@@ -1,0 +1,402 @@
+[
+  {
+    "mimetype": "application/zip",
+    "origin": {
+      "type": "device",
+      "id": "Bootstrapper"
+    },
+    "name": "8403_4_1_t1_dicom.zip",
+    "project": {
+      "group": "scitran",
+      "created": "2016-03-15T21:40:50.938000+00:00",
+      "modified": "2016-03-15T21:41:16.783000+00:00",
+      "label": "Neuroscience",
+      "_id": "56e88162211d6cc45223f168",
+      "public": false
+    },
+    "session": {
+      "group": "scitran",
+      "created": "2016-03-15T21:40:59.456000+00:00",
+      "modified": "2016-03-15T21:41:01.437000+00:00",
+      "label": "2014-11-13T162516",
+      "project": "56e88162211d6cc45223f168",
+      "_id": "56e8816b211d6cc45223f171",
+      "public": false,
+      "subject": {
+        "code": "ex8403"
+      }
+    },
+    "container_name": "acquisitions",
+    "hash": "v0-sha384-2b8806f1007fb33e98f6189305db45e750e865fb100bd115867393ce7d339fa5ee161cbb8447f56ea30cc24b97ab4d42",
+    "type": "dicom",
+    "acquisition": {
+      "created": "2016-03-15T21:41:00.167000",
+      "modified": "2016-03-15T21:41:00.167000",
+      "label": "8403_4_1_t1",
+      "session": "56e8816b211d6cc45223f171",
+      "_id": "56e8816c211d6cc45223f173",
+      "public": false
+    },
+    "size": 3068863
+  },
+  {
+    "mimetype": "application/zip",
+    "origin": {
+      "type": "device",
+      "id": "Bootstrapper"
+    },
+    "name": "8613_6_1_t1_dicom.zip",
+    "project": {
+      "group": "scitran",
+      "created": "2016-03-15T21:40:50.938000+00:00",
+      "modified": "2016-03-15T21:41:16.783000+00:00",
+      "label": "Neuroscience",
+      "_id": "56e88162211d6cc45223f168",
+      "public": false
+    },
+    "session": {
+      "group": "scitran",
+      "created": "2016-03-15T21:41:03.432000+00:00",
+      "modified": "2016-03-15T21:41:05.517000+00:00",
+      "label": "2015-01-07T173004",
+      "project": "56e88162211d6cc45223f168",
+      "_id": "56e8816f211d6cc45223f175",
+      "public": false,
+      "subject": {
+        "code": "ex8613"
+      }
+    },
+    "container_name": "acquisitions",
+    "hash": "v0-sha384-b4cc5ffb9dfdc6fcb5b5b86e9a6f2f5ece6f76f91222e0672c7beae65a31b7a115329e57de9bf8442603e4fe3e7877d9",
+    "type": "dicom",
+    "acquisition": {
+      "created": "2016-03-15T21:41:04.187000",
+      "modified": "2016-03-15T21:41:04.187000",
+      "label": "8613_6_1_t1",
+      "session": "56e8816f211d6cc45223f175",
+      "_id": "56e88170211d6cc45223f177",
+      "public": false
+    },
+    "size": 3216495
+  },
+  {
+    "mimetype": "application/zip",
+    "origin": {
+      "type": "device",
+      "id": "Bootstrapper"
+    },
+    "name": "8892_14_1_dti_dicom.zip",
+    "project": {
+      "group": "scitran",
+      "created": "2016-03-15T21:40:50.938000+00:00",
+      "modified": "2016-03-15T21:41:16.783000+00:00",
+      "label": "Neuroscience",
+      "_id": "56e88162211d6cc45223f168",
+      "public": false
+    },
+    "session": {
+      "group": "scitran",
+      "created": "2016-03-15T21:41:14.279000+00:00",
+      "modified": "2016-03-15T21:41:16.783000+00:00",
+      "label": "2015-02-15T134437",
+      "project": "56e88162211d6cc45223f168",
+      "_id": "56e8817a211d6cc45223f179",
+      "public": false,
+      "subject": {
+        "code": "ex8892"
+      }
+    },
+    "container_name": "acquisitions",
+    "hash": "v0-sha384-981e5ebca5a68eed2107bedab8c6295f0fc38e69f9851bc7e31ee5a6b0aaf9a7fef4c325470da62c5f8df1e75cf717fa",
+    "type": "dicom",
+    "acquisition": {
+      "created": "2016-03-15T21:41:14.279000",
+      "modified": "2016-03-15T21:41:14.279000",
+      "label": "8892_14_1_dti",
+      "session": "56e8817a211d6cc45223f179",
+      "_id": "56e8817a211d6cc45223f17a",
+      "public": false
+    },
+    "size": 36156559
+  },
+  {
+    "mimetype": "application/zip",
+    "origin": {
+      "type": "device",
+      "id": "Bootstrapper"
+    },
+    "name": "149_1_1_localizer_dicom.zip",
+    "project": {
+      "group": "scitran",
+      "created": "2016-03-15T21:41:17.213000+00:00",
+      "modified": "2016-03-15T21:41:44.869000+00:00",
+      "label": "Psychology",
+      "_id": "56e8817d211d6cc45223f17e",
+      "public": false
+    },
+    "session": {
+      "group": "scitran",
+      "created": "2016-03-15T21:41:17.213000+00:00",
+      "modified": "2016-03-15T21:41:26.604000+00:00",
+      "label": "2011-03-18T114600",
+      "project": "56e8817d211d6cc45223f17e",
+      "_id": "56e8817d211d6cc45223f17f",
+      "public": false,
+      "subject": {
+        "code": "ex149"
+      }
+    },
+    "container_name": "acquisitions",
+    "hash": "v0-sha384-0c7fb868e318992d2cc1c98e24720c07755c8b5da6b647feca01ac230db49c1fbcd41f25e7857d65eb65983156fadccf",
+    "type": "dicom",
+    "acquisition": {
+      "created": "2016-03-15T21:41:17.213000",
+      "modified": "2016-03-15T21:41:17.213000",
+      "label": "149_1_1_localizer",
+      "session": "56e8817d211d6cc45223f17f",
+      "_id": "56e8817d211d6cc45223f180",
+      "public": false
+    },
+    "size": 1030589
+  },
+  {
+    "mimetype": "application/zip",
+    "origin": {
+      "type": "device",
+      "id": "Bootstrapper"
+    },
+    "name": "3967_5_1_inversion_recovery_dicom.zip",
+    "project": {
+      "group": "scitran",
+      "created": "2016-03-15T21:41:17.213000+00:00",
+      "modified": "2016-03-15T21:41:44.869000+00:00",
+      "label": "Psychology",
+      "_id": "56e8817d211d6cc45223f17e",
+      "public": false
+    },
+    "session": {
+      "group": "scitran",
+      "created": "2016-03-15T21:41:38.762000+00:00",
+      "modified": "2016-03-15T21:41:41.836000+00:00",
+      "label": "2013-02-14T163721",
+      "project": "56e8817d211d6cc45223f17e",
+      "_id": "56e88192211d6cc45223f18b",
+      "public": false,
+      "subject": {
+        "code": "ex3967"
+      }
+    },
+    "container_name": "acquisitions",
+    "hash": "v0-sha384-b514d2a14a6be45d5cdc97564603acdd7261c416d8110fdbd823e28f689ed269525fa7e8d7f2b7f7156cf2c7cd8d55b8",
+    "type": "dicom",
+    "acquisition": {
+      "created": "2016-03-15T21:41:41.610000",
+      "modified": "2016-03-15T21:41:41.610000",
+      "label": "3967_5_1_inversion_recovery",
+      "session": "56e88192211d6cc45223f18b",
+      "_id": "56e88195211d6cc45223f18e",
+      "public": false
+    },
+    "size": 531229
+  },
+  {
+    "mimetype": "application/zip",
+    "origin": {
+      "type": "device",
+      "id": "Bootstrapper"
+    },
+    "name": "14591_anon_screensave_dicom.zip",
+    "project": {
+      "group": "scitran",
+      "created": "2016-03-15T21:41:45.131000+00:00",
+      "modified": "2016-03-15T21:41:48.905000+00:00",
+      "label": "Testdata",
+      "_id": "56e88199211d6cc45223f194",
+      "public": false
+    },
+    "session": {
+      "group": "scitran",
+      "created": "2016-03-15T21:41:48.596000+00:00",
+      "modified": "2016-03-15T21:41:48.905000+00:00",
+      "label": "1970-01-01T000000",
+      "project": "56e88199211d6cc45223f194",
+      "_id": "56e8819c211d6cc45223f19a",
+      "public": false,
+      "subject": {
+        "code": "ex7236"
+      }
+    },
+    "container_name": "acquisitions",
+    "hash": "v0-sha384-20799f0ee2640f86c0c035dbe547e1efec0903443fbc973a09172eb3b2b34080d3e0053d081017d1212228d1aac7a3f3",
+    "type": "dicom",
+    "acquisition": {
+      "created": "2016-03-15T21:41:48.596000",
+      "modified": "2016-03-15T21:41:48.596000",
+      "label": "14591_anon_screensave",
+      "session": "56e8819c211d6cc45223f19a",
+      "_id": "56e8819c211d6cc45223f19b",
+      "public": false
+    },
+    "size": 452745
+  },
+  {
+    "mimetype": "application/zip",
+    "origin": {
+      "type": "device",
+      "id": "Bootstrapper"
+    },
+    "name": "4784_3_1_t1_dicom.zip",
+    "project": {
+      "group": "scitran",
+      "created": "2016-03-15T21:40:50.938000+00:00",
+      "modified": "2016-03-15T21:41:16.783000+00:00",
+      "label": "Neuroscience",
+      "_id": "56e88162211d6cc45223f168",
+      "public": false
+    },
+    "session": {
+      "group": "scitran",
+      "created": "2016-03-15T21:40:50.938000+00:00",
+      "modified": "2016-03-15T21:40:53.037000+00:00",
+      "label": "2013-06-04T223626",
+      "project": "56e88162211d6cc45223f168",
+      "_id": "56e88162211d6cc45223f169",
+      "public": false,
+      "subject": {
+        "code": "ex4784"
+      }
+    },
+    "container_name": "acquisitions",
+    "hash": "v0-sha384-6e7ac8ef9b8d7e82a6a56c0eb938fa41e89d338e81a6f9630f0b89abffc5ca411d73e068b2b88966e7d7e59c061e7a96",
+    "type": "dicom",
+    "acquisition": {
+      "created": "2016-03-15T21:40:51.697000",
+      "modified": "2016-03-15T21:40:51.697000",
+      "label": "4784_3_1_t1",
+      "session": "56e88162211d6cc45223f169",
+      "_id": "56e88163211d6cc45223f16b",
+      "public": false
+    },
+    "size": 2921889
+  },
+  {
+    "mimetype": "application/zip",
+    "origin": {
+      "type": "device",
+      "id": "Bootstrapper"
+    },
+    "name": "8403_6_1_fmri_dicom.zip",
+    "project": {
+      "group": "scitran",
+      "created": "2016-03-15T21:40:50.938000+00:00",
+      "modified": "2016-03-15T21:41:16.783000+00:00",
+      "label": "Neuroscience",
+      "_id": "56e88162211d6cc45223f168",
+      "public": false
+    },
+    "session": {
+      "group": "scitran",
+      "created": "2016-03-15T21:40:59.456000+00:00",
+      "modified": "2016-03-15T21:41:01.437000+00:00",
+      "label": "2014-11-13T162516",
+      "project": "56e88162211d6cc45223f168",
+      "_id": "56e8816b211d6cc45223f171",
+      "public": false,
+      "subject": {
+        "code": "ex8403"
+      }
+    },
+    "container_name": "acquisitions",
+    "hash": "v0-sha384-b177079389e7610554528de05934256fc5a70837ff2e484605acf49a1b604a8e7b0510966d5c9f3e0326d7e7526e0ca3",
+    "type": "dicom",
+    "acquisition": {
+      "created": "2016-03-15T21:41:01.437000",
+      "modified": "2016-03-15T21:41:01.437000",
+      "label": "8403_6_1_fmri",
+      "session": "56e8816b211d6cc45223f171",
+      "_id": "56e8816d211d6cc45223f174",
+      "public": false
+    },
+    "size": 4694706
+  },
+  {
+    "mimetype": "application/zip",
+    "origin": {
+      "type": "device",
+      "id": "Bootstrapper"
+    },
+    "name": "8892_1_1_localizer_dicom.zip",
+    "project": {
+      "group": "scitran",
+      "created": "2016-03-15T21:40:50.938000+00:00",
+      "modified": "2016-03-15T21:41:16.783000+00:00",
+      "label": "Neuroscience",
+      "_id": "56e88162211d6cc45223f168",
+      "public": false
+    },
+    "session": {
+      "group": "scitran",
+      "created": "2016-03-15T21:41:14.279000+00:00",
+      "modified": "2016-03-15T21:41:16.783000+00:00",
+      "label": "2015-02-15T134437",
+      "project": "56e88162211d6cc45223f168",
+      "_id": "56e8817a211d6cc45223f179",
+      "public": false,
+      "subject": {
+        "code": "ex8892"
+      }
+    },
+    "container_name": "acquisitions",
+    "hash": "v0-sha384-c5eed2bcb8daf03485bdf9cd0931d635a2ca69965741cfdb1dfab68fba28490819a6c590d24b32f690cf967545cbc0f4",
+    "type": "dicom",
+    "acquisition": {
+      "created": "2016-03-15T21:41:16.300000",
+      "modified": "2016-03-15T21:41:16.300000",
+      "label": "8892_1_1_localizer",
+      "session": "56e8817a211d6cc45223f179",
+      "_id": "56e8817c211d6cc45223f17b",
+      "public": false
+    },
+    "size": 8525582
+  },
+  {
+    "mimetype": "application/zip",
+    "origin": {
+      "type": "device",
+      "id": "Bootstrapper"
+    },
+    "name": "149_4_1_t2_dicom.zip",
+    "project": {
+      "group": "scitran",
+      "created": "2016-03-15T21:41:17.213000+00:00",
+      "modified": "2016-03-15T21:41:44.869000+00:00",
+      "label": "Psychology",
+      "_id": "56e8817d211d6cc45223f17e",
+      "public": false
+    },
+    "session": {
+      "group": "scitran",
+      "created": "2016-03-15T21:41:17.213000+00:00",
+      "modified": "2016-03-15T21:41:26.604000+00:00",
+      "label": "2011-03-18T114600",
+      "project": "56e8817d211d6cc45223f17e",
+      "_id": "56e8817d211d6cc45223f17f",
+      "public": false,
+      "subject": {
+        "code": "ex149"
+      }
+    },
+    "container_name": "acquisitions",
+    "hash": "v0-sha384-37ff41c10498f0ce23adf60aa9837b3400dbd7f23707a525f85141e4362694a8b583944289ccc32f5d55bc241bb544db",
+    "type": "dicom",
+    "acquisition": {
+      "created": "2016-03-15T21:41:26.604000",
+      "modified": "2016-03-15T21:41:26.604000",
+      "label": "149_4_1_t2",
+      "session": "56e8817d211d6cc45223f17f",
+      "_id": "56e88186211d6cc45223f182",
+      "public": false
+    },
+    "size": 17707250
+  }
+]
