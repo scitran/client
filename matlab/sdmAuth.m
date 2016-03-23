@@ -68,12 +68,12 @@ function [token, status] = sdmAuth(action, sdmInstance)
 %% Check inputs
 
 % By default we will create a token
-if notDefined('action')
+if ~exist('action', 'var') || isempty(action)
     action = 'create';
 end
 
 % We default to sni_sdm (for now)
-if notDefined('sdm_instance');
+if ~exist('sdm_instance', 'var') || isempty(sdm_instance)
     sdmInstance = 'sni_sdm';
 end
 
@@ -112,7 +112,7 @@ if ~isfield(sdm, sdmInstance) %#ok<NODEF>
         client_id     = input('Please enter the client_id: ', 's');
         client_secret = input('Please enter the client_secret: ', 's');
         % Check that fields are not blank
-        if notDefined('client_id') || notDefined('client_secret');
+        if isempty(client_id) || isempty(client_secret);
             disp('One more more keys is empty, aborting');
             return
         else
@@ -132,10 +132,10 @@ client_secret = sdm.(sdmInstance).client_secret;
 client_id = sdm.(sdmInstance).client_id;
 
 % Check for client secret
-if notDefined('client_secret');
+if isempty(client_secret);
     prompt = (sprintf('\nSDM AUTH: Connecting to "%s"...\nPlease enter the client_secret: ', sdmInstance));
     client_secret = input(prompt, 's');
-    if notDefined('client_secret')
+    if isempty(client_secret)
         disp('Aborting')
         return
     else
@@ -204,7 +204,7 @@ end
 
 if (~isempty(strfind(lower(token), 'error')) || status > 0) 
     status = 1;
-    warning('Check that you have python dependencies installed and on your path. HINT: Try "pip install oauth2client"');
+    warning('Check that you have Python and the dependencies installed AND on your PATH. HINT: Try "pip install oauth2client"');
     error(token);
 end
 

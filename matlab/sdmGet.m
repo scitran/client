@@ -25,7 +25,7 @@ pLink = pLink{1};
 
 
 %% Parse fName from the permalink if 'fName' was not provided.
-if notDefined('fName') 
+if ~exist('fName', 'var') || isempty (fName) 
     [~, f, e] = fileparts(pLink);
     t_e = explode('?', e);
     out_dir = tempname;
