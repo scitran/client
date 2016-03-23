@@ -73,7 +73,7 @@ if ~exist('action', 'var') || isempty(action)
 end
 
 % We default to sni_sdm (for now)
-if ~exist('sdm_instance', 'var') || isempty(sdm_instance)
+if ~exist('sdmInstance', 'var') || isempty(sdmInstance)
     sdmInstance = 'sni_sdm';
 end
 
@@ -158,6 +158,14 @@ urlwrite('https://raw.githubusercontent.com/scitran/scripts/master/oauth2cli.py'
 fileattrib(pyCode, '+x');
 
 
+%% Configure ENV for python
+
+initPath = getenv('PATH');
+if ~strfind(initPath, '/usr/local/bin')
+    setenv('PATH', ['/usr/local/bin:', initPath]);
+end
+
+
 %% Switch on action
 
 switch lower(action)
@@ -210,5 +218,10 @@ end
 
 % Remove trailing spaces from token string before returning
 token = strtrim(token);
+
+
+%% Reset PATH env
+
+setenv('PATH', initPath);
 
 return
