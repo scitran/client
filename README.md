@@ -15,10 +15,10 @@ There are many ways to do the install for other systems, and we will add other e
 
  If the path to python is not in this list, then you set add it, say be
 
-   ```setenv('PATH',['/Users/wandell/anaconda/bin/:',getenv('PATH')]);
-   ```
+   ```setenv('PATH',['/Users/wandell/anaconda/bin/:',getenv('PATH')]);```
  
  You might verify that you succeeded by trying
+ 
    ```system('which python')```
  
  * You must have access to port 9000 to open a browser window/tab. By default this should work just fine. This is almost never a problem, apart from some VM installs.
