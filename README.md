@@ -15,7 +15,7 @@ There are many ways to do the install for other systems, and we will add other e
 
  If the path to python is not in this list, then you set add it, say be
 
-   ```setenv('PATH',['/Users/wandell/anaconda/bin/:',getenv('PATH')]);```
+   ```setenv('PATH',['/Users/wandell/anaconda/bin/:',getenv('PATH')]); ```
  
  You might verify that you succeeded by trying
  
