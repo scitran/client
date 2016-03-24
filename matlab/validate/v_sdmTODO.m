@@ -24,10 +24,6 @@
 %
 % LMP/BW Scitran Team, 2016
 
-%% Check that the database is up
-
-%% Authorization
-
 %% Does a search
 
 % Set up the structure that will be converted to json format

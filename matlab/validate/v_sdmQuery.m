@@ -8,12 +8,58 @@
 
 %% Authorization
 
+token = sdmAuth('create','scitran');
+
 %% Does a search
+
+% Now, we can search for elements of the data model
+%
+%    https://github.com/scitran/core/wiki/Data-Model,-v2
+%
+
+% The main information types for the scitran client are
+%
+%    Group, Project, Session, Acquisition and Files
+%
+% There are other types that are used internally for the data model.
+%
+
+%% To search for subjects within that age and of a particular sex
+
+loadjson('sdm_search1.json');
+
+%% To search for all subjects of a certain age range and sex
+
+
+%% To search for subjects of a certain age range, sex, and type of measurement
+%
+% The type of measurement is specified as 'measurement' in the Files group
+
+
+%% 
+
+%   subject age
+%   subject sex
+%   subject id
+%
+%   project name
+%
+%   session label
+%
+%   Acquisition measurement
+%   
+
 
 % Set up the structure that will be converted to json format
 jsonSend.multi_match.fields = 'name';
 jsonSend.multi_match.query = 't1.zip';
 jsonSend.multi_match.lenient = true;
+
+clear jsonSend
+
+jsonSend.range.('subject.age').gte=10;
+
+jsonSend.range.subject_0x2E_age.lte=20;
 
 % Convert
 jsonData = savejson('',jsonSend);
