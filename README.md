@@ -5,17 +5,17 @@ This repository includes utilities to interact with the SciTran API from the cli
 
 * You must have python on your path. The key module is oauth2client.  If you use, say, anaconda to manage your python method than pip is included and you can do the install this way from your terminal
 
-  pip install oauth2client
+   ```pip install oauth2client```
 
 There are many ways to do the install for other systems, and we will add other examples here later.
 
  * The python executable must be in the path environment variable in Matlab.  You can find your path by typing
-  getenv('PATH')
+    ```getenv('PATH')```
  If the path to python is not in this list, then you set add it, say be
-  setenv('PATH',['/Users/wandell/anaconda/bin/:',getenv('PATH')]);
+    ```setenv('PATH',['/Users/wandell/anaconda/bin/:',getenv('PATH')]);```
  
  You might verify that you succeeded by trying
-  system('which python')
+  ```system('which python')```
  
  * You must have access to port 9000 to open a browser window/tab. By default this should work just fine. This is almost never a problem, apart from some VM installs.
 
