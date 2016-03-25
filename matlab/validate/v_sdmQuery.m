@@ -3,12 +3,28 @@
 %    * Authorize
 %    * Search
 %
+% When you want a dot in the search field, for example
 %
+% {
+% 	"range": {
+% 		"subject.age": {
+% 			"gte": 10,
+% 			"lte": 90
+% 		}
+% 	}
+% }
+% 
+% You should insert the string "_0x2E_".   Because this is ugly, we might
+% use the syntax _dot_ and then do a strrep()
+%
+%   
 % LMP/BW Scitran Team, 2016
 
 %% Authorization
 
+% TODO:  [token, furl] = sdmAuth('create','scitran');
 token = sdmAuth('create','scitran');
+% furl = 'https://flywheel.scitran.stanford.edu';
 
 %% Does a search
 
@@ -25,9 +41,9 @@ token = sdmAuth('create','scitran');
 %
 
 %% To search for subjects within that age and of a particular sex
-
-loadjson('sdm_search1.json');
-
+% srch = loadjson('sdm_search1.json');
+% 
+% savejson('',srch,'tmp.json');
 %% To search for all subjects of a certain age range and sex
 
 
@@ -35,39 +51,39 @@ loadjson('sdm_search1.json');
 %
 % The type of measurement is specified as 'measurement' in the Files group
 
-
-%% 
-
-%   subject age
-%   subject sex
-%   subject id
+%%  Build the json object
 %
-%   project name
+% We test with this one
 %
-%   session label
-%
-%   Acquisition measurement
-%   
+% {
+% 	"range": {
+% 		"subject.age": {
+% 			"gte": 10,
+% 			"lte": 90
+% 		}
+% 	}
+% }
 
-
-% Set up the structure that will be converted to json format
-jsonSend.multi_match.fields = 'name';
-jsonSend.multi_match.query = 't1.zip';
-jsonSend.multi_match.lenient = true;
-
+% Convert the struct to a json data string that we will send.
 clear jsonSend
-
-jsonSend.range.('subject.age').gte=10;
-
+jsonSend.range.subject_0x2E_age.gte=10;
 jsonSend.range.subject_0x2E_age.lte=20;
-
-% Convert
 jsonData = savejson('',jsonSend);
 
 % Build up the curl command
-curlcmd = ...
-    sprintf('curl -XGET "https://docker.local.flywheel.io:8443/api/search/files?user=renzofrigato@flywheel.io&root=1" -k -d ');
-syscommand = [curlcmd,'''',jsonData,''''];
+clear s
+s.url    = furl;
+s.token  = token;
+s.body   = jsonData;
+s.target = 'sessions';
+srchCMD = sdmCommandCreate(s);
+
+% 
+[status, result] = system(srchCMD);
+
+% syscommand = sdmCommandCreate('url',furl,'token',token,'body',jsonData,'target','session');
+% sdmCommandRun(curcmd,jsonData)
+
 
 % On your system, you must have curl libraries properly configured
 cENV = configure_curl;

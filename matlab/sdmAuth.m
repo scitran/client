@@ -67,15 +67,35 @@ function [token, status] = sdmAuth(action, sdmInstance)
 
 %% Check inputs
 
-% By default we will create a token
-if ~exist('action', 'var') || isempty(action)
-    action = 'create';
-end
+% One way to use parse and set up inputs
+%   s.action = 'create';
+%   s.sdmInstance = 'scitran';
+%   sdmAuth(s)
+%
+%  sdmAuth('action',param1,'sdmInstance',param2);
 
-% We default to sni_sdm (for now)
-if ~exist('sdmInstance', 'var') || isempty(sdmInstance)
-    sdmInstance = 'sni_sdm';
-end
+p = inputParser;
+% 
+actions = {'create','refresh','revoke'};
+% p.addRequired('action',@(x) any(validatestring(x,actions)));
+% p.addRequired('sdmInstance',@ischar);
+% 
+% p.parse(action,sdmInstance)
+
+p.addOptional('action','create',@(x) any(validatestring(x,actions)));
+p.addOptional('sdmInstance','scitran',@ischar);
+p.parse(action)
+
+
+% By default we will create a token
+% if ~exist('action', 'var') || isempty(action)
+%     action = 'create';
+% end
+% 
+% % We default to sni_sdm (for now)
+% if ~exist('sdmInstance', 'var') || isempty(sdmInstance)
+%     sdmInstance = 'sni_sdm';
+% end
 
 
 %% Load or create local client_auth file
