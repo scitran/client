@@ -1,5 +1,5 @@
-function [token, status] = sdmAuth(action, sdmInstance)
-% [token, status] = sdmAuth([action='create'], [sdmInstance='sni_sdm'])
+function [token, client_url, status] = sdmAuth(varargin)
+% [token, client_url, status] = sdmAuth(varargin)
 % 
 %  Get an authorization token for SDM download/upload. 
 % 
@@ -24,7 +24,7 @@ function [token, status] = sdmAuth(action, sdmInstance)
 % 
 % 
 % INPUTS: 
-%       action - Token action to perform.
+%       'action' - Token action to perform.
 %                   'create'  - [default] generate a new token. This will
 %                               refresh the token if one exists.
 %                   'refresh' - refresh an existing token.
@@ -33,7 +33,7 @@ function [token, status] = sdmAuth(action, sdmInstance)
 %                               no longer in need of the token. Each token
 %                               and sdmAuth profile will be deleted.
 % 
-%       sdmInstance - String denoting the sdm instance to authorize
+%       'instance' - String denoting the sdm instance to authorize
 %                     against. Information about the instance is saved
 %                     within a mat file (e.g. sdmAuth.mat) and loaded when
 %                     chosen. Default='sni_sdm' (sni-sdm.stanford.edu). New
@@ -44,15 +44,17 @@ function [token, status] = sdmAuth(action, sdmInstance)
 %       
 %       
 %  OUTPUTS:
-%       token   - string containing the token
+%       token      - string containing the token
+%
+%       client_url - the base url for the instance
 % 
-%       status  - boolean where 0=success and >0 denotes failure.
+%       status     - boolean where 0=success and >0 denotes failure.
 % 
 % 
 %  EXAMPLE USAGE:
-%       [token, status] = sdmAuth('create','sni-sdm'); 
+%       [token, client_url, status] = sdmAuth('action', 'create', 'instance', 'scitran'); 
 %             
-%           * Note that for default usage no inputs are required.
+%           * Note that for the above default usage no inputs are required.
 %       
 % 
 %  SEE ALSO:
@@ -65,81 +67,64 @@ function [token, status] = sdmAuth(action, sdmInstance)
 % 
 % 
 
-%% Check inputs
+%% Parse inputs
 
-% One way to use parse and set up inputs
-%   s.action = 'create';
-%   s.sdmInstance = 'scitran';
-%   sdmAuth(s)
-%
-%  sdmAuth('action',param1,'sdmInstance',param2);
+actions = {'create','refresh','revoke'};
 
 p = inputParser;
-% 
-actions = {'create','refresh','revoke'};
-% p.addRequired('action',@(x) any(validatestring(x,actions)));
-% p.addRequired('sdmInstance',@ischar);
-% 
-% p.parse(action,sdmInstance)
+p.addOptional('action', 'create', @(x) any(strcmp(x,actions)));
+p.addOptional('instance', 'scitran', @ischar);
+p.parse(varargin{:})
 
-p.addOptional('action','create',@(x) any(validatestring(x,actions)));
-p.addOptional('sdmInstance','scitran',@ischar);
-p.parse(action)
-
-
-% By default we will create a token
-% if ~exist('action', 'var') || isempty(action)
-%     action = 'create';
-% end
-% 
-% % We default to sni_sdm (for now)
-% if ~exist('sdmInstance', 'var') || isempty(sdmInstance)
-%     sdmInstance = 'sni_sdm';
-% end
+action = p.Results.action;
+instance = p.Results.instance;
 
 
 %% Load or create local client_auth file
 
 % Base directory to store user-specific files
-sdmDir = fullfile(getenv('HOME'), 'sdm');
+sdmDir = fullfile(getenv('HOME'), '.sdm');
 if ~exist(sdmDir,'dir') 
     mkdir(sdmDir); 
 end
 
-localAuthFile = fullfile(sdmDir, '.sdmAuth.mat');
-% If the file does not exist, then copy it from vistasoft, which is on the
-% path.
+% If the file does not exist, then copy it from the path
+localAuthFile = fullfile(sdmDir, 'sdmAuth.json');
 if ~exist(localAuthFile, 'file')
-    copyfile(which('sdmAuth.mat'), localAuthFile)
+    copyfile(which('sdmAuth.json'), localAuthFile)
 end
 
 
 %% Set path to token file and initilize token
-tokenFile = fullfile(sdmDir, '.sdm_token');
+tokenFile = fullfile(sdmDir, 'sdm_token');
 token = '';
 
 
 %% Load instance and client information (used in python command)
 
-load(localAuthFile); % loads sdm
+sdm = loadjson(localAuthFile); 
 
 % Check for client/instance info in the localAuthFile 
 % Prompt to add it if not found, then save it for next time.
-if ~isfield(sdm, sdmInstance) %#ok<NODEF>
-    prompt = sprintf('\n%s does not exist in your local auth file. \n Would you like to enter it? (y/n): ', sdmInstance);
+if ~isfield(sdm, instance) 
+    disp('Known instances:');
+    disp(fieldnames(sdm));
+    prompt = sprintf('Unknown instance: \n ''%s'' is not a known instance. \n Would you like to add it to your local config? (y/n): ', instance);
     response = input(prompt,'s');    
     if lower(response) == 'y'
         client_id     = input('Please enter the client_id: ', 's');
         client_secret = input('Please enter the client_secret: ', 's');
+        client_url    = input('Please enter the instance url: ', 's');
         % Check that fields are not blank
-        if isempty(client_id) || isempty(client_secret);
+        if isempty(client_id) || isempty(client_secret) || isempty(client_url);
             disp('One more more keys is empty, aborting');
             return
         else
-            sdm.(sdmInstance).client_id = client_id;
-            sdm.(sdmInstance).client_secret = client_secret;
-            save(localAuthFile, 'sdm');
-            disp('Instance ID and Secret saved.');
+            sdm.(instance).client_id = client_id;
+            sdm.(instance).client_secret = client_secret;
+            sdm.(instance).client_url = client_url;
+            savejson('', sdm, localAuthFile);
+            disp('Instance ID, URL, and Secret saved.');
         end
     else
         disp('Aborting');
@@ -148,41 +133,44 @@ if ~isfield(sdm, sdmInstance) %#ok<NODEF>
 end
 
 % Set the values
-client_secret = sdm.(sdmInstance).client_secret;
-client_id = sdm.(sdmInstance).client_id;
+client_secret = sdm.(instance).client_secret;
+client_id = sdm.(instance).client_id;
+client_url = sdm.(instance).client_url;
 
 % Check for client secret
 if isempty(client_secret);
-    prompt = (sprintf('\nSDM AUTH: Connecting to "%s"...\nPlease enter the client_secret: ', sdmInstance));
+    prompt = (sprintf('\nSDM AUTH: Connecting to "%s"...\nPlease enter the client_secret: ', instance));
     client_secret = input(prompt, 's');
     if isempty(client_secret)
         disp('Aborting')
         return
     else
         % Save the value to sdm and save to file for next time
-        sdm.(sdmInstance).client_secret = client_secret;
-        save(localAuthFile, 'sdm');
+        sdm.(instance).client_secret = client_secret;
+        savejson('', sdm, localAuthFile);
         disp('Client Secret saved.');
     end
 end
 
 
-%% Download python code from GitHub 
+%% Download oauth2cli.py from GitHub 
 
-pyCode = fullfile(sdmDir, 'oauth2cli.py');
+oauth2cli_code = fullfile(sdmDir, 'oauth2cli.py');
 
 % Dowload the script (from github master)
-urlwrite('https://raw.githubusercontent.com/scitran/scripts/master/oauth2cli.py', pyCode);
+oauth2cli_url = 'https://raw.githubusercontent.com/scitran/utilities/4988b955b6d3b531977ddd13ecb91265c96155c9/oauth2cli.py';
+urlwrite(oauth2cli_url, oauth2cli_code);
 
 % Make the code executable
-fileattrib(pyCode, '+x');
+fileattrib(oauth2cli_code, '+x');
 
 
 %% Configure ENV for python
 
+% TODO: Improve this
 initPath = getenv('PATH');
-if ~strfind(initPath, '/usr/local/bin')
-    setenv('PATH', ['/usr/local/bin:', initPath]);
+if isempty(strfind(initPath, '/usr/local/bin'))
+    setenv('PATH', ['/usr/local/bin:', [getenv('HOME'), '/anaconda/bin'], ':', initPath]);
 end
 
 
@@ -194,10 +182,10 @@ switch lower(action)
     case {'create', 'refresh'}
         if exist(tokenFile,'file') 
             subFunction = 'refresh';
-            cmd = ['python ', pyCode, ' --filename ', tokenFile , ' ', subFunction];
+            cmd = ['python ', oauth2cli_code, ' --filename ', tokenFile , ' ', subFunction];
         else
             subFunction = 'create';
-            cmd = ['python ', pyCode, ' --filename ', tokenFile , ' ', subFunction, ' --auth_host_port 9000 --client-secret ',  client_secret, ' --client-id ', client_id];
+            cmd = ['python ', oauth2cli_code, ' --filename ', tokenFile , ' ', subFunction, ' --auth_host_port 9000 --client-secret ',  client_secret, ' --client-id ', client_id];
         end
         
         % Execute the call to python
@@ -206,7 +194,7 @@ switch lower(action)
     % Revoke an existing token
     case {'revoke', 'delete'}
         if exist(tokenFile, 'file')
-            cmd = ['python ', pyCode, ' --filename ', tokenFile , ' ', action];
+            cmd = ['python ', oauth2cli_code, ' --filename ', tokenFile , ' ', action];
             % Execute the call to python
             [status, token] = system(cmd);
             if status == 0

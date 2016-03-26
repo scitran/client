@@ -20,11 +20,13 @@
 %   
 % LMP/BW Scitran Team, 2016
 
+% On your system, you must have curl libraries properly configured
+cENV = configure_curl;
+
 %% Authorization
 
-% TODO:  [token, furl] = sdmAuth('create','scitran');
-token = sdmAuth('create','scitran');
-% furl = 'https://flywheel.scitran.stanford.edu';
+[token, furl, ~] = sdmAuth('action', 'create', 'instance', 'scitran');
+
 
 %% Does a search
 
@@ -77,42 +79,30 @@ s.token  = token;
 s.body   = jsonData;
 s.target = 'sessions';
 srchCMD = sdmCommandCreate(s);
+[~, result] = system(srchCMD);
 
+% Dump the data
+scitranData = loadjson(result);
+for ii=1:length(scitranData)
+    scitranData{ii}.type
+    scitranData{ii}.name
+end
+
+
+%% This command should fail
 % 
-[status, result] = system(srchCMD);
-
-% syscommand = sdmCommandCreate('url',furl,'token',token,'body',jsonData,'target','session');
-% sdmCommandRun(curcmd,jsonData)
-
-
-% On your system, you must have curl libraries properly configured
-cENV = configure_curl;
-[status, result] = system(syscommand);
-unconfigure_curl(cENV);
-
-% Dump the data
-scitranData = loadjson(result);
-for ii=1:length(scitranData)
-    scitranData{ii}.type
-    scitranData{ii}.name
-end
-
-%% Should fail
-curlcmd = ...
-    sprintf('curl -XGET "https://docker.local.flywheel.io:8443/api/search/files?user=evilperson@flywheel.io&root=1" -k -d ');
-syscommand = [curlcmd,'''',jsonData,''''];
-
-% On your system, you must have curl libraries properly configured
-cENV = configure_curl;
-[status, result] = system(syscommand);
-unconfigure_curl(cENV);
-
-% Dump the data
-scitranData = loadjson(result);
-for ii=1:length(scitranData)
-    scitranData{ii}.type
-    scitranData{ii}.name
-end
+% curlcmd = ...
+%     sprintf('curl -XGET "https://docker.local.flywheel.io:8443/api/search/files?user=evilperson@flywheel.io&root=1" -k -d ');
+% syscommand = [curlcmd,'''',jsonData,''''];
+% 
+% [status, result] = system(syscommand);
+% 
+% % Dump the data
+% scitranData = loadjson(result);
+% for ii=1:length(scitranData)
+%     scitranData{ii}.type
+%     scitranData{ii}.name
+% end
 
 
 %% Does a download
@@ -120,3 +110,5 @@ end
 %% Does an upload
 
 %%
+
+unconfigure_curl(cENV);
