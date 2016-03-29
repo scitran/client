@@ -42,9 +42,16 @@ body   = p.Results.body;
 target = p.Results.target;
 url    = p.Results.url;
 
+% If this is a local instance we need to insert the 'insecure' flag
+if strfind(url, 'docker.local') 
+    insecureFlag = ' -k ';
+else
+    insecureFlag = '';
+end
+
 %% Build the search command
 
-cmd = sprintf('curl -XGET "%s/api/search/%s" -H "Authorization":"%s" -H "Content-Type:application/json" -d ''%s''',url,target,token,body);
+cmd = sprintf('curl -XGET "%s/api/search/%s" -H "Authorization":"%s" -H "Content-Type:application/json" %s -d ''%s''', url, target, token, insecureFlag, body);
 
 end
 
