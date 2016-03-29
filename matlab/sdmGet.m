@@ -1,4 +1,4 @@
-function fName = sdmGet(pLink,fName)
+function fName = sdmGet(pLink,fName, token)
 % Retrieve a file from an sdm instance
 %
 %   fName = sdmGet(pLink,[fName])
@@ -6,15 +6,23 @@ function fName = sdmGet(pLink,fName)
 % Inputs
 %  pLink:  Permalink from the SDM
 %  fName:  Location and/or filename to write the file
+%  token:  Authorization token for download
 %
 % Return
 %  fName:  Path to file saved on disk
 %
 % Example:
+%   token = sdmAuth('instance', 'snisdm');
 %   fName = sdmGet('https://sni-sdm.stanford.edu/api/acquisitions/55adf6956c6e/file/9999.31469779911316754284_nifti.bval', ...
-%                  'lmperry@stanford.edu', '/tmp/nifti.nii.gz')
+%                  'lmperry@stanford.edu', '/tmp/nifti.nii.gz', token)
 %
 % LMP/BW Vistasoft Team, 2015-16
+
+
+%% Parse inputs
+if ~exist('token', 'var') || isemtpy(token)
+    error('A token is required for download. See: sdmAuth.')
+end
 
 
 %% Combine permalink and username to generate the download link
@@ -34,12 +42,6 @@ if ~exist('fName', 'var') || isempty (fName)
 end
 
 
-%% Get authorization token 
-fprintf('Authenticating...')
-[token, ~] = sdmAuth();
-fprintf('done.\n');
-
-
 %% Download the data
 
 % Use curl - works on any version of matlab
@@ -57,47 +59,3 @@ end
 
 
 return
-
-
-    function curENV = configure_curl()
-        %% Configure library paths for curl command to work properly
-        % MAC
-        if ismac
-            curENV = getenv('DYLD_LIBRARY_PATH');
-            setenv('DYLD_LIBRARY_PATH','');
-            
-        % Linux
-        elseif (isunix && ~ismac)
-            curENV = getenv('LD_LIBRARY_PATH');
-            setenv('LD_LIBRARY_PATH','/usr/lib:/usr/local/lib');
-            
-        % Other/Unknown
-        else
-            error('Unsupported system.\n');
-        end
-    return
-        
-    
-    function unconfigure_curl(curENV)
-        %% Reset library paths
-        if ismac
-            setenv('DYLD_LIBRARY_PATH',curENV);
-        elseif (isunix && ~ismac)
-            setenv('LD_LIBRARY_PATH',curENV);
-        else
-            error('Unsupported system.\n');
-        end
-    return
-    
-    
-    
- 
-% %% Use websave to retrieve the data and store it
-% 
-% if exist(which('websave'),'file') % use websave (only available on newer matlab)
-%     options = weboptions('KeyName', 'Authorization', 'KeyValue', token);
-%     websave(fName, pLink, options)
-% 
-% end
-    
-
