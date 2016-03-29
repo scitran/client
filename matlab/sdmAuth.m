@@ -96,7 +96,7 @@ end
 
 
 %% Set path to token file and initilize token
-tokenFile = fullfile(sdmDir, 'sdm_token');
+tokenFile = fullfile(sdmDir, ['sdm_token_', instance]);
 token = '';
 
 
@@ -174,6 +174,19 @@ if isempty(strfind(initPath, '/usr/local/bin'))
 end
 
 
+%% Check tokenFile client_id
+
+% If the user has selected an instance and a tokenFile exists we need to
+% check that the instance chosen now is the same as the one in the
+% tokenFile. If not, we need to remove the tokenFile to create a new one.
+if exist(tokenFile,'file')
+    T = loadjson(tokenFile);
+    if ~strcmp(T.client_id, client_id)
+        delete(tokenFile);
+    end
+end
+
+
 %% Switch on action
 
 switch lower(action)
@@ -199,7 +212,6 @@ switch lower(action)
             [status, token] = system(cmd);
             if status == 0
                 delete(tokenFile);
-                delete(localAuthFile);
                 return
             else
                 error(token);
