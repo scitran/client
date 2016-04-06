@@ -28,6 +28,10 @@ p.addParameter('body','',@ischar);
 vFunc = @(x) isequal(x(1:6),'https:');
 p.addParameter('url','https://flywheel.scitran.stanford.edu',vFunc);
 
+% Default we are searching the full database.  But the user could say
+% search a specific collection only.
+p.addParameter('collection','',@ischar);
+
 % These are the options.  Could do this in reverse order ... check for a
 % valid string after finding the target parameter (below)
 vStrings = {'sessions','acquisitions','files','projects'};
@@ -41,6 +45,7 @@ token  = p.Results.token;
 body   = p.Results.body;
 target = p.Results.target;
 url    = p.Results.url;
+collection = p.Results.collection;
 
 % If this is a local instance we need to insert the 'insecure' flag
 if strfind(url, 'docker.local') 
@@ -50,8 +55,12 @@ else
 end
 
 %% Build the search command
-
-cmd = sprintf('curl -XGET "%s/api/search/%s" -H "Authorization":"%s" -H "Content-Type:application/json" %s -d ''%s''', url, target, token, insecureFlag, body);
+if isempty(collection)
+    cmd = sprintf('curl -XGET "%s/api/search/%s" -H "Authorization":"%s" -H "Content-Type:application/json" %s -d ''%s''', url, target, token, insecureFlag, body);
+else
+    cmd = sprintf('curl -XGET "%s/api/search/%s?collection=%s" -H "Authorization":"%s" -H "Content-Type:application/json" %s -d ''%s''', url, target, collection, token, insecureFlag, body);   
+    
+end
 
 end
 

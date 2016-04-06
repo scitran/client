@@ -1,5 +1,8 @@
 %% Validation scripts we hope to write
 %
+% Remember to start MATLAB from the terminal window, not by clicking on
+% some stupid icon.
+%
 % The scitranClient utilities are designed to interact with the scitran API
 % that manages MR and related neuroimaging data.
 %

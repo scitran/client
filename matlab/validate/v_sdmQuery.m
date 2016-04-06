@@ -31,6 +31,7 @@ warning('off', 'MATLAB:namelengthmaxexceeded');
 
 
 %% Authorization
+% The auth returns both a token and the url of the flywheel instance
 [token, furl, ~] = sdmAuth('action', 'create', 'instance', 'local');
 
 
@@ -80,9 +81,9 @@ warning('off', 'MATLAB:namelengthmaxexceeded');
 % jsonData = savejson('',jsonSend);
 
 clear jsonSend
-jsonSend.multi_match.fields = 'name';
+jsonSend.multi_match.fields = '*';
 jsonSend.multi_match.query = '.zip';
-jsonSend.multi_match.lenient = true;
+jsonSend.multi_match.lenient = 'true';
 
 % Convert
 jsonData = savejson('',jsonSend);
@@ -93,8 +94,27 @@ s.url    = furl;
 s.token  = token;
 s.body   = jsonData;
 s.target = 'files';
+s.collection = 'patient';
 srchCMD = sdmCommandCreate(s);
+
+%%
 [~, result] = system(srchCMD);
+
+% Functionalize this
+% result = sdmSearch(srchCMD);
+% [status, result] = system(srchCMD);
+
+%% Now start parsing the json result that was returned
+
+
+% syscommand = sdmCommandCreate('url',furl,'token',token,'body',jsonData,'target','session');
+% sdmCommandRun(curcmd,jsonData)
+
+
+% On your system, you must have curl libraries properly configured
+%cENV = configure_curl;
+%[status, result] = system(syscommand);
+%unconfigure_curl(cENV);
 
 % Dump the data
 scitranData = loadjson(result);
@@ -112,3 +132,5 @@ end
 %%
 
 unconfigure_curl(cENV);
+
+%%
