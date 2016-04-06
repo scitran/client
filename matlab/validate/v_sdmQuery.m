@@ -20,12 +20,18 @@
 %   
 % LMP/BW Scitran Team, 2016
 
+
+%% Get ready
+
 % On your system, you must have curl libraries properly configured
 cENV = configure_curl;
 
-%% Authorization
+% Turn off the very annoying Matlab warning regarding variable name length
+warning('off', 'MATLAB:namelengthmaxexceeded');
 
-[token, furl, ~] = sdmAuth('action', 'create', 'instance', 'scitran');
+
+%% Authorization
+[token, furl, ~] = sdmAuth('action', 'create', 'instance', 'local');
 
 
 %% Does a search
@@ -67,9 +73,18 @@ cENV = configure_curl;
 % }
 
 % Convert the struct to a json data string that we will send.
+% TODO: The lines commented below do not work.
+% clear jsonSend
+% jsonSend.range.subject_0x2E_age.gte=10;
+% jsonSend.range.subject_0x2E_age.lte=20;
+% jsonData = savejson('',jsonSend);
+
 clear jsonSend
-jsonSend.range.subject_0x2E_age.gte=10;
-jsonSend.range.subject_0x2E_age.lte=20;
+jsonSend.multi_match.fields = 'name';
+jsonSend.multi_match.query = '.zip';
+jsonSend.multi_match.lenient = true;
+
+% Convert
 jsonData = savejson('',jsonSend);
 
 % Build up the curl command
@@ -77,7 +92,7 @@ clear s
 s.url    = furl;
 s.token  = token;
 s.body   = jsonData;
-s.target = 'sessions';
+s.target = 'files';
 srchCMD = sdmCommandCreate(s);
 [~, result] = system(srchCMD);
 
@@ -88,21 +103,6 @@ for ii=1:length(scitranData)
     scitranData{ii}.name
 end
 
-
-%% This command should fail
-% 
-% curlcmd = ...
-%     sprintf('curl -XGET "https://docker.local.flywheel.io:8443/api/search/files?user=evilperson@flywheel.io&root=1" -k -d ');
-% syscommand = [curlcmd,'''',jsonData,''''];
-% 
-% [status, result] = system(syscommand);
-% 
-% % Dump the data
-% scitranData = loadjson(result);
-% for ii=1:length(scitranData)
-%     scitranData{ii}.type
-%     scitranData{ii}.name
-% end
 
 
 %% Does a download

@@ -28,7 +28,7 @@
 
 % Set up the structure that will be converted to json format
 jsonSend.multi_match.fields = 'name';
-jsonSend.multi_match.query = 't1.zip';
+jsonSend.multi_match.query = '.zip';
 jsonSend.multi_match.lenient = true;
 
 % Convert
@@ -44,11 +44,15 @@ cENV = configure_curl;
 [status, result] = system(syscommand);
 unconfigure_curl(cENV);
 
-% Dump the data
-scitranData = loadjson(result);
-for ii=1:length(scitranData)
-    scitranData{ii}.type
-    scitranData{ii}.name
+if ~status
+    % Dump the data
+    scitranData = loadjson(result);
+    for ii=1:length(scitranData)
+        scitranData{ii}.type
+        scitranData{ii}.name
+    end
+else
+    disp(status);
 end
 
 %% Should fail
@@ -70,6 +74,9 @@ end
 
 
 %% Does a download
+
+% pLink = 'https://flywheel.scitran.stanford.edu/api/acquisitions/56fa0e6539a00d9010e51898/files/ADNI_036_S_4491_MR_MPRAGE_br_raw_20120201100141402_26_S139086_I281772.nii.gz'
+
 
 %% Does an upload
 

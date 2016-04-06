@@ -10,7 +10,7 @@ function cmd = sdmCommandCreate(varargin)
 %  s.url    = furl;
 %  s.token  = token;
 %  s.body   = jsonData;
-%  s.target = 'session';
+%  s.target = 'sessions';
 %  syscommand = sdmCommandCreate(s);
 %  system(syscommand)
 %
