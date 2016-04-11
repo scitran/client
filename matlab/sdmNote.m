@@ -41,10 +41,11 @@ furl
 sessionID = scitranData{1}.session.x0x5F_id;
 noteID    = scitranData{1}.session.notes{1}.x0x5F_id;
 
-value = myNote;
-payload = savejson(value);
-cmd = sprintf('curl -X POST %s/api/sessions/%s/notes -k -d ''%s'' ', furl,sessionID,payload)
-system(cmd)
+clear note
+note.text = myNote;
+text = savejson('',note);
+cmd = sprintf('curl -X POST %s/api/sessions/%s/notes?user=wandell@stanford.edu -k -d ''%s'' ', furl,sessionID,text)
+[s,r] = system(cmd)
 
 
 
