@@ -2,7 +2,7 @@
 
 The **scitran client software** is part of our software tools to support scientific transparency and reproducible research.
 
-The heart of Stanford's [Project on Scientific Transparency (PoST)](http://post.stanford.edu) is the [scientific data management (SDM) software](https://github.com/scitran). The software works with a MongoDB database, and it comprises a collection of tools to interact with the database (api), and an AngularJS front end to manage, view, search, annotate, and generally interact with the data.
+The heart of Stanford's [Project on Scientific Transparency (PoST)](http://post.stanford.edu) is the [scientific transparency data management (SDM) software](https://github.com/scitran). The software works with a MongoDB database, and it comprises a collection of tools to interact with the database (api), and an AngularJS front end to manage, view, search, annotate, and generally interact with the data.
 
 PoST has transitioned its work from developing the SDM system to creating application programs to run on the SDM platform. These programs are being developed to support reproducible methods in neuroimaging research.
 
