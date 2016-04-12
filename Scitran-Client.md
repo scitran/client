@@ -6,9 +6,9 @@ The heart of Stanford's [Project on Scientific Transparency (PoST)](http://post.
 
 PoST has transitioned its work from developing the SDM system to creating application programs to run on the SDM platform. These programs are being developed to support reproducible methods in neuroimaging research.
 
-The SDM continues to be developed by [Flywheel Exchange](https://flyweel.io). They are extending the SDM functions, and they are offering support for installation and maintenance for these sophisticated tools.
+The SDM itself continues to be developed by [Flywheel Exchange](https://flyweel.io). They are extending the SDM functions, and they are offering support for installation and maintenance for these sophisticated tools.
 
-This project, **scitran client**, is a command line interface to allow users to interact with the Flywheel (SDM) database.  Flywheel and the Wandell lab at Stanford have added features to enable users to perform the following functions
+The **scitran client** repository implements a command line interface to allow users to interact with the Flywheel (SDM) database from their own computers.  Specifically, Flywheel and the Wandell lab at Stanford have added features to enable users to perform the following functions
 
 * obtain authorization to read/write from a Flywheel database
 * search the database for files
@@ -20,3 +20,4 @@ These functions can be run from anywhere on the Internet. In this way, a user ca
 
 The **scitran client** includes implementations in both Matlab and Python.
 
+We gratefully acknowledge the [Simons Foundation](https://www.simonsfoundation.org/) and particularly the [Simons Foundation Autism Research Initiative](https://sfari.org/) for their support of the [Project on Scientific Transparency] (http://post.stanford.edu).
