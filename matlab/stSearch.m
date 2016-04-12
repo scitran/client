@@ -1,4 +1,4 @@
-function idx = sdmSearch(d,varargin)
+function idx = stSearch(d,varargin)
 % Searching through the json file
 %
 %  Is it possible for RF to make it such that the json file always has

@@ -1,7 +1,7 @@
-function cmd = sdmCommandCreate(varargin)
+function cmd = stCommandCreate(varargin)
 % Create the system command for the flywheel database query
 %
-%   cmd = sdmCommandCreate('url',url, ...
+%   cmd = stCommandCreate('url',url, ...
 %                          'token', token, ...
 %                          'target',{'sessions','acquisitions','files','projects'}, ...
 %                          'body', jsonBody);
@@ -11,7 +11,7 @@ function cmd = sdmCommandCreate(varargin)
 %  s.token  = token;
 %  s.body   = jsonData;
 %  s.target = 'sessions';
-%  syscommand = sdmCommandCreate(s);
+%  syscommand = stCommandCreate(s);
 %  system(syscommand)
 %
 % LMP/BW Vistasoft team, 2016
@@ -57,13 +57,17 @@ end
 % Write out the result to a json file
 result_json_file = [tempname, '.json'];
 
+% Set the number of search results desired (does not work with collection
+% searches)
+num_results = 50;
+
 %% Build the search command
 if isempty(collection)
-    cmd = sprintf('curl -XGET "%s/api/search/%s?size=15" -H "Authorization":"%s" -H "Content-Type:application/json" %s -s -d ''%s'' > %s && echo %s',...
-        url, target, token, insecureFlag, body, result_json_file, result_json_file);
+    cmd = sprintf('curl -XGET "%s/api/search/%s%s" -H "Authorization":"%s" -H "Content-Type:application/json" %s -s -d ''%s'' > %s && echo "%s"',...
+        url, target, ['?size=', num2str(num_results)], token, insecureFlag, body, result_json_file, result_json_file);
 else
-    cmd = sprintf('curl -XGET "%s/api/search/%s?collection=%s" -H "Authorization":"%s" -H "Content-Type:application/json" %s -s -d ''%s'' > %s && echo %s',...
-        url, target, collection, token, insecureFlag, body, result_json_file, result_json_file);   
+    cmd = sprintf('curl -XGET "%s/api/search/%s%s" -H "Authorization":"%s" -H "Content-Type:application/json" %s -s -d ''%s'' > %s && echo "%s"',...
+        url, target, ['?collection=', collection], token, insecureFlag, body, result_json_file, result_json_file);   
     
 end
 

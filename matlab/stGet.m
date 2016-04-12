@@ -1,7 +1,7 @@
-function fName = sdmGet(pLink,fName, token)
+function fName = stGet(pLink,fName, token)
 % Retrieve a file from an sdm instance
 %
-%   fName = sdmGet(pLink,[fName])
+%   fName = stGet(pLink,[fName])
 %
 % Inputs
 %  pLink:  Permalink from the SDM
@@ -12,16 +12,16 @@ function fName = sdmGet(pLink,fName, token)
 %  fName:  Path to file saved on disk
 %
 % Example:
-%   token = sdmAuth('instance', 'snisdm');
-%   fName = sdmGet('https://sni-sdm.stanford.edu/api/acquisitions/55adf6956c6e/file/9999.31469779911316754284_nifti.bval', ...
+%   token = stAuth('instance', 'snisdm');
+%   fName = stGet('https://sni-sdm.stanford.edu/api/acquisitions/55adf6956c6e/file/9999.31469779911316754284_nifti.bval', ...
 %                  'lmperry@stanford.edu', '/tmp/nifti.nii.gz', token)
 %
 % LMP/BW Vistasoft Team, 2015-16
 
 
 %% Parse inputs
-if ~exist('token', 'var') || isemtpy(token)
-    error('A token is required for download. See: sdmAuth.')
+if ~exist('token', 'var') || isempty(token)
+    error('A token is required for download. See: stAuth.')
 end
 
 

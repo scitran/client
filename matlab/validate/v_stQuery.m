@@ -45,46 +45,15 @@ warning('off', 'MATLAB:namelengthmaxexceeded');
 
 %% Does a search
 
-% The main information types for the scitran client are
+% The main information types (targets) for the scitran client are
 %
 %    Group, Project, Session, Acquisition and Files
 %
-%% To search for subjects within that age and of a particular sex
-% srch = loadjson('sdm_search1.json');
-% 
-% savejson('',srch,'tmp.json');
-%% To search for all subjects of a certain age range and sex
-
-
-%% To search for subjects of a certain age range, sex, and type of measurement
-%
-% The type of measurement is specified as 'measurement' in the Files group
-
-%%  Build the json object
-%
-% We test with this one
-%
-% {
-% 	"range": {
-% 		"subject.age": {
-% 			"gte": 10,
-% 			"lte": 90
-% 		}
-% 	}
-% }
-
-% Convert the struct to a json data string that we will send.
-% TODO: The lines commented below do not work.
-% clear jsonSend
-% jsonSend.range.subject_0x2E_age.gte=10;
-% jsonSend.range.subject_0x2E_age.lte=20;
-% jsonData = savejson('',jsonSend);
-
 clear jsonSend
 jsonSend.multi_match.fields = '*';
 jsonSend.multi_match.query = '.bvec';
 jsonSend.multi_match.lenient = 'true';
- 
+
 % Convert
 jsonData = savejson('',jsonSend);
 
@@ -94,23 +63,23 @@ s.url    = furl;
 s.token  = token;
 s.body   = jsonData;
 s.target = 'files';
-%s.collection = 'patients';
-srchCMD = stCommandCreate(s);
 
-%%
-[~, result] = system(srchCMD);
+% Run the search 
+[~, result] = system(stCommandCreate(s));
 
+% Load the result file
 scitranData = loadjson(strtrim(result)); % NOTE the use of strtrim
-disp(scitranData{1});
+disp(scitranData{1}); % The rusults should come back in an array
 
-
-%% Dump the data names
+% Dump the data names
 for ii=1:length(scitranData)
     scitranData{ii}.type
     scitranData{ii}.name
 end
 
-%%
+
+%% Searches a collection
+
 clear jsonSend
 jsonSend.multi_match.fields = '*';
 jsonSend.multi_match.query = '.zip';
@@ -126,17 +95,53 @@ s.token  = token;
 s.body   = jsonData;
 s.target = 'files';
 s.collection = 'patients';
-[~, result] = system(sdmCommandCreate(s));
+[~, result] = system(stCommandCreate(s));
 
 % Dump the data names
-scitranData = loadjson(result);
+scitranData = loadjson(strtrim(result));
 for ii=1:length(scitranData)
     scitranData{ii}.type
     scitranData{ii}.name
 end
 
 
+%% To search for all subjects of a certain age range and sex
+
+
+%% To search for subjects of a certain age range, sex, and type of measurement
+%
+% The type of measurement is specified as 'measurement' in the Files group
+%
+% {
+% 	"range": {
+% 		"subject.age": {
+% 			"gte": 10,
+% 			"lte": 90
+% 		}
+% 	}
+% }
+
+
 %% Does a download
+
+% Build up the link to the data file 
+%TODO: This should be a subfunction in stGet
+plink = sprintf('%s/api/acquisitions/%s/files/%s', furl, scitranData{1}.acquisition.x0x5F_id, scitranData{1}.name);
+
+% Download the file
+dl_file = stGet(plink, [], token);
+
+% Verify file size  
+% TODO: this should be baked in to stGet
+dlf = dir(dl_file);
+if isequal(dlf.bytes, scitranData{1}.size)
+    disp('File downloaded and same size');
+else
+    disp('Something went wrong');
+end
+
+
+
 
 %% Does an upload
 
