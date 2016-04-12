@@ -40,7 +40,7 @@ warning('off', 'MATLAB:namelengthmaxexceeded');
 
 %% Authorization
 % The auth returns both a token and the url of the flywheel instance
-[token, furl, ~] = sdmAuth('action', 'create', 'instance', 'local');
+[token, furl, ~] = sdmAuth('action', 'create', 'instance', 'scitran');
 
 
 %% Does a search
@@ -82,9 +82,9 @@ warning('off', 'MATLAB:namelengthmaxexceeded');
 
 clear jsonSend
 jsonSend.multi_match.fields = '*';
-jsonSend.multi_match.query = '.zip';
+jsonSend.multi_match.query = '.bvec';
 jsonSend.multi_match.lenient = 'true';
-
+ 
 % Convert
 jsonData = savejson('',jsonSend);
 
@@ -94,13 +94,13 @@ s.url    = furl;
 s.token  = token;
 s.body   = jsonData;
 s.target = 'files';
-s.collection = 'patients';
+%s.collection = 'patients';
 srchCMD = sdmCommandCreate(s);
 
 %%
 [~, result] = system(srchCMD);
-scitranData = loadjson(result);
-scitranData{1}
+scitranData = loadjson(strtrim(result)); % NOTE the use of strtrim
+disp(scitranData{1});
 
 
 %% Dump the data names
@@ -133,6 +133,8 @@ for ii=1:length(scitranData)
     scitranData{ii}.type
     scitranData{ii}.name
 end
+
+
 %% Does a download
 
 %% Does an upload

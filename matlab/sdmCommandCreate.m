@@ -54,11 +54,16 @@ else
     insecureFlag = '';
 end
 
+% Write out the result to a json file
+result_json_file = [tempname, '.json'];
+
 %% Build the search command
 if isempty(collection)
-    cmd = sprintf('curl -XGET "%s/api/search/%s" -H "Authorization":"%s" -H "Content-Type:application/json" %s -d ''%s''', url, target, token, insecureFlag, body);
+    cmd = sprintf('curl -XGET "%s/api/search/%s?size=15" -H "Authorization":"%s" -H "Content-Type:application/json" %s -s -d ''%s'' > %s && echo %s',...
+        url, target, token, insecureFlag, body, result_json_file, result_json_file);
 else
-    cmd = sprintf('curl -XGET "%s/api/search/%s?collection=%s" -H "Authorization":"%s" -H "Content-Type:application/json" %s -d ''%s''', url, target, collection, token, insecureFlag, body);   
+    cmd = sprintf('curl -XGET "%s/api/search/%s?collection=%s" -H "Authorization":"%s" -H "Content-Type:application/json" %s -s -d ''%s'' > %s && echo %s',...
+        url, target, collection, token, insecureFlag, body, result_json_file, result_json_file);   
     
 end
 
