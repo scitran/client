@@ -1,1 +1,1 @@
-Welcome to the client wiki!
+Home
