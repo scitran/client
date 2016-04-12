@@ -4,8 +4,6 @@ This repository includes Matlab and Python utilities to interact with the SciTra
 
 ## Matlab Client Setup
 
-* If your terminal environment is set up properly, the best way to use scitranClient services is to start matlab from a terminal (to inherit your shell ENV). But many people start from an icon, which sets up its own idiosyncratic environment. If you click, you may have to set your ENV (PATH) to include paths to python & required libs manually.
-
 * Even when using the Matlab version, you must have python on your path to enable authorization. The key Python module is oauth2client.  If you use, say, anaconda to manage your python method than pip is included and you can do the install this way from your terminal
    ```
    pip install oauth2client
@@ -24,17 +22,16 @@ You might verify that you succeeded by trying
    ```
    system('which python')
    ```
+* If your terminal environment is set up properly, the best way to initiate scitran client is to start matlab from a terminal.  In that case, the Matlab program inherits your shell ENV. Many people start Matlab from an icon, however. This sets up Matlab's own idiosyncratic environment. In that case, you may have to set your ENV (PATH) to include paths to python & required libs manually from within Matlab.  See XXX for instructions on how to do this.
 
+## Scitran client dependencies
 
-## Dependencies
-
-* To open up access to a Flywheel instance you will be prompted for the client ID and secret.
-This secret can only be given by an administrator of the instance you wish to connect to.
+* The purpose of the software is to access a Flywheel instance.  You will need an authorization token.  On first access, you will be prompted for the client ID and secret. This secret can only be given by an administrator of the instance you wish to connect to.  So, speak to your administrator about the client ID and secret.
 
 * JSONlab
-The MATLAB SciTran client uses JSONlab to load, save, and parse json objects. JSONlab must therefore be on your MATLAB path. You can download JSONlab from https://github.com/fangq/jsonlab.  Version XXX is included in this distribution.
+The MATLAB SciTran client uses JSONlab to load, save, and parse json objects. Hence, [JSONlab](https://github.com/fangq/jsonlab) must  be on your MATLAB path. Version XXX is included in this distribution.
 
-* You must have access to port 9000 to open a browser window/tab. By default this should work just fine. This is almost never a problem, apart from some VM installs. (Deprecate?)
+* (Deprecated). You must have access to port 9000 to open a browser window/tab. By default this should work just fine. This is almost never a problem, apart from some VM installs.
 
 
 ## Python Client
