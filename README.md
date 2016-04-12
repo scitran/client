@@ -1,6 +1,6 @@
 # Scitran client software
 
-This repository includes Matlab and Python utilities to interact with the SciTran API from the client side for search, get, and put.  See the project wiki page for a longer introduction and links to manual pages.
+This repository includes Matlab and Python utilities to interact with the SciTran API from the client side for search, get, and put.  See the [project wiki page](https://github.com/scitran/client/wiki) for a general introduction and links to specific manual pages.
 
 ## Matlab Client Setup
 
