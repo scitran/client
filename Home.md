@@ -2,7 +2,7 @@
 
 The **scitran client software** is part of our software tools to support scientific transparency and reproducible research.
 
-The heart of Stanford's [Project on Scientific Transparency (PoST)](http://post.stanford.edu) is the [scientific transparency data management (SDM) software](https://github.com/scitran). The software works with a MongoDB database, and it comprises a collection of tools to interact with the database (api), and an AngularJS front end to manage, view, search, annotate, and generally interact with the data.
+The heart of the [Project on Scientific Transparency (PoST)](http://post.stanford.edu) is the [scientific transparency data management (SDM) software](https://github.com/scitran). The software works with a MongoDB database, and it comprises a collection of tools to interact with the database (api), and an AngularJS front end to manage, view, search, annotate, and generally interact with the data.
 
 PoST has transitioned its work from developing the SDM system to creating application programs to run on the SDM platform. These programs are being developed to support reproducible methods in neuroimaging research.
 
@@ -20,4 +20,4 @@ These functions can be run from anywhere on the Internet. In this way, a user ca
 
 The **scitran client** includes implementations in both Matlab and Python.
 
-We gratefully acknowledge the [Simons Foundation](https://www.simonsfoundation.org/) and particularly the [Simons Foundation Autism Research Initiative](https://sfari.org/) for their support of the [Project on Scientific Transparency] (http://post.stanford.edu).
+The Wandell lab gratefully acknowledge the [Simons Foundation](https://www.simonsfoundation.org/) and particularly the [Simons Foundation Autism Research Initiative](https://sfari.org/) for their support of the [Project on Scientific Transparency] (http://post.stanford.edu).  The code in this repository and the api functionality are being developed by Michael Perry, Renzo Frigato, Gunnar Schaefer, and Brian Wandell.
