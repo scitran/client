@@ -11,9 +11,9 @@
 %% Check that the database is up
 
 % It is possible to create, refresh, or revoke
-clientID = 'local';   % Options are local, scitran, and snisdm
+clientID = 'scitran';   % Options are local, scitran, and snisdm
 action   = 'create';  
-[token, result] = sdmAuth(action,clientID);
+[token, result] = stAuth(action,clientID);
 
 % If result returns 0, then we are good
 if result==0,   disp('A token was created')
@@ -25,9 +25,9 @@ disp(token)
 
 %% If you have lost the token by a matlab clear you might run
 
-clientID = 'local';
+clientID = 'scitran';
 action   = 'refresh';  
-[token, result] = sdmAuth(action,clientID);
+[token, result] = stAuth(action,clientID);
 
 % If result returns 0, then we are good
 if result==0

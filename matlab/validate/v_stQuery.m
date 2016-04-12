@@ -40,7 +40,7 @@ warning('off', 'MATLAB:namelengthmaxexceeded');
 
 %% Authorization
 % The auth returns both a token and the url of the flywheel instance
-[token, furl, ~] = sdmAuth('action', 'create', 'instance', 'scitran');
+[token, furl, ~] = stAuth('action', 'create', 'instance', 'scitran');
 
 
 %% Does a search
@@ -95,10 +95,11 @@ s.token  = token;
 s.body   = jsonData;
 s.target = 'files';
 %s.collection = 'patients';
-srchCMD = sdmCommandCreate(s);
+srchCMD = stCommandCreate(s);
 
 %%
 [~, result] = system(srchCMD);
+
 scitranData = loadjson(strtrim(result)); % NOTE the use of strtrim
 disp(scitranData{1});
 
