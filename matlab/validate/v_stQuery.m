@@ -128,10 +128,11 @@ print -dpng 'bvecs.png';
 
 %% Put the image back up as an attachment
 
-%% Upload the result
-
+fName = fullfile(pwd,'bvecs.png');
+[status, result] = stPut(fName, plink, token);
 
 %%
+urlAndName = https://flywheel.scitran.stanford.edu/api/acquisitions/56ea1534ddea7f915e81f7b9/files/bvecs.png
 
 
 

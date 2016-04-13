@@ -1,11 +1,11 @@
-function [status, result] = sdmPut(pLink, fName, token)
+function [status, result] = stPut(fName, pLink, token)
 % Attach a file to the permalink location
 %
-%      sdmPut(pLink, fname, token)
+%      stPut(fName, pLink, token)
 %
 % Inputs: 
-%  pLink:   Permalink from an SDM instance for session or acquisition file
-%  fname:   Name of the file on disk to attach/put/upload 
+%  pLink:   Permalink from a scitran instance for session or acquisition file
+%  fname:   Full path to the file on disk to attach/put/upload 
 %  token:   Authorization token for upload
 % 
 % Outputs:
@@ -24,10 +24,18 @@ function [status, result] = sdmPut(pLink, fName, token)
 
 
 %% Parse inputs
+p = inputParser;
+p.addRequired('fname',@(x)(exist(x,'file')));
+p.addRequired('pLink',@ischar);
+p.addRequired('token',@ischar);
 
-if ~exist('token', 'var') || isemtpy(token)
-    error('A token is required for upload. See: sdmAuth.')
-end
+p.parse(fName,pLink,token);
+
+fName = p.Results.fname;
+pLink = p.Results.pLink;
+token = p.Results.token;
+
+%%
 
 % Handle permalinks which may have '?user='
 pLink = explode('?', pLink);
