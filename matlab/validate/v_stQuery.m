@@ -126,14 +126,42 @@ plot3(bvecs(1,:),bvecs(2,:),bvecs(3,:),'o');
 axis equal; 
 print -dpng 'bvecs.png';
 
+
+%% Upload an analysis
+
+% Get the collection ID 
+COL_ID = scitranData{1}.collection.x0x5F_id;
+
+% Construct the json payload
+clear payload
+payload.label = 'bvecs_image_analysis'; % Analysis label
+payload.files{1}.name = 'bvecs.png';    % Name of the results file
+payload.files{2}.name = '';             % We have to pad the json struct or savejson will not give us a list
+
+% Jsonify the payload
+PAYLOAD = savejson('',payload);
+PAYLOAD = strrep(PAYLOAD, '"', '\"');   % Escape the " or the cmd will fail.
+
+% Location of analysis file on disk
+analysis_file = fullfile('~/Desktop/', payload.files{1}.name);
+
+% Construct the command
+curlCmd = sprintf('curl -F "file=@%s" -F "metadata=%s" %s/api/collections/%s/analyses -H "Authorization":"%s"', analysis_file, PAYLOAD, furl, COL_ID, token );
+
+% Run the command
+[status, result] = system(curlCmd);
+
+% Display the resulting analysis ID (as json)
+disp(result);
+
+% Load the json result
+R = loadjson(result); % Has x0x5F_id field
+
+% Display the analysis id
+fprintf('Analysis id: %s \n', R.x0x5F_id);
+
+
 %% Put the image back up as an attachment
 
 fName = fullfile(pwd,'bvecs.png');
-[status, result] = stPut(fName, plink, token);
-
-%%
-urlAndName = https://flywheel.scitran.stanford.edu/api/acquisitions/56ea1534ddea7f915e81f7b9/files/bvecs.png
-
-
-
-%%
+% [status, result] = stPut(fName, plink, token);
