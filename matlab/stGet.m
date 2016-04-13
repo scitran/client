@@ -1,15 +1,18 @@
-function fName = stGet(pLink,fName, token)
-% Retrieve a file from an sdm instance
+function destination = stGet(pLink,token,varargin)
+% Retrieve a file from an scitran instance
 %
-%   fName = stGet(pLink,[fName])
+%   fName = stGet(pLink,token,'destination',filename,'size',size)
 %
-% Inputs
+% Required Inputs
 %  pLink:  Permalink from the SDM
-%  fName:  Location and/or filename to write the file
 %  token:  Authorization token for download
 %
+% Optional Inputs
+%  destination:  full path to file output location (default is a tempdir)
+%  size:         File size in bytes (if known) used for checking
+%
 % Return
-%  fName:  Path to file saved on disk
+%  fName:  Full path to the file saved on disk
 %
 % Example:
 %   token = stAuth('instance', 'snisdm');
@@ -20,10 +23,20 @@ function fName = stGet(pLink,fName, token)
 
 
 %% Parse inputs
-if ~exist('token', 'var') || isempty(token)
-    error('A token is required for download. See: stAuth.')
-end
+p = inputParser;
+p.addRequired('pLink',@ischar);
+p.addRequired('token',@ischar);
 
+% Param/value pairs
+p.addParameter('destination','',@ischar)
+p.addParameter('size',[],@isnumeric);
+
+p.parse(pLink,token,varargin{:});
+
+pLink = p.Results.pLink;
+token = p.Results.token;
+destination = p.Results.destination;
+size = p.Results.size;
 
 %% Combine permalink and username to generate the download link
 
@@ -33,12 +46,12 @@ pLink = pLink{1};
 
 
 %% Parse fName from the permalink if 'fName' was not provided.
-if ~exist('fName', 'var') || isempty (fName) 
+if ~exist('destination', 'var') || isempty (destination) 
     [~, f, e] = fileparts(pLink);
     t_e = explode('?', e);
     out_dir = tempname;
     mkdir(out_dir);
-    fName = fullfile(out_dir, [ f, t_e{1}]);
+    destination = fullfile(out_dir, [ f, t_e{1}]);
 end
 
 
@@ -47,15 +60,23 @@ end
 % Use curl - works on any version of matlab
 curEnv = configure_curl();
 
-curl_cmd = sprintf('/usr/bin/curl -v -X GET "%s" -H "Authorization":"%s" -o %s\n', pLink, token, fName);
+curl_cmd = sprintf('/usr/bin/curl -v -X GET "%s" -H "Authorization":"%s" -o %s\n', pLink, token, destination);
 [status, result] = system(curl_cmd);
 
 unconfigure_curl(curEnv);
 
 if status > 0
-    fName = '';
+    destination = '';
     warning(result); % warn - perhaps error?
 end
 
+% Verify file size
+if ~isempty(size)
+    dlf = dir(destination);
+    if ~isequal(dlf.bytes, size)
+        error('File size mismatch: %d (file) %d (expected).\n',dlf.bytes,size);
+    end
+end
 
-return
+end
+

@@ -14,8 +14,14 @@
 % 	}
 % }
 % 
-% You should insert the string "_0x2E_".   Because this is ugly, we might
-% use the syntax _dot_ and then do a strrep()
+% You should insert the string "_0x2E_".   In subject.age you should have
+% subject_0x2E_age.
+%
+% If you do not include subject.age, then all ages will be returned.
+%
+% Because this is ugly, we might use the syntax _dot_ and then do a
+% strrep(). Also, notice that gte means greater than or equal to, and lte
+% for less than or equal to.
 %
 % Notes on curl configuration
 %
@@ -27,7 +33,6 @@
 %    unconfigure_curl(cENV);
 %   
 % LMP/BW Scitran Team, 2016
-
 
 %% Get ready
 
@@ -43,12 +48,15 @@ warning('off', 'MATLAB:namelengthmaxexceeded');
 [token, furl, ~] = stAuth('action', 'create', 'instance', 'scitran');
 
 
-%% Does a search
+%% Does a search for bvec files.
 
-% The main information types (targets) for the scitran client are
-%
-%    Group, Project, Session, Acquisition and Files
-%
+% Set up the json payload the we send to define the search.
+% In this case 
+%  fields  - Which fields to search.  * means all.  'name' means name field
+%  query   - String to search on
+%  lenient - Things like allowing upper/lower case on the search
+% We need a document on all the slots that we can fill.
+
 clear jsonSend
 jsonSend.multi_match.fields = '*';
 jsonSend.multi_match.query = '.bvec';
@@ -57,14 +65,31 @@ jsonSend.multi_match.lenient = 'true';
 % Convert
 jsonData = savejson('',jsonSend);
 
-% Build up the curl command
+% Build up the curl command.  We use s to denote the structure that
+% contains the parameters used to create the command.
 clear s
 s.url    = furl;
 s.token  = token;
-s.body   = jsonData;
+
+% Could search on a collection, or if not set then we search on everything
+% including acquisitions, sessions, whatever.  
+s.collection = 'patients';
+
+% The possible search targets are
+%
+%    Group, Project, Session, Acquisition and Files
+%
+% When you are looking for bvec files, then the target is files.  For other
+% queries, say you are looking for age, then you would search for session
+% because the age of a subject is attached to the session.
 s.target = 'files';
 
-% Run the search 
+s.body   = jsonData;
+
+% This defines the search
+disp(s)
+
+%% Run the search 
 [~, result] = system(stCommandCreate(s));
 
 % Load the result file
@@ -77,73 +102,34 @@ for ii=1:length(scitranData)
     scitranData{ii}.name
 end
 
+fprintf('Returned %d matches\n',length(scitranData))
 
-%% Searches a collection
-
-clear jsonSend
-jsonSend.multi_match.fields = '*';
-jsonSend.multi_match.query = '.zip';
-jsonSend.multi_match.lenient = 'true';
-
-% Convert
-jsonData = savejson('',jsonSend);
-
-% Build up the curl command
-clear s
-s.url    = furl;
-s.token  = token;
-s.body   = jsonData;
-s.target = 'files';
-s.collection = 'patients';
-[~, result] = system(stCommandCreate(s));
-
-% Dump the data names
-scitranData = loadjson(strtrim(result));
-for ii=1:length(scitranData)
-    scitranData{ii}.type
-    scitranData{ii}.name
-end
-
-
-%% To search for all subjects of a certain age range and sex
-
-
-%% To search for subjects of a certain age range, sex, and type of measurement
-%
-% The type of measurement is specified as 'measurement' in the Files group
-%
-% {
-% 	"range": {
-% 		"subject.age": {
-% 			"gte": 10,
-% 			"lte": 90
-% 		}
-% 	}
-% }
-
-
-%% Does a download
+%% Downloads the first bvec file
 
 % Build up the link to the data file 
-%TODO: This should be a subfunction in stGet
+% TODO:
+%  We need a function that looks
+%
+%     plink = plinkCreate(url,acqID,filename)
+%
 plink = sprintf('%s/api/acquisitions/%s/files/%s', furl, scitranData{1}.acquisition.x0x5F_id, scitranData{1}.name);
 
 % Download the file
-dl_file = stGet(plink, [], token);
+% dl_file = stGet(plink, token);
+% dl_file = stGet(plink, token, 'destination',fullfile(pwd,'deleteMe.bvec'));
+dl_file = stGet(plink, token, 'destination',fullfile(pwd,'deleteMe.bvec'),'size',scitranData{1}.size);
 
-% Verify file size  
-% TODO: this should be baked in to stGet
-dlf = dir(dl_file);
-if isequal(dlf.bytes, scitranData{1}.size)
-    disp('File downloaded and same size');
-else
-    disp('Something went wrong');
-end
+% You can check the data in this case
+bvecs = load(dl_file,'ascii');
+hdl = mrvNewGraphWin;
+plot3(bvecs(1,:),bvecs(2,:),bvecs(3,:),'o');
+axis equal; 
+print -dpng 'bvecs.png';
 
+%% Put the image back up as an attachment
 
+%% Upload the result
 
-
-%% Does an upload
 
 %%
 
