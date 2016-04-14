@@ -27,14 +27,10 @@ disp(token)
 
 clientID = 'scitran';
 action   = 'refresh';  
-[token, result] = stAuth(action,clientID);
+[token, url] = stAuth(action,clientID);
 
 % If result returns 0, then we are good
-if result==0
-    disp('A token was refreshed')
-else
-    disp(result)
-end
+disp(url)
 
 
 %% To revoke, you will actually remove the secret and client ID
