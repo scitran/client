@@ -46,15 +46,23 @@ function [status, result] = stAttachFile(varargin)
 targets = {'sessions', 'acquisitions', 'projects'};
 
 p = inputParser;
-p.addParameter('fName', @(x) ischar(x) && exist(x, 'file'));
-p.addParameter('target', @(x) ischar(x) && ismember(x, targets));
-p.addParameter('id', @ischar);
-p.addParameter('url', @ischar);
-p.addParameter('token', @ischar);
+p.addParameter('fName', '', @(x) ischar(x) && exist(x, 'file'));
+p.addParameter('target', '', @(x) ischar(x) && ismember(x, targets));
+p.addParameter('id', '', @ischar);
+p.addParameter('url', '', @ischar);
+p.addParameter('token', '', @ischar);
 
 p.parse(varargin{:});
 
 args = p.Results;
+
+% Make sure none of the args are empty
+params = fieldnames(args);
+for i = 1:numel(params)
+    if isempty(args.(params{i}))
+        error('%s cannot be empty!\n', params{i})
+    end
+end
 
 
 %% Configure library paths for curl command to work properly
