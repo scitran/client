@@ -38,7 +38,7 @@ token = p.Results.token;
 %%
 
 % Handle permalinks which may have '?user='
-pLink = explode('?', pLink);
+pLink = strsplit(pLink, '?');
 pLink = pLink{1};
 
 % Build the url from the permalink by removing the endpart
