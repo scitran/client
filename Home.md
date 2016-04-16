@@ -1,6 +1,6 @@
 ## Scitran Client
 
-See the scitran core wiki page for an introduction to [scientific transparency data management software](https://scitran.github.io/) and the Stanford [Project on Scientific Transparency (PoST)](http://post.stanford.edu). 
+See the scitran core wiki page for an introduction to [scientific transparency data management software](https://github.com/scitran/core/wiki) and the Stanford [Project on Scientific Transparency (PoST)](http://post.stanford.edu). 
 
 The **scitran client** repository implements a command line interface to allow users to interact with the scitran database from their own computers.  Specifically, Flywheel and the Wandell lab at Stanford have added features to enable users to perform the following functions
 
