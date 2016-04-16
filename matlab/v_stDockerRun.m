@@ -27,8 +27,12 @@ warning('off', 'MATLAB:namelengthmaxexceeded');
 % We need a document on all the slots that we can fill.
 
 clear jsonSend
-jsonSend.multi_match.fields = '*';
-jsonSend.multi_match.query = '.nii.gz';
+
+% Look in this field (label in this case; * means all fields)
+jsonSend.multi_match.fields = '*';  
+% jsonSend.multi_match.query = 'Anatomy_t1w';
+% jsonSend.multi_match.query = 'nii.gz';
+jsonSend.multi_match.query = '.nii.gz';   % The label we are looking for
 jsonSend.multi_match.lenient = 'true';
 
 % Convert to json
@@ -42,7 +46,7 @@ s.token  = token;
 
 % Could search on a collection, or if not set then we search on everything
 % including acquisitions, sessions, whatever.
-s.collection = 'patients';
+s.collection = 'GearTest';
 
 % The possible search targets are
 %
@@ -64,19 +68,23 @@ disp(s)
 
 % Load the result file
 searchResult = loadjson(strtrim(result)); % NOTE the use of strtrim
-disp(searchResult{1}); % The rusults should come back in an array
-
-% Dump the data names
-for ii=1:length(searchResult)
-    searchResult{ii}.type
-    searchResult{ii}.name
+if isempty(searchResult)
+    disp('No files matching query found');
+else
+    disp(searchResult{1}); % The rusults should come back in an array
+    
+    % Dump the data names
+    for ii=1:length(searchResult)
+        searchResult{ii}.name
+    end
+    
+    fprintf('Returned %d matches\n',length(searchResult))
+    
 end
-
-fprintf('Returned %d matches\n',length(searchResult))
-
 
 %% Find an anatomy t1 file
 
+% Check that the measurement type is anatomy
 for i = 1:numel(searchResult)
     if strfind(lower(searchResult{i}.acquisition.measurement), 'anatomy')
         indX = i;
@@ -84,6 +92,9 @@ for i = 1:numel(searchResult)
     end
 end
 
+% CHeck that this is an anatomical
+% searchResult{indX}
+searchResult{indX}.acquisition.measurement
 
 %% Download the file
 plink = sprintf('%s/api/acquisitions/%s/files/%s',...
@@ -91,22 +102,26 @@ plink = sprintf('%s/api/acquisitions/%s/files/%s',...
 
 dl_file = stGet(plink, token, 'destination', fullfile(pwd,searchResult{indX}.name),'size',searchResult{indX}.size);
 
-% Create an output directory (must be empty!)
+% Create an output directory. Must start as empty!
+% The engine takes anything in the output directory and uploads it.
 outputDirectory = fullfile(pwd,'output');
-if ~exist(outputDirectory, 'dir')
+if exist(outputDirectory,'dir')
+    delete(fullfile(outputDirectory,'*'))
+else 
     mkdir(outputDirectory);
 end
-
-
+    
 %% Run docker
 
 % Configure docker
-% stDockerConfig('machine', 'default');
-stDockerConfig('machine', 'vista'); 
+stDockerConfig('machine', 'default');
+% stDockerConfig('machine', 'vista'); 
 
 % Run a docker container
+baseName = strsplit(searchResult{indX}.name,'.nii.gz');
+oFile = [baseName{1},'_bet'];
 docker_cmd = sprintf('docker run -ti --rm -v %s:/input -v %s:/output vistalab/bet /input/%s /output/%s',...
-    pwd, outputDirectory, searchResult{indX}.name, 'brain_extracted');
+    pwd, outputDirectory, searchResult{indX}.name, oFile);
 
 [status, result] = system(docker_cmd, '-echo');
 
@@ -114,15 +129,17 @@ disp(status);
 disp(result);
 
 
-%% Upload the file as a session attachement
+%% Upload the file as a session attachment
 
 clear A
 A.token     = token;
-A.url       = url;
-A.fName     = fullfile(pwd, 'output/brain_extracted.nii.gz');
-A.target    = 'sessions';
-A.id        = searchResult{indX}.session.x0x5F_id;
+A.url       = furl;
+A.fName     = fullfile(pwd, 'output',[oFile,'.nii.gz']);
+A.target    = 'collections';
+A.id        = searchResult{indX}.collection.x0x5F_id;
 
 [status, result] = stAttachFile(A);
 disp(status);
 disp(result);
+
+%%

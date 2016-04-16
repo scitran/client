@@ -1,33 +1,34 @@
 function [status, result] = stAttachFile(varargin)
-%
-% Upload a file as an attachment to a given target ('project', 'session',
-% 'acquisition') within a SciTran DB.
+% Upload a file as an attachment to a given target 
+%  ('project', 'session', 'acquisition') within a SciTran DB.
 %
 %      stAttachFile(varargin)
 %
-% INPUTS: 
+% The arguments can all be passed parameter/value pairs.  Or, they can be
+% passed as the slots in a structure.
+%
+% REQUIRED INPUTS: 
 %   
-%   fName:   [Required, type=char] Full path to the file on disk to
-%            attach/put/upload
-%   
-%   target:  [Required, type=char, valid='projects', 'sessions', 'acquisitions'] 
-%            Target for the attachment
-%   
-%   id:      [Required, type=char] Id of the target
-%   
-%   url:     [Required, type=char] URL for the instance
-%   
-%   token:   [Required, type=char] Authorization token for upload
-% 
+%   fName:   [type=char] Full path to the file on disk to attach/put/upload
+%   target:  [type=char, valid='projects', 'sessions', 'acquisitions'] 
+%            The type of scitran document where we store the attachment.
+%            Individual files are 'acquisitions'.  The collection of files
+%            during an scanner experience is a 'session'.  A group
+%            of sessions can be a 'project'.
+%            TODO:  Check that we can attach to a collection, which is a
+%            group of sessions that are chosen by the user 
+%   id:      [type=char] Database ID of the target - 
+%   url:     [type=char] URL for the online scitran database
+%   token:   [type=char] Authorization token for upload
 % 
 % OUTPUTS:
 %   
 %   status:  Boolean indicating success (0) or failure (~=0)
-%   
 %   result:  The output of the verbose curl command.
-%
 % 
 % Example:
+%  Attach a file using the slots in a structure
+%
 %   [A.token, A.url] = stAuth('instance', 'scitran');
 %   A.fName = '/Users/lmperry/test.txt';
 %   A.target = 'session';
@@ -43,7 +44,7 @@ function [status, result] = stAttachFile(varargin)
 %% Parse inputs
 
 % Allowed targets
-targets = {'sessions', 'acquisitions', 'projects'};
+targets = {'sessions', 'acquisitions', 'projects','collections'};
 
 p = inputParser;
 p.addParameter('fName', '', @(x) ischar(x) && exist(x, 'file'));

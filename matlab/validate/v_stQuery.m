@@ -3,6 +3,8 @@
 %    * Authorize
 %    * Search
 %
+% Notes
+%
 % When you want a dot in the search field, for example
 %
 % {
@@ -73,7 +75,7 @@ s.token  = token;
 
 % Could search on a collection, or if not set then we search on everything
 % including acquisitions, sessions, whatever.  
-s.collection = 'patients';
+s.collection = 'Young Males';
 
 % The possible search targets are
 %
@@ -98,11 +100,15 @@ disp(scitranData{1}); % The rusults should come back in an array
 
 % Dump the data names
 for ii=1:length(scitranData)
-    scitranData{ii}.type
     scitranData{ii}.name
 end
 
 fprintf('Returned %d matches\n',length(scitranData))
+fprintf('Subject\n');
+for ii=1:length(scitranData)
+    fprintf('  %s\n',scitranData{ii}.session.subject.code);
+end
+idx = 2;
 
 %% Downloads the first bvec file
 
@@ -112,12 +118,12 @@ fprintf('Returned %d matches\n',length(scitranData))
 %
 %     plink = plinkCreate(url,acqID,filename)
 %
-plink = sprintf('%s/api/acquisitions/%s/files/%s', furl, scitranData{1}.acquisition.x0x5F_id, scitranData{1}.name);
+plink = sprintf('%s/api/acquisitions/%s/files/%s', furl, scitranData{idx}.acquisition.x0x5F_id, scitranData{idx}.name);
 
 % Download the file
 % dl_file = stGet(plink, token);
 % dl_file = stGet(plink, token, 'destination',fullfile(pwd,'deleteMe.bvec'));
-dl_file = stGet(plink, token, 'destination',fullfile(pwd,'deleteMe.bvec'),'size',scitranData{1}.size);
+dl_file = stGet(plink, token, 'destination',fullfile(pwd,'deleteMe.bvec'),'size',scitranData{idx}.size);
 
 % You can check the data in this case
 bvecs = load(dl_file,'ascii');
@@ -130,20 +136,24 @@ print -dpng 'bvecs.png';
 %% Upload an analysis
 
 % Get the collection ID 
-COL_ID = scitranData{1}.collection.x0x5F_id;
+COL_ID = scitranData{idx}.collection.x0x5F_id;
 
 % Construct the json payload
+% .label and .files are required.
+% We can add elements to the structure, such as a description of the
+% analysis (note), the name of the person who did the analysis.  These
+% names are free form. Hmmm.
 clear payload
 payload.label = 'bvecs_image_analysis'; % Analysis label
 payload.files{1}.name = 'bvecs.png';    % Name of the results file
-payload.files{2}.name = '';             % We have to pad the json struct or savejson will not give us a list
+payload.files{end+1}.name = '';             % We have to pad the json struct or savejson will not give us a list
 
 % Jsonify the payload
 PAYLOAD = savejson('',payload);
 PAYLOAD = strrep(PAYLOAD, '"', '\"');   % Escape the " or the cmd will fail.
 
 % Location of analysis file on disk
-analysis_file = fullfile('~/Desktop/', payload.files{1}.name);
+analysis_file = fullfile(pwd, payload.files{1}.name);
 
 % Construct the command
 curlCmd = sprintf('curl -F "file=@%s" -F "metadata=%s" %s/api/collections/%s/analyses -H "Authorization":"%s"', analysis_file, PAYLOAD, furl, COL_ID, token );
