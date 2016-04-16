@@ -24,6 +24,13 @@ You might verify that you succeeded by trying
    ```
 * If your terminal environment is set up properly, the best way to initiate scitran client is to start matlab from a terminal.  In that case, the Matlab program inherits your shell ENV. Many people start Matlab from an icon, however. This sets up Matlab's own idiosyncratic environment. In that case, you may have to set your ENV (PATH) to include paths to python & required libs manually from within Matlab.  See XXX for instructions on how to do this.
 
+## Docker requirements
+
+For certain applications, you will want to run docker containers.  You can invoke any docker machine you set up on your computer.  To get the machine started, you will need to issue a command such as
+
+  ```
+  docker-machine start default
+  ```
 ## Scitran client dependencies
 
 * The purpose of the software is to access a Flywheel instance.  You will need an authorization token.  On first access, you will be prompted for the client ID and secret. This secret can only be given by an administrator of the instance you wish to connect to.  So, speak to your administrator about the client ID and secret.
