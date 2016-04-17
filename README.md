@@ -26,11 +26,23 @@ You might verify that you succeeded by trying
 
 ## Docker requirements
 
-For certain applications, you will want to run docker containers.  You can invoke any docker machine you set up on your computer.  To get the machine started, you will need to issue a command such as
+For certain applications, you will want to run docker containers. This will require that you have docker installed on your local machine. To do that visit the docker website for [OSX](https://docs.docker.com/machine/install-machine/) and [Linux](https://docs.docker.com/linux/step_one/) instructions. 
+
+Once you have Docker installed you can invoke any docker machine and container you set up on your computer.  
+
+If you're using `docker-machine` on OSX there are a couple more steps required. First you will need to first create a 'machine'. To create a machine you should issue the `create` command (below we use 'default' for the machine name):
+
+   ```
+   docker-machine create --driver virtualbox default
+   ```
+
+To get the machine started, issue the `start` command followed by the machine name:
 
   ```
   docker-machine start default
   ```
+Now you're ready to issue docker commands through Matlab or Python. See [matlab/stDockerConfig.m](https://github.com/scitran/client/blob/master/matlab/stDockerConfig.m) for Matlab implementation details.
+  
 ## Scitran client dependencies
 
 * The purpose of the software is to access a Flywheel instance.  You will need an authorization token.  On first access, you will be prompted for the client ID and secret. This secret can only be given by an administrator of the instance you wish to connect to.  So, speak to your administrator about the client ID and secret.
