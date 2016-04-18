@@ -51,16 +51,32 @@ if ismac
         error('%s \nIs docker-machine installed?', version); 
     end
     
-    % Check the status of the machine.
-    [~, result] = system('docker-machine status');
+    % Check that the machine is running
+    [~, result] = system(sprintf('docker-machine status %s', args.machine));
     if strcmp(strtrim(result),'Running')
-        fprintf('docker-machine %s is running.\n',args.machine);
+        if args.debug; 
+            fprintf('docker-machine ''%s'' is running.\n', args.machine); 
+        end
+    
+    % Start the machine
     else
-        % Start the machine
-        fprintf('Starting docker-machine %s ...',args.machine);
-        [~, result] = system(sprintf('docker-machine start %s', args.machine));
-        if args.debug, disp(result); end
-        fprintf('done.\n');
+        fprintf('Starting docker-machine ''%s'' ... \n', args.machine);
+        [status, result] = system(sprintf('docker-machine start %s', args.machine), '-echo');
+        if status && strfind(strtrim(result), 'not exist');
+            
+            % Prompt to create the machine
+            resp = input('Would you like to create the machine now? (y/n): ', 's');
+            if lower(resp) == 'y'
+                [status, result] = system(sprintf('docker-machine create -d virtualbox %s', args.machine), '-echo');
+                if status
+                    error(result);
+                else
+                    fprintf('The machine ''%s'' is up and running!\n', args.machine);
+                end
+            else
+                error(result);
+            end
+        end
     end
     
     % Get the docker env variables for the machine
