@@ -69,17 +69,13 @@ end
 
 % Configure docker
 stDockerConfig('machine', 'default');
-iDir    = fullfile(pwd,'input');
 
-% Create the input and output directories. Make sure they are empty!
-if exist(iDir,'dir'),     delete(fullfile(iDir,'*'))
-else                      mkdir(iDir);
-end
+iDir    = fullfile(pwd,'input');
+stDirCreate(iDir);
 
 oDir = fullfile(pwd,'output');
-if exist(oDir,'dir'),     delete(fullfile(oDir,'*'))
-else                      mkdir(oDir);
-end
+stDirCreate(oDir);
+
 
 %% Download the file from the scitran database
 
@@ -126,5 +122,9 @@ A.target    = 'collections';
 A.id        = srchResult{idx}.collection.x0x5F_id;
 
 [status, result] = stUploadFile(A);
+
+% A.fName     = fullfile(pwd, 'output',[d.oFile,'.nii.gz']);
+% stDirCreate(oDir);   % Empty the output dir
+% publish(mfilename,'format','pdf','outputDir',oDir);
 
 %%

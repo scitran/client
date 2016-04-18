@@ -1,5 +1,5 @@
 function [status, result] = stPut(fName, pLink, token)
-% Attach a file to the permalink location
+% DEPRECATED - Attach a file to the permalink location
 %
 %      stPut(fName, pLink, token)
 %
@@ -18,7 +18,7 @@ function [status, result] = stPut(fName, pLink, token)
 %   pLink ='https://sni-sdm.stanford.edu/api/acquisitions/559e9c86c81ba9de1e95ad61/file/1.2.840.113619.2.283.4120.7575399.26065.1300464087.922_1_dicom.tgz'
 %   fName = '/Path/to/some/file/on/disk'
 %   
-%   [status, result] = sdmPut(pLink, fName, token);
+%   [status, result] = stPut(pLink, fName, token);
 %
 % LMP/BW Vistasoft Team, 2015-16
 

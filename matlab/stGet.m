@@ -1,5 +1,5 @@
 function destination = stGet(pLink,token,varargin)
-% Retrieve a file from an scitran instance
+% Deprecated - Retrieve a file from an scitran instance
 %
 %   fName = stGet(pLink,token,'destination',filename,'size',size)
 %
