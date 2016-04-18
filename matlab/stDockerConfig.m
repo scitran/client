@@ -1,33 +1,22 @@
 function status = stDockerConfig(varargin)
-% 
-%  status = stDockerConfig(varargin)
-% 
-% Configure the Matlab environment to allow docker calls from within
-% Matlab.
+% Configure the Matlab environment and initiate the docker-machine
 %
+%   status = stDockerConfig(varargin) 
 % 
 % INPUTS: 
-% 
-%       'machine' - [Optional, type=char, default='default'] 
-%                   Name of the docker-machine on OSX. Should exist.
-% 
-%       'debug'   - [Optional, type=logical, default=false] 
-%                   If true then messages are displayed throughout the
-%                   process, otherwise we're quiet save for an error.
+%    'machine' - [Optional, type=char, default='default'] 
+%                Name of the docker-machine on OSX. Should exist.
+%    'debug'   - [Optional, type=logical, default=false] 
+%                If true then messages are displayed throughout the
+%                process, otherwise we're quiet save for an error.
 %       
-%  OUTPUTS:
+% OUTPUTS:
+%    status    - boolean where 0=success and >0 denotes failure.
 % 
-%       status    - boolean where 0=success and >0 denotes failure.
-% 
-% 
-%  EXAMPLE USAGE:
-%       [status] = stDockerConfig('machine', 'default', 'debug', true); 
-% 
-% 
+% EXAMPLE:
+%    [status] = stDockerConfig('machine', 'default', 'debug', true); 
 % 
 % (C) Stanford VISTA Lab, 2016 
-% 
-% 
 
 %% Parse input arguments
 
@@ -37,7 +26,6 @@ p.addOptional('debug', false, @islogical);
 p.parse(varargin{:})
 
 args = p.Results;
-
 
 %% Configure Matlab ENV for the machine
 
@@ -61,6 +49,18 @@ if ismac
         end
     else
         error('%s \nIs docker-machine installed?', version); 
+    end
+    
+    % Check the status of the machine.
+    [~, result] = system('docker-machine status');
+    if strcmp(strtrim(result),'Running')
+        fprintf('docker-machine %s is running.\n',args.machine);
+    else
+        % Start the machine
+        fprintf('Starting docker-machine %s ...',args.machine);
+        [~, result] = system(sprintf('docker-machine start %s', args.machine));
+        if args.debug, disp(result); end
+        fprintf('done.\n');
     end
     
     % Get the docker env variables for the machine
@@ -96,11 +96,7 @@ if ismac
         error('Docker could not be configured: %s', result);
     end
     
-    % Start the machine
-    [~, result] = system(sprintf('docker-machine start %s', args.machine));
-    if args.debug
-        disp(result);
-    end
+
     
     
 % LINUX

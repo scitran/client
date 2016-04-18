@@ -1,21 +1,14 @@
-% Run a docker container on a given search result
+% Run a reproducible calculation on data from a scitran instance
 %
+% The example here runs a docker container that uses the FSL brain
+% extraction program on a given search result with a T1 anatomical.
 %
-%
-%
+% LMP/BW Vistasoft 
 
-%%
-% On your system, you must have curl libraries properly configured
-cENV = configure_curl;
+%%  Authorization and initialize
 
-% Turn off the very annoying Matlab warning regarding variable name length
-warning('off', 'MATLAB:namelengthmaxexceeded');
-
-
-%% Authorization
-% The auth returns both a token and the url of the flywheel instance
-[token, furl, ~] = stAuth('action', 'create', 'instance', 'scitran');
-
+p.action = 'create'; p.init = true; p.instance = 'scitran';
+[token, client_url] = stAuth(p);
 
 %% Does a search for nifti files.
 
@@ -41,7 +34,7 @@ jsonData = savejson('',jsonSend);
 % Build up the curl command.  We use s to denote the structure that
 % contains the parameters used to create the command.
 clear s
-s.url    = furl;
+s.url    = client_url;
 s.token  = token;
 
 % Could search on a collection, or if not set then we search on everything
@@ -98,7 +91,7 @@ searchResult{indX}.acquisition.measurement
 
 %% Download the file
 plink = sprintf('%s/api/acquisitions/%s/files/%s',...
-    furl, searchResult{indX}.acquisition.x0x5F_id, searchResult{indX}.name);
+    client_url, searchResult{indX}.acquisition.x0x5F_id, searchResult{indX}.name);
 
 dl_file = stGet(plink, token, 'destination', fullfile(pwd,searchResult{indX}.name),'size',searchResult{indX}.size);
 

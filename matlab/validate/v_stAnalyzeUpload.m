@@ -1,7 +1,4 @@
-%% Query the database
-%
-%    * Authorize
-%    * Search
+%% Authorize, Query, download, analyze, upload
 %
 % LMP/BW Scitran Team, 2016
 %

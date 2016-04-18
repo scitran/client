@@ -1,8 +1,10 @@
-function [status, result] = stAttachFile(varargin)
-% Upload a file as an attachment to a given target 
-%  ('project', 'session', 'acquisition') within a SciTran DB.
+function [status, result] = stUploadFile(varargin)
+% Upload a file as an attachment to a scitran
 %
-%      stAttachFile(varargin)
+% The possible places to upload the file are ('project', 'session',
+% 'acquisition','collection') 
+%
+%      stUploadFile(varargin)
 %
 % The arguments can all be passed parameter/value pairs.  Or, they can be
 % passed as the slots in a structure.
@@ -10,11 +12,11 @@ function [status, result] = stAttachFile(varargin)
 % REQUIRED INPUTS: 
 %   
 %   fName:   [type=char] Full path to the file on disk to attach/put/upload
-%   target:  [type=char, valid='projects', 'sessions', 'acquisitions'] 
+%   target:  [type=char, valid='projects', 'sessions', 'acquisitions', 'collections'] 
 %            The type of scitran document where we store the attachment.
-%            Individual files are 'acquisitions'.  The collection of files
-%            during an scanner experience is a 'session'.  A group
-%            of sessions can be a 'project'.
+%            Individual files are 'acquisitions'.  The set of files
+%            obtained from a visit to the scanner is a 'session'.  A group
+%            of sessions is a 'project'.
 %            TODO:  Check that we can attach to a collection, which is a
 %            group of sessions that are chosen by the user 
 %   id:      [type=char] Database ID of the target - 
@@ -24,7 +26,7 @@ function [status, result] = stAttachFile(varargin)
 % OUTPUTS:
 %   
 %   status:  Boolean indicating success (0) or failure (~=0)
-%   result:  The output of the verbose curl command.
+%   result:  The output of the curl command (run verbosely)
 % 
 % Example:
 %  Attach a file using the slots in a structure
@@ -36,10 +38,10 @@ function [status, result] = stAttachFile(varargin)
 % 
 %   [status, result] = stAttachFile(A);
 % 
-% 
 % LMP/BW Vistasoft Team, 2015-16
-% 
 
+% TODO:
+% Can we upload to a collection?
 
 %% Parse inputs
 
@@ -59,19 +61,22 @@ args = p.Results;
 
 % Make sure none of the args are empty
 params = fieldnames(args);
-for i = 1:numel(params)
-    if isempty(args.(params{i}))
-        error('%s cannot be empty!\n', params{i})
+for ii = 1:numel(params)
+    if isempty(args.(params{ii}))
+        error('%s cannot be empty!\n', params{ii})
     end
 end
 
 
 %% Configure library paths for curl command to work properly
 
-curENV = configure_curl();
+% I think this should only be needed during the stAuth call.  So, disabled
+% here (BW).
+%
+% curENV = configure_curl();
 
 
-%% Build and execute the curl command
+%% Build and execute the curl upload command
 
 curl_cmd = sprintf('curl -F "file=@%s" %s/api/%s/%s/files -H "Authorization:%s"',...
     args.fName, args.url, args.target, args.id, args.token);
@@ -85,27 +90,14 @@ if status ~= 0
     warning('Upload failed');
     disp(result)
 else
-    fprintf('File sucessfully uploaded.\n');
+    fprintf('File %s sucessfully uploaded.\n',args.fName);
 end
 
 
 %% Reset library paths
 
-unconfigure_curl(curENV);
+% As per above.
+% unconfigure_curl(curENV);
 
-
-return
-
-
-
-
-
-
-
-
-
-
-
-
-
+end
 

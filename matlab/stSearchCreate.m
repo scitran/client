@@ -1,5 +1,5 @@
-function cmd = stCommandCreate(varargin)
-% Create the system command for the flywheel database query
+function cmd = stSearchCreate(varargin)
+% Create the command for the scitran database query
 %
 %   cmd = stCommandCreate('url',url, ...
 %                          'token', token, ...
