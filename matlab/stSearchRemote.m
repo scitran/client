@@ -33,7 +33,7 @@ srchCommand = p.Results.srchCommand;
 summarize   = p.Results.summarize;
 
 %% Execute the search and load
-[~, srchFile] = system(srchCommand);
+[~, srchFile] = stCurlRun(srchCommand);
 
 % Read the json file
 srchResult = loadjson(strtrim(srchFile)); % NOTE the use of strtrim

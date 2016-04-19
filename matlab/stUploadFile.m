@@ -40,13 +40,11 @@ function [status, result] = stUploadFile(varargin)
 % 
 % LMP/BW Vistasoft Team, 2015-16
 
-% TODO:
-% Can we upload to a collection?
 
 %% Parse inputs
 
 % Allowed targets
-targets = {'sessions', 'acquisitions', 'projects','collections'};
+targets = {'sessions', 'acquisitions', 'projects', 'collections'};
 
 p = inputParser;
 p.addParameter('fName', '', @(x) ischar(x) && exist(x, 'file'));
@@ -68,14 +66,6 @@ for ii = 1:numel(params)
 end
 
 
-%% Configure library paths for curl command to work properly
-
-% I think this should only be needed during the stAuth call.  So, disabled
-% here (BW).
-%
-% curENV = configure_curl();
-
-
 %% Build and execute the curl upload command
 
 curl_cmd = sprintf('curl -F "file=@%s" %s/api/%s/%s/files -H "Authorization:%s"',...
@@ -83,7 +73,7 @@ curl_cmd = sprintf('curl -F "file=@%s" %s/api/%s/%s/files -H "Authorization:%s"'
 
 % Execute the command
 fprintf('Sending... ');
-[status, result] = system(curl_cmd);
+[status, result] = stCurlRun(curl_cmd);
 
 % Let the user know if it worked
 if status ~= 0
@@ -93,11 +83,6 @@ else
     fprintf('File %s sucessfully uploaded.\n',args.fName);
 end
 
-
-%% Reset library paths
-
-% As per above.
-% unconfigure_curl(curENV);
 
 end
 

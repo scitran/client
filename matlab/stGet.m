@@ -40,15 +40,15 @@ size = p.Results.size;
 
 %% Combine permalink and username to generate the download link
 
-% Handle permalinks which may have '?user='
-pLink = explode('?', pLink);
+% Handle permalinks which may have '?user=' elements
+pLink = strsplit(pLink, '?');
 pLink = pLink{1};
 
 
 %% Parse fName from the permalink if 'fName' was not provided.
 if ~exist('destination', 'var') || isempty (destination) 
     [~, f, e] = fileparts(pLink);
-    t_e = explode('?', e);
+    t_e = strsplit(e, '?');
     out_dir = tempname;
     mkdir(out_dir);
     destination = fullfile(out_dir, [ f, t_e{1}]);
@@ -57,17 +57,13 @@ end
 
 %% Download the data
 
-% Use curl - works on any version of matlab
-curEnv = configure_curl();
-
 curl_cmd = sprintf('/usr/bin/curl -v -X GET "%s" -H "Authorization":"%s" -o %s\n', pLink, token, destination);
-[status, result] = system(curl_cmd);
+[status, result] = stCurlRun(curl_cmd);
 
-unconfigure_curl(curEnv);
 
 if status > 0
     destination = '';
-    warning(result); % warn - perhaps error?
+    error(result); 
 end
 
 % Verify file size
