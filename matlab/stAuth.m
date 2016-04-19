@@ -10,7 +10,7 @@ function [token, client_url, status] = stAuth(varargin)
 %
 % In addition, there are several configuration steps that may be needed the
 % first time you use scitran client in a session.  These initializations
-% for the PATH and curl configuration are managed here by the 'init' flag.
+% for the PATH configuration are managed here by the 'init' flag.
 % 
 % INPUTS: 
 %       'action' - Token action to perform.
@@ -31,7 +31,7 @@ function [token, client_url, status] = stAuth(varargin)
 %                     stored as vars in the mat file (for new connections
 %                     users are prompted for the client_secret.
 %
-%       'init'     -  Configure the library paths for curl usage and turn
+%       'init'     -  Configure the system path usage and turn
 %                     off the Matlab name length warning.
 %       
 %  OUTPUTS:
@@ -185,9 +185,6 @@ if init
         setenv('PATH', ['/usr/local/bin:', [getenv('HOME'), '/anaconda/bin'], ':', initPath]);
     end
     
-    % Sets up library ordering for curl
-    configure_curl;
-    
     % Turns off annoying MATLAB warnings.
     warning('off', 'MATLAB:namelengthmaxexceeded');
 end
@@ -259,8 +256,5 @@ end
 token = strtrim(token);
 
 
-%% Reset PATH env
-
-setenv('PATH', initPath);
 
 return
