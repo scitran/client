@@ -77,7 +77,6 @@ actions = {'create','refresh','revoke'};
 p = inputParser;
 p.addParameter('action', 'create', @(x) any(strcmp(x,actions)));
 p.addParameter('instance', 'scitran', @ischar);
-p.addParameter('init',false,@islogical);
 p.parse(varargin{:})
 
 action   = p.Results.action;
