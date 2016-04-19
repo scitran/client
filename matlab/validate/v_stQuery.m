@@ -26,24 +26,8 @@
 % Because this is ugly, we might use the syntax _dot_ and then do a
 % strrep(). Also, notice that gte means greater than or equal to, and lte
 % for less than or equal to.
-%
-% Notes on curl configuration
-%
-% On your system, you must have curl libraries properly configured.  Matlab
-% has its own environment
-%
-%    cENV = configure_curl;
-%       ... Your code here ...
-%    unconfigure_curl(cENV);
+% 
 %   
-
-%% Get ready
-
-% On your system, you must have curl libraries properly configured
-cENV = configure_curl;
-
-% Turn off the very annoying Matlab warning regarding variable name length
-warning('off', 'MATLAB:namelengthmaxexceeded');
 
 
 %% Authorization
@@ -196,7 +180,7 @@ analysis_file = fullfile(pwd, payload.files{1}.name);
 curlCmd = sprintf('curl -F "file=@%s" -F "metadata=%s" %s/api/collections/%s/analyses -H "Authorization":"%s"', analysis_file, PAYLOAD, furl, COL_ID, token );
 
 % Run the command
-[status, result] = system(curlCmd);
+[status, result] = stCurlRun(curlCmd);
 
 % Display the resulting analysis ID (as json)
 disp(result);

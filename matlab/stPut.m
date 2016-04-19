@@ -74,19 +74,13 @@ if md5_status
 end
 
 
-%% Configure library paths for curl command to work properly
-
-% MAC
-curENV = configure_curl();
-
-
 %% Build and execute the curl command
 
 curl_cmd = sprintf('/usr/bin/curl -v -X PUT --data-binary @%s -H "Content-MD5:%s" -H "Content-Type:application/octet-stream" -H "Authorization:%s" "%s?flavor=attachment"\n', fName, checkSum, token, urlAndName);
 
 % Execute the command
 fprintf('Sending... ');
-[status, result] = system(curl_cmd);
+[status, result] = stCurlRun(curl_cmd);
 
 % Let the user know if it worked
 if status
@@ -95,11 +89,6 @@ if status
 else
     fprintf('File sucessfully uploaded.\n');
 end
-
-
-%% Reset library paths
-
-unconfigure_curl(curENV);
 
 
 return

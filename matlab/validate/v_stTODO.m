@@ -42,10 +42,7 @@ curlcmd = ...
     sprintf('curl -XGET "https://docker.local.flywheel.io:8443/api/search/files?user=renzofrigato@flywheel.io&root=1" -k -d ');
 syscommand = [curlcmd,'''',jsonData,''''];
 
-% On your system, you must have curl libraries properly configured
-cENV = configure_curl;
-[status, result] = system(syscommand);
-unconfigure_curl(cENV);
+[status, result] = stCurlRun(syscommand);
 
 if ~status
     % Dump the data
@@ -63,10 +60,7 @@ curlcmd = ...
     sprintf('curl -XGET "https://docker.local.flywheel.io:8443/api/search/files?user=evilperson@flywheel.io&root=1" -k -d ');
 syscommand = [curlcmd,'''',jsonData,''''];
 
-% On your system, you must have curl libraries properly configured
-cENV = configure_curl;
-[status, result] = system(syscommand);
-unconfigure_curl(cENV);
+[status, result] = stCurlRun(syscommand);
 
 % Dump the data
 scitranData = loadjson(result);
