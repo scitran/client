@@ -1,5 +1,5 @@
 function [status, result] = stPut(fName, pLink, token)
-% DEPRECATED - Attach a file to the permalink location
+% Attach a file to the permalink location
 %
 %      stPut(fName, pLink, token)
 %

@@ -123,8 +123,4 @@ A.id        = srchResult{idx}.collection.x0x5F_id;
 
 [status, result] = stUploadFile(A);
 
-% A.fName     = fullfile(pwd, 'output',[d.oFile,'.nii.gz']);
-% stDirCreate(oDir);   % Empty the output dir
-% publish(mfilename,'format','pdf','outputDir',oDir);
-
 %%
