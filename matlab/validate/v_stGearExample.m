@@ -13,7 +13,6 @@
 
 % Set up the parameters for authorization, the first time
 st.action = 'create';     % Create a token
-st.init = true;           % Initialize for curl
 st.instance = 'scitran';  % Specify client
 
 % Get the authorized token
@@ -79,13 +78,8 @@ stDirCreate(oDir);
 
 %% Download the file from the scitran database
 
-% TODO:  We need a function to build the permanent link.
-plink = sprintf('%s/api/acquisitions/%s/files/%s',...
-    client_url, srchResult{idx}.acquisition.x0x5F_id, srchResult{idx}.name);
-
-% Do the download
-destFile   = fullfile(iDir,srchResult{idx}.name);
-dl_file = stGet(plink, token, 'destination', destFile,'size',srchResult{idx}.size);
+destFile = fullfile(iDir,srchResult{idx}.name);
+dl_file = stFileDownload(client_url,token,srchResult{idx},'destination',destFile);
 
 %% Set up parameters for the docker container and run it
 
@@ -110,17 +104,20 @@ docker_cmd = stDockerCommand(container,d);
 
 if ~status, fprintf('*** docker returned\n %s\n',result);
 else fprintf('docker error\n');
-end
+end 
 
 %% Upload the processed file to the collection
 
+% The principle is to put enough stuff in here so we could run this script
+% again and get the same result out.
 clear A
 A.token     = token;
 A.url       = client_url;
 A.fName     = fullfile(pwd, 'output',[d.oFile,'.nii.gz']);
 A.target    = 'collections';
 A.id        = srchResult{idx}.collection.x0x5F_id;
+% A.container = 'vistalab/bet';
 
-[status, result] = stUploadFile(A);
+[status, result] = stFileUpload(A);
 
 %%
