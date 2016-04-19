@@ -1,10 +1,10 @@
-function [status, result] = stUploadFile(varargin)
+function [status, result] = stFileUpload(varargin)
 % Upload a file as an attachment to a scitran
 %
 % The possible places to upload the file are ('project', 'session',
 % 'acquisition','collection') 
 %
-%      stUploadFile(varargin)
+%      stFileUpload(varargin)
 %
 % The arguments can all be passed parameter/value pairs.  Or, they can be
 % passed as the slots in a structure.
