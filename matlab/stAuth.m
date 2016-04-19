@@ -31,8 +31,6 @@ function [token, client_url, status] = stAuth(varargin)
 %                     stored as vars in the mat file (for new connections
 %                     users are prompted for the client_secret.
 %
-%       'init'     -  Configure the system path usage and turn
-%                     off the Matlab name length warning.
 %       
 %  OUTPUTS:
 %       token      - string containing the token
@@ -56,7 +54,7 @@ function [token, client_url, status] = stAuth(varargin)
 % 
 % NOTES: 
 %  The python code requires that:
-%       1) Start matlab from a terminal (to inheret your ENV) or
+%       1) Start matlab from a terminal (to inheret your ENV) OR
 %          otherwise properly set your ENV (PATH) to include paths to
 %          python & required libs.
 %       2) Have certain python libs installed and on your path. 
@@ -84,7 +82,56 @@ p.parse(varargin{:})
 
 action   = p.Results.action;
 instance = p.Results.instance;
-init     = p.Results.init;
+
+
+%% Check PATH configuration 
+
+% Paths to check for a working version of python (with oauth2client). This
+% list can be appended for different platforms. Note that the default PATH
+% is always checked first and if successful these paths will not be
+% checked.
+py_paths = {'/usr/bin/',...
+            '/usr/local/bin',...
+            [getenv('HOME'), '/anaconda/bin'],...
+            '/opt/local/bin/'};
+
+% Test default PATH
+python_test_cmd = 'python -c "import oauth2client"';
+[status, result] = system(python_test_cmd);
+
+% On failure test py_paths for working version
+if status ~= 0
+    for ii = 1:numel(py_paths)
+        p_cmd = fullfile(py_paths{ii}, python_test_cmd);
+        [status, result] = system(p_cmd);
+        if status == 0;
+            initPath = getenv('PATH');
+            % Prepend py_path to the existing PATH env var
+            setenv('PATH', [py_paths{ii}, ':', initPath]);
+            break
+        end
+    end
+end
+
+% Do a final check on status
+if status ~= 0
+    warning('Check that you have Python and the dependencies installed AND on your PATH. HINT: Try "pip install oauth2client"');
+    error(result);
+end
+
+
+%% Configure MATLAB warning messages  
+
+% Matlab warning ids to check (and turn off)
+warn_ids = {'MATLAB:namelengthmaxexceeded'};
+
+% Checks and turns off MATLAB warnings
+for ii = 1:numel(warn_ids)
+    w = warning('query', warn_ids{ii});
+    if strcmpi(w.state, 'on')
+        warning('off', warn_ids{ii});
+    end
+end
 
 
 %% Load or create local client_auth file
@@ -170,24 +217,6 @@ urlwrite(oauth2cli_url, oauth2cli_code);
 
 % Make the code executable
 fileattrib(oauth2cli_code, '+x');
-
-
-%% Configure the ENV the first time through
-
-% Not run by default, but run if ('init',true) is set on the input.
-
-% This needs a little help for additional machines and non-anaconda
-% installs
-if init
-    % Set up the pathway for anaconda.
-    initPath = getenv('PATH');
-    if isempty(strfind(initPath, '/usr/local/bin'))
-        setenv('PATH', ['/usr/local/bin:', [getenv('HOME'), '/anaconda/bin'], ':', initPath]);
-    end
-    
-    % Turns off annoying MATLAB warnings.
-    warning('off', 'MATLAB:namelengthmaxexceeded');
-end
 
 
 %% Check tokenFile client_id
