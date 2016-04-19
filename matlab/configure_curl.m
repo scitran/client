@@ -25,8 +25,9 @@ elseif (isunix && ~ismac)   % Linux
     end
     
     % I guess we can just over-write, but perhaps we should adjust?
-    p = explor(':',curENV);
-    fprintf('Load library path %s\n',p);
+    p = strsplit(curENV, ':');
+    fprintf('Load library path \n');
+    disp(p);
     setenv('LD_LIBRARY_PATH','/usr/lib:/usr/local/lib');
 else
     % Other/Unknown
