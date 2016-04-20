@@ -1,10 +1,10 @@
-function [status, result] = stFileUpload(varargin)
+function [status, result, plink] = stFileUpload(varargin)
 % Upload a file as an attachment to a scitran
 %
 % The possible places to upload the file are ('project', 'session',
 % 'acquisition','collection') 
 %
-%      stFileUpload(varargin)
+%    [status, result, plink] = stFileUpload(varargin)
 %
 % The arguments can all be passed parameter/value pairs.  Or, they can be
 % passed as the slots in a structure.
@@ -27,7 +27,8 @@ function [status, result] = stFileUpload(varargin)
 %   
 %   status:  Boolean indicating success (0) or failure (~=0)
 %   result:  The output of the curl command (run verbosely)
-% 
+%   plink:   Permalink to the uploaded file
+%
 % Example:
 %  Attach a file using the slots in a structure
 %
@@ -70,6 +71,9 @@ end
 
 curl_cmd = sprintf('curl -F "file=@%s" %s/api/%s/%s/files -H "Authorization:%s"',...
     args.fName, args.url, args.target, args.id, args.token);
+
+lst = strsplit(args.fName,'/');
+plink = sprintf('%s/api/%s/%s/files/%s',args.url, args.target, args.id,lst{end});
 
 % Execute the command
 fprintf('Sending... ');

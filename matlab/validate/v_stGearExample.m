@@ -79,7 +79,13 @@ stDirCreate(oDir);
 %% Download the file from the scitran database
 
 destFile = fullfile(iDir,srchResult{idx}.name);
-dl_file = stFileDownload(client_url,token,srchResult{idx},'destination',destFile);
+[dl_file, inputPlink] = stFileDownload(client_url,token,srchResult{idx},'destination',destFile);
+
+stRep.plink = inputPlink;
+
+% Maybe not needed.
+lst = strsplit(inputPlink,'/');
+stRep.iFile = lst{end};
 
 %% Set up parameters for the docker container and run it
 
@@ -118,6 +124,6 @@ A.target    = 'collections';
 A.id        = srchResult{idx}.collection.x0x5F_id;
 % A.container = 'vistalab/bet';
 
-[status, result] = stFileUpload(A);
+[status, result, resultPlink] = stFileUpload(A);
 
 %%
