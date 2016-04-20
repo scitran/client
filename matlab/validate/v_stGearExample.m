@@ -102,9 +102,9 @@ docker_cmd = stDockerCommand(container,d);
 %  run the docker command
 [status, result] = system(docker_cmd, '-echo');
 
-if ~status, fprintf('*** docker returned\n %s\n',result);
-else fprintf('docker error\n');
-end 
+if status ~= 0
+    fprintf('docker error: %s\n', result);
+end
 
 %% Upload the processed file to the collection
 
