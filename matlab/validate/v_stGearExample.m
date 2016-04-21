@@ -7,6 +7,10 @@
 %  container that ran the skull-stripping and other parameters needed for
 %  reproducibility.
 %
+%  In addition, we create a "Reproducibility file".  This is a json file
+%  that includes all the parameters required for running the analysis
+%  again.
+%
 % LMP/BW
 
 %%  Authorization and initialize
@@ -81,12 +85,6 @@ stDirCreate(oDir);
 destFile = fullfile(iDir,srchResult{idx}.name);
 [dl_file, inputPlink] = stFileDownload(client_url,token,srchResult{idx},'destination',destFile);
 
-stRep.plink = inputPlink;
-
-% Maybe not needed.
-lst = strsplit(inputPlink,'/');
-stRep.iFile = lst{end};
-
 %% Set up parameters for the docker container and run it
 
 % the input and output directories, and input file
@@ -125,5 +123,27 @@ A.id        = srchResult{idx}.collection.x0x5F_id;
 % A.container = 'vistalab/bet';
 
 [status, result, resultPlink] = stFileUpload(A);
+if status ~= 0
+    fprintf('docker error: %s\n', result);
+end
+
+%% Save the replication file in the output directory
+
+clear stRep
+
+stRep.data.iDir   = fullfile(pwd,'input');
+lst = strsplit(inputPlink,'/'); stRep.data.iFile  = lst{end};
+stRep.data.oDir   = fullfile(pwd,'output');
+stRep.data.oFile  = d.oFile;       % Need oFile
+stRep.inputPlink  = inputPlink;    % If we decide to compare
+stRep.resultPlink = resultPlink;   % If we decide to compare
+stRep.docker.container = 'vistalab/bet';   % Need the container
+
+opt.FileName = fullfile(stRep.data.oDir,[stRep.data.oFile,'.json']);
+savejson('',stRep,opt);
+
+% Upload the replication file to the site
+A.fName     = opt.FileName;
+[status, result, repPlink] = stFileUpload(A);
 
 %%
