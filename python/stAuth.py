@@ -8,7 +8,7 @@ import os
 import shutil
 import json
 
-__author__ = 'vincent'
+__author__ = 'vsitzmann'
 
 def _handle_instance_auth(instance, st_dir):
     '''
@@ -120,7 +120,7 @@ def create_token(instance, st_dir):
             credentials.refresh(httplib2.Http())
             storage = file.Storage(token_file_path)
             storage.put(credentials)
-            credentials.set_storage(storage)
+            credentials.set_store(storage)
             print('The existing token has been refreshed.')
         except client.HttpAccessTokenRefreshError:
             print('This token has been revoked. Deleting it...')
@@ -135,10 +135,9 @@ def create_token(instance, st_dir):
 
         flow = client.OAuth2WebServerFlow(client_id=client_id,
                                           client_secret=client_secret,
-                                          scope='https://www.googleapis.com/auth/userinfo.email',
-                                          flags=flags)
+                                          scope='https://www.googleapis.com/auth/userinfo.email')
         storage = file.Storage(token_file_path)
-        credentials = tools.run_flow(flow, storage)
+        credentials = tools.run_flow(flow, storage, flags)
 
     return credentials.access_token
 
