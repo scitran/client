@@ -1,6 +1,8 @@
-function idx = stSearch(d,varargin)
+function idx = stSearchResultFilter(d,varargin)
 % Search through the data returned from a scitran search
-%
+%   
+%   idx = stSearch(d, pField, value)
+% 
 % INPUTS:  Parameter/Value pairs, or slots in a single structure
 %   parameter field
 %   value to match
@@ -13,7 +15,7 @@ function idx = stSearch(d,varargin)
 %   filename
 %
 % Multiple parameter/value pairs can be 
-%   idx = stSearch(d,'pField','subject code','value','ex8403')
+%   idx = stSearch(d,'subject code', 'ex8403')
 %
 % Notes:
 % Is it possible for RF to make it such that the json file always has
@@ -52,13 +54,15 @@ idx = zeros(nSrch,nData);
 for pp=1:nSrch
     pField = varargin{1 + 2*(pp-1)};  % This is the parameter
     value  = varargin{2 + 2*(pp-1)};  % This is the value
-    switch mrvParamFormat(pField)     % Force lower, no space
+    switch strtrim(lower(strrep(pField, ' ', ''))) % Force lower, no space
         
         % Make a list of all the values for that parameter
         case 'subjectcode'
             for ii=1:nData, lst{ii} = d{ii}.session.subject.code; end
         case 'filename'
             for ii=1:nData, lst{ii} = d{ii}.name; end
+        case 'measurement'
+            for ii=1:nData, lst{ii} = d{ii}.acquisition.measurement; end
         otherwise
             error('Unknown parameter field %s\n',pField);
     end
@@ -70,6 +74,9 @@ for pp=1:nSrch
         if ~isempty(foo{jj}), idx(pp,jj) = 1; end
     end 
 end
+
+% Return the indicies 
+idx = find(idx == 1);
 
 % Now, we could find the intersection of all the indices.  Or we could just
 % return the cell array of all the indices.
