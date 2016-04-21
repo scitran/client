@@ -26,10 +26,10 @@ p = inputParser;
 p.addParameter('fields','*',@ischar);
 p.addParameter('query','.nii.gz',@ischar);
 p.addParameter('lenient',true,@islogical);
-p.parse;
+p.parse(varargin{:});
 
-fields = p.Results.fields;
-query  = p.Results.query;
+fields  = p.Results.fields;
+query   = p.Results.query;
 lenient = p.Results.lenient;
 
 %% Create
@@ -40,6 +40,6 @@ jQuery.multi_match.query   = query;   % The label we are looking for
 jQuery.multi_match.lenient = lenient;
 
 % Convert structure to json format
-jQuery = savejson('',jQuery);
+jQuery = savejson('', jQuery);
 
 end
