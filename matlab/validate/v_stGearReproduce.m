@@ -16,33 +16,16 @@ st.instance = 'scitran';  % Specify client
 
 %% What should be in the reproducibility file?
 
-% In this case, we appear to need 
-%   dockerCmd
-%   plink to data in scitran
-%  
+% The reproducibility permalink comes either from the web site or from the
+% upload script v_stGearExample
+repPlink = 'https://flywheel.scitran.stanford.edu/api/collections/57117f9e981f740020aa8932/files/11810_8_1_bet.json';
 
+% We write it out here
+lst = strsplit(repPlink,'/'); 
+destination = fullfile('output',lst{end});
+dl_file = stGet(repPlink,token,'destination',destination);
 
-% stRepFile = 'st.rep';
-% stRep = loadjson(stRepFile);
-
-% This will load an stRep struct
-
-% The plink will be in the file
-clear stRep;
-stRep.data.iDir = fullfile(pwd,'input');
-stRep.data.iFile = lst{end};
-
-stRep.data.oDir = fullfile(pwd,'output');
-stRep.data.oFile = 'test_bet';   % Need oFile
-
-stRep.inputPlink = inputPlink;  % If we decide to compare
-stRep.resultPlink = resultPlink;  % If we decide to compare
-
-stRep.docker.container = 'vistalab/bet';   % Need the container
-
-% stRep.data.iFile.plink = downPlink;
-% lst = strsplit(downPlink,'/');   % Need downPlink
-% lst{end}
+stRep = loadjson(dl_file);
 
 %% Set up the docker command
 
@@ -51,11 +34,10 @@ stDockerConfig('machine', 'default');
 stDirCreate(stRep.data.iDir);
 stDirCreate(stRep.data.oDir);
 
-
 %% Download the file from the scitran database
 
 % Put the file in the destination location
-dest = fullfile(stRep.data.iDir,stRep.data.iFile);
+dest    = fullfile(stRep.data.iDir,stRep.data.iFile);
 dl_file = stGet(stRep.inputPlink, token, 'destination',dest );
 
 % Create and run the docker command.
@@ -65,6 +47,8 @@ stRep.docker.cmd = stDockerCommand(stRep.docker.container,stRep.data);
 if status ~= 0
     fprintf('docker error: %s\n', result);
 end
+
+%% We could download the file from the site and compare ...
 
 %% See v_stQuery for related stuff
 
