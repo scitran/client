@@ -141,7 +141,6 @@ def create_token(instance, st_dir):
 
     return (credentials.access_token, client_url)
 
-
 def revoke_token(instance, st_dir):
     '''
     Deletes an existing token for instance.
