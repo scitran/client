@@ -93,7 +93,7 @@ def create_token(instance, st_dir):
         st_dir (str): Path of directory where the tokens live.
 
     Returns:
-        token (str): The requested token
+        Python tuple: (token (str), client_url (str)): (The requested token, the base url for this client)
     '''
 
     try:
@@ -139,7 +139,7 @@ def create_token(instance, st_dir):
         storage = file.Storage(token_file_path)
         credentials = tools.run_flow(flow, storage, flags)
 
-    return credentials.access_token
+    return (credentials.access_token, client_url)
 
 
 def revoke_token(instance, st_dir):
