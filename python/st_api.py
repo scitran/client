@@ -2,7 +2,7 @@ __author__ = 'vsitzmann'
 
 import os
 import requests
-import stAuth
+import st_auth
 import urlparse
 import json
 
@@ -39,7 +39,7 @@ class InstanceHandler():
         return urlparse.urljoin(self.base_url, path)
 
     def authenticate(self):
-        self.token, self.base_url = stAuth.create_token(self.instance, self.st_dir)
+        self.token, self.base_url = st_auth.create_token(self.instance, self.st_dir)
 
     def search_remote(self, search_query, fields='*', num_results=50, lenient=True, target='sessions', collection=''):
         '''Searches the remote site.
@@ -94,19 +94,20 @@ class InstanceHandler():
         path = "api/acquisitions/%s/files/%s"%(acq_id, acq_name)
         headers = {"Authorization": self.token}
 
-        print('Searching...')
         response = requests.get(self._url(path), headers=headers)
         # TODO (vsitzmann): Handling of bad HTTP status codes
 
         abs_file_path = os.path.join(dest_dir, acq_name)
 
-        if response.status_code == 200:
+        if response.status_code == 403:
+            return (403, "Not authorized.")
+        elif response.status_code == 200:
             print('File found. Saving to %s.'%abs_file_path)
             with open(abs_file_path, 'wb') as fd:
                 for chunk in response.iter_content():
                     fd.write(chunk)
 
-        return abs_file_path
+            return 200, abs_file_path
 
     def upload_attachment(self, file_path, target, db_id):
         filename= os.path.split(file_path)[1]
@@ -118,4 +119,9 @@ class InstanceHandler():
         # TODO (vsitzmann): Handling of bad HTTP status codes
 
         return response
+
+
+
+
+
 
