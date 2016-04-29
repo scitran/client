@@ -29,7 +29,7 @@ srch.token  = token;
 
 % In this example, we search on a collection that we created called
 % GearTest
-srch.collection = 'Engage';
+srch.collection = 'ENGAGE';
 
 % We are searching for files in the collection (as opposed to ...)
 srch.target = 'files';
@@ -68,7 +68,7 @@ SUB_ID = RESULT.session.subject.code;
 %% RUN BET: #1 Configure docker/directories
 
 % Configure docker
-stDockerConfig('machine', 'vista');
+stDockerConfig('machine', 'default');
 
 % Make input directory
 iDir    = fullfile(pwd,'input');
@@ -115,13 +115,13 @@ end
 %% UPLOAD: the processed/result file to the collection
 
 clear upload
-uplaod.token     = token;
-uplaod.url       = client_url;
-uplaod.fName     = fullfile(docker.oDir, [docker.oFile,'.nii.gz']);
-uplaod.target    = 'collections';
-uplaod.id        = RESULT.collection.x0x5F_id;
+upload.token     = token;
+upload.url       = client_url;
+upload.fName     = fullfile(docker.oDir, [docker.oFile,'.nii.gz']);
+upload.target    = 'collections';
+upload.id        = RESULT.collection.x0x5F_id;
 
-[status, result, resultPlink] = stFileUpload(uplaod);
+[status, result, resultPlink] = stFileUpload(upload);
 if status ~= 0
     fprintf('Upload Error: %s\n', result);
 end
