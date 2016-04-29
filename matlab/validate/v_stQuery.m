@@ -166,15 +166,17 @@ COL_ID = scitranData{idx}.collection.x0x5F_id;
 % names are free form. Hmmm.
 clear payload
 payload.label = 'bvecs_image_analysis'; % Analysis label
-payload.files{1}.name = 'bvecs.png';    % Name of the results file
-payload.files{end+1}.name = '';             % We have to pad the json struct or savejson will not give us a list
+payload.outputs{1}.name = 'bvecs.png';    % Name of the results file
+payload.outputs{end+1}.name = '';             % We have to pad the json struct or savejson will not give us a list
+
+
 
 % Jsonify the payload
 PAYLOAD = savejson('',payload);
 PAYLOAD = strrep(PAYLOAD, '"', '\"');   % Escape the " or the cmd will fail.
 
 % Location of analysis file on disk
-analysis_file = fullfile(pwd, payload.files{1}.name);
+analysis_file = fullfile(pwd, payload.outputs{1}.name);
 
 % Construct the command
 curlCmd = sprintf('curl -F "file=@%s" -F "metadata=%s" %s/api/collections/%s/analyses -H "Authorization":"%s"', analysis_file, PAYLOAD, furl, COL_ID, token );
