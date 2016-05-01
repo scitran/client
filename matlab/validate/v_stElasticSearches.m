@@ -120,10 +120,10 @@ clear b
 b.path = 'acquisitions/files';
 b.projects.match.label = 'testproject';
 b.session.match.label = '20120522_1043';
-b.acquisitions.match.label = '*';
+b.acquisitions.match.label = '11_1_spiral_high_res_fieldmap';
 s.body = savejson('',b);
-s.body
-
+data = stEsearchRun(s);
+data
 
 % Try to get the URL to the collections with the label Young Males
 clear b
