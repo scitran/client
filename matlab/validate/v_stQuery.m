@@ -1,7 +1,8 @@
-%% Query the database
+%% Use Elastic Search to Query the database
 %
-%    * Authorize
-%    * Search
+%    * Authorize - use stAuth
+%    * Set base parameters (e.g., url and token)
+%  
 %
 % LMP/BW Scitran Team, 2016
 %
@@ -85,7 +86,7 @@ s.body   = jsonData;
 disp(s)
 
 %% Run the search 
-[~, result] = system(stCommandCreate(s));
+[~, result] = system(stSearchCreate(s));
 
 % Load the result file
 scitranData = loadjson(strtrim(result)); % NOTE the use of strtrim

@@ -6,6 +6,22 @@ function cmd = stSearchCreate(varargin)
 %                          'target',{'sessions','acquisitions','files','projects'}, ...
 %                          'body', jsonBody);
 %
+% If this is NOT a collection then (50 is aribtrary)
+%
+%  curl -XGET "<url>/api/search/<target>['?size=', num2str(50)] ...
+%       -H "Authorization":<token> 
+%       -H "Content-Type:application/json" <insecureFlag> 
+%       -s -d <body> ...
+%        > <result_json_file> && echo <result_json_file>')
+%
+% If it is a collection then
+%
+%  curl -XGET "<url>/api/search/<target>['?collection=', <collection>] ...
+%       -H "Authorization":<token> 
+%       -H "Content-Type:application/json" <insecureFlag> 
+%       -s -d <body> ...
+%        > <result_json_file> && echo <result_json_file>')
+%
 % Example:
 %  s.url    = furl;
 %  s.token  = token;
@@ -60,19 +76,28 @@ result_json_file = [tempname, '.json'];
 % Set the number of search results desired (does not work with collection
 % searches)
 num_results = 50;
-
 %% Build the search command
-if isempty(collection)
+if isempty(collection) && test
     cmd = sprintf('curl -XGET "%s/api/search/%s%s" -H "Authorization":"%s" -H "Content-Type:application/json" %s -s -d ''%s'' > %s && echo "%s"',...
         url, target, ['?size=', num2str(num_results)], token, insecureFlag, body, result_json_file, result_json_file);
 else
+    %
     cmd = sprintf('curl -XGET "%s/api/search/%s%s" -H "Authorization":"%s" -H "Content-Type:application/json" %s -s -d ''%s'' > %s && echo "%s"',...
         url, target, ['?collection=', collection], token, insecureFlag, body, result_json_file, result_json_file);   
+end
+
+end
+
     
-end
-
-end
-
+    
+% #curl -X GET $BASE_URL/search?user=$USERNAME\&root=true -k -d '{
+% #   "path": "sessions",
+% #  "sessions": {
+% #     "match": {
+% #        "subject.code": "ex7236"
+% #   }
+% #    }
+% #}'
 
 
 
