@@ -6,8 +6,8 @@ function [cmd, oFile] = stEsearchCreate(varargin)
 % Inputs (either as struct or parameter/value)
 %  'token' - authorization token
 %  'url'   - scitran instance url
-%  'body'  - json data
-%  'oFile' - json output file of the search results
+%  'json'  - json data sent in for search
+%  'oFile' - json output file from the elastic search
 %
 % Example
 % 
@@ -26,7 +26,7 @@ p.addParameter('url','https://flywheel.scitran.stanford.edu',vFunc);
 p.addParameter('token','',@ischar);
 
 % This is the json data that defines the search
-p.addParameter('body','',@ischar);
+p.addParameter('json','',@ischar);
 
 % Output file name, must end with a .json extension
 oFile = [tempname, '.json'];
@@ -38,7 +38,7 @@ p.parse(varargin{:});
 
 url    = p.Results.url;
 token  = p.Results.token;
-body   = p.Results.body;
+json   = p.Results.json;
 oFile  = p.Results.oFile;
 
 %% Build the command
@@ -49,7 +49,7 @@ oFile  = p.Results.oFile;
 % num_results = 50;
 
 cmd = sprintf('curl -XGET "%s/api/search" -H "Authorization":"%s" -k -d ''%s'' > %s && echo "%s"',...
-    url, token, body, oFile, oFile);
+    url, token, json, oFile, oFile);
     
     
 end

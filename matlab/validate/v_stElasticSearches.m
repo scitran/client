@@ -2,13 +2,15 @@
 %
 %    * Authorize - use stAuth to get a token
 %    * Set base parameters (e.g., url and token)
+%    * Set json parameters for the search
+%    * Use stEsearchRun
 %
-% LMP/BW Scitran Team, 2016
-
-% Notes
 %
-% When you want a dot in the search field, for example
+% Syntax: 
+%  Explain the logic below, where b is a struct with the fields used to
+%  create the json search object.
 %
+%  Also, explain the dot in the search field,
 % {
 % 	"range": {
 % 		"subject.age": {
@@ -17,168 +19,113 @@
 % 		}
 % 	}
 % }
-% 
-% You should insert the string "_0x2E_".   In subject.age you should have
-% subject_0x2E_age.
+% We must replace subject.age by subject_0x2E_age in the struct
 %
-% If you do not include subject.age, then all ages will be returned.
-%
-% Because this is ugly, we might use the syntax _dot_ and then do a
-% strrep(). Also, notice that gte means greater than or equal to, and lte
-% for less than or equal to.
-% 
-% I believe we might need a similar 
-
+% LMP/BW Scitran Team, 2016
 
 %% Authorization
+
 % The auth returns both a token and the url of the flywheel instance
 [token, furl, ~] = stAuth('action', 'create', 'instance', 'scitran');
 fprintf('Token length %d\nConnected to: %s\n',length(token),furl)
 
-% Build up the curl command.  We use s to denote the structure that
-% contains the parameters used to create the elastic search command.
+% We use s to denote the structure that
+% contains the parameters needed to create the elastic search command.  The
+% url and token are fixed throughout.  We keep changing the json payload,
+% which we story in the slot called s.json
 clear s
 s.url    = furl;
 s.token  = token;
 
-%% Example searches from RF's search_demo.sh stored in local
-
-% # get sessions created in the last 2 weeks
-% curl -X GET $BASE_URL/search?user=$USERNAME\&root=true -k -d '{
-%     "path": "sessions",
-%     "sessions": {
-%         "range": {
-%             "created": {
-%                 "gte":"now-2w"
-%             }
-%         }
-%     }
-% }' 
+%% get sessions created in the last 2 weeks
 clear b
 b.path = 'sessions';
 b.sessions.range.created.gte = 'now-2w';
-s.body = savejson('',b);
+s.json = savejson('',b);
 data = stEsearchRun(s);
-fprintf('Found sessions in previous two weeks %d\n',length(data.sessions))
 
-% Open up the browser to the first found session
-id = data.sessions{1}.x0x5F_id;
-webid = sprintf('%s/#/dashboard/%s/%s',s.url,b.path(1:(end-1)),id)
-web(webid,'-browser')
+fprintf('Found %d sessions in previous two weeks \n',length(data.sessions))
+stBrowser(s.url,data.sessions{1});
 
-% Get sessions with this subject code
-% '{
-%     "path": "sessions",
-%     "sessions": {
-%         "match": {
-%             "subject.code": "ex7236"
-%         }
-%     }
-% }'
-%
+%% Get sessions with this subject code
 clear b
 b.path = 'sessions';
 subjectCode = 'ex4842';
 b.sessions.match.subject_0x2E_code = subjectCode;
-s.body = savejson('',b);
+s.json = savejson('',b);
 data = stEsearchRun(s);
 fprintf('Found %d sessions with subject code %s\n',length(data.sessions),subjectCode)
 
-id = data.sessions{1}.x0x5F_id;
-webid = sprintf('%s/#/dashboard/%s/%s',s.url,b.path(1:(end-1)),id);
-web(webid,'-browser')
+% Click to 'Subject' tab to see the subject code
+stBrowser(s.url,data.sessions{1});
 
-% Find a session with this label
+%% Find a session with this label
 clear b
 b.path = 'sessions';
 b.sessions.match.label= '20151128_1621';
-s.body = savejson('',b);
+s.json = savejson('',b);
+data = stEsearchRun(s);
+stBrowser(s.url,data.sessions{1});
 
 
+%% Sessions with subjects within this age range
 
-% *****Fails.  Ask RF.*****
-% # get files in acquisition
-% curl -X GET $BASE_URL/search?user=$USERNAME\&root=true -k -d '{
-%     "path": "acquisitions/files",
-%     "projects": {
-%         "match": {
-%             "label": "Testdata"
-%         }
-%     },
-%     "sessions": {
-%         "match": {
-%             "label": "baz"
-%         }
-%     },
-%     "acquisitions": {
-%         "match": {
-%             "label": "screensave"
-%         }
-%     }
-% }'
+clear b
+b.path = 'sessions';
+b.range.subject_0x2E_age.gte = 10;
+b.range.subject_0x2E_age.lte = 12;
+s.json = savejson('',b);
+data = stEsearchRun(s); 
+
+% I do not think this runs correctly
+fprintf('Found %d sessions with subjects in this range\n',length(data.sessions));
+
+%% get files in acquisition
+
 clear b
 b.path = 'acquisitions/files';
 b.projects.match.label = 'testproject';
-b.session.match.label = '20120522_1043';
+b.sessions.match.label = '20120522_1043';
 b.acquisitions.match.label = '11_1_spiral_high_res_fieldmap';
-s.body = savejson('',b);
+s.json = savejson('',b);
 data = stEsearchRun(s);
-data
+fprintf('Found %d matches to this acquisition label\n',length(data.files));
 
-% Try to get the URL to the collections with the label Young Males
+% Show the session that contains this file
+% Maybe there is a better way to get to the session with this file
+clear b
+b.path = 'sessions';
+b.sessions.match.label = '20120522_1043';
+s.json = savejson('',b);
+data = stEsearchRun(s);
+stBrowser(s.url,data.sessions{1});
+
+%% Get the URL to the collection labeled Young Males
 clear b
 b.path = 'collections';   % The s needs to be trimmed, sigh.
 b.collections.match.label = 'Young Males';
-s.body = savejson('',b);
-s.body
+s.json = savejson('',b);
 data = stEsearchRun(s);
-id = data.collections{1}.x0x5F_id;
-webid = sprintf('%s/#/dashboard/%s/%s',s.url,b.path(1:(end-1)),id);
-web(webid,'-browser')
+stBrowser(s.url,data.collections{1});
 
-
-% # get files in project/session/acquisition/collection
-% curl -X GET $BASE_URL/search?user=$USERNAME\&root=true -k -d '{
-%     "path": "files",
-%     "projects": {
-%         "match": {
-%             "label": "Testdata"
-%         }
-%     },
-%     "sessions": {
-%         "match": {
-%             "label": "baz"
-%         }
-%     },
-%     "acquisitions": {
-%         "match": {
-%             "label": "screensave"
-%         }
-%     }
-% }'
+%% # get files in project/session/acquisition/collection
 clear b
 b.path = 'files';
 b.projects.match.label = 'ENGAGE';
 b.sessions.match.label = '20160212_1145';
 b.acquisitions.match.label = '14_1_HOS_WB_HRBRAIN';
-s.body = savejson('',b);
-s.body
-
+s.json = savejson('',b);
 data = stEsearchRun(s);
 
-%% Now build the elastic search command
-
-esCMD = stEsearchCreate(s);
-
-%% Run the search 
-[~, result] = system(esCMD);
-
-% Load the result file
-fname = strtrim(result(strfind(result,'/private/tmp'):end));
-scitranData = loadjson(fname); % NOTE the use of strtrim
-
-scitranData
+% Maybe there is a better way to get to the session with this file
+% This works, but ...
+clear b
+b.path = 'sessions';
+b.projects.match.label = 'ENGAGE';
+b.sessions.match.label = '20160212_1145';
+s.json = savejson('',b);
+data = stEsearchRun(s);
+stBrowser(s.url,data.sessions{1});
 
 %%
-scitranData.sessions{1}.x0x5F_source
 
