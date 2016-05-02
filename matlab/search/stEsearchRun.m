@@ -17,8 +17,13 @@ function [srchResult, plink, srchFile] = stEsearchRun(srch)
 %% Could check the srch struct here for the appropriate fields
 %
 
-% The struct srch should have a url, token and body
-% We use those to create the elastic search command
+% The struct srch should have a url, token and json. We use those to create
+% the elastic search command.  We accept either a struct or a json notation
+% for the srch.json field.
+if isstruct(srch.json)
+    % It is a Matlab struct, so convert it to json notation.
+    srch.json = savejson('',srch.json);
+end
 esCMD = stEsearchCreate(srch);
 
 %% Run the command

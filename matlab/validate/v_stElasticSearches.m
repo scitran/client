@@ -134,6 +134,30 @@ s.json = savejson('',b);
 data = stEsearchRun(s);
 stBrowser(s.url,data.collections{1});
 
+%%
+clear b
+b.path = 'files';   % The s needs to be trimmed, sigh.
+b.collections.match.label = 'Young Males';
+b.acquisitions.match.label = 'SPGR 1mm 30deg';
+b.files.match.type = 'nifti';
+s.json = b;
+
+data = stEsearchRun(s);
+stBrowser(s.url,data.collections{1});
+
+%%
+clear b
+b.path = 'files';   % The s needs to be trimmed, sigh.
+b.collections.match.label = 'Young Males';
+b.acquisitions.match.measurement = 'Diffusion';
+b.files.match.type = 'bvec';
+s.json = savejson('',b);
+data = stEsearchRun(s);
+
+data = stEsearchRun(s);
+
+stBrowser(s.url,data.collections{1});
+
 %% get files in project/session/acquisition/collection
 
 clear b
@@ -190,4 +214,13 @@ fprintf('Found %d matching files\n',length(data.files))
 for ii=1:length(data.files)
     data.files{ii}.x0x5F_source
 end
+
+%% get all the projects
+clear b
+b.path = 'projects';
+% b.sessions.match.label = '20151128_1621';
+s.json = savejson('',b);
+data = stEsearchRun(s);
+fprintf('Found %d matching projects\n',length(data.projects))
+
 
