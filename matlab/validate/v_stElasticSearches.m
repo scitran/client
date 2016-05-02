@@ -57,8 +57,8 @@ s.json = savejson('',b);
 data = stEsearchRun(s);
 fprintf('Found %d sessions in previous two weeks \n',length(data.sessions))
 
-% To see the session in the web page, use this command
-%    stBrowser(s.url,data.sessions{1});
+%% To see the session in the web page, use this command
+stBrowser(s.url,data.sessions{1});
 
 %% Get sessions with this subject code
 clear b
@@ -82,7 +82,8 @@ s.json = savejson('',b);
 data = stEsearchRun(s);
 fprintf('Found %d sessions with the label %s\n',length(data.sessions),sessionLabel)
 
-%  stBrowser(s.url,data.sessions{1});
+%%  
+stBrowser(s.url,data.sessions{1});
 
 
 %% Sessions with subjects within this age range
