@@ -30,6 +30,7 @@
 %   b.path = 'sessions'    
 %   b.path = 'acquisitions'
 %   b.path = 'files'        
+%   b.path = 'analysis'
 %
 % There are various special cases when you set the path, as well.  Note
 % that some of these have a single '/' and some have a double '//'.
@@ -44,9 +45,7 @@
 %            sessions, files, notes, analyses in these sessions,
 %            acquisitions belonging to these sessions, files, notes,
 %            analyses in these acquisitions.   
-%   b.path = 'collections//files'   Files within a collection that is
-%            files in the matched collections, files in their sessions
-%            and in their acquisitions  
+%   b.path = 'collections//files'   Files in the matched collections
 %   b.path = 'collections//acquisitions' all acquisitions that belongs to
 %            the matched collections. 
 %
@@ -57,7 +56,7 @@
 %   and 'bool'.  Start with those, and then we will build up more complex
 %   examples.
 %
-%% Notes on notation
+%% Notation
 %
 %  Matlab uses '.' in structs, and json allows '.' as part of the
 %  variable name. So, we insert a dot on the Matlab side by inserting a
@@ -70,6 +69,7 @@
 % 		    }
 % 	       }
 %       }
+%
 % We use the code
 %     clear b; 
 %     b.range.subject_0x2E_age.lte = years2sec(10);
@@ -83,6 +83,14 @@
 % x0x5F nonsense.
 % 
 % LMP/BW Scitran Team, 2016
+
+
+% Questions for RF:
+%
+%   In the case of acquisitions/files, I suppose we always have to set the
+%   acquisition.match.label or something?  What is intended there?
+%   Same question in general for the '/' and '//'
+%
 
 %% Authorization
 
@@ -100,18 +108,18 @@ s.token  = token;
 
 % We keep changing the json payload, which we store in the slot called
 %    s.json
-% This is built up repeatedly for each of the searches, below.
+% This is built up specifically for each of the searches, below.
 
 %% get all the projects
 clear b
 b.path = 'projects';
 s.json = b;
-[data,~,sFile] = stEsearchRun(s);
-fprintf('Found %d projects\n',length(data.projects))
+[projects,~,sFile] = stEsearchRun(s);
+fprintf('Found %d projects\n',length(projects))
 
 % Save this project label for later
-projectID = data.projects{1}.x0x5F_id;
-projectLabel = data.projects{1}.x0x5F_source.label;
+projectID    = projects{1}.id;
+projectLabel = projects{1}.source.label;
 
 %% Get the sessions within the first project from above
 
@@ -119,34 +127,65 @@ clear b
 b.path = 'projects/sessions';
 b.projects.match.x0x5F_id = projectID;
 s.json = b;
-data = stEsearchRun(s);
-fprintf('Found %d sessions in the project %s\n',length(data.sessions),projLabel);
+sessions = stEsearchRun(s);
+fprintf('Found %d sessions in the project %s\n',length(sessions),projectLabel);
 
-sessionID = data.sessions{1}.x0x5F_id;
-sessionLabel = data.sessions{1}.x0x5F_source.label;
+sessionID = sessions{1}.id;
+sessionLabel = sessions{1}.source.label;
+% stBrowser(s.url,sessions{1});
 
-%% Get the acquisitions inside the session
+%% Get the acquisitions inside a session
 
 clear b
 b.path = 'sessions/acquisitions';
 b.sessions.match.x0x5F_id = sessionID;
 s.json = b;
-data = stEsearchRun(s);
+acquisitions = stEsearchRun(s);
 
-fprintf('Found %d acquisitions in the session %s\n',length(data.acquisitions),sessionLabel);
+fprintf('Found %d acquisitions in the session %s\n',length(acquisitions),sessionLabel);
+stBrowser(s.url,acquisitions{1});
+
+%% Find nifti files in the session
+
+clear b
+b.path = 'files';
+b.sessions.match.x0x5F_id = sessionID;
+b.files.match.type = 'nifti';
+s.json = b;
+files = stEsearchRun(s);
+
+nFiles = length(files);
+fprintf('Found %d nifti files in the session %s\n',nFiles,sessionLabel);
+for ii=1:nFiles
+    fprintf('%d:  %s\n',ii,files{ii}.source.name);
+end
+
+% Download a file this way
+%
+%  dl = stGet(files{1}.plink,s.token)
+%  d = niftiRead(dl);
+
+%% Look for the analyses
+
+clear b
+b.path = 'analyses';
+b.analyses.match_all = '{}';
+s.json = b;
+savejson('',b)
+analyses = stEsearchRun(s);
 
 
-%% get sessions created in the last 2 weeks
+%% Count the number of sessions created in the last 2 weeks
 
 clear b
 b.path = 'sessions';
 b.sessions.range.created.gte = 'now-2w';
 s.json = b;
-data = stEsearchRun(s);
-fprintf('Found %d sessions in previous two weeks \n',length(data.sessions))
+sessions = stEsearchRun(s);
+fprintf('Found %d sessions in previous two weeks \n',length(sessions))
 
 % To see the session in the web page, use this command
-%   stBrowser(s.url,data.sessions{1});
+%   stBrowser(s.url,sessions{1});
 
 
 %% Get sessions with this subject code
@@ -155,35 +194,35 @@ b.path = 'sessions';
 subjectCode = 'ex4842';
 b.sessions.match.subject_0x2E_code = subjectCode;
 s.json = b;
-data = stEsearchRun(s);
-fprintf('Found %d sessions with subject code %s\n',length(data.sessions),subjectCode)
+sessions = stEsearchRun(s);
+fprintf('Found %d sessions with subject code %s\n',length(sessions),subjectCode)
 
 % Click to 'Subject' tab to see the subject code
-%    stBrowser(s.url,data.sessions{1});
+%    stBrowser(s.url,sessions{1});
 
 %% Find a session with a specific label
 
+sessionLabel = '20151128_1621';
+
 clear b
 b.path = 'sessions';
-sessionLabel = '20151128_1621';
 b.sessions.match.label= sessionLabel;
 s.json = b;
-data = stEsearchRun(s);
-fprintf('Found %d sessions with the label %s\n',length(data.sessions),sessionLabel)
+sessions = stEsearchRun(s);
+fprintf('Found %d sessions with the label %s\n',length(sessions),sessionLabel)
 
 % Browse the session.
-%   stBrowser(s.url,data.sessions{1});
+%   stBrowser(s.url,sessions{1});
 
 %% Sessions with subjects within this age range
 
 clear b
 b.path = 'sessions';
-b.range.subject_0x2E_age.lte = 12;
+b.range.subject_0x2E_age.gte = year2sec(12);
 s.json = b;
-data = stEsearchRun(s); 
+sessions = stEsearchRun(s); 
 
-% I do not think this runs correctly.  The number is far too large.
-fprintf('Found %d sessions with subjects in this range\n',length(data.sessions));
+fprintf('Found %d sessions with subjects in this range\n',length(sessions));
 
 %% get files from a particular project, session, and acquisition
 
@@ -192,16 +231,13 @@ b.path = 'acquisitions/files';
 b.projects.match.label = 'testproject';
 b.sessions.match.label = '20120522_1043';
 b.acquisitions.match.label = '11_1_spiral_high_res_fieldmap';
+b.files.match.type = 'nifti';
 s.json = b;
-data = stEsearchRun(s);
-fprintf('Found %d matches to this acquisition/files label\n',length(data.files));
+files = stEsearchRun(s);
+fprintf('Found %d matches to this acquisition/files label\n',length(files));
 
 % This is how to download the nifti file
-fname = data.files{1}.x0x5F_source.name;
-id    = data.files{1}.x0x5F_source.container_id;
-sz    = data.files{1}.x0x5F_source.size;
-plink = sprintf('%s/api/acquisitions/%s/files/%s',s.url, id, fname);
-dl_file = stGet(plink, s.token, 'destination', fullfile(pwd,fname),'size',sz);
+dl_file = stGet(files{1}.plink, s.token, 'destination', fullfile(pwd,fname),'size',sz);
 
 %% Show the session that contains this file
 
@@ -216,11 +252,11 @@ stBrowser(s.url,data.sessions{1});
 %% Get the URL to the collection labeled Young Males
 
 clear b
-b.path = 'collections';   % The s needs to be trimmed, sigh.
+b.path = 'collections';  
 b.collections.match.label = 'Young Males';
 s.json = b;
-data = stEsearchRun(s);
-stBrowser(s.url,data.collections{1});
+collections = stEsearchRun(s);
+stBrowser(s.url,collections{1});
 
 %%
 clear b
@@ -230,8 +266,8 @@ b.acquisitions.match.label = 'SPGR 1mm 30deg';
 b.files.match.type = 'nifti';
 s.json = b;
 
-data = stEsearchRun(s);
-stBrowser(s.url,data.collections{1});
+files = stEsearchRun(s);
+stBrowser(s.url,files{1});
 
 %%
 clear b

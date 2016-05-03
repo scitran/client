@@ -1,4 +1,4 @@
-function [srchResult, plink, srchFile] = stEsearchRun(srch)
+function [result, plink, srchFile] = stEsearchRun(srch)
 % Create a cmd and run an elastic search from the search struct
 %
 %  [srchResult, plink, srchFile] = stEsearchRun(s)
@@ -9,7 +9,7 @@ function [srchResult, plink, srchFile] = stEsearchRun(srch)
 %
 % Return:
 %  srchResult:  Struct of data from scitran
-%  plink:       If data type is files, then this is a cell array of permalinks
+%  plink:       If files, a cell array of permalinks can be returned
 %  srchFile:    Name of json file returned by the search
 %
 % BW Scitran Team 2016
@@ -29,22 +29,95 @@ end
 esCMD = stEsearchCreate(srch);
 
 %% Run the command
+
+% result is a string with a bunch of stuff RF put in it, including timing
+% information and the json output file.  We get the filename below.
 [~, result] = system(esCMD);
 
-%% Load the result file, which is a string in the returned data.
-
+% Load the result json file. NOTE the use of strtrim to get rid of the
+% final blank character
 srchFile = strtrim(result(strfind(result,'/private/tmp'):end));
-srchResult = loadjson(srchFile); % NOTE the use of strtrim
-% If the user is searching for files, we build the plink for a file
-% download for them right here.  How nice of us!
-if nargout >= 2
-    if strcmp(fieldnames(srchResult),'files')
-        n = length(srchResult.files);
-        plink = cell(1,n);
-        for ii=1:n
-            fname = srchResult.files{ii}.x0x5F_source.name;
-            id    = srchResult.files{ii}.x0x5F_source.container_id;
-            plink{ii} = sprintf('%s/api/acquisitions/%s/files/%s',srch.url, id, fname);
-        end 
+
+% This is now a Matlab struct with a lot of ugly terms.  We clean them up
+% below.
+srchResult = loadjson(srchFile); 
+if isfield(srchResult,'message')
+    result = srchResult;
+    fprintf('Search error\n');
+    fprintf('Status code: %d\n',result.status_code);
+    fprintf('Message:     %s\n',result.message);
+    return;
+end
+
+%% Define the search type and re-write the data into result
+
+% This is simply to clean up the look of the returned Matlab structure.
+srchType = fieldnames(srchResult);
+switch srchType{1}
+    % TODO:  Sort several of these by their label before returning.
+    case 'projects'
+        nProjects = length(srchResult.projects);  
+        result = cell(1,nProjects);
+        for ii=1:nProjects          
+            result{ii}.id     = srchResult.projects{ii}.x0x5F_id;
+            result{ii}.type   = srchResult.projects{ii}.x0x5F_type;
+            result{ii}.source = srchResult.projects{ii}.x0x5F_source;
+            result{ii}.score  = srchResult.projects{ii}.x0x5F_score;
+            result{ii}.index  = srchResult.projects{ii}.x0x5F_index;        
+        end
+    case 'sessions'
+        nSessions = length(srchResult.sessions);
+        result = cell(1,nSessions);
+        for ii=1:nSessions
+            result{ii}.id     = srchResult.sessions{ii}.x0x5F_id;
+            result{ii}.type   = srchResult.sessions{ii}.x0x5F_type;
+            result{ii}.source = srchResult.sessions{ii}.x0x5F_source;
+            result{ii}.score  = srchResult.sessions{ii}.x0x5F_score;
+            result{ii}.index  = srchResult.sessions{ii}.x0x5F_index;
+        end
+    case 'acquisitions'
+        nAcquisitions = length(srchResult.acquisitions);
+        result = cell(1,nAcquisitions);
+        for ii=1:nAcquisitions
+            result{ii}.id     = srchResult.acquisitions{ii}.x0x5F_id;
+            result{ii}.type   = srchResult.acquisitions{ii}.x0x5F_type;
+            result{ii}.source = srchResult.acquisitions{ii}.x0x5F_source;
+            result{ii}.score  = srchResult.acquisitions{ii}.x0x5F_score;
+            result{ii}.index  = srchResult.acquisitions{ii}.x0x5F_index;
+        end
+    case 'files'
+        nFiles = length(srchResult.files);
+        result = cell(1,nFiles);
+        for ii=1:nFiles
+            result{ii}.id     = srchResult.files{ii}.x0x5F_id;
+            result{ii}.type   = srchResult.files{ii}.x0x5F_type;
+            result{ii}.source = srchResult.files{ii}.x0x5F_source;
+            result{ii}.score  = srchResult.files{ii}.x0x5F_score;
+            result{ii}.index  = srchResult.files{ii}.x0x5F_index;
+        end
+    case 'collections'
+        nCollections = length(srchResult.collections);
+        result = cell(1,nCollections);
+        for ii=1:nCollections
+            result{ii}.id     = srchResult.collections{ii}.x0x5F_id;
+            result{ii}.type   = srchResult.collections{ii}.x0x5F_type;
+            result{ii}.source = srchResult.collections{ii}.x0x5F_source;
+            result{ii}.score  = srchResult.collections{ii}.x0x5F_score;
+            result{ii}.index  = srchResult.collections{ii}.x0x5F_index;
+        end
+    otherwise
+        error('Unknown search type %s\n',srchType{1})
+end
+
+%% If the user is searching for files, we build the plinks for each file
+if strcmp(srchType,'files')
+    n = length(result);
+    plink = cell(1,n);
+    for ii=1:n
+        fname = result{ii}.source.name;
+        id    = result{ii}.source.container_id;
+        result{ii}.plink = sprintf('%s/api/acquisitions/%s/files/%s',srch.url, id, fname);
     end
+end
+
 end
