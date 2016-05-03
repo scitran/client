@@ -113,6 +113,9 @@ s.token  = token;
 %% get all the projects
 clear b
 b.path = 'projects';
+b.projects.match.group = 'wandell';
+% Why doesn't ths work
+% b.projects.match.label = 'vwfa'
 s.json = b;
 [projects,~,sFile] = stEsearchRun(s);
 fprintf('Found %d projects\n',length(projects))
@@ -120,6 +123,8 @@ fprintf('Found %d projects\n',length(projects))
 % Save this project label for later
 projectID    = projects{1}.id;
 projectLabel = projects{1}.source.label;
+
+
 
 %% Get the sessions within the first project from above
 
