@@ -8,14 +8,16 @@ function [srchResult, plink, srchFile] = stEsearchRun(srch)
 %  create the elastic search command
 %
 % Return:
-%   srchResult:  Struct of data from scitran
-%   plink:       If data type is files, then this is a cell array of permalinks
-%   srchFile:    Name of json file returned by the search
+%  srchResult:  Struct of data from scitran
+%  plink:       If data type is files, then this is a cell array of permalinks
+%  srchFile:    Name of json file returned by the search
 %
 % BW Scitran Team 2016
 
 %% Could check the srch struct here for the appropriate fields
 %
+
+plink = [];   % Need a default
 
 % The struct srch should have a url, token and json. We use those to create
 % the elastic search command.  We accept either a struct or a json notation
@@ -33,7 +35,6 @@ esCMD = stEsearchCreate(srch);
 
 srchFile = strtrim(result(strfind(result,'/private/tmp'):end));
 srchResult = loadjson(srchFile); % NOTE the use of strtrim
-
 % If the user is searching for files, we build the plink for a file
 % download for them right here.  How nice of us!
 if nargout >= 2
