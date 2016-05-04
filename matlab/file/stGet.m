@@ -4,7 +4,7 @@ function destination = stGet(pLink,token,varargin)
 %   fName = stGet(pLink,token,'destination',filename,'size',size)
 %
 % Required Inputs
-%  pLink:  Permalink from the SDM
+%  pLink:  Either a permalink or a files{} struct with a plink slot
 %  token:  Authorization token for download
 %
 % Optional Inputs
@@ -24,7 +24,8 @@ function destination = stGet(pLink,token,varargin)
 
 %% Parse inputs
 p = inputParser;
-p.addRequired('pLink',@ischar);
+vFunc = @(x) (ischar(x) || isstruct(x));
+p.addRequired('pLink',vFunc);
 p.addRequired('token',@ischar);
 
 % Param/value pairs
@@ -38,6 +39,9 @@ token = p.Results.token;
 destination = p.Results.destination;
 size = p.Results.size;
 
+% If we sent in a files{} struct, then get the plink slot out now.
+if isstruct(pLink), pLink = pLink.plink; end
+    
 %% Combine permalink and username to generate the download link
 
 % Handle permalinks which may have '?user=' elements
