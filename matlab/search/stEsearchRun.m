@@ -105,18 +105,32 @@ switch srchType{1}
             result{ii}.score  = srchResult.collections{ii}.x0x5F_score;
             result{ii}.index  = srchResult.collections{ii}.x0x5F_index;
         end
+    case 'analyses'
+        nAnalyses = length(srchResult.analyses);
+        result = cell(1,nAnalyses);
+        for ii=1:nAnalyses
+            result{ii}.id     = srchResult.analyses{ii}.x0x5F_id;
+            result{ii}.type   = srchResult.analyses{ii}.x0x5F_type;
+            result{ii}.source = srchResult.analyses{ii}.x0x5F_source;
+            result{ii}.score  = srchResult.analyses{ii}.x0x5F_score;
+            result{ii}.index  = srchResult.analyses{ii}.x0x5F_index;
+        end
     otherwise
         error('Unknown search type %s\n',srchType{1})
 end
 
 %% If the user is searching for files, we build the plinks for each file
+
+% The files might be part of an acquisition, or part of a session, or part
+% of a project.  So many files, so little time.
 if strcmp(srchType,'files')
     n = length(result);
     plink = cell(1,n);
     for ii=1:n
-        fname = result{ii}.source.name;
+        cname = result{ii}.source.container_name;
         id    = result{ii}.source.container_id;
-        result{ii}.plink = sprintf('%s/api/acquisitions/%s/files/%s',srch.url, id, fname);
+        fname = result{ii}.source.name;
+        result{ii}.plink = sprintf('%s/api/%s/%s/files/%s',srch.url, cname, id, fname);
     end
 end
 

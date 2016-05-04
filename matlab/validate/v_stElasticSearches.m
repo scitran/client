@@ -95,16 +95,14 @@
 %% Authorization
 
 % The auth returns a token and the url of the flywheel instance
-[token, furl, ~] = stAuth('action', 'create', 'instance', 'scitran');
+[s.token, s.url] = stAuth('action', 'create', 'instance', 'scitran');
 fprintf('Token length %d\nConnected to: %s\n',length(token),furl)
+
+%% Searches
 
 % We use the structure s to store the parameters needed to create the
 % elastic search command.  The url and token are fixed throughout, so we
 % set them here.  
-
-clear s
-s.url    = furl;
-s.token  = token;
 
 % We keep changing the json payload, which we store in the slot called
 %    s.json
@@ -113,8 +111,10 @@ s.token  = token;
 %% get all the projects
 clear b
 b.path = 'projects';
-b.projects.match.group = 'wandell';
 % Why doesn't ths work
+b.projects.bool.must(1).match.group = 'wandell';
+b.projects.bool.must(2).match.label = 'vwfa';
+
 % b.projects.match.label = 'vwfa'
 s.json = b;
 [projects,~,sFile] = stEsearchRun(s);
@@ -123,8 +123,7 @@ fprintf('Found %d projects\n',length(projects))
 % Save this project label for later
 projectID    = projects{1}.id;
 projectLabel = projects{1}.source.label;
-
-
+% stBrowser(s.url,projects{1});
 
 %% Get the sessions within the first project from above
 
@@ -174,10 +173,19 @@ end
 
 clear b
 b.path = 'analyses';
-b.analyses.match_all = '{}';
 s.json = b;
-savejson('',b)
 analyses = stEsearchRun(s);
+
+% Now show the collection that contains this analysis
+analyses{1}.source
+
+% Which collection is the analysis in?
+clear b; 
+b.path = analyses{1}.source.container_name; 
+b.collections.match.x0x5F_id = analyses{1}.source.container_id;
+s.json = b;
+collections = stEsearchRun(s);
+stBrowser(s.url,collections{1})
 
 
 %% Count the number of sessions created in the last 2 weeks
@@ -189,6 +197,10 @@ s.json = b;
 sessions = stEsearchRun(s);
 fprintf('Found %d sessions in previous two weeks \n',length(sessions))
 
+% To see the sessions within some time range use:
+%   b.sessions.range.created.gte = dateFormat;
+%   b.sessions.range.created.lte = dateFormat;
+%
 % To see the session in the web page, use this command
 %   stBrowser(s.url,sessions{1});
 

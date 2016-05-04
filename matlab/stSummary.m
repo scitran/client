@@ -41,7 +41,7 @@ for ii=1:length(projects)
     s.json = b;
     sessions = stEsearchRun(s);
     nSessions = nSessions + length(sessions); 
-    str2 = sprintf('\t%s (%d sessions)\n',pLabel,length(sessions));
+    str2 = sprintf('\t%s (%d sessions)\n',pLabel,length(sessions))
     str  =  addText(str,str2);
 end
 str = addText(str,sprintf('\n  Total sessions:  %d\n',nSessions));
