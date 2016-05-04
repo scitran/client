@@ -1,72 +1,101 @@
 %% v_stEsearchDocker
 %
-%  Illustrates how we interaction from the command line with the scitran
-%  database.
+% This script illustrates how to interact from the command line with the
+% scitran database. We have a Matlab and a Python interface for doing so.
 %
-%  This example executes an FSL brain extraction tool (bet2) using data
-%  from a scitran database. The processed data are placed back in the
-%  scitran database in the 'Session Analyses' section.
+% The same operations will be possible from within the web browser via an
+% easy-to-use graphic interface (pulldown menus and forms to set the
+% parameters).
 %
-%  Separately, we show how to create a "Reproducibility file".  This is a
-%  json file that includes all the parameters required for running the
-%  analysis again.
+% We follow reproducible research practices: you can always see the full
+% code and parameters that are applied to the data.  You will also be able
+% to search the database to see what parameters and code other people are
+% running on their data.
+%
+% This code shows the principles of what happens behind the graphical user
+% interface in the browser window.
+%
+% You will always be able to use a command line interface like this, so you
+% can build your own analyses and tools while following reproducible
+% methods.
+%
+% Example:
+%
+%  In this example, we execute a docker container built to run the FSL
+%  brain extraction tool (bet2). Data are retrieved from a scitran database
+%  and processed. The result are placed back in the scitran database.
+%
+%  Flywheel uses the term 'Gear' to describe the process of
+%
+%     * retrieving the data, 
+%     * selecting the parameters, 
+%     * running a program in a docker container, and
+%     * putting the result back into the database
+%
+%  This script illustrates one simple Gear.  There will be many other gears
+%  for a very wide range of data processing purposes. We are building gears
+%  for (a) tractography, (b) cortical mesh visualization, (c) quality
+%  assurance, (d) tissue measurement, (e) spectroscopy, and ...
+%
+%  We are committed to making the code and parameters transparent, and we
+%  are committed to helping you create and share your own Gears.  That's
+%  why we call this the project on scientific transparency!
 %
 % LMP/BW, Scitran Team, 2016
 
 %%  Authorization 
 
-% Get the authorized token
+% Get authorization to read from the database
 [s.token, s.url] = stAuth('action', 'create', 'instance', 'scitran');
 
-%% Configure docker/directories
+%% Configure your local computer to run docker containers
 
-% This is one time on the local machine.
+% A docker container is a virtual machine that can be copied to almost any
+% computer and run there.  We can have many different docker containers
+% that execute all kinds of data processing
 
-% Configure docker
+% Docker containers can run either locally, on your machine, or on a remote
+% computer in the Cloud.  In this example, we will run the brain extraction
+% tool from FSL, which we have installed in a docker container.
 stDockerConfig('machine', 'default');
 
-% Make input directory
+% Make an empty directory for the input to the docker container
 iDir    = fullfile(pwd,'input');
 stDirCreate(iDir);
 
-% Make utput directory
+% Make an empty directory for the output from the docker container
 oDir = fullfile(pwd,'output');
 stDirCreate(oDir);
 
-%% Set up and execute a simple search 
+%% Execute a simple search 
 
-% This search and many like it should be generated from a GUI interface
-% that helps with selecting the possible options.
+% This search could also be done from the browser interface
 
-% We are looking for T1 weighted 1mm files in the GearTest collection.
+% We are searching for T1 weighted files in the GearTest collection.
 clear b
 b.path = 'files';                         % Looking for files
 
-% These files are
+% These files match the following properties
 b.collections.match.label  = 'GearTest';   % In this collection
-b.acquisitions.match.label = 'T1w';        % Acquisition T1w 1mm
-b.files.match.type         = 'nifti';      % The nifti type
+b.acquisitions.match.label = 'T1w';        % Acquisition T1w
+b.files.match.type         = 'nifti';      % A nifti type
 
 % Attach the search terms to the json field in the search structure
 s.json = b;
 
-% Run the search 
+% Run the search and get information about files
 files = stEsearchRun(s);
 
-% What files did we find?
-fprintf('Found %d matching files\n',length(files))
-for ii=1:length(files)
-    fprintf('%d  %s\n',ii,files{ii}.source.name);
-end
+%% Get the file from the scitran database
 
-%% RUN BET: #2 Download the file from the scitran database
-
-% This could be a loop for files{}.  But for now, just execute on one files
+% Execute the docker container on one file.  This could be a loop.
 fname = files{1}.source.name;
 destFile = fullfile(iDir, fname);
-dl_file = stGet(files{1}.plink,s.token,'destination',destFile);
 
-%% Set up parameters for the docker container and run it
+% Get the file from the database
+stGet(files{1}.plink,s.token,'destination',destFile);
+
+%% Set up for the brain extraction tool docker container and run it
 
 % Build the docker structure to run the container
 clear docker
@@ -80,38 +109,61 @@ docker.iFile =  fname;
 baseName = strsplit(docker.iFile,'.nii.gz');
 docker.oFile  = [baseName{1},'_bet'];
 
-% Set up which docker container to run
+% Indicate that we want to run the brain extraction tool (bet) docker
+% container
 docker.container = 'vistalab/bet';
 
-% The docker struct is essential for reproducibility
+% The docker struct and the files cell array contains the information
+% needed for reproducibility
 stDockerRun(docker);
 
-%% Find the collection in the database
+%% Upload the result to the collection in the database
 
-% We will upload the data to the Collection Analyses section
+% Find information about the Collection so we can upload
 clear a
 a.path = 'collections';                    
 a.collections.match.label = b.collections.match.label;
 s.json = a;
 collections = stEsearchRun(s);
 
-% Build a struct with the information needed to upload the analysis.
+% Build a struct with the information needed to upload the results
 clear upload
 upload.label = 'FSL bet2 analysis';      % Analysis label
 upload.outputs{1}.name = [docker.oFile,'.nii.gz'];   % Name of the results file from vistalab/bet
 upload.inputs{1}.name = docker.iFile;    % Name of the results file
 
-% We could add elements to the upload structure, such as a description of
-% the analysis (note), the name of the person who did the analysis.  These
-% names are free form.
-
-% Put the results in the database
+% Store the result in the database
 stPutAnalysis(s, collections{1}, upload);
 
 %% Go to the browser and have a look at the collection
 
-% This will find me the sessions in FearTest
 stBrowser(s.url,collections{1});
+
+%%
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 % This would be a more direct way to get to the web page
 % clear b
@@ -156,5 +208,3 @@ stBrowser(s.url,collections{1});
 %     fprintf('Upload Error: %s\n', result);
 % end
 
-
-%%
