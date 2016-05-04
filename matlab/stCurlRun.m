@@ -60,7 +60,9 @@ end
 %% Run the curl command
 
 [status, result] = system(args.curl_command);
-
+if status ~= 0
+    fprintf('stCulrRun error: %s\n', result);
+end
 
 %% Reset the ENV
 

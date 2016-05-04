@@ -3,17 +3,20 @@ function url = stBrowser(sturl, obj, varargin)
 %
 %  url = stBrowser(sturl, obj)
 %
-% Input:
-%  sturl:    Scitran site url, say https://flywheel.scitran.stanford.edu
-%  obj:      A struct returned by an stEsearchRun command
-%  display:  Bring up the browser (default is true)
-%  collection:  This is a session or file from a collection
+% Inputs:
+%  sturl:       Scitran site url, say https://flywheel.scitran.stanford.edu
+%  obj:         A struct returned by an stEsearchRun command
+%
+% Optional parameter/value pairs
+%  display:     Bring up the browser (default is true)
+%  collection:  Set to true if this a session or file from a collection
 %
 % Output:
 %  url:    The url to a project or session or collection
 %
 % Examples:
 %    stBrowse('https://flywheel.scitran.stanford.edu',obj,'display',false);
+%    stBrowse('https://flywheel.scitran.stanford.edu',obj,'collection',true);
 %
 % BW  Scitran Team, 2016
 
@@ -27,19 +30,23 @@ p.addRequired('sturl',vFunc);
 p.addRequired('obj',@isstruct);
 
 p.addParameter('display',true,@islogical);
-p.addParameter('collection',false,@islogical);
 
-p.parse(sturl,obj);
-sturl = p.Results.sturl;
-obj   = p.Results.obj;
-display = p.Results.display;
+% If this exists, then it must be a struct.
+c.c = false;
+isstruct(c)
+p.addParameter('collection',c,@isstruct);
+
+p.parse(sturl,obj,varargin{:});
+sturl      = p.Results.sturl;
+obj        = p.Results.obj;
+display    = p.Results.display;
 collection = p.Results.collection;
 
 %% Build and show the web URL
 
-if collection
-    % We want to show a session or acquisition in the context of a
-    % collection.  
+if isfield(collection,'id')
+    % Show a session in the context of a collection.
+    url = sprintf('%s/#/dashboard/collection/%s/session/%s',sturl,collection.id,obj.id);
 else
     % We show a session, acquisition in the context of the project, not 
     switch obj.type

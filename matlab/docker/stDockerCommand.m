@@ -1,7 +1,7 @@
-function dockerCommand = stDockerCommand(container,varargin)
+function dockerCommand = stDockerCommand(varargin)
 % Create a docker command to run a container
 %
-%   
+%   dockerCommand = stDockerCommand(varargin)
 %
 % Inputs:
 %    container - the Docker container to run
@@ -18,12 +18,12 @@ function dockerCommand = stDockerCommand(container,varargin)
 
 %%
 p = inputParser;
-p.addRequired('container',@ischar);
+p.addParameter('container',@ischar);
 p.addParameter('iFile','notNamed',@ischar);
 p.addParameter('oFile','notNamed',@ischar);
 p.addParameter('iDir','input',@ischar);
 p.addParameter('oDir','output',@ischar);
-p.parse(container,varargin{:});
+p.parse(varargin{:});
 
 container = p.Results.container;
 iDir  = p.Results.iDir;
