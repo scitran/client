@@ -1,45 +1,40 @@
-%% v_stEsearchDocker
+%% Running a Gear
 %
-% This script illustrates how to interact from the command line with the
-% scitran database. We have a Matlab and a Python interface for doing so.
+%            *** The project on scientific transparency ***
 %
-% The same operations will be possible from within the web browser via an
+%  Flywheel uses the term 'Gear' to describe the process of
+%
+%     * retrieving data from a scitran database,
+%     * selecting the parameters, 
+%     * analyzing the data with a program stored in a docker container, and
+%     * placing the result and parameters into the database for
+%       scientific transparency and reproducibility
+%
+% This script illustrates one simple Gear for anatomical processing
+% (skull-stripping).  In this example, we execute a docker container built
+% to run the FSL brain extraction tool (bet2). Data are retrieved from a
+% scitran database and processed. The result are placed back in the scitran
+% database.
+%
+% There will be many other gears for a very wide range of data processing
+% purposes. We are building gears for (a) tractography, (b) cortical mesh
+% visualization, (c) quality assurance, (d) tissue measurement, (e)
+% spectroscopy, and ...
+%
+% Operating Gears will be possible from within the web browser via an
 % easy-to-use graphic interface (pulldown menus and forms to set the
 % parameters).
-%
-% We follow reproducible research practices: you can always see the full
-% code and parameters that are applied to the data.  You will also be able
-% to search the database to see what parameters and code other people are
-% running on their data.
 %
 % This code shows the principles of what happens behind the graphical user
 % interface in the browser window.
 %
-% You will always be able to use a command line interface like this, so you
-% can build your own analyses and tools while following reproducible
-% methods.
+% This script illustrates how to interact from the command line with the
+% scitran database using Matlab. There is also a Python interface.  Using
+% these command line tools, you can build your own Gears.
 %
-% Example:
-%
-%  In this example, we execute a docker container built to run the FSL
-%  brain extraction tool (bet2). Data are retrieved from a scitran database
-%  and processed. The result are placed back in the scitran database.
-%
-%  Flywheel uses the term 'Gear' to describe the process of
-%
-%     * retrieving the data, 
-%     * selecting the parameters, 
-%     * running a program in a docker container, and
-%     * putting the result back into the database
-%
-%  This script illustrates one simple Gear.  There will be many other gears
-%  for a very wide range of data processing purposes. We are building gears
-%  for (a) tractography, (b) cortical mesh visualization, (c) quality
-%  assurance, (d) tissue measurement, (e) spectroscopy, and ...
-%
-%  We are committed to making the code and parameters transparent, and we
-%  are committed to helping you create and share your own Gears.  That's
-%  why we call this the project on scientific transparency!
+% We are committed to making our code and parameters transparent, and we
+% are committed to helping you create and share your own Gears.  That's
+% why we call this the project on scientific transparency!
 %
 % LMP/BW, Scitran Team, 2016
 
@@ -165,13 +160,15 @@ stBrowser(s.url,collections{1});
 
 
 
-% This would be a more direct way to get to the web page
-% clear b
-% b.path = 'sessions';
-% b.collections.match.label = 'GearTest';
-% s.json = b;
-% sessions = stEsearchRun(s);
-% stBrowser(s.url,sessions{1},'collection',collections{1});
+
+
+
+
+
+
+
+
+
 
 
 %% Display the resulting analysis ID (as json)
