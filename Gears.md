@@ -11,7 +11,7 @@ Gears will be available within the web browser via an easy-to-use graphic interf
 
 ### Executing a Gear
 
-The script **v_stEsearchDocker.m** illustrates one simple Gear for anatomical processing (skull-stripping).  The idea is explained [in this video](https://youtu.be/eS7vRzhbpjg).  
+The script [**v_stEsearchDocker.m**](https://github.com/scitran/client/blob/master/matlab/validate/v_stElasticSearches.m) illustrates one simple Gear for anatomical processing (skull-stripping).  The idea is explained [in this video](https://youtu.be/eS7vRzhbpjg).  
 
 In this example, data are retrieved from a scitran database and processed. The result are placed back in the scitran
 database.
