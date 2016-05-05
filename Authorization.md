@@ -1,5 +1,3 @@
-## Authorization
-
 To access a scitran database, use the stAuth command
 
    [srch.url, srch.token, status] = stAuth(varargin)
