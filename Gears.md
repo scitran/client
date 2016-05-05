@@ -1,9 +1,11 @@
 Flywheel uses the term 'Gear' to describe the process of
 
   * retrieving data from a scitran database,
-  * selecting the parameters, 
-  * analyzing the data with a program stored in [docker containers](https://www.docker.com/what-docker), and
+  * selecting the analysis program and its parameters
+  * executing the program to produce results
   * placing the result and parameters into the database for scientific transparency and reproducibility
+
+To support reproducible research, Gears are usually built around programs stored in a [docker container](https://www.docker.com/what-docker).  This is a tool that Docker containers wrap the analysis program in a complete filesystem that contains everything it needs to run: code, runtime, system tools, system libraries – anything you can install on a server. This guarantees that it will always run the same, regardless of the environment it is running in.
 
 Gears will be available within the web browser via an easy-to-use graphic interface (pulldown menus and forms to set the parameters).  There will be a Flywheel system for managing Gear execution and storing results from the web interface.  The code here shows how you can execute and manage gears from within Matlab.
 
