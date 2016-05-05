@@ -23,8 +23,8 @@ Then we identify the file properties.
 
 Finally, you are ready to run the search
 
-   % Run the search and get information about files that match the criteria
-   files = stEsearchRun(s);
+    % Run the search and get information about files that match the criteria
+    files = stEsearchRun(s);
 
 The variable 'files' is a cell array of Matlab structures;  each contains the database properties of a file that matches your criterion.  You can retrieve one of these files with the stGet() command
 
