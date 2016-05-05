@@ -9,7 +9,7 @@ The **scitran client** repository implements a command line interface to allow u
 
 These scitran client can be run from anywhere on the Internet, securely addressing the data in the scitran database. In this way, a user can process data stored in a scitran database either using their local computer or from a larger computational resource such as a Cloud Compute engine.  
 
-The key elements that supports **reproducible research** is this:  The original files are securely stored in a database, the analysis methods are precisely described and reproducibly (using [Gears]()), and the results and analysis specification are stored back in the database. 
+The key elements that supports **reproducible research** is this:  The original files are securely stored in a database, the analysis methods are precisely described and reproducibly (using [Gears](https://github.com/scitran/client/wiki/Gears)), and the results and analysis specification are stored back in the database. 
 
 The **scitran client** will include implementations in both Matlab and Python.  The client will include examples of how to reproducibly run many standard functions from FSL, FreeSurfer, SPM, and other packages.
 
