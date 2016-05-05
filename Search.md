@@ -1,6 +1,6 @@
-Within scitran's [MongoDB database](https://www.mongodb.org/), files are stored using complex names designed for efficiency.  When humans want to interact with the files, we need clearer filenames and procedures.
+Scitran stores files using complex names designed for efficiency.  The files are named by their content (content addressable data), which offers some striking efficiencies. Scitran's [MongoDB database](https://www.mongodb.org/) describes information about these files, and this is addressed through the MongoDB API.
 
-The scitran client uses [elastic search](http://joelabrahamsson.com/elasticsearch-101/) to provide a simple clear way to access files and other database objects (sessions, projects, acquisitions, collections, analyses).
+But when humans want to interact with the files, we need clearer filenames and procedures.  The scitran client uses [elastic search](http://joelabrahamsson.com/elasticsearch-101/) to provide a simple clear way to access files and other database objects (sessions, projects, acquisitions, collections, analyses).
 
 Because the database is secure, you must first obtain [authorization](https://github.com/scitran/client/wiki/Authorization).  Typically, we store the url and token in a structure, such as
 
