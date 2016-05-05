@@ -1,5 +1,3 @@
-## The Gear Concept
-
 Flywheel uses the term 'Gear' to describe the process of
 
   * retrieving data from a scitran database,
@@ -7,7 +5,7 @@ Flywheel uses the term 'Gear' to describe the process of
   * analyzing the data with a program stored in a docker container, and
   * placing the result and parameters into the database for scientific transparency and reproducibility
 
-## Executing a Gear
+### Executing a Gear
 
 The script **v_stEsearchDocker.m** illustrates one simple Gear for anatomical processing (skull-stripping).  The idea is explained [in this video](https://youtu.be/eS7vRzhbpjg).  
 
@@ -23,4 +21,6 @@ This code shows the principles of what happens behind the graphical user interfa
 This script illustrates how to interact from the command line with the scitran database using Matlab. There is also a Python interface.  Using these command line tools, you can build your own Gears.
 
 We are committed to making our code and parameters transparent, and we are committed to helping you create and share your own Gears.  That's why we call this the project on scientific transparency!
+
+### Building a Gear
 
