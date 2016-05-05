@@ -1,4 +1,4 @@
-Flywheel uses the term 'Gear' to describe the process of
+Flywheel uses the term **Gear** to describe the process of
 
   * retrieving data from a scitran database,
   * selecting the analysis program and its parameters
