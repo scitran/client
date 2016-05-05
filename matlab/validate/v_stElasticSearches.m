@@ -1,30 +1,55 @@
-%% Scitran search examples
+%% Scitran search
 %
-% To interact with the database, you need to find key structures, such as
-% files, acquisitions (groups of related files), sessions, and projects.
-% This search method shows how to find these database objects.  The idea is
-% this:
+% It is possible to interact with the database, either to process the files
+% or to discover content, using Matlab or Python.  This script illustrates
+% various ways to search the database to find files and experiments.
 %
-%    * Authorize yourself - use stAuth to get a token
-%    * Set search conditions as a Matlab structure
-%    * Use stEsearchRun to perform the search and return the object
+% The basic objects in the data base comprise individual files,
+% acquisitions (groups of related files), sessions, and projects. These
+% objects are described a little more below and also on the scitran/client
+% wiki page.
+%
+% The scitran client supports search the data base to identify these
+% objects. The principle of the search is simple:
+%
+%    * Authorization - use stAuth to get a token
+%    * Use a Matlab structure to set up the search requirements for one of
+%      the object types  
+%    * Use stEsearchRun to perform the search
+%    * The results are returned in a cell array that lists the objects that
+%      meet the search criterion
 % 
 % Principles
 %
 % 1. Basic terms
 %
-%  A *project* includes multiple sessions
-%  A project belongs to a research *group*
-%  A *session* is part of a project
-%  Each session includes multiple *acquisitions*
-%  Each acquisition includes multiple *files*
-%  A *collection* is built from multiple *acquisitions*
+%  * A project includes the data from multiple sessions; a project
+%    belongs to a research *group* 
+%  * Session - What you might have done in an hour's session at the
+%    scanner, collecting a variety of data
+%  * Acquisitions - groups of related files, such as the diffusion, bvecs
+%    and bval fall, or the dicom and nifti file, that are produced when you
+%    push the button on an MR scanner
+%  * Files - single files, such as a nifti file, or a dicom file, ...
+%  * Collection - users create collections from the Flywheel interface by
+%    combining multiple acquisitions or sessions.  Collections act as
+%    'virtual experiments' in which the data collected at different
+%    projects, or by different groups, are combined and analyzed. Scitran
+%    creates these collections without duplicating the data
+%  * Analyses - sets of files, within a collection or session, that have
+%    been analyzed using a Gear.  The analyses objects include both the
+%    files and information about the methods that were used to perform a
+%    specific (reproducible) analysis.
 %  
-% 2. Searching for a particular type of object
+% 2. Searching for an object
 %
-% We set the terms of the search by creating a Matlab struct.  The first
-% slot in the struct defines the type of object you are searching for.
-% Examples are:
+%  Searches begin by defining the type of object (e.g., files).  Then we
+%  define the required features of the object.
+%
+%  We set the terms of the search by  creating a Matlab struct.  The first
+%  slot in the struct defines the type of object you are searching for.
+%  Suppose we call the struct 'b'.  The b.path slot defines the kind of
+%  object we are searching for.
 %
 %   b.path = 'projects'
 %   b.path = 'sessions'    
@@ -33,11 +58,24 @@
 %   b.path = 'analysis'
 %   b.path = 'collections'
 %
-% 3. The key operations in the search now are 
+% 3. The search operations are specified by adding additional slots to the
+%    struct, 'b'.  These includes specific operators, parameters, and
+%    values.  The point of this script is to provide many examples of how
+%    to set up these searches
+% 
+% 4. Important operators that we use below are
+%
 %   'match'
 %   'bool'
 %   'must' 
 %   'range'
+%
+% Important parameters we use in search are 
+%   'name', 'group', 'label', 'id','plink', subject_0x2E_age',
+%   'container_id', 'type'.  
+%
+% The full list can be found in the scitran/core data model wiki page (Data
+% model).
 %
 % Other terms are possible (e.g. 'filtered','filter','query','not') but
 % here we illustrate the basics. 
@@ -45,53 +83,8 @@
 % See also:  stBrowser - we use this function to visualize the returned
 % object in the browser.
 %
-%% Matlab structs and JSON
+% See programming notes at the end of the file
 %
-%  Matlab uses '.' in structs, and json allows '.' as part of the
-%  variable name. So, we insert a dot on the Matlab side by inserting a
-%  string, _0x2E_.  For example, to create a json object like this:
-%
-%   s = {
-%   	"range": {
-%   		"subject.age": {
-% 	   		  "lte": years2sec(10)
-% 		    }
-% 	       }
-%       }
-%
-% We use the code
-%     clear b; 
-%     b.range.subject_0x2E_age.lte = years2sec(10);
-%
-% Another issue is the use of _ at the front of a variable, like _id
-%
-% In this case, we cannot set b._id in Matlab.  But we can set
-%    b.projects.match.x0x5F_id = projectID;
-%
-% The savejson('',b) returns the variable as simply _id, without all the
-% x0x5F nonsense.
-% 
-%% DRAFT:  Do not use for now.
-%
-% There are various special cases when you set the path, as well.  Note
-% that some of these have a single '/' and some have a double '//'.
-%
-%   b.path = 'acquisitions/files'  files within a specific acquisition
-%   b.path = 'sessions//files'     files contained in sessions and
-%            acquisitions (excluding files attached to a collection or a
-%            project). The double slash ("//") means take every descendant
-%            of the matched sessions that is a file. 
-%   b.path = 'sessions//' "//" means every descendant of the matched
-%            sessions, including the sessions themselves. That is
-%            sessions, files, notes, analyses in these sessions,
-%            acquisitions belonging to these sessions, files, notes,
-%            analyses in these acquisitions.   
-%   b.path = 'collections//files'   Files in the matched collections
-%   b.path = 'collections//acquisitions' all acquisitions that belongs to
-%            the matched collections. 
-%
-% See also:
-%   
 % LMP/BW Scitran Team, 2016
 
 %% Authorization
@@ -100,7 +93,7 @@
 % fixed as part of 's' throughout the examples, below.
 [s.token, s.url] = stAuth('action', 'create', 'instance', 'scitran');
 
-%% See a list of all projects
+%% List all projects
 
 % In this example, we use the structure 'b' to store the search parameters.
 % When we are satisfied with the parameters, we attach b to the mean search
@@ -114,7 +107,7 @@ projects = stEsearchRun(s);
 fprintf('Found %d projects\n',length(projects))
 
 
-%% See a list of projects attached to the group 'wandell'
+%% List projects attached to the group 'wandell' with label 'vwfa'
 
 clear b
 b.path = 'projects';
@@ -137,7 +130,7 @@ projectLabel = projects{1}.source.label;
 
 clear b
 b.path = 'sessions';
-b.projects.match.x0x5F_id = projectID;   % Sorry about that.
+b.projects.match.x0x5F_id = projectID;   % Note the ugly x0x5F.  See notes.
 s.json = b;
 sessions = stEsearchRun(s);
 fprintf('Found %d sessions in the project %s\n',length(sessions),projectLabel);
@@ -329,3 +322,54 @@ for ii=1:length(files)
 end
 
 %%
+
+
+
+
+%% Matlab structs and JSON format
+%
+%  Matlab uses '.' in structs, and json allows '.' as part of the
+%  variable name. So, we insert a dot on the Matlab side by inserting a
+%  string, _0x2E_.  For example, to create a json object like this:
+%
+%   s = {
+%   	"range": {
+%   		"subject.age": {
+% 	   		  "lte": years2sec(10)
+% 		    }
+% 	       }
+%       }
+%
+% We use the code
+%     clear b; 
+%     b.range.subject_0x2E_age.lte = years2sec(10);
+%
+% Another issue is the use of _ at the front of a variable, like _id
+%
+% In this case, we cannot set b._id in Matlab.  But we can set
+%    b.projects.match.x0x5F_id = projectID;
+%
+% The savejson('',b) returns the variable as simply _id, without all the
+% x0x5F nonsense.
+% 
+%% DRAFT:  Do not use for now.
+%
+% There are various special cases when you set the path, as well.  Note
+% that some of these have a single '/' and some have a double '//'.
+%
+%   b.path = 'acquisitions/files'  files within a specific acquisition
+%   b.path = 'sessions//files'     files contained in sessions and
+%            acquisitions (excluding files attached to a collection or a
+%            project). The double slash ("//") means take every descendant
+%            of the matched sessions that is a file. 
+%   b.path = 'sessions//' "//" means every descendant of the matched
+%            sessions, including the sessions themselves. That is
+%            sessions, files, notes, analyses in these sessions,
+%            acquisitions belonging to these sessions, files, notes,
+%            analyses in these acquisitions.   
+%   b.path = 'collections//files'   Files in the matched collections
+%   b.path = 'collections//acquisitions' all acquisitions that belongs to
+%            the matched collections. 
+%
+% See also:
+%   
