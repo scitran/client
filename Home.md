@@ -1,12 +1,11 @@
 The **scitran client** repository implements a command line interface to allow users to interact with the scitran database from their own computers.  Specifically, [Flywheel](https://flywheel.io) and the [Wandell lab at Stanford](http://web.stanford.edu/~wandell) have added features to enable users to perform the following functions
 
-* obtain authorization to read/write from a Flywheel database
-* search the database for a collection of sessions and the files therein
-* download a representation of the information
-* search the local representation for files with specific properties
-* download individual files for processing
-* create a description of the processing 
-* place the results and description of the processing back into the database
+* obtain authorization to read/write from a Flywheel database using stAuth().
+* search the database for a collection of sessions and the files therein using stEsearchRun()
+* download the results (as a Matlab struct), the output of stEsearchRun()
+* download database objects (e.g., files, sessions, projects) for processing using stGet().
+* create a description of the processing (called analyses)
+* place the results and description of the processing back into the database using stPut()
 
 These scitran client can be run from anywhere on the Internet, securely addressing the data in the scitran database. In this way, a user can process data stored in a scitran database using their own computational resources.  The key elements that supports reproducible research is this:  The original files are securely stored in a database, the analysis methods are precisely described, and the results and analysis specification are stored back in the database. 
 
