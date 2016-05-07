@@ -1,41 +1,33 @@
-classdef scitran(instance) < handles
+classdef scitran < handle
     % Scitran object for interacting with a database
     %
-    % st = scitran('scitran');
+    % st = scitran('action','create','instance','scitran');
     %
     % 
     
-    % Data stuff (public)    
-    url
-    token
+    properties (SetAccess = private, GetAccess = public)  
 
-    queryCmd
-    queryResult
+    url = 'https://flywheel.scitran.stanford.edu';
+    token = '';
+    instance = 'scitran';
     
-end
+    end    % Data stuff (public)
+
 
     % Methods (public)
-    function scitran(obj,instance)
-    % Constructor
+    methods
         
-    [token, url] = stAuth(instance);
-    
+        function obj = scitran(varargin)
+            % Creates the object by authorizing the instance
+            % The url and the token are stored in the object.
+            %
+            % Example:
+            %   st = scitran('action','create','instance','scitran');
+            auth(obj,varargin{:});
+        end
+        
     end
     
-    function search
-    end
     
-    function get
-    end
-    
-    function put
-    end
-    
-    function printResult
-    end
-    
-    function print
-    end
-%
 
 end
