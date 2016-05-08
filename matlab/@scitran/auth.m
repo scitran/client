@@ -244,19 +244,19 @@ switch lower(action)
         end
 
         % Execute the call to python
-        [status, token] = system(cmd);
+        [status, obj.token] = system(cmd);
 
     % Revoke an existing token
     case {'revoke', 'delete'}
         if exist(tokenFile, 'file')
             cmd = ['python ', oauth2cli_code, ' --filename ', tokenFile , ' ', action];
             % Execute the call to python
-            [status, token] = system(cmd);
+            [status, obj.token] = system(cmd);
             if status == 0
                 delete(tokenFile);
                 return
             else
-                error(token);
+                error(obj.token);
             end
         else
             warning('No token could be found to revoke!');
@@ -272,10 +272,10 @@ end
 
 %% Check for errors and format token before returning
 
-if (~isempty(strfind(lower(token), 'error')) || status > 0)
+if (~isempty(strfind(lower(obj.token), 'error')) || status > 0)
     status = 1;
     warning('Check that you have Python and the dependencies installed AND on your PATH. HINT: Try "pip install oauth2client"');
-    error(token);
+    error(obj.token);
 end
 
 % Remove trailing spaces from token string before returning
