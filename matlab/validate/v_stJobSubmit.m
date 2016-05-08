@@ -72,7 +72,7 @@ J.tags = {'dicom', 'converter', 'dcm_convert'};
 endpoint = 'api/jobs/add';
 job_body = savejson('',J);
 
-submit_job_command = sprintf('curl -k -X POST %s/%s -d ''%s'' -H "X-SciTran-Auth:change-me" -H "X-SciTran-Name:live.sh" -H "X-SciTran-Method:script" ', url, endpoint, job_body);
+submit_job_command = sprintf('curl -k -X POST %s/%s -d ''%s'' -H "Authorization":"%s" -H "X-SciTran-Name:live.sh" -H "X-SciTran-Method:script" ', url, endpoint, job_body, token);
 
 [s, jobID] = stCurlRun(submit_job_command);
 
