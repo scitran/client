@@ -10,7 +10,7 @@ st = scitran('action','create','instance','scitran');
 %%
 clear srch
 srch.path = 'projects';
-srch.projects.match.public = 'Public Data';
+srch.projects.match.label = 'Public Data';
 projects = st.search(srch);
 
 %

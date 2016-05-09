@@ -303,7 +303,15 @@ for ii=1:length(files)
     files{ii}.source
 end
 
-%%
+%% Find Public Data
+%
+
+% clear srch
+% srch.path = 'projects';
+% srch.projects.match.exact_label = 'Public Data';
+% savejson('',srch)
+% projects = st.search(srch);
+
 
 
 
