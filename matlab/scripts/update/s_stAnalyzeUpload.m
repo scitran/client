@@ -1,35 +1,10 @@
-%% Authorize, Query, download, analyze, upload
+%% Bring down the diffusion, bvec and bval
 %
 % LMP/BW Scitran Team, 2016
-%
-% Notes
-%
-% When you want a dot in the search field, for example
-%
-% {
-% 	"range": {
-% 		"subject.age": {
-% 			"gte": 10,
-% 			"lte": 90
-% 		}
-% 	}
-% }
-% 
-% You should insert the string "_0x2E_".   In subject.age you should have
-% subject_0x2E_age.
-%
-% If you do not include subject.age, then all ages will be returned.
-%
-% Because this is ugly, we might use the syntax _dot_ and then do a
-% strrep(). Also, notice that gte means greater than or equal to, and lte
-% for less than or equal to.
-%   
-
 
 %% Authorization
 % The auth returns both a token and the url of the flywheel instance
-[token, furl, ~] = stAuth('action', 'create', 'instance', 'scitran');
-fprintf('Token length %d\nConnected to: %s\n',length(token),furl)
+st = scitran('action', 'create', 'instance', 'scitran');
 
 %% Does a search for bvec files.
 

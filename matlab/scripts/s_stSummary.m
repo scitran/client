@@ -1,9 +1,10 @@
 % stSummary
 %
 % Summarize the projects and number of sessions in each project for a
-% scitran instance
+% scitran instance.
 %
-% Seems slow, no?  Should this one use the MongoDB endpoints?
+% We need an exact match here.  Check with RF because it still seems to me
+% that we are returning 2x 
 %
 % BW, Scitran Team, 2016
 
