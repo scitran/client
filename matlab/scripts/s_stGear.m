@@ -126,12 +126,12 @@ upload.label = 'FSL bet2 analysis';      % Analysis label
 upload.outputs{1}.name = [docker.oFile,'.nii.gz'];   % Name of the results file from vistalab/bet
 upload.inputs{1}.name = docker.iFile;    % Name of the results file
 
-% Store the result in the database
-st.put(collections{1}, upload);
+% Store the files in a Collection analysis in the database
+st.put('analysis',upload,'id',collections{1}.id);
 
 %% Go to the browser and have a look at the collection
 
-stBrowser(s.url,collections{1});
+st.browser(collections{1});
 
 %%
 

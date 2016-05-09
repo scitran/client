@@ -1,94 +1,130 @@
-function [status, result] = put(fName, pLink, token)
+function [status, result] = put(obj,upType,stData,varargin)
 % Attach a file to the permalink location
 %
-%      stPut(fName, pLink, token)
+%      st.put(upType,stdata,'id',id)
 %
-% Inputs: 
-%  pLink:   Permalink from a scitran instance for session or acquisition file
-%  fname:   Full path to the file on disk to attach/put/upload 
-%  token:   Authorization token for upload
-% 
+% Inputs:
+%  upType: Type of upload.  Analysis, File, ...
+%  stData: Matlab struct containing the fields for the upload
+%
 % Outputs:
 %  status:  Boolean indicating success (0) or failure (~=0)
 %  result:  The output of the verbose curl command
 %
-% 
+% We need to make sure the struct for the stData are described properly
+% here.
+%
 % Example:
-%   token = sdmAuth('instnace', 'snisdm')
-%   pLink ='https://sni-sdm.stanford.edu/api/acquisitions/559e9c86c81ba9de1e95ad61/file/1.2.840.113619.2.283.4120.7575399.26065.1300464087.922_1_dicom.tgz'
-%   fName = '/Path/to/some/file/on/disk'
-%   
-%   [status, result] = stPut(pLink, fName, token);
+%    st.put('analysis',stData,'id',collection{1}.id);
+%    st.put('file',stData);
 %
 % LMP/BW Vistasoft Team, 2015-16
 
 
 %% Parse inputs
 p = inputParser;
-p.addRequired('fname',@(x)(exist(x,'file')));
-p.addRequired('pLink',@ischar);
-p.addRequired('token',@ischar);
+p.addRequired('upType',@ischar);
 
-p.parse(fName,pLink,token);
+% Should have a vFunc here with more detail
+p.addRequired('stData',@isstruct);
+p.addParameter('id','',@ischar);
 
-fName = p.Results.fname;
-pLink = p.Results.pLink;
-token = p.Results.token;
+p.parse(upType,stData,varargin{:});
 
-%%
+upType = p.Results.upType;
+stData = p.Results.stData;
+id     = p.Results.id;
 
-% Handle permalinks which may have '?user='
-pLink = strsplit(pLink, '?');
-pLink = pLink{1};
-
-% Build the url from the permalink by removing the endpart
-url = fileparts(pLink);
-
-% Get the URL with the file name appended to it
-[~,n,e] = fileparts(fName);
-urlAndName = fullfile(url,[n,e]);
-
-
-%% Gemerate MD5 checksum 
-
-% MAC
-if ismac
-    md5_cmd = sprintf('md5 %s',fName);
-    [md5_status, md5_result] = system(md5_cmd);
-    checkSum = md5_result(end-32:end-1);
-      
-% Linux
-elseif (isunix && ~ismac)
-    md5_cmd = sprintf('md5sum %s',fName);
-    [md5_status, md5_result] = system(md5_cmd);
-    checkSum = md5_result(1:32);
-      
-% Other/Unknown    
-else
-    error('Unsupported system.\n');
+%% Do relevant upload
+switch upType
+    case 'analysis'
+        
+        % Analysis upload to a collection or session.
+        % In this case, the id needed to be set
+        
+        % Construct the command to upload one input file and one output file
+        inAnalysis  = fullfile(pwd, 'input', stData.inputs{1}.name);
+        outAnalysis = fullfile(pwd, 'output',stData.outputs{1}.name);
+        
+        % We have to pad the json struct or savejson will not give us a list
+        if length(stData.inputs) == 1
+            stData.inputs{end+1}.name = '';
+        end
+        if length(stData.outputs) == 1
+            stData.outputs{end+1}.name = '';
+        end
+        
+        % Jsonify the payload, assuming it is necessary
+        if isstruct(stData)
+            stData = savejson('',stData);
+            stData = strrep(stData, '"', '\"');   % Escape the " or the cmd will fail.
+        end
+        
+        curlCmd = sprintf('curl -F "file1=@%s" -F "file2=@%s" -F "metadata=%s" %s/api/collections/%s/analyses -H "Authorization":"%s"', inAnalysis, outAnalysis, stData, obj.url, id, obj.token );
+        
+        %% Execute the curl command with all the fields
+        
+        stCurlRun(curlCmd);
+        
+   case {'files','file'}
+        
+        % Not checked.  Do with LMP.
+        
+        % Handle permalinks which may have '?user='
+        pLink = strsplit(pLink, '?');
+        pLink = pLink{1};
+        
+        % Build the url from the permalink by removing the endpart
+        url = fileparts(pLink);
+        
+        % Get the URL with the file name appended to it
+        [~,n,e] = fileparts(fName);
+        urlAndName = fullfile(url,[n,e]);
+        
+        
+        %% Gemerate MD5 checksum
+        
+        % MAC
+        if ismac
+            md5_cmd = sprintf('md5 %s',fName);
+            [md5_status, md5_result] = system(md5_cmd);
+            checkSum = md5_result(end-32:end-1);
+            
+            % Linux
+        elseif (isunix && ~ismac)
+            md5_cmd = sprintf('md5sum %s',fName);
+            [md5_status, md5_result] = system(md5_cmd);
+            checkSum = md5_result(1:32);
+            
+            % Other/Unknown
+        else
+            error('Unsupported system.\n');
+        end
+        
+        % Check that it worked
+        if md5_status
+            error('System checksum command failed');
+        end
+        
+        
+        %% Build and execute the curl command
+        
+        curl_cmd = sprintf('/usr/bin/curl -v -X PUT --data-binary @%s -H "Content-MD5:%s" -H "Content-Type:application/octet-stream" -H "Authorization:%s" "%s?flavor=attachment"\n', fName, checkSum, token, urlAndName);
+        
+        % Execute the command
+        fprintf('Sending... ');
+        [status, result] = stCurlRun(curl_cmd);
+        
+        % Let the user know if it worked
+        if status
+            warning('Upload failed');
+            disp(result)
+        else
+            fprintf('File sucessfully uploaded.\n');
+        end
+        
+     otherwise
+        error('Unknown upload type %s\n',upType);
 end
 
-% Check that it worked
-if md5_status 
-    error('System checksum command failed'); 
 end
-
-
-%% Build and execute the curl command
-
-curl_cmd = sprintf('/usr/bin/curl -v -X PUT --data-binary @%s -H "Content-MD5:%s" -H "Content-Type:application/octet-stream" -H "Authorization:%s" "%s?flavor=attachment"\n', fName, checkSum, token, urlAndName);
-
-% Execute the command
-fprintf('Sending... ');
-[status, result] = stCurlRun(curl_cmd);
-
-% Let the user know if it worked
-if status
-    warning('Upload failed');
-    disp(result)
-else
-    fprintf('File sucessfully uploaded.\n');
-end
-
-
-return
