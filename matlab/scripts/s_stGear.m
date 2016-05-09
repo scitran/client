@@ -43,6 +43,9 @@
 % Get authorization to read from the database
 st = scitran('action', 'create', 'instance', 'scitran');
 
+% A place for temporary files.
+chdir(fullfile(stRootPath,'local'));
+
 %% Configure your local computer to run docker containers
 
 % A docker container is a virtual machine that can be copied to almost any
@@ -112,11 +115,10 @@ st.docker(docker);
 %% Upload the result to the collection in the database
 
 % Find information about the Collection so we can upload
-clear a
-a.path = 'collections';                    
-a.collections.match.label = b.collections.match.label;
-s.json = a;
-collections = stEsearchRun(s);
+clear srch
+srch.path = 'collections';                         % Looking for files
+srch.collections.match.label  = 'GearTest'; 
+collections = st.search(srch);
 
 % Build a struct with the information needed to upload the results
 clear upload
@@ -125,7 +127,7 @@ upload.outputs{1}.name = [docker.oFile,'.nii.gz'];   % Name of the results file 
 upload.inputs{1}.name = docker.iFile;    % Name of the results file
 
 % Store the result in the database
-stPutAnalysis(s, collections{1}, upload);
+st.put(collections{1}, upload);
 
 %% Go to the browser and have a look at the collection
 

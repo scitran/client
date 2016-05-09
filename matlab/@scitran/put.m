@@ -1,4 +1,4 @@
-function [status, result] = stPut(fName, pLink, token)
+function [status, result] = put(fName, pLink, token)
 % Attach a file to the permalink location
 %
 %      stPut(fName, pLink, token)
