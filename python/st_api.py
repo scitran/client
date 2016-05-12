@@ -8,6 +8,7 @@ import st_exceptions
 import st_auth
 import urlparse
 import json
+from elasticsearch_dsl import Search
 
 __author__ = 'vsitzmann'
 
@@ -70,7 +71,7 @@ class InstanceHandler(object):
         pprint(prepared_request.method)
         pprint(prepared_request.url)
         pprint(prepared_request.headers)
-        # pprint(prepared_request.body)
+        pprint(prepared_request.body)
 
         print('\n')
 
@@ -83,6 +84,26 @@ class InstanceHandler(object):
             return request
         else:
             raise st_exceptions.InvalidToken('Not Authenticated!')
+
+    def search_anything_should_joined(self, path='', file_props={}, acq_props={}, collection_props={}, session_props={}, project_props={}):
+        constraints = {}
+
+        if file_props:
+            constraints.update(self._bool_match_multiple_field('files', file_props))
+
+        if acq_props:
+            constraints.update(self._bool_match_multiple_field('acquisitions', acq_props))
+
+        if collection_props:
+            constraints.update(self._bool_match_multiple_field('collections', collection_props))
+
+        if session_props:
+            constraints.update(self._bool_match_multiple_field('sessions', session_props))
+
+        if project_props:
+            constraints.update(self._bool_match_multiple_field('sessions', project_props))
+
+        return self.search_remote(path, constraints)[os.path.basename(path)]
 
     def authenticate(self):
         self.token, self.base_url = st_auth.create_token(self.instance, self.st_dir)
@@ -156,10 +177,17 @@ class InstanceHandler(object):
     def _bool_match_multiple_field(self, element, field_value_dict):
         ''' Assembles the common elasticsearch-query of wanting to specify several field-value pairs for a certain element.
         '''
+        constraints_list = []
+        for field, value in field_value_dict.iteritems():
+            if isinstance(value, list):
+                constraints_list.extend([{'match':{field:single_value}} for single_value in value])
+            else:
+                constraints_list.append({'match':{field:value}})
+
         result = {
             element:{
                 'bool':{
-                    'should': [ {'match':{field_name:field_value}} for field_name, field_value in field_value_dict.iteritems() ]
+                    'should':constraints_list
                 }
             }
         }
