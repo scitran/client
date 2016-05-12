@@ -25,6 +25,8 @@ def fulltext_df_search(key_value_pairs, dataframe):
         if len(fitting_columns)>1:
             print("The column identifier %s is not unique and matches the following column names: "%key, fitting_columns)
             print("Skipping this identifier for now. Please define a unique identifier.")
+        elif not fitting_columns:
+            print("No results for that query")
         else:
             row_matches = np.logical_and(row_matches, dataframe[fitting_columns[0]] == value)
 
