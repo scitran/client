@@ -19,24 +19,24 @@ scitran_client = st_api.InstanceHandler('scitran', '/home/vsitzmann/.stclient/',
 
 # Find the session with subject code PA27541.
 print("Finding session with subject code %s"%subject_code)
-relevant_session = scitran_client.search_anything(path='sessions', session_props={'subject.exact_code':subject_code})
+relevant_session = scitran_client.search_anything_should_joined(path='sessions', session_props={'subject.exact_code':subject_code})
 # Extract the session id.
 session_id = relevant_session[0]['_id']
 print("Found a session with id %s"%session_id)
 
 # As a sanity check, take a look at the acquisitions related to that session:
 print("Searching for acquisitions related to that session...")
-relevant_acquisitions = scitran_client.search_anything(path='acquisitions',
-                                                       acq_props={'session':session_id})
+relevant_acquisitions = scitran_client.search_anything_should_joined(path='acquisitions',
+                                                                     acq_props={'session':session_id})
 acquisitions_df = pd.io.json.json_normalize(relevant_acquisitions)
 print('%d acquisitions found for the subject code %s. \
 The acquisitions can be inspected using the pandas dataframe acquisitions_df.'%(len(relevant_acquisitions), subject_code))
 
 # Search for the files associated with acquisitions with that session id
 print("Searching files related to acquisitions with session id %s"%session_id)
-relevant_files = scitran_client.search_anything(path='files',
-                                                file_props={'type':['nifti', 'bvec', 'bval']},
-                                                acq_props={'session':session_id, 'measurement':'diffusion'})
+relevant_files = scitran_client.search_anything_should_joined(path='files',
+                                                              file_props={'type':['nifti', 'bvec', 'bval']},
+                                                              acq_props={'session':session_id, 'measurement':'diffusion'})
 files_dataframe = pd.io.json.json_normalize(relevant_files)
 print("Find %d files."%len(relevant_files))
 
