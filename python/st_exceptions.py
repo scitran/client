@@ -18,3 +18,13 @@ class BadRequest(APIException):
 class WrongFormat(APIException):
     pass
 
+
+
+class DockerException(Exception):
+    pass
+
+class MachineSetupError(DockerException):
+    pass
+
+class MachineNotInstalled(DockerException):
+    pass
