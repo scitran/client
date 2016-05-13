@@ -10,7 +10,7 @@ The scitran client can be run securely from any computer on the Internet. In thi
 
 The key elements that supports **reproducible research** are these
   * The original files are securely stored in a database
-  * The analysis methods are precisely described and reproducibly (using [Gears](https://github.com/scitran/client/wiki/Gears)), and 
+  * The analysis methods are implemented reproducibly (using [Gears](https://github.com/scitran/client/wiki/Gears)), and 
   * The results and analysis specification are stored back in the database. 
 
 The **scitran client** will include implementations in both Matlab and Python.  The client will include examples of how to reproducibly run many standard functions from FSL, FreeSurfer, SPM, and other packages.
