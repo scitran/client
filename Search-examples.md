@@ -35,48 +35,24 @@ There are also search 'operators'.  You have already seen the main one:  'match'
 
 ### Gear-head notes
 
-%% Matlab structs and JSON format
-%
-%  Matlab uses '.' in structs, and json allows '.' as part of the
-%  variable name. So, we insert a dot on the Matlab side by inserting a
-%  string, _0x2E_.  For example, to create a json object like this:
-%
-%   s = {
-%   	"range": {
-%   		"subject.age": {
-% 	   		  "lte": years2sec(10)
-% 		    }
-% 	       }
-%       }
-%
-% We use the code
-%     clear srch; 
-%     srch.range.subject_0x2E_age.lte = years2sec(10);
-%
-% Another issue is the use of _ at the front of a variable, like _id
-%
-% In this case, we cannot set srch._id in Matlab.  But we can set
-%    srch.projects.match.x0x5F_id = projectID;
-%
-% The savejson('',srch) returns the variable as simply _id, without all the
-% x0x5F nonsense.
-% 
-%% DRAFT:  Do not use for now.
-%
-% There are various special cases when you set the path, as well.  Note
-% that some of these have a single '/' and some have a double '//'.
-%
-%   srch.path = 'acquisitions/files'  files within a specific acquisition
-%   srch.path = 'sessions//files'     files contained in sessions and
-%            acquisitions (excluding files attached to a collection or a
-%            project). The double slash ("//") means take every descendant
-%            of the matched sessions that is a file. 
-%   srch.path = 'sessions//' "//" means every descendant of the matched
-%            sessions, including the sessions themselves. That is
-%            sessions, files, notes, analyses in these sessions,
-%            acquisitions belonging to these sessions, files, notes,
-%            analyses in these acquisitions.   
-%   srch.path = 'collections//files'   Files in the matched collections
-%   srch.path = 'collections//acquisitions' all acquisitions that belongs to
-%            the matched collections. 
-%
+Matlab uses '.' in structs, and json allows '.' as part of the variable name. So, we insert a dot on the Matlab side by inserting a string, _0x2E_.  For example, to create a json object like this:
+
+    s = {
+   	"range": {
+  		"subject.age": {
+	   		  "lte": years2sec(10)
+		    }
+	       }
+      }
+
+We use the code
+     clear srch; 
+     srch.range.subject_0x2E_age.lte = years2sec(10);
+
+Another issue is the use of _ at the front of a variable, like _id
+
+ In this case, we cannot set srch._id in Matlab.  But we can set
+
+     srch.projects.match.x0x5F_id = projectID;
+
+The savejson('',srch) returns the variable as simply _id, without all the x0x5F nonsense.
