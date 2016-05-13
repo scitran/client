@@ -1,14 +1,11 @@
-Scitran stores files using complex names designed for efficiency.  The files are named by their content (content addressable data), which offers some striking efficiencies. Scitran's [MongoDB database](https://www.mongodb.org/) describes information about these files, and this is addressed through the MongoDB API.
 
-But when humans want to interact with the files, we need clearer filenames and procedures.  The scitran client uses [elastic search](http://joelabrahamsson.com/elasticsearch-101/) to provide a simple clear way to access files and other database objects (sessions, projects, acquisitions, collections, analyses).
-
-Because the database is secure, you must first obtain [authorization](https://github.com/scitran/client/wiki/Authorization).  Typically, we store the url and token in a structure, such as
+To perform a search, you must first obtain [authorization](https://github.com/scitran/client/wiki/Authorization).  
 
     st = scitran('action','create','instance','scitran');
 
-Then, create a Matlab structure to set the search parameters. Perhaps the simplest and most important example is to identify files for downloading.  We do this by setting up a structure, 'b', with a slot that indicates we are looking for files.
+Then, create a Matlab structure to set the search parameters. Perhaps the simplest and most important example is to identify files for downloading. 
 
-    srch.path = 'files';                         % Looking for files
+    srch.path = 'files';                         % Return information about files
 
 Then we identify the file properties.  
 
@@ -29,9 +26,13 @@ You can direct the output to a particular destination using
 
     st.get(files{1},'destination',localFileName)
 
-There are many (many, many) types of searches possible.  We explain the general syntax and provide examples in the script
+There are many (many, many) types of searches possible.  These can return sessions, projects, collections, acquisitions, analyses.  Examples of the search syntax are in the script
 [s_stSearches.m](https://github.com/scitran/client/blob/master/matlab/scripts/s_stSearches.m)
 
-####Note
+####Notes
+Scitran stores files using complex names designed for efficiency.  The files are named by their content (content addressable data), which offers some striking efficiencies. Scitran's [MongoDB database](https://www.mongodb.org/) describes information about these files, and this is addressed through the MongoDB API.
+
+But when humans want to interact with the files, we need clearer filenames and procedures.  The scitran client uses [elastic search](http://joelabrahamsson.com/elasticsearch-101/) to provide a simple clear way to access files and other database objects (sessions, projects, acquisitions, collections, analyses).
+
 There are several ways to humanize interactions with the files in the database.  For example, in one implementation of the database we used the [Fuse filesystem](https://en.wikipedia.org/wiki/Filesystem_in_Userspace), a particularly useful tool for writing virtual file systems.  Historically, the method has [security issues](https://github.com/libfuse/libfuse/issues/15).
 
