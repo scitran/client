@@ -40,18 +40,21 @@ Matlab uses '.' in structs, and json allows '.' as part of the variable name. So
     s = {
    	"range": {
   		"subject.age": {
-	   		  "lte": years2sec(10)
+	   		  "lte": 315576000
 		    }
 	       }
       }
 
 We use the code
+
      clear srch; 
      srch.range.subject_0x2E_age.lte = years2sec(10);
 
+(time values, including dates, are stored in SI units, seconds).
+
 Another issue is the use of _ at the front of a variable, like _id
 
- In this case, we cannot set srch._id in Matlab.  But we can set
+In this case, we cannot set a structure variable with a leading underscore, such as srch._id.  But we can set
 
      srch.projects.match.x0x5F_id = projectID;
 
