@@ -29,7 +29,8 @@ You can direct the output to a particular destination using
 
     st.get(files{1},'destination',localFileName)
 
-There are many (many, many) types of searches possible.  We explain the general syntax and provide examples in the script *s_stSearches.m*.
+There are many (many, many) types of searches possible.  We explain the general syntax and provide examples in the script
+[https://github.com/scitran/client/blob/master/matlab/scripts/s_stSearches.m](s_stSearches.m)
 
 ####Note
 There are several ways to humanize interactions with the files in the database.  For example, in one implementation of the database we used the [Fuse filesystem](https://en.wikipedia.org/wiki/Filesystem_in_Userspace), a particularly useful tool for writing virtual file systems.  Historically, the method has [security issues](https://github.com/libfuse/libfuse/issues/15).
