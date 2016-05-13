@@ -13,7 +13,7 @@ The code here shows how you can execute and manage gears from within Matlab. Sho
 
 ### Executing a Gear
 
-The script [**s_stDocker.m**]() illustrates one simple Gear for anatomical processing (skull-stripping).
+The script [**s_stGear.m**](https://github.com/scitran/client/blob/master/matlab/scripts/s_stGear.m) illustrates one simple Gear for anatomical processing (skull-stripping).
 
 In this example, data are retrieved from a scitran database and processed. The result are placed back in the scitran
 database.
