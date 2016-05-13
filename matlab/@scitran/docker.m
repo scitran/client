@@ -1,7 +1,7 @@
-function [cmd, status, result] = stDockerRun(docker)
-% Run the container with the parameters in the docker struct
+function [cmd, status, result] = docker(~,docker)
+% Run the container with the parameters defined in the docker struct
 %
-%  [cmd, status, result] = stDockerRun(docker)
+%  [cmd, status, result] = st.docker(docker)
 %
 % Inputs - docker is a struct with the following fields
 %
@@ -16,13 +16,22 @@ function [cmd, status, result] = stDockerRun(docker)
 % BW/LMP Scitran Team, 2016
 
 %% Check input arguments
+p = inputParser;
+vFunc = @(x) (isstruct(x) && ...
+    isfield(x,'container') && ...
+    isfield(x,'iFile') &&isfield(x,'iDir') && ...
+    isfield(x,'oFile') && isfield(x,'oDir'));
+p.addRequired('docker',vFunc);
 
+p.parse(docker);
+docker = p.Results.docker;
 
 %% Create and run the command
 cmd = stDockerCommand(docker);
 
 [status, result] = system(cmd, '-echo');
 
+% Not catching error correctly.
 if status ~= 0
     fprintf('docker error: %s\n', result);
 else

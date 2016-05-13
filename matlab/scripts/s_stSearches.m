@@ -48,18 +48,18 @@
 %
 %  We set the terms of the search by  creating a Matlab struct.  The first
 %  slot in the struct defines the type of object you are searching for.
-%  Suppose we call the struct 'b'.  The b.path slot defines the kind of
+%  Suppose we call the struct 'srch'.  The srch.path slot defines the kind of
 %  object we are searching for.
 %
-%   b.path = 'projects'
-%   b.path = 'sessions'    
-%   b.path = 'acquisitions'
-%   b.path = 'files'        
-%   b.path = 'analysis'
-%   b.path = 'collections'
+%   srch.path = 'projects'
+%   srch.path = 'sessions'    
+%   srch.path = 'acquisitions'
+%   srch.path = 'files'        
+%   srch.path = 'analysis'
+%   srch.path = 'collections'
 %
 % 3. The search operations are specified by adding additional slots to the
-%    struct, 'b'.  These includes specific operators, parameters, and
+%    struct, 'srch'.  These includes specific operators, parameters, and
 %    values.  The point of this script is to provide many examples of how
 %    to set up these searches
 % 
@@ -80,7 +80,7 @@
 % Other terms are possible (e.g. 'filtered','filter','query','not') but
 % here we illustrate the basics. 
 %
-% See also:  stBrowser - we use this function to visualize the returned
+% See also:  st.browser - we use this function to visualize the returned
 % object in the browser.
 %
 % See programming notes at the end of the file
@@ -91,32 +91,28 @@
 
 % The auth returns a token and the url of the flywheel instance.  These are
 % fixed as part of 's' throughout the examples, below.
-[s.token, s.url] = stAuth('action', 'create', 'instance', 'scitran');
+st = scitran('action', 'create', 'instance', 'scitran');
 
 %% List all projects
 
-% In this example, we use the structure 'b' to store the search parameters.
-% When we are satisfied with the parameters, we attach b to the mean search
+% In this example, we use the structure 'srch' to store the search parameters.
+% When we are satisfied with the parameters, we attach srch to the mean search
 % structure, s, and then run the search command.
 
-clear b
-b.path = 'projects';
-s.json = b;
-projects = stEsearchRun(s);
-
+clear srch
+srch.path = 'projects';
+projects = st.search(srch);
 fprintf('Found %d projects\n',length(projects))
 
+%% List projects in the group 'wandell' with label 'vwfa'
 
-%% List projects attached to the group 'wandell' with label 'vwfa'
+clear srch
+srch.path = 'projects';
+srch.projects.bool.must(1).match.group = 'wandell';
+srch.projects.bool.must(2).match.label = 'vwfa';
 
-clear b
-b.path = 'projects';
-b.projects.bool.must(1).match.group = 'wandell';
-b.projects.bool.must(2).match.label = 'vwfa';
-
-% b.projects.match.label = 'vwfa'
-s.json = b;
-projects = stEsearchRun(s);
+% srch.projects.match.label = 'vwfa'
+projects = st.search(srch);
 fprintf('Found %d projects for the group wandell, with label vwfa.\n',length(projects))
 
 % Save this project information
@@ -124,15 +120,22 @@ projectID    = projects{1}.id;
 projectLabel = projects{1}.source.label;
 
 % You can browse to the project this way
-%   stBrowser(s.url,projects{1});
+%   st.browser(projects{1});
+
+%% Get all the sessions within a specific collection
+clear srch; 
+srch.path = 'sessions';
+srch.collections.match.label = 'GearTest';
+sessions = st.search(srch);
+
+fprintf('Found %d sessions in GearTest\n',length(sessions));
 
 %% Get the sessions within the first project
 
-clear b
-b.path = 'sessions';
-b.projects.match.x0x5F_id = projectID;   % Note the ugly x0x5F.  See notes.
-s.json = b;
-sessions = stEsearchRun(s);
+clear srch
+srch.path = 'sessions';
+srch.projects.match.x0x5F_id = projectID;   % Note the ugly x0x5F.  See notes.
+sessions = st.search(srch);
 fprintf('Found %d sessions in the project %s\n',length(sessions),projectLabel);
 
 % Save this session information
@@ -140,28 +143,27 @@ sessionID = sessions{1}.id;
 sessionLabel = sessions{1}.source.label;
 
 % Bring the session up this way
-%   stBrowser(s.url,sessions{1});
+%   st.browser(sessions{1});
 
 %% Get the acquisitions inside a session
 
-clear b
-b.path = 'acquisitions';
-b.sessions.match.x0x5F_id = sessionID;
-s.json = b;
-acquisitions = stEsearchRun(s);
+clear srch
+srch.path = 'acquisitions';
+srch.sessions.match.x0x5F_id = sessionID;
+s.json = srch;
+acquisitions = st.search(srch);
 fprintf('Found %d acquisitions in the session %s\n',length(acquisitions),sessionLabel);
 
 % This brings up the session containing this acquisition
-%   stBrowser(s.url,acquisitions{1});
+%   st.browser(acquisitions{1});
 
 %% Find nifti files in the session
 
-clear b
-b.path = 'files';
-b.sessions.match.x0x5F_id = sessionID;
-b.files.match.type = 'nifti';
-s.json = b;
-files = stEsearchRun(s);
+clear srch
+srch.path = 'files';
+srch.sessions.match.x0x5F_id = sessionID;
+srch.files.match.type = 'nifti';
+files = st.search(srch);
 
 nFiles = length(files);
 fprintf('Found %d nifti files in the session %s\n',nFiles,sessionLabel);
@@ -174,99 +176,91 @@ end
 %  dl = stGet(files{1}.plink,s.token)
 %  d = niftiRead(dl);
 
-%% Look for  analyses in the GearTest collection
+%% Look for analyses in the GearTest collection
 
-clear b
-b.path = 'analyses';
-b.collections.match.label = 'GearTest';
-s.json = b;
-analyses = stEsearchRun(s);
+clear srch
+srch.path = 'analyses';
+srch.collections.match.label = 'GearTest';
+analyses = st.search(srch);
 
 % Which collection is the analysis in?
-clear b; 
-b.path = 'collections';
-b.collections.match.label = 'GearTest';
-s.json = b;
-collections = stEsearchRun(s);
+clear srch; 
+srch.path = 'collections';
+srch.collections.match.label = 'GearTest';
+s.json = srch;
+collections = st.search(srch);
 
 % Find a session from that collection
-clear b; 
-b.path = 'sessions'; 
-b.collections.match.label = 'GearTest';
-s.json = b;
-sessions = stEsearchRun(s);
+clear srch; 
+srch.path = 'sessions'; 
+srch.collections.match.label = 'GearTest';
+sessions = st.search(srch);
 
 % Bring up the browser to that collection and session
-stBrowser(s.url,sessions{1},'collection',collections{1})
+url = st.browser(sessions{1},'collection',collections{1});
 
 %% Count the number of sessions created in a recent time period
 
-clear b
-b.path = 'collections';
-b.sessions.range.created.gte = 'now-4w';  % For weeks ago
-s.json = b;
-collections = stEsearchRun(s);
+clear srch
+srch.path = 'collections';
+srch.sessions.range.created.gte = 'now-4w';  % For weeks ago
+collections = st.search(srch);
 fprintf('Found %d collections in previous two weeks \n',length(collections))
 
 % To see the sessions within some time range use:
-%   b.sessions.range.created.gte = dateFormat;
-%   b.sessions.range.created.lte = dateFormat;
+%   srch.sessions.range.created.gte = dateFormat;
+%   srch.sessions.range.created.lte = dateFormat;
 %
 % To see the session in the web page, use this command
-%   stBrowser(s.url,sessions{1});
+%   st.browser(sessions{1});
 
 
 %% Get sessions with this subject code
-clear b
-b.path = 'sessions';
+clear srch
+srch.path = 'sessions';
 subjectCode = 'ex4842';
-b.sessions.match.subject_0x2E_code = subjectCode;
-s.json = b;
-sessions = stEsearchRun(s);
+srch.sessions.match.subject_0x2E_code = subjectCode;
+sessions = st.search(srch);
 fprintf('Found %d sessions with subject code %s\n',length(sessions),subjectCode)
 
 % Click to 'Subject' tab to see the subject code
-%    stBrowser(s.url,sessions{1});
+%    st.browser(s.url,sessions{1});
 
 %% Get sessions in which the subject age is within a range
 
-clear b
-b.path = 'sessions';
-b.sessions.bool.must{1}.range.subject_0x2E_age.gt = year2sec(10);
-b.sessions.bool.must{1}.range.subject_0x2E_age.lt = year2sec(15);
-s.json = b;
-sessions = stEsearchRun(s);
-% savejson('',s.json)
+clear srch
+srch.path = 'sessions';
+srch.sessions.bool.must{1}.range.subject_0x2E_age.gt = year2sec(10);
+srch.sessions.bool.must{1}.range.subject_0x2E_age.lt = year2sec(15);
+sessions = st.search(srch);
 
 fprintf('Found %d sessions\n',length(sessions))
 
 % View it in the browser and click on the subject tab to see the age
-%   stBrowser(s.url,sessions{1})
+%   st.browser(sessions{1})
 
 %% Find a session with a specific label
 
 sessionLabel = '20151128_1621';
 
-clear b
-b.path = 'sessions';
-b.sessions.match.label= sessionLabel;
-s.json = b;
-sessions = stEsearchRun(s);
+clear srch
+srch.path = 'sessions';
+srch.sessions.match.label= sessionLabel;
+sessions = st.search(srch);
 fprintf('Found %d sessions with the label %s\n',length(sessions),sessionLabel)
 
 % Browse the session.
-%   stBrowser(s.url,sessions{1});
+%   st.browser(sessions{1});
 
 %% get files from a particular project, session, and acquisition
 
-clear b
-b.path = 'files';
-b.projects.match.label = 'testproject';
-b.sessions.match.label = '20120522_1043';
-b.acquisitions.match.label = '11_1_spiral_high_res_fieldmap';
-b.files.match.type = 'nifti';
-s.json = b;
-files = stEsearchRun(s);
+clear srch
+srch.path = 'files';
+srch.projects.match.label = 'testproject';
+srch.sessions.match.label = '20120522_1043';
+srch.acquisitions.match.label = '11_1_spiral_high_res_fieldmap';
+srch.files.match.type = 'nifti';
+files = st.search(srch);
 fprintf('Found %d matches to this files label\n',length(files));
 
 % This is how to download the nifti file
@@ -276,52 +270,56 @@ fprintf('Found %d matches to this files label\n',length(files));
 
 
 %%
-clear b
-b.path = 'files';   
-b.collections.match.label = 'Young Males';
-b.acquisitions.match.label = 'SPGR 1mm 30deg';
-b.files.match.type = 'nifti';
-s.json = b;
+clear srch
+srch.path = 'files';   
+srch.collections.match.label = 'Young Males';
+srch.acquisitions.match.label = 'SPGR 1mm 30deg';
+srch.files.match.type = 'nifti';
 
-files = stEsearchRun(s);
+files = st.search(srch);
 
 %%
-clear b
-b.path = 'files';   
-b.collections.match.label = 'Young Males';
-b.acquisitions.match.measurement = 'Diffusion';
-b.files.match.type = 'bvec';
+clear srch
+srch.path = 'files';   
+srch.collections.match.label = 'Young Males';
+srch.acquisitions.match.measurement = 'Diffusion';
+srch.files.match.type = 'bvec';
 
-s.json = b;
-files = stEsearchRun(s);
+files = st.search(srch);
 
 %% get files in project/session/acquisition/collection
 
-clear b
-b.path = 'files';                         % Looking for T1 weighted files
-b.collections.match.label = 'ENGAGE';     % Collection is ENGAGE
-b.acquisitions.match.label = 'T1w 1mm';   % Description column
-s.json = b;
-files = stEsearchRun(s);
+clear srch
+srch.path = 'files';                         % Looking for T1 weighted files
+srch.collections.match.label = 'ENGAGE';     % Collection is ENGAGE
+srch.acquisitions.match.label = 'T1w 1mm';   % Description column
+files = st.search(srch);
 fprintf('Found %d matching files\n',length(files))
 
 %% get files from a collection
 
-clear b
-b.path = 'files'; 
-b.collections.match.label = 'Young Males';   
-b.acquisitions.match.label = 'SPGR 1mm 30deg';   
-b.files.match.name = '16.1_dicom_nifti.nii.gz';
-s.json = b;
+clear srch
+srch.path = 'files'; 
+srch.collections.match.label = 'Young Males';   
+srch.acquisitions.match.label = 'SPGR 1mm 30deg';   
+srch.files.match.name = '16.1_dicom_nifti.nii.gz';
 
-files = stEsearchRun(s);
+files = st.search(srch);
 fprintf('Found %d matching files\n',length(files))
 
 for ii=1:length(files)
     files{ii}.source
 end
 
-%%
+%% Find Public Data
+%
+
+clear srch
+srch.path = 'projects';
+srch.projects.match.exact_label = 'Public Data';
+savejson('',srch)
+projects = st.search(srch);
+
 
 
 
@@ -341,15 +339,15 @@ end
 %       }
 %
 % We use the code
-%     clear b; 
-%     b.range.subject_0x2E_age.lte = years2sec(10);
+%     clear srch; 
+%     srch.range.subject_0x2E_age.lte = years2sec(10);
 %
 % Another issue is the use of _ at the front of a variable, like _id
 %
-% In this case, we cannot set b._id in Matlab.  But we can set
-%    b.projects.match.x0x5F_id = projectID;
+% In this case, we cannot set srch._id in Matlab.  But we can set
+%    srch.projects.match.x0x5F_id = projectID;
 %
-% The savejson('',b) returns the variable as simply _id, without all the
+% The savejson('',srch) returns the variable as simply _id, without all the
 % x0x5F nonsense.
 % 
 %% DRAFT:  Do not use for now.
@@ -357,18 +355,18 @@ end
 % There are various special cases when you set the path, as well.  Note
 % that some of these have a single '/' and some have a double '//'.
 %
-%   b.path = 'acquisitions/files'  files within a specific acquisition
-%   b.path = 'sessions//files'     files contained in sessions and
+%   srch.path = 'acquisitions/files'  files within a specific acquisition
+%   srch.path = 'sessions//files'     files contained in sessions and
 %            acquisitions (excluding files attached to a collection or a
 %            project). The double slash ("//") means take every descendant
 %            of the matched sessions that is a file. 
-%   b.path = 'sessions//' "//" means every descendant of the matched
+%   srch.path = 'sessions//' "//" means every descendant of the matched
 %            sessions, including the sessions themselves. That is
 %            sessions, files, notes, analyses in these sessions,
 %            acquisitions belonging to these sessions, files, notes,
 %            analyses in these acquisitions.   
-%   b.path = 'collections//files'   Files in the matched collections
-%   b.path = 'collections//acquisitions' all acquisitions that belongs to
+%   srch.path = 'collections//files'   Files in the matched collections
+%   srch.path = 'collections//acquisitions' all acquisitions that belongs to
 %            the matched collections. 
 %
 % See also:

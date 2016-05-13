@@ -1,7 +1,7 @@
-function destination = stGet(pLink,token,varargin)
+function [destination, curl_cmd] = get(obj,pLink,token,varargin)
 % Retrieve a file from an scitran instance
 %
-%   fName = stGet(pLink,token,'destination',filename,'size',size)
+%   [fName, curl_cmd] = get(obj,pLink,token,'destination',filename,'size',size)
 %
 % Required Inputs
 %  pLink:  Either a permalink or a files{} struct with a plink slot
@@ -24,9 +24,10 @@ function destination = stGet(pLink,token,varargin)
 
 %% Parse inputs
 p = inputParser;
+
+% plink can either be a files Matlab struct or a plink to a file
 vFunc = @(x) (ischar(x) || isstruct(x));
 p.addRequired('pLink',vFunc);
-p.addRequired('token',@ischar);
 
 % Param/value pairs
 p.addParameter('destination','',@ischar)
@@ -35,7 +36,6 @@ p.addParameter('size',[],@isnumeric);
 p.parse(pLink,token,varargin{:});
 
 pLink = p.Results.pLink;
-token = p.Results.token;
 destination = p.Results.destination;
 size = p.Results.size;
 
@@ -61,9 +61,8 @@ end
 
 %% Download the data
 
-curl_cmd = sprintf('/usr/bin/curl -v -X GET "%s" -H "Authorization":"%s" -o %s\n', pLink, token, destination);
+curl_cmd = sprintf('/usr/bin/curl -v -X GET "%s" -H "Authorization":"%s" -o %s\n', pLink, obj.token, destination);
 [status, result] = stCurlRun(curl_cmd);
-
 
 if status > 0
     destination = '';

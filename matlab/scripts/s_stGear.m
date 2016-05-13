@@ -41,7 +41,10 @@
 %%  Authorization 
 
 % Get authorization to read from the database
-[s.token, s.url] = stAuth('action', 'create', 'instance', 'scitran');
+st = scitran('action', 'create', 'instance', 'scitran');
+
+% A place for temporary files.
+chdir(fullfile(stRootPath,'local'));
 
 %% Configure your local computer to run docker containers
 
@@ -67,19 +70,16 @@ stDirCreate(oDir);
 % This search could also be done from the browser interface
 
 % We are searching for T1 weighted files in the GearTest collection.
-clear b
-b.path = 'files';                         % Looking for files
+clear srch
+srch.path = 'files';                         % Looking for files
 
 % These files match the following properties
-b.collections.match.label  = 'GearTest';   % In this collection
-b.acquisitions.match.label = 'T1w';        % Acquisition T1w
-b.files.match.type         = 'nifti';      % A nifti type
-
-% Attach the search terms to the json field in the search structure
-s.json = b;
+srch.collections.match.label  = 'GearTest';   % In this collection
+srch.acquisitions.match.label = 'T1w';        % Acquisition T1w
+srch.files.match.type         = 'nifti';      % A nifti type
 
 % Run the search and get information about files
-files = stEsearchRun(s);
+files = st.search(srch);
 
 %% Get the file from the scitran database
 
@@ -88,7 +88,7 @@ fname = files{1}.source.name;
 destFile = fullfile(iDir, fname);
 
 % Get the file from the database
-stGet(files{1}.plink,s.token,'destination',destFile);
+st.get(files{1},'destination',destFile);
 
 %% Set up for the brain extraction tool docker container and run it
 
@@ -110,16 +110,15 @@ docker.container = 'vistalab/bet';
 
 % The docker struct and the files cell array contains the information
 % needed for reproducibility
-stDockerRun(docker);
+st.docker(docker);
 
 %% Upload the result to the collection in the database
 
 % Find information about the Collection so we can upload
-clear a
-a.path = 'collections';                    
-a.collections.match.label = b.collections.match.label;
-s.json = a;
-collections = stEsearchRun(s);
+clear srch
+srch.path = 'collections';                         % Looking for files
+srch.collections.match.label  = 'GearTest'; 
+collections = st.search(srch);
 
 % Build a struct with the information needed to upload the results
 clear upload
@@ -127,12 +126,12 @@ upload.label = 'FSL bet2 analysis';      % Analysis label
 upload.outputs{1}.name = [docker.oFile,'.nii.gz'];   % Name of the results file from vistalab/bet
 upload.inputs{1}.name = docker.iFile;    % Name of the results file
 
-% Store the result in the database
-stPutAnalysis(s, collections{1}, upload);
+% Store the files in a Collection analysis in the database
+st.put('analysis',upload,'id',collections{1}.id);
 
 %% Go to the browser and have a look at the collection
 
-stBrowser(s.url,collections{1});
+st.browser(collections{1});
 
 %%
 

@@ -1,32 +1,44 @@
-function [result, plink, srchFile] = stEsearchRun(srch)
+function [result, srchFile] = search(obj,srch,varargin)
 % Create a cmd and run an elastic search from the search struct
 %
-%  [srchResult, plink, srchFile] = stEsearchRun(s)
+%  [srchResult, srchFile] = st.search(s)
 %
 % Input:
 %  srch:  A struct containing the url, token and json fields needed to
-%  create the elastic search command
+%         create the search command
+%  srchFile:  Name of json file if you want it returned by the search
 %
 % Return:
 %  srchResult:  Struct of data from scitran
-%  plink:       If files, a cell array of permalinks can be returned
-%  srchFile:    Name of json file returned by the search
 %
 % BW Scitran Team 2016
 
 %% Could check the srch struct here for the appropriate fields
 %
+p = inputParser;
 
-plink = [];   % Need a default
+p.addRequired('srch');
+% If you want the json file returned by the search, then this should be a
+% legitimate file name for writing it.  It should have a .json extension.
+p.addParameter('oFile','',@ischar);
 
-% The struct srch should have a url, token and json. We use those to create
-% the elastic search command.  We accept either a struct or a json notation
-% for the srch.json field.
-if isstruct(srch.json)
+p.parse(srch,varargin{:});
+srch  = p.Results.srch;
+oFile = p.Results.oFile;
+
+
+%% The srch is a Matlab structure containing the search requirements. 
+
+% It is converted to json here.  But, we accept either a struct or a json
+% notation for the srch.
+if isstruct(srch)
     % It is a Matlab struct, so convert it to json notation.
-    srch.json = savejson('',srch.json);
+    srch = savejson('',srch);
 end
-esCMD = stEsearchCreate(srch);
+esCMD = obj.searchCmd(srch);
+
+% Could validate the oFile name
+%vFunc = @(x) isequal(x(end-5:end),'.json');
 
 %% Run the command
 
@@ -125,13 +137,23 @@ end
 % of a project.  So many files, so little time.
 if strcmp(srchType,'files')
     n = length(result);
-    plink = cell(1,n);
     for ii=1:n
         cname = result{ii}.source.container_name;
         id    = result{ii}.source.container_id;
         fname = result{ii}.source.name;
-        result{ii}.plink = sprintf('%s/api/%s/%s/files/%s',srch.url, cname, id, fname);
+        result{ii}.plink = sprintf('%s/api/%s/%s/files/%s',obj.url, cname, id, fname);
     end
 end
+
+% Save the search file, or delete it.
+if ~isempty(oFile)
+    % Less typical
+    movefile(srchFile,oFile);
+else
+    % Typical
+    delete(srchFile);
+end
+
+
 
 end
