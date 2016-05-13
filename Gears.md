@@ -1,17 +1,19 @@
 Flywheel uses the term **Gear** to describe the process of
 
-  * retrieving data from a scitran database,
+  * identifying scitran input files
   * selecting the analysis program and its parameters
-  * executing the program to produce results
-  * placing the result and parameters into the database for scientific transparency and reproducibility
+  * executing the program to produce output files
+  * placing the analysis information (inputs, analysis, outputs) into the database
 
-Gears are usually built around programs stored in a [docker container](https://www.docker.com/what-docker).  This is a tool that Docker containers wrap the analysis program in a complete filesystem that contains everything it needs to run: code, runtime, system tools, system libraries – anything you can install on a server. This guarantees that it will always run the same, regardless of the environment it is running in.  This supports a main goal of this project:  Reproducible research.
+The intention of the Gear is to be complete and provide for scientific transparency and reproducibility.
 
-Gears will be available within the web browser via an easy-to-use graphic interface (pulldown menus and forms to set the parameters).  There will be a Flywheel system for managing Gear execution and storing results from the web interface.  The code here shows how you can execute and manage gears from within Matlab.
+The methods used in Gears are usually built around programs stored in a [docker container](https://www.docker.com/what-docker).  The Docker container wraps the analysis program and its parameters in a complete filesystem that contains everything it needs to run: code, runtime, system tools, system libraries – anything you can install on a server. This guarantees that it will always run the same, regardless of the environment it is running in.  This supports the main goal of the scitran project:  Reproducible research.
+
+The code here shows how you can execute and manage gears from within Matlab. Shortly, **Gears** will be available for execution from the web browser (pulldown menus and forms to set the parameters).  Flywheel engineers are implementing a system for managing Gear execution, storing results, and searching through about Gear usage and properties.
 
 ### Executing a Gear
 
-The script [**v_stEsearchDocker.m**](https://github.com/scitran/client/blob/master/matlab/validate/v_stElasticSearches.m) illustrates one simple Gear for anatomical processing (skull-stripping).  The idea is explained [in this video](https://youtu.be/eS7vRzhbpjg).  
+The script [**s_stDocker.m**]() illustrates one simple Gear for anatomical processing (skull-stripping).
 
 In this example, data are retrieved from a scitran database and processed. The result are placed back in the scitran
 database.
