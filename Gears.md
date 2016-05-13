@@ -26,5 +26,4 @@ This script illustrates how to interact from the command line with the scitran d
 
 We are committed to making our code and parameters transparent, and we are committed to helping you create and share your own Gears.  That's why we call this the project on scientific transparency!
 
-### Building a Gear
 
