@@ -6,9 +6,8 @@ Because the database is secure, you must first obtain [authorization](https://gi
 
     st = scitran('action','create','instance','scitran');
 
-Then, create a Matlab structure to identify do the search. Perhaps the simplest and most important example is to identify files for downloading.  We do this by setting up a structure, 'b', with a slot that indicates we are looking for files.
+Then, create a Matlab structure to set the search parameters. Perhaps the simplest and most important example is to identify files for downloading.  We do this by setting up a structure, 'b', with a slot that indicates we are looking for files.
 
-    clear b
     srch.path = 'files';                         % Looking for files
 
 Then we identify the file properties.  
@@ -18,17 +17,20 @@ Then we identify the file properties.
     srch.acquisitions.match.label = 'T1w';        % Part of an acquisition named T1w (T1-weighted)
     srch.files.match.type         = 'nifti';      % The file type is nifti
 
-Finally, you are ready to run the search
+To run the search
 
-    % Run the search and get information about files that match the criteria
     files = st.search(srch);
 
-The variable 'files' is a cell array of Matlab structures;  each contains the database properties of a file that matches your criterion.  You can retrieve one of these files with the stGet() command
+The variable 'files' is a cell array of Matlab structures;  each contains the database information of a file that matches the search criteria.  You can retrieve one of these files with the stGet() command
 
-    st.get(files{1},s.token,'destination',localFileName)
+    st.get(files{1})
 
-There are many (many, many) types of searches possible.  We explain the general syntax and provide examples in *s_stSearches.m*.
+You can direct the output to a particular destination using
+
+    st.get(files{1},'destination',localFileName)
+
+There are many (many, many) types of searches possible.  We explain the general syntax and provide examples in the script *s_stSearches.m*.
 
 ####Note
-There are several ways to humanize interactions with the files.  For example, in one implementation of the database we used the [Fuse filesystem](https://en.wikipedia.org/wiki/Filesystem_in_Userspace), a particularly useful tool for writing virtual file systems.  Historically, the method has [security issues](https://github.com/libfuse/libfuse/issues/15).
+There are several ways to humanize interactions with the files in the database.  For example, in one implementation of the database we used the [Fuse filesystem](https://en.wikipedia.org/wiki/Filesystem_in_Userspace), a particularly useful tool for writing virtual file systems.  Historically, the method has [security issues](https://github.com/libfuse/libfuse/issues/15).
 
