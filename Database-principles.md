@@ -1,4 +1,4 @@
-The database files are grouped logically into a set of basic categories that we define here.  The client search queries are structured around these categories.
+The database files are grouped logically into a set of basic categories.  The search queries are structured around these categories.
 
 * **Project** - data from multiple sessions; a project belongs to a research *group* 
 * **Session** - complete set of files acquired in a visit to the scanner.  A session usually contains many data and auxiliary files
