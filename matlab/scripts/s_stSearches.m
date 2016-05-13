@@ -12,44 +12,28 @@
 % The scitran client supports search the data base to identify these
 % objects. The principle of the search is simple:
 %
-%    * Authorization - use stAuth to get a token
-%    * Use a Matlab structure to set up the search requirements for one of
-%      the object types  
-%    * Use stEsearchRun to perform the search
-%    * The results are returned in a cell array that lists the objects that
-%      meet the search criterion
+%    * Authorization to access the scitran site (st = scitran)
+%    * Create a Matlab structure (srch) to specify search requirements
+%    * Run Search (results = st.search(srch))
+%    * Results are a cell array of objects that meet the search criterion
 % 
-% Principles
+% For further and developing documentation, see
 %
-% 1. Basic terms
+%  * <https://github.com/scitran/client/wiki scitran/client wiki page>, and
+%  specifically the pages on 
 %
-%  * A project includes the data from multiple sessions; a project
-%    belongs to a research *group* 
-%  * Session - What you might have done in an hour's session at the
-%    scanner, collecting a variety of data
-%  * Acquisitions - groups of related files, such as the diffusion, bvecs
-%    and bval fall, or the dicom and nifti file, that are produced when you
-%    push the button on an MR scanner
-%  * Files - single files, such as a nifti file, or a dicom file, ...
-%  * Collection - users create collections from the Flywheel interface by
-%    combining multiple acquisitions or sessions.  Collections act as
-%    'virtual experiments' in which the data collected at different
-%    projects, or by different groups, are combined and analyzed. Scitran
-%    creates these collections without duplicating the data
-%  * Analyses - sets of files, within a collection or session, that have
-%    been analyzed using a Gear.  The analyses objects include both the
-%    files and information about the methods that were used to perform a
-%    specific (reproducible) analysis.
+%  * <https://github.com/scitran/client/wiki/Search Search> and the
+%  * <https://github.com/scitran/client/wiki/Search-examples search examples>
 %  
-% 2. Searching for an object
+% Searching for an object
 %
-%  Searches begin by defining the type of object (e.g., files).  Then we
-%  define the required features of the object.
+%  Searches begin by defining the type of object you are looking for (e.g.,
+%  files).  Then we define the required features of the object.
 %
 %  We set the terms of the search by  creating a Matlab struct.  The first
 %  slot in the struct defines the type of object you are searching for.
-%  Suppose we call the struct 'srch'.  The srch.path slot defines the kind of
-%  object we are searching for.
+%  Suppose we call the struct 'srch'.  The srch.path slot defines the kind
+%  of object we are searching for.
 %
 %   srch.path = 'projects'
 %   srch.path = 'sessions'    
@@ -58,32 +42,28 @@
 %   srch.path = 'analysis'
 %   srch.path = 'collections'
 %
-% 3. The search operations are specified by adding additional slots to the
-%    struct, 'srch'.  These includes specific operators, parameters, and
-%    values.  The point of this script is to provide many examples of how
-%    to set up these searches
+% The search operations are specified by adding additional slots to the
+% struct, 'srch'.  These includes specific operators, parameters, and
+% values.  The point of this script is to provide many examples of how to
+% set up these searches
 % 
-% 4. Important operators that we use below are
+% Important operators that we use below are
 %
-%   'match'
-%   'bool'
-%   'must' 
-%   'range'
+%   'match', 'bool', 'must', 'range'
 %
 % Important parameters we use in search are 
 %   'name', 'group', 'label', 'id','plink', subject_0x2E_age',
 %   'container_id', 'type'.  
 %
-% The full list can be found in the scitran/core data model wiki page (Data
-% model).
+% A list of searchable terms can be found in the scitran/core
 %
-% Other terms are possible (e.g. 'filtered','filter','query','not') but
+%  <https://github.com/scitran/core/wiki/Data-Model Data Model page>.
+%
+% Other operators are possible (e.g. 'filtered','filter','query','not') but
 % here we illustrate the basics. 
 %
 % See also:  st.browser - we use this function to visualize the returned
-% object in the browser.
-%
-% See programming notes at the end of the file
+%            object in the browser.
 %
 % LMP/BW Scitran Team, 2016
 
