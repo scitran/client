@@ -1,4 +1,4 @@
-To access a scitran database, we create use the st.auth command
+To access a scitran database, we create a scitran object
 
     st = scitran(varargin)
 
