@@ -26,7 +26,7 @@ You can direct the output to a particular destination using
 
     st.get(files{1},'destination',localFileName)
 
-There are many (many, many) types of searches, and you can see examples on the search summary page.  These can return sessions, projects, collections, acquisitions, analyses.  
+There are many (many, many) types of searches, and you can see examples on the [search examples page](https://github.com/scitran/client/wiki/Search-examples).  Searches return Matlab cell arrays of sessions, projects, collections, acquisitions, analyses.  
 
 Programming examples of the search syntax are in the script
 [s_stSearches.m](https://github.com/scitran/client/blob/master/matlab/scripts/s_stSearches.m)
