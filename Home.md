@@ -3,8 +3,8 @@ The **scitran client** repository implements a command line interface to allow u
 * obtain authorization to read/write from a Flywheel database
 * search the database
 * download database objects (e.g., files, sessions, projects, analyses)
-* upload results (e.g., files)
-* upload methods (e.g., analyses)
+* upload results (e.g., files, graphs, other attachments)
+* upload method descriptions (e.g., analyses, Gears)
 
 These scitran client can be run from anywhere on the Internet, securely addressing the data in the scitran database. In this way, a user can process data stored in a scitran database either using their local computer or from a larger computational resource such as a Cloud Compute engine.  
 
