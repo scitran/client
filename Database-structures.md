@@ -1,13 +1,10 @@
 The database files are grouped logically into a set of basic categories that we define here.  The client search queries are structured around these categories.
 
 * **Project** - the data from multiple sessions; a project belongs to a research *group* 
-* **Session** - the collection of files acquired in an hour at the scanner.  This can include many types of data and auxiliary files
-* **Acquisitions** - groups of related files during a session.  An example might be a raw (spectra) file and the dicom files produced from it and the nifti file assembled from the dicoms.  Another example is a diffusion data set in a nifti file along with the bvec and bval data.  Or fMRI data in dicom files, the nifti file, and associated physiological data.  Typically the files in a collection all result from the single push of a 'Scan' button.
-* **Files** - single files, such as a nifti file, or a zip file with many dicom files
+* **Session** - the complete set of files acquired in an hour at the scanner.  A session can contain many data and auxiliary files
+* **Acquisitions** - groups of related files acquired in a session.  The files can be related because they are derived from a common source, say a raw (spectra) file and the dicom files produced from it and the nifti file assembled from the dicoms.  Files can be related because they provide information, say a diffusion data set in a nifti file along with the bvec and bval data.  Or files can be related for both reasons, say fMRI data in dicom files and the derived nifti file, along with associated physiological data.  The files in an acquisition typically result from the single push of a 'Scan' button.
+* **Files** - single files, such as a nifti file, or a zip file (which might contain many dicom files)
 
-The notion of a collection or 'virtual experiment' is fundamental to the scitran approach.  The idea is that one can use search to create a new collection that you treat as a new experiment.  This enables the user to re-use data from multiple projects and do new analyses.  Through the magic of modern software, Scitran builds collections without duplicating the data.
+* **Collection** - The notion of a collection or 'virtual experiment' is fundamental to the scitran approach.  Collections act as 'virtual experiments' in which the data collected at different projects, or by different groups, are combined and analyzed.  We search to identify acquisitions and combine them into a collection.  (Scitran builds collections without duplicating the data.) Collections appear as if they are projects (groups of sessions).  But the data within each session may be only a subset of the data from the original experimental session.
 
-* **Collection** - collections are groups of acquisitions or sessions.  Collections act as 'virtual experiments' in which the data collected at different projects, or by different groups, are combined and analyzed. 
-
-To help with 
-* **Analyses** - sets of files, within a collection or session, that have been analyzed using a Gear.  The analyses objects include both the files and information about the methods that were used to perform a specific (reproducible) analysis.
+* **Analyses** - We perform reproducible analyses on collections.  The analyses must have defined inputs, a method of processing, and defined outputs.  The analyses may operate on files within a session, or they may operate on the files in a collection. The analysis database contains all the information you need to reproduce an analysis.
