@@ -1,5 +1,5 @@
 * [Introduction](https://github.com/scitran/client/wiki/Home)
 * [Authorization](https://github.com/scitran/client/wiki/Authorization)
-* [Database](https://github.com/scitran/client/wiki/Database_principles)
+* [Database](https://github.com/scitran/client/wiki/Database-principles)
 * [Search](https://github.com/scitran/client/wiki/Search)
 * [Gears](https://github.com/scitran/client/wiki/Gears)
