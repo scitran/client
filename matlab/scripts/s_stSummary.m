@@ -28,12 +28,12 @@ for ii=1:length(projects)
     clear srch
     srch.path = 'sessions';
     pLabel = projects{ii}.source.label;
-    srch.projects.match.label = projects{ii}.source.label;
+    srch.projects.match.exact_label = projects{ii}.source.label;
     sessions = st.search(srch);
     
     nSessions = nSessions + length(sessions); 
-    str2 = sprintf('\t%s (%d sessions)\n',pLabel,length(sessions))
-    str  =  addText(str,str2);
+    str2 = sprintf('\t%s (%d sessions)\n',pLabel,length(sessions));
+    str  =  addText(str,str2)
 end
 str = addText(str,sprintf('\n  Total sessions:  %d\n',nSessions));
 disp(str)

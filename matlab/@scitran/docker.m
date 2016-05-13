@@ -1,7 +1,7 @@
-function [cmd, status, result] = docker(obj,docker)
-% Run the container with the parameters in the docker struct
+function [cmd, status, result] = docker(~,docker)
+% Run the container with the parameters defined in the docker struct
 %
-%  [cmd, status, result] = stDockerRun(docker)
+%  [cmd, status, result] = st.docker(docker)
 %
 % Inputs - docker is a struct with the following fields
 %
@@ -17,7 +17,12 @@ function [cmd, status, result] = docker(obj,docker)
 
 %% Check input arguments
 p = inputParser;
-p.addRequired('docker',@isstruct);
+vFunc = @(x) (isstruct(x) && ...
+    isfield(x,'container') && ...
+    isfield(x,'iFile') &&isfield(x,'iDir') && ...
+    isfield(x,'oFile') && isfield(x,'oDir'));
+p.addRequired('docker',vFunc);
+
 p.parse(docker);
 docker = p.Results.docker;
 

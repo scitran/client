@@ -4,7 +4,7 @@ function url = browser(obj, stdata, varargin)
 %  url = stBrowser(obj, dType, varargin)
 %
 % Inputs:
-%  stdata:      A struct returned by an st.search command.  We display
+%  stdata:    A struct returned by an st.search command.  We display
 %             projects, sessions, acquisitions, and analyses.
 %
 % Optional parameter/value pairs
@@ -15,8 +15,20 @@ function url = browser(obj, stdata, varargin)
 %  url:    The url to a project or session or collection
 %
 % Examples:
-%    stBrowse('https://flywheel.scitran.stanford.edu',obj,'browse',false);
-%    stBrowse('https://flywheel.scitran.stanford.edu',obj,'collection',true);
+%    st = scitran; srch.path = 'projects';
+%    stdata = st.search(srch);
+%    st.browser(stdata{1});
+%
+%  No browser is brought up, but the url is returned;
+%    url = st.browser(stdata{1},'browse',false);
+%
+%  Open the session as part of a collection that contains it
+%    clear srch; 
+%    srch.path = 'sessions'; srch.collections.match.label='GearTest';
+%    stdata = st.search(srch);
+%    srch.path = 'collections'; srch.collections.match.label='GearTest';
+%    collection = st.search(srch);
+%    url = st.browser(stdata{1},'collection',collection{1});
 %
 % BW  Scitran Team, 2016
 

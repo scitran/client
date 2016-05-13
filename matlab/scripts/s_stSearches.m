@@ -104,7 +104,7 @@ srch.path = 'projects';
 projects = st.search(srch);
 fprintf('Found %d projects\n',length(projects))
 
-%% List projects attached to the group 'wandell' with label 'vwfa'
+%% List projects in the group 'wandell' with label 'vwfa'
 
 clear srch
 srch.path = 'projects';
@@ -121,6 +121,14 @@ projectLabel = projects{1}.source.label;
 
 % You can browse to the project this way
 %   st.browser(projects{1});
+
+%% Get all the sessions within a specific collection
+clear srch; 
+srch.path = 'sessions';
+srch.collections.match.label = 'GearTest';
+sessions = st.search(srch);
+
+fprintf('Found %d sessions in GearTest\n',length(sessions));
 
 %% Get the sessions within the first project
 
@@ -168,7 +176,7 @@ end
 %  dl = stGet(files{1}.plink,s.token)
 %  d = niftiRead(dl);
 
-%% Look for  analyses in the GearTest collection
+%% Look for analyses in the GearTest collection
 
 clear srch
 srch.path = 'analyses';
@@ -306,11 +314,11 @@ end
 %% Find Public Data
 %
 
-% clear srch
-% srch.path = 'projects';
-% srch.projects.match.exact_label = 'Public Data';
-% savejson('',srch)
-% projects = st.search(srch);
+clear srch
+srch.path = 'projects';
+srch.projects.match.exact_label = 'Public Data';
+savejson('',srch)
+projects = st.search(srch);
 
 
 
