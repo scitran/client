@@ -14,4 +14,4 @@ To see other options and the methods, type
 
     doc scitran
 
-To configure your computer with the necessary Python libraries, follow the instructions on the scitran/client Readme.
+To configure your computer with the necessary Python libraries, follow the instructions on the scitran/client [Readme](https://github.com/scitran/client).
