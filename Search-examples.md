@@ -5,7 +5,7 @@ The first field defines the type of object you would like returned.  This is spe
     % The value can be 'projects','sessions','acquisitions','files','collections', or 'analyses'
     srch.path = 'files';  
 
-Additional fields define the conditions of the search.  Suppose that you want files that are within a collection whose label matches 'GearTest'.  Then you add this 
+Additional fields define the conditions of the search.  Suppose that you want files that are within a collection whose label matches 'GearTest'.  Then you add this term to the Matlab srch structure.
 
     srch.collection.match.label = 'GearTest';
 
@@ -28,13 +28,7 @@ The set of terms you can match is defined by the [scitran data model](https://gi
     srch.sessions.bool.must{1}.range.subject_0x2E_age.gt = year2sec(10);
     srch.sessions.bool.must{1}.range.subject_0x2E_age.lt = year2sec(15);
 
-There are also search 'operators'.  You have already seen the main one:  'match'.  Here is a list of the others
-
-    'match'
-    'bool'
-    'must' 
-    'should'
-    'range'
+The search 'operators' are 'match', 'bool', 'must', 'should' and 'range'.  For now, use the examples in the file [s_stSearches.m](https://github.com/scitran/client/blob/master/matlab/scripts/s_stSearches.m).  A more thorough document will appear.
 
 ### Gear-head notes
 
