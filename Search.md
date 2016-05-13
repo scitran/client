@@ -14,7 +14,7 @@ Then we identify the file properties.
 
     % These files match the following properties
     srch.collections.match.label  = 'GearTest';   % In the collection named GearTest
-    srch.acquisitions.match.label = 'T1w';        % Part of an acquisition named T1w (T1-weighted)
+    srch.acquisitions.match.label = 'T1w';        % Part of an acquisition named T1w
     srch.files.match.type         = 'nifti';      % The file type is nifti
 
 To run the search
