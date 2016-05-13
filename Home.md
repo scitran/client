@@ -1,10 +1,10 @@
 The **scitran client** repository implements a command line interface to allow users to interact with the scitran database from their own computers.  Specifically, [Flywheel](https://flywheel.io) and the [Wandell lab at Stanford](http://web.stanford.edu/~wandell) have added features to enable users to perform the following functions
 
-* obtain authorization to read/write from a Flywheel database using.
-* search the database for a collection of sessions and the files therein
-* download database objects (e.g., files, sessions, projects)
-* create a description of the processing (analyses)
-* place the results and analysis description in the database
+* obtain authorization to read/write from a Flywheel database
+* search the database
+* download database objects (e.g., files, sessions, projects, analyses)
+* upload results (e.g., files)
+* upload methods (e.g., analyses)
 
 These scitran client can be run from anywhere on the Internet, securely addressing the data in the scitran database. In this way, a user can process data stored in a scitran database either using their local computer or from a larger computational resource such as a Cloud Compute engine.  
 
