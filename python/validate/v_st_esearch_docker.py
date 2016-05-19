@@ -54,7 +54,7 @@ constraints = {
                     }
                 }
             }
-source_acquisition = scitran_instance.search_remote(path, constraints)['acquisitions'][0]
+source_acquisition = scitran_instance.search(path, constraints)['acquisitions'][0]
 print("Chose the file %s of acquisition %s as a test file."%(filename, source_acquisition['_source']['label']))
 
 # Download the test file to the input directory defined above
@@ -73,7 +73,7 @@ command ='/input/%s /output/%s'%(in_file, out_file)
 st_docker.run_container('vistalab/bet', command=command, in_dir=in_dir, out_dir=out_dir)
 
 # Find one collection that the file belongs to:
-file_collections = scitran_instance.search_remote(path='collections', constraints={'collections':{'match':{'label':'testing'}}})['collections']
+file_collections = scitran_instance.search(path='collections', constraints={'collections':{'match':{'label': 'testing'}}})['collections']
 collection_id = file_collections[0]['_id']
 
 # Reupload the file as an analysis for  the determined collection:
@@ -99,5 +99,5 @@ constraints = {
 }
 
 path='analyses'
-uploaded_analyses = scitran_instance.search_remote(path, constraints)['analyses']
+uploaded_analyses = scitran_instance.search(path, constraints)['analyses']
 pprint(uploaded_analyses)
