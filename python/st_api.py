@@ -4,11 +4,11 @@ from pprint import pprint
 import os
 import requests
 from requests_futures import sessions
+import requests_toolbelt
 import st_exceptions
 import st_auth
 import urlparse
 import json
-from elasticsearch_dsl import Search
 
 __author__ = 'vsitzmann'
 
@@ -103,7 +103,7 @@ class InstanceHandler(object):
         if project_props:
             constraints.update(self._bool_match_multiple_field('sessions', project_props))
 
-        return self.search_remote(path, constraints)[os.path.basename(path)]
+        return self.search(path, constraints)[os.path.basename(path)]
 
     def authenticate(self):
         self.token, self.base_url = st_auth.create_token(self.instance, self.st_dir)
@@ -136,7 +136,7 @@ class InstanceHandler(object):
         self._check_status_code(response)
         return response
 
-    def search_remote(self, path, constraints, num_results=-1):
+    def search(self, path, constraints, num_results=-1):
         '''Searches remote "path" objects with constraints.
 
         This is the most general function for an elastic search that allows to pass in a "path" as well as
@@ -166,15 +166,19 @@ class InstanceHandler(object):
         '''
         result = {
             element:{
-                'bool':{
-                    'should': [ {'match':{field_name:matching_string}} for matching_string in matching_strings ]
+                'constant_score':{
+                    'query':{
+                        'bool':{
+                            'should': [ {'match':{field_name:matching_string}} for matching_string in matching_strings ]
+                        }
+                    }
                 }
             }
         }
 
         return result
 
-    def _bool_match_multiple_field(self, element, field_value_dict):
+    def _bool_match_multiple_field(self, element, field_value_dict, bool_type='should'):
         ''' Assembles the common elasticsearch-query of wanting to specify several field-value pairs for a certain element.
         '''
         constraints_list = []
@@ -186,8 +190,12 @@ class InstanceHandler(object):
 
         result = {
             element:{
-                'bool':{
-                    'should':constraints_list
+                'constant_score':{
+                    'query':{
+                        'bool':{
+                            bool_type:constraints_list
+                        }
+                    }
                 }
             }
         }
@@ -220,7 +228,7 @@ class InstanceHandler(object):
         if project_labels:
             constraints.update(self._bool_match_single_field('projects', 'label', collection_labels))
 
-        search_results_dict = self.search_remote(path, constraints)['sessions']
+        search_results_dict = self.search(path, constraints)['sessions']
 
         return search_results_dict
 
@@ -256,7 +264,7 @@ class InstanceHandler(object):
         if project_labels:
             constraints.update(self._bool_match_single_field('projects', 'label', project_labels))
 
-        search_results = self.search_remote(path, constraints, num_results=num_results)['files']
+        search_results = self.search(path, constraints, num_results=num_results)['files']
 
         return search_results
 
@@ -292,7 +300,7 @@ class InstanceHandler(object):
         if project_labels:
             constraints.update(self._bool_match_single_field('projects', 'label', project_labels))
 
-        search_results_dict = self.search_remote(path, constraints, num_results=num_results)['files']
+        search_results_dict = self.search(path, constraints, num_results=num_results)['files']
 
         return search_results_dict
 
@@ -386,6 +394,10 @@ class InstanceHandler(object):
         files = {'file1':open(in_file_path, 'rb'), 'file2':open(out_file_path, 'rb')}
 
         response = self._request(method='POST', endpoint=endpoint, data=payload, files = files)
+
+        # with open(in_filename, 'rb') as in_file, open(out_filename) as out_file:
+
+
         return response
 
 
