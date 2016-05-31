@@ -11,7 +11,7 @@ import json
 
 __author__ = 'vsitzmann'
 
-class FlywheelClient(object):
+class ScitranClient(object):
     '''Handles api calls to a certain instance.
 
     Attributes:
@@ -52,6 +52,7 @@ class FlywheelClient(object):
             os.mkdir(self.gear_out_dir)
 
     def _check_status_code(self, response):
+        '''Checks the status codes of received responses and raises errors in case of bad http requests.'''
         status_code = response.status_code
 
         if status_code == 200:
@@ -95,6 +96,7 @@ class FlywheelClient(object):
         print('\n')
 
     def _authenticate_request(self, request):
+        '''Automatically appends the authorization token to every request sent out.'''
         if self.token:
             request.headers.update({
                 'Authorization':self.token
@@ -177,7 +179,7 @@ class FlywheelClient(object):
         if num_results != -1:
             search_body.update({'size':num_results})
 
-        response = self._request(endpoint="search", data=json.dumps(search_body))
+        response = self._request(endpoint="search", data=json.dumps(search_body), params={'size':num_results})
 
         return json.loads(response.text)
 
@@ -264,12 +266,23 @@ class FlywheelClient(object):
 
         return abs_file_path
 
-    def download_all_file_search_results(self, file_search_results, dest_dir=None):
+    def download_all_file_search_results(self, file_search_results, dest_dir):
+        '''Download all files contained in the list returned by a call to ScitranClient.search_files()
+
+        Args:
+            file_search_results (dict): Search result.
+            dest_dir (str): Path to the directory that files should be downloaded to.
+
+        Returns:
+            string: Destination directory.
+        '''
         for file_search_result in file_search_results:
             container_id = file_search_result['_source']['container_id']
             container_name = file_search_result['_source']['container_name']
             file_name = file_search_result['_source']['name']
             self.download_file(container_name, container_id, file_name, dest_dir=dest_dir)
+
+        return dest_dir
 
     def upload_analysis(self, in_file_path, out_file_path, metadata, target_collection_id):
         '''Attaches an input file and an output file to a collection on the remote end.
@@ -322,9 +335,21 @@ class FlywheelClient(object):
             destination (dict):
 
         '''
+        # submit_job_command = sprintf(
+            # 'curl -k -X POST %s/%s -d ''%s'' -H "X-SciTran-Auth:%s" -H "X-SciTran-Name:live.sh" -H "X-SciTran-Method:script" ',
+            # st.url, endpoint, job_body, drone_secret);
 
-        pass
+        endpoint = 'jobs/add'
 
+        job_dict = {}
+        job_dict.update({'inputs':inputs})
+        job_dict.update({'tags':tags})
+        job_dict.update({'destination':destination})
+
+        response = self._request(endpoint=endpoint,
+                                 data=json.dumps(job_dict),
+                                 headers={'X-SciTran-Name:live.sh', 'X-SciTran-Method:script'})
+        return response
 
     def run_gear_and_upload_analysis(self, container, in_dir=None, out_dir=None, in_file=None, out_file=None):
         if not in_dir:
