@@ -77,3 +77,4 @@ if prompt_result.lower() == 'y':
     #                                  file_name=filename,
     #                                  dest_dir=download_dir)
 
+# TODO (vsitzmann): command line flags
