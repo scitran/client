@@ -8,6 +8,31 @@ import st_exceptions
 
 __author__ = 'vsitzmann'
 
+def check_docker_machine(machine='default'):
+    try:
+        _ = subprocess.check_call(['docker-machine', '-v'])
+    except OSError:
+        raise st_exceptions.MachineNotInstalled("docker-machine is required, but not installed. Please install docker-machine.")
+
+    try:
+        _ = subprocess.check_output(['docker-machine', 'status', machine])
+        print("docker-machine %s is running." % machine)
+    except subprocess.CalledProcessError:
+        print("Starting docker-machine %s..." % machine)
+
+        try:
+            _ = subprocess.check_output(['docker-machine', 'start', machine])
+        except subprocess.CalledProcessError:
+            create_machine_query = input('Would you like to create the machine now? (y/n)')
+
+            if create_machine_query.lower() == 'y':
+                status = subprocess.call(['docker-machine', 'create', '-d', 'virtualbox', machine])
+
+                if status:
+                    raise st_exceptions.MachineSetupError("Error creating the docker machine.")
+                else:
+                    print("The machine %s is up and running!" % machine)
+
 def run_container(container, command, in_dir='input', out_dir='output', machine='default'):
     '''
     in_dir and out_dir should be named /input and /output respectively
@@ -27,30 +52,7 @@ def run_container(container, command, in_dir='input', out_dir='output', machine=
     if platform == 'linux2':
         docker_client = docker.Client('unix:///var/run/docker.sock')
     else:
-        try:
-            _ = subprocess.check_call(['docker-machine', '-v'])
-        except OSError:
-            raise st_exceptions.MachineNotInstalled("docker-machine is required, but not installed. Please install docker-machine.")
-
-        try:
-            _ = subprocess.check_output(['docker-machine', 'status', machine])
-            print("docker-machine %s is running." % machine)
-        except subprocess.CalledProcessError:
-            print("Starting docker-machine %s..." % machine)
-
-            try:
-                _ = subprocess.check_output(['docker-machine', 'start', machine])
-            except subprocess.CalledProcessError:
-                create_machine_query = input('Would you like to create the machine now? (y/n)')
-
-                if create_machine_query.lower() == 'y':
-                    status = subprocess.call(['docker-machine', 'create', '-d', 'virtualbox', machine])
-
-                    if status:
-                        raise st_exceptions.MachineSetupError("Error creating the docker machine.")
-                    else:
-                        print("The machine %s is up and running!" % machine)
-
+        check_docker_machine(machine)
         docker_client = docker.from_env(assert_hostname=False)
 
     host_config = docker_client.create_host_config(binds=[in_dir+':/input', out_dir+':/output'])
