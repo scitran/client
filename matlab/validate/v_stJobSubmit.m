@@ -46,12 +46,12 @@ J.gear = 'fsl-bet';
 
 % Define the inputs ( multiple inputs are defined by their type (dicom, nifti))
 J.inputs.nifti.container_type = 'acquisition';
-J.inputs.nifti.container_id = files{1}.source.container_id;
+J.inputs.nifti.container_id = files{1}.source.container.x0x5F_id;
 J.inputs.nifti.filename = files{1}.source.name;
 
 % Define the destination (where to put the results from the gear)
 J.destination.container_type = 'acquisition';
-J.destination.container_id = files{1}.source.container_id;
+J.destination.container_id = files{1}.source.container.x0x5F_id;
 
 % Define tags (optional)
 J.tags = {'bet', 'analysis', 'brain-extraction', 'gear'};
@@ -90,12 +90,12 @@ J.gear = 'fsl-fast';
 
 % Define inputs ( multiple inputs are defined by their type (dicom, nifti))
 J.inputs.nifti.container_type = 'acquisition';
-J.inputs.nifti.container_id = files{1}.source.container_id;
+J.inputs.nifti.container_id = files{1}.source.container.x0x5F_id;
 J.inputs.nifti.filename = files{1}.source.name;
 
 % Define the destination (where to put the results from the gear)
 J.destination.container_type = 'acquisition';
-J.destination.container_id = files{1}.source.container_id;
+J.destination.container_id = files{1}.source.container.x0x5F_id;
 
 % Define tags (optional)
 J.tags = {'fast', 'analysis', 'segmentation', 'gear'};
