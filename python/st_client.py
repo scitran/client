@@ -8,6 +8,8 @@ import st_exceptions
 import st_auth
 import urlparse
 import json
+import shutil
+import st_docker
 
 __author__ = 'vsitzmann'
 
@@ -106,26 +108,6 @@ class ScitranClient(object):
         else:
             raise st_exceptions.InvalidToken('Not Authenticated!')
 
-    def search_anything_should_joined(self, path='', file_props={}, acq_props={}, collection_props={}, session_props={}, project_props={}):
-        constraints = {}
-
-        if file_props:
-            constraints.update(self._bool_match_multiple_field('files', file_props))
-
-        if acq_props:
-            constraints.update(self._bool_match_multiple_field('acquisitions', acq_props))
-
-        if collection_props:
-            constraints.update(self._bool_match_multiple_field('collections', collection_props))
-
-        if session_props:
-            constraints.update(self._bool_match_multiple_field('sessions', session_props))
-
-        if project_props:
-            constraints.update(self._bool_match_multiple_field('sessions', project_props))
-
-        return self.search(path, constraints)[os.path.basename(path)]
-
     def _authenticate(self):
         self.token, self.base_url = st_auth.create_token(self.instance, self.st_dir)
         self.base_url = urlparse.urljoin(self.base_url, 'api/')
@@ -198,47 +180,6 @@ class ScitranClient(object):
     def search_acquisitions(self, constraints, num_results=-1):
         return self.search(path='acquisitions', constraints=constraints, num_results=num_results)['acquisitions']
 
-    def _bool_match_single_field(self, element, field_name, matching_strings, bool_type='should'):
-        ''' Assembles the common elasticsearch-query of specifieng several possible values for a single field.
-        '''
-        result = {
-            element:{
-                'constant_score':{
-                    'query':{
-                        'bool':{
-                            bool_type: [ {'match':{field_name:matching_string}} for matching_string in matching_strings ]
-                        }
-                    }
-                }
-            }
-        }
-
-        return result
-
-    def _bool_match_multiple_field(self, element, field_value_dict, bool_type='should'):
-        ''' Assembles the common elasticsearch-query of wanting to specify several field-value pairs for a certain element.
-        '''
-        constraints_list = []
-        for field, value in field_value_dict.iteritems():
-            if isinstance(value, list):
-                constraints_list.extend([{'match':{field:single_value}} for single_value in value])
-            else:
-                constraints_list.append({'match':{field:value}})
-
-        result = {
-            element:{
-                'constant_score':{
-                    'query':{
-                        'bool':{
-                            bool_type:constraints_list
-                        }
-                    }
-                }
-            }
-        }
-
-        return result
-
     def download_file(self, container_type, container_id, file_name, dest_dir=None):
         '''Download a file that resides in a specified container.
 
@@ -276,13 +217,15 @@ class ScitranClient(object):
         Returns:
             string: Destination directory.
         '''
+        file_paths = []
         for file_search_result in file_search_results:
-            container_id = file_search_result['_source']['container_id']
+            container_id = file_search_result['_source']['container']['_id']
             container_name = file_search_result['_source']['container_name']
             file_name = file_search_result['_source']['name']
-            self.download_file(container_name, container_id, file_name, dest_dir=dest_dir)
+            abs_file_path = self.download_file(container_name, container_id, file_name, dest_dir=dest_dir)
+            file_paths.append(abs_file_path)
 
-        return dest_dir
+        return file_paths
 
     def upload_analysis(self, in_file_path, out_file_path, metadata, target_collection_id):
         '''Attaches an input file and an output file to a collection on the remote end.
@@ -307,27 +250,18 @@ class ScitranClient(object):
             'inputs':[{'name':in_filename}]
         })
 
-        # payload = {
-        #    'metadata':json.dumps(metadata)
-        # }
-        #
-        # files = {'file1':open(in_file_path, 'rb'), 'file2':open(out_file_path, 'rb')}
-        #
-        # response = self._request(method='POST', endpoint=endpoint, data=payload, files = files)
-
-        # with open(in_filename, 'rb') as in_file, open(out_filename) as out_file:
-        with open(in_filename, 'rb') as in_file, open(out_filename, 'rb') as out_file:
-            mpe = requests_toolbelt.multipart.encoder.MultipartEncoder(
-                fields={'metadata': json.dumps(metadata), 'file1': (in_filename, in_file), 'file2':(out_filename, out_file)}
-            )
-            response = self._request(endpoint, method='POST', data=mpe, headers={'Content-Type':mpe.content_type})
+        try:
+            with open(in_file_path, 'rb') as in_file, open(out_file_path, 'rb') as out_file:
+                mpe = requests_toolbelt.multipart.encoder.MultipartEncoder(
+                    fields={'metadata': json.dumps(metadata), 'file1': (in_filename, in_file), 'file2':(out_filename, out_file)}
+                )
+                response = self._request(endpoint, method='POST', data=mpe, headers={'Content-Type':mpe.content_type})
+        except st_exceptions.BadRequest:
+            return -1
 
         return response
 
-    def submit_job(self,
-                   inputs,
-                   destination,
-                   tags=[]):
+    def submit_job(self, inputs, destination, tags=[]):
         '''Submits a job to the flywheel factory
 
         Args:
@@ -351,16 +285,62 @@ class ScitranClient(object):
                                  headers={'X-SciTran-Name:live.sh', 'X-SciTran-Method:script'})
         return response
 
-    def run_gear_and_upload_analysis(self, container, in_dir=None, out_dir=None, in_file=None, out_file=None):
+    def run_gear_and_upload_analysis(self, metadata_label, container, target_collection_id, in_dir=None, out_dir=None):
+        '''Runs a docker container on all files in an input directory and uploads input and output file in an analysis.
+
+        Args:
+            metadata_label (str): The label of the uploaded analysis.
+            container (str): The docker container to run.
+            target_collection_id (str): The collection id of the target collection that analyses are uploaded to.
+            in_dir (Optional[str]): The input directory to the gear where all the input files reside.
+                                        If not given, the self.gear_in_dir will be used.
+            out_dir (Optional[str]): The output directory that should be used by the gear. If given, has to be empty.
+                                        If not given, the self.gear_out_dir will be used.
+
+        Returns:
+
+        '''
         if not in_dir:
             in_dir = self.gear_in_dir
+
+            try:
+                shutil.rmtree(in_dir)
+                os.mkdir(in_dir)
+            except:
+                pass
+
         if not out_dir:
             out_dir = self.gear_out_dir
 
-        # Check if the output directory is empty.
-        if os.listdir(out_dir):
+            try:
+                shutil.rmtree(out_dir)
+                os.mkdir(out_dir)
+            except:
+                pass
+        elif os.listdir(out_dir):
             print("Output directory is not empty!")
             return
+
+        for in_file in os.listdir(in_dir):
+            print("\nRunning container %s on file %s..."%(container, in_file))
+            out_file = in_file[:-7] + '_bet'
+            command ='/input/%s /output/%s'%(in_file, out_file)
+            st_docker.run_container(container, command=command, in_dir=in_dir, out_dir=out_dir)
+
+            print("Reuploading result to collection with id %s."%(target_collection_id))
+            in_file_path = os.path.join(in_dir, in_file)
+            out_file_path = os.path.join(out_dir, out_file + '.nii.gz')
+            metadata = {'label': metadata_label}
+            response = self.upload_analysis(in_file_path, out_file_path, metadata, target_collection_id=target_collection_id)
+            # analyses_id = json.loads(response.text)['_id']
+            print("Uploaded the analysis.\n")
+            # print("Uploaded the analyses. Saved in database under ID %s"%analyses_id)
+
+            try:
+                shutil.rmtree(out_dir)
+                os.mkdir(out_dir)
+            except:
+                pass
 
         pass
 
