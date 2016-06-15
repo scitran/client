@@ -252,7 +252,7 @@ def qa_reports_functional_acqs_females():
     scitran_client = st_client.ScitranClient('scitran', scitran_dir, debug=True)
 
     file_constraints = {}
-    file_constraints.update(constrain_element('files', match('type', 'qa')))
+    file_constraints.update(constrain_element('files', match('name', 'qa_report.png')))
     file_constraints.update(constrain_element('acquisitions',
                                               constant_score(
                                                   bool(
