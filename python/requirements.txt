@@ -20,6 +20,7 @@ pyasn1==0.1.9
 pyasn1-modules==0.0.8
 pyparsing==2.1.1
 python-dateutil==2.5.3
+python-gflags==3.0.5
 pytz==2016.4
 requests==2.10.0
 requests-toolbelt==0.6.2
