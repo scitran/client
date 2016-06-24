@@ -5,6 +5,7 @@ import requests
 import sys
 import subprocess
 import st_exceptions
+from subprocess import call
 
 __author__ = 'vsitzmann'
 
@@ -56,6 +57,8 @@ def run_container(container, command, in_dir='input', out_dir='output', machine=
         docker_client = docker.from_env(assert_hostname=False)
 
     host_config = docker_client.create_host_config(binds=[in_dir+':/input', out_dir+':/output'])
+    docker_client.pull(container)
+    call(["eval","$(docker-machine env default)"])
 
     try:
         container_instance = docker_client.create_container(host_config=host_config,
