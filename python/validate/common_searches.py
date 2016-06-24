@@ -28,7 +28,7 @@ def Filter_ADNIT1_subject_metadata():
         list of jsons describing files.
     '''
     # Create the scitran client instance, which handles all communication with the API.
-    scitran_client = st_client.ScitranClient('scitran', scitran_dir, debug=True)
+    scitran_client = st_client.ScitranClient('scitran', debug=True)
 
     ###################################
     # Find the sessions in a project. #
@@ -123,7 +123,7 @@ def Filter_ADNIT1_subject_metadata():
 
 
 def ENGAGE_nifti_bval_bvec_diffusion_files():
-    scitran_client = st_client.ScitranClient('scitran', scitran_dir, debug=True)
+    scitran_client = st_client.ScitranClient('scitran', debug=True)
 
     # Find the sessions in a project
     project_constraints = constrain_element('projects', match('label', 'ENGAGE'))
@@ -191,7 +191,7 @@ def ENGAGE_nifti_bval_bvec_diffusion_files():
 
 
 def ENGAGE_anatomy_acquisitions_niftis():
-    scitran_client = st_client.ScitranClient('scitran', scitran_dir, debug=True)
+    scitran_client = st_client.ScitranClient('scitran', debug=True)
 
     # Find the sessions in a project
     project_constraints = constrain_element('projects', match('label', 'ENGAGE'))
@@ -249,7 +249,7 @@ def ENGAGE_anatomy_acquisitions_niftis():
 def qa_reports_functional_acqs_females():
     # TODO (vsitzmann): request is too large?
     # How is this filetype called?
-    scitran_client = st_client.ScitranClient('scitran', scitran_dir, debug=True)
+    scitran_client = st_client.ScitranClient('scitran', debug=True)
 
     file_constraints = {}
     file_constraints.update(constrain_element('files', match('name', 'qa_report.png')))

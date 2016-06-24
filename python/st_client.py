@@ -10,6 +10,7 @@ import urlparse
 import json
 import shutil
 import st_docker
+from settings import *
 
 __author__ = 'vsitzmann'
 
@@ -25,11 +26,11 @@ class ScitranClient(object):
 
     def __init__(self,
                  instance_name,
-                 st_dir,
                  debug=False,
-                 downloads_dir='downloads',
-                 gear_in_dir='downloads/input',
-                 gear_out_dir='downloads/output'):
+                 st_dir = AUTH_DIR,
+                 downloads_dir=DEFAULT_DOWNLOADS_DIR,
+                 gear_in_dir=DEFAULT_INPUT_DIR,
+                 gear_out_dir=DEFAULT_OUTPUT_DIR):
 
         self.session = requests.Session()
         self.instance = instance_name

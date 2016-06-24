@@ -23,7 +23,7 @@ try:
 except Exception:
     pass
 
-scitran_instance = st_client.ScitranClient('scitran', st_dir)
+scitran_instance = st_client.ScitranClient('scitran', debug=True)
 
 # Start a search
 print("Running the search...")
