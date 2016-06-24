@@ -7,6 +7,7 @@ from oauth2client import client, file, tools
 import os
 import shutil
 import json
+import settings
 
 __author__ = 'vsitzmann'
 
@@ -28,7 +29,7 @@ def _handle_instance_auth(instance, st_dir):
     local_auth_file_path = os.path.join(st_dir, 'stAuth.json')
     # TODO (Vincent): where to put stAuth.json file?
     if not os.path.isfile(local_auth_file_path):
-        shutil.copyfile('stAuth.json', local_auth_file_path)
+        shutil.copyfile(os.path.join(settings.EXEC_HOME, 'stAuth.json'), local_auth_file_path)
 
 
     with open(local_auth_file_path, 'r') as local_auth_file:
