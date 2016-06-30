@@ -5,7 +5,8 @@ import requests
 import sys
 import subprocess
 import st_exceptions
-from subprocess import call
+import subprocess
+import os
 
 __author__ = 'vsitzmann'
 
@@ -49,6 +50,13 @@ def run_container(container, command, in_dir='input', out_dir='output', machine=
     '''
 
     platform = sys.platform
+    env_vars_string = subprocess.check_output(['docker-machine', 'env', machine])
+    relevant_indices = [1,3,5,7]
+    new_env_vars = [env_vars_string.split()[i] for i in relevant_indices]
+    new_env_var_dict = dict([env_var_string.replace('\"','').split('=') for env_var_string in new_env_vars])
+
+    for key, value in new_env_var_dict.iteritems():
+        os.environ[key] = value
 
     if platform == 'linux2':
         docker_client = docker.Client('unix:///var/run/docker.sock')
@@ -58,7 +66,6 @@ def run_container(container, command, in_dir='input', out_dir='output', machine=
 
     host_config = docker_client.create_host_config(binds=[in_dir+':/input', out_dir+':/output'])
     docker_client.pull(container)
-    call(["eval","$(docker-machine env default)"])
 
     try:
         container_instance = docker_client.create_container(host_config=host_config,
