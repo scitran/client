@@ -7,15 +7,13 @@ from pprint import pprint
 import st_client
 import pandas
 from elasticsearch_helper import *
+import settings
 
 __author__ = 'vsitzmann'
 
 # The input and output directories that will be mounted in the docker container.
-in_dir ='/home/vsitzmann/Desktop/input'
-out_dir = '/home/vsitzmann/Desktop/output'
-
-# The directory where the client secret, tokens etc. are stored
-st_dir = '/home/vsitzmann/.stclient'
+in_dir = settings.DEFAULT_INPUT_DIR
+out_dir = settings.DEFAULT_OUTPUT_DIR
 
 try:
     os.mkdir(in_dir)
