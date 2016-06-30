@@ -10,10 +10,11 @@ from elasticsearch_helper import *
 import st_client
 import pandas as pd
 import utils
+import settings
 
-download_dir = '/home/vsitzmann/Desktop/session_files'
+download_dir = settings.DEFAULT_DOWNLOADS_DIR
 subject_code = 'PA27541'
-scitran_dir = '/home/vsitzmann/.stclient/'
+scitran_dir = settings.AUTH_DIR
 
 try:
     os.mkdir(download_dir)
