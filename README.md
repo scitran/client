@@ -18,7 +18,7 @@ If the path to python is not in this list, then you set add it, say be
    ```
    setenv('PATH',['/Users/wandell/anaconda/bin/:',getenv('PATH')]);
    ```
-You might verify that you succeeded by trying
+You might verify that you succeeded by trying from within your Matlab command window
    ```
    system('which python')
    ```
