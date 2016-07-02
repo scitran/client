@@ -18,7 +18,7 @@ If the path to python is not in this list, then you set add it, say be
    ```
    setenv('PATH',['/Users/wandell/anaconda/bin/:',getenv('PATH')]);
    ```
-You might verify that you succeeded by trying
+You might verify that you succeeded by trying from within your Matlab command window
    ```
    system('which python')
    ```
@@ -49,8 +49,6 @@ Now you're ready to issue docker commands through Matlab or Python. See [matlab/
 
 * JSONlab
 The MATLAB SciTran client uses JSONlab to load, save, and parse json objects. Hence, [JSONlab](https://github.com/fangq/jsonlab) must  be on your MATLAB path. Version XXX is included in this distribution.
-
-* (Deprecated). You must have access to port 9000 to open a browser window/tab. By default this should work just fine. This is almost never a problem, apart from some VM installs.
 
 
 ## Python Client
