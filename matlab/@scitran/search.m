@@ -139,9 +139,9 @@ if strcmp(srchType,'files')
     n = length(result);
     for ii=1:n
         cname = result{ii}.source.container_name;
-        id    = result{ii}.source.container.x0x5F_id;
+        acquisitionid    = result{ii}.source.acquisition.x0x5F_id;
         fname = result{ii}.source.name;
-        result{ii}.plink = sprintf('%s/api/%s/%s/files/%s',obj.url, cname, id, fname);
+        result{ii}.plink = sprintf('%s/api/%s/%s/files/%s',obj.url, cname, acquisitionid, fname);
     end
 end
 

@@ -36,7 +36,7 @@ oFile = [tempname, '.json'];
 % Ask LMP what to do about this issue
 % num_results = 50;
 
-cmd = sprintf('curl -XGET "%s/api/search" -H "Authorization":"%s" -k -d ''%s'' > %s && echo "%s"',...
+cmd = sprintf('curl -XPOST "%s/api/search" -H "Authorization":"%s" -k -d ''%s'' > %s && echo "%s"',...
     obj.url, obj.token, srch, oFile, oFile);
     
     

@@ -1,14 +1,15 @@
 function url = browser(obj, stdata, varargin)
 % Open up the scitran URL to the object id
 %
-%  url = stBrowser(obj, dType, varargin)
+%  url = st.browser(obj, dType, varargin)
 %
 % Inputs:
 %  stdata:    A struct returned by an st.search command.  We display
 %             projects, sessions, acquisitions, and analyses.
 %
 % Optional parameter/value pairs
-%  browse:      Bring up the browser (default is true)
+%  browse:      Bring up the browser (default is true). If set to false,
+%               the url is returned, which may be useful.
 %  collection:  Set to true to show a session from a collection
 %
 % Output:
@@ -35,9 +36,8 @@ function url = browser(obj, stdata, varargin)
 %% Parse the inputs
 p = inputParser;
 
-% The object is a returned search object from the stEsearchRun
-% To use the browser, the object must be a project, session, acquisition,
-% or analysis
+% stdata is a returned search object from the st.search The browser can
+% open up an object that is a project, session, acquisition, or analysis
 vFunc = @(x) (isstruct(x) && ismember(x.type, {'projects','sessions','acquisitions','collections','analyses'}));
 p.addRequired('stdata',vFunc);
 
