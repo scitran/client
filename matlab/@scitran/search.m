@@ -52,7 +52,11 @@ srchFile = strtrim(result(strfind(result,'/private/tmp'):end));
 
 % This is now a Matlab struct with a lot of ugly terms.  We clean them up
 % below.
-srchResult = loadjson(srchFile); 
+if ~exist(srchFile,'file'), error('Results does not contain a valid search file');
+else
+    srchResult = loadjson(srchFile);
+end
+
 if isfield(srchResult,'message')
     result = srchResult;
     fprintf('Search error\n');
