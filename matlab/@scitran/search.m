@@ -48,7 +48,11 @@ esCMD = obj.searchCmd(srch);
 
 % Load the result json file. NOTE the use of strtrim to get rid of the
 % final blank character
-srchFile = strtrim(result(strfind(result,'/private/tmp'):end));
+if ismac
+    srchFile = strtrim(result(strfind(result,'/private/tmp'):end));
+elseif isunix
+    srchFile = strtrim(result(strfind(result,'/tmp'):end));
+end
 
 % This is now a Matlab struct with a lot of ugly terms.  We clean them up
 % below.

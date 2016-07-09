@@ -185,7 +185,7 @@ clear srch
 srch.path = 'collections';
 srch.sessions.range.created.gte = 'now-4w';  % For weeks ago
 collections = st.search(srch);
-fprintf('Found %d collections in previous two weeks \n',length(collections))
+fprintf('Found %d collections in previous four weeks \n',length(collections))
 
 % To see the sessions within some time range use:
 %   srch.sessions.range.created.gte = dateFormat;
