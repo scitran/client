@@ -5,7 +5,7 @@
 %  Flywheel uses the term 'Gear' to describe the process of
 %
 %     * retrieving data from a scitran database,
-%     * selecting the parameters, 
+%     * selecting the parameters,
 %     * analyzing the data with a program stored in a docker container, and
 %     * placing the result and parameters into the database for
 %       scientific transparency and reproducibility
@@ -38,13 +38,14 @@
 %
 % LMP/BW, Scitran Team, 2016
 
-%%  Authorization 
+%%  Authorization
 
 % Get authorization to read from the database
 st = scitran('action', 'create', 'instance', 'scitran');
 
 % A place for temporary files.
 chdir(fullfile(stRootPath,'local'));
+
 
 %% Configure your local computer to run docker containers
 
@@ -65,7 +66,8 @@ stDirCreate(iDir);
 oDir = fullfile(pwd,'output');
 stDirCreate(oDir);
 
-%% Execute a simple search 
+
+%% Execute a simple search
 
 % This search could also be done from the browser interface
 
@@ -81,6 +83,7 @@ srch.files.match.type         = 'nifti';      % A nifti type
 % Run the search and get information about files
 files = st.search(srch);
 
+
 %% Get the file from the scitran database
 
 % Execute the docker container on one file.  This could be a loop.
@@ -89,6 +92,7 @@ destFile = fullfile(iDir, fname);
 
 % Get the file from the database
 st.get(files{1},'destination',destFile);
+
 
 %% Set up for the brain extraction tool docker container and run it
 
@@ -112,95 +116,43 @@ docker.container = 'vistalab/bet';
 % needed for reproducibility
 st.docker(docker);
 
-%% Upload the result to the collection in the database
 
-% Find information about the Collection so we can upload
-clear srch
-srch.path = 'collections';                         % Looking for files
-srch.collections.match.label  = 'GearTest'; 
-collections = st.search(srch);
+%% Build analysis struct with the information needed to upload the results
 
-% Build a struct with the information needed to upload the results
+% NOTE: Full paths are required for the outputs and inputs.
 clear upload
-upload.label = 'FSL bet2 analysis';      % Analysis label
-upload.outputs{1}.name = [docker.oFile,'.nii.gz'];   % Name of the results file from vistalab/bet
-upload.inputs{1}.name = docker.iFile;    % Name of the results file
+analysis.label           = 's_stGear.m: FSL bet2 analysis';                % Analysis label
+analysis.outputs{1}.name = fullfile(docker.oDir, [docker.oFile,'.nii.gz']); % Full path to the OUTPUT file
+analysis.inputs{1}.name  = fullfile(docker.iDir, docker.iFile);             % Full path to the INPUT file
 
-% Store the files in a Collection analysis in the database
-st.put('analysis',upload,'id',collections{1}.id);
 
-%% Go to the browser and have a look at the collection
+%% UPLOAD ANALYSIS TO COLLECTION
+%  NOTE: This will make this analysis viewable from any of the sessions within that collection!
 
+% Find the database ID for the Collection so we can upload to it
+clear srch
+srch.path                     = 'collections';
+srch.collections.match.label  = 'GearTest';
+collections                   = st.search(srch);
+collection_id                 = collections{1}.id;
+
+st.put('collection analysis', analysis,'id', collection_id);
+
+% Go to the browser and have a look at the collection
 st.browser(collections{1});
 
-%%
 
+%% UPLOAD ANALYSIS TO THE SESSION
 
+% Get the SESSION ID which contains the acquisitions and the file we used
+% for input (this ID is needed for a session analysis)
+clear search
+search.path                 = 'sessions';
+search.sessions.match.label = files{1}.source.session.label;
+session                     = st.search(search);
+session_id                  = session{1}.id;
 
+st.put('session analysis', analysis, 'id', session_id);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-%% Display the resulting analysis ID (as json)
-% disp(result);
-% 
-% % Load the json result
-% R = loadjson(result); % Has x0x5F_id field
-% 
-% % Display the analysis id
-% fprintf('Analysis id: %s \n', R.x0x5F_id);
-
-
-%% UPLOAD: the processed/result file to the collection (OLD)
-
-% It would be nice to have the collection id from the previous search
-% clear b
-% b.path = 'collections';                         % Looking for T1 weighted files
-% b.collections.match.label = 'GearTest';   
-% s.json = savejson('',b);
-% data = stEsearchRun(s);
-% fprintf('Found %d collection(s) named %s\n',length(data.collections),b.collections.match.label);
-% id = data.collections{1}.x0x5F_id;
-% 
-% % Now get ready for the upload
-% clear upload
-% upload.token     = token;
-% upload.url       = client_url;
-% upload.fName     = fullfile(docker.oDir, [docker.oFile,'.nii.gz']);
-% upload.target    = 'collections';
-% upload.id        = id;
-% 
-% [status, result, resultPlink] = stFileUpload(upload);
-% if status ~= 0
-%     fprintf('Upload Error: %s\n', result);
-% end
-
+% Go to the browser and have a look at the collection
+st.browser(session{1});
