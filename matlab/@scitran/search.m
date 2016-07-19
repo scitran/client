@@ -27,7 +27,7 @@ srch  = p.Results.srch;
 oFile = p.Results.oFile;
 
 
-%% The srch is a Matlab structure containing the search requirements. 
+%% The srch is a Matlab structure containing the search requirements.
 
 % It is converted to json here.  But, we accept either a struct or a json
 % notation for the srch.
@@ -76,14 +76,14 @@ srchType = fieldnames(srchResult);
 switch srchType{1}
     % TODO:  Sort several of these by their label before returning.
     case 'projects'
-        nProjects = length(srchResult.projects);  
+        nProjects = length(srchResult.projects);
         result = cell(1,nProjects);
-        for ii=1:nProjects          
+        for ii=1:nProjects
             result{ii}.id     = srchResult.projects{ii}.x0x5F_id;
             result{ii}.type   = srchResult.projects{ii}.x0x5F_type;
             result{ii}.source = srchResult.projects{ii}.x0x5F_source;
             result{ii}.score  = srchResult.projects{ii}.x0x5F_score;
-            result{ii}.index  = srchResult.projects{ii}.x0x5F_index;        
+            result{ii}.index  = srchResult.projects{ii}.x0x5F_index;
         end
     case 'sessions'
         nSessions = length(srchResult.sessions);
@@ -143,13 +143,16 @@ end
 
 % The files might be part of an acquisition, or part of a session, or part
 % of a project.  So many files, so little time.
+% TODO: Handle session and project attachments
 if strcmp(srchType,'files')
     n = length(result);
     for ii=1:n
         cname = result{ii}.source.container_name;
-        acquisitionid    = result{ii}.source.acquisition.x0x5F_id;
-        fname = result{ii}.source.name;
-        result{ii}.plink = sprintf('%s/api/%s/%s/files/%s',obj.url, cname, acquisitionid, fname);
+        if strcmpi(cname, 'acquisitions') % Only add files from acquisitions to result
+            acquisitionid = result{ii}.source.acquisition.x0x5F_id;
+            fname = result{ii}.source.name;
+            result{ii}.plink = sprintf('%s/api/%s/%s/files/%s',obj.url, cname, acquisitionid, fname);
+        end
     end
 end
 
