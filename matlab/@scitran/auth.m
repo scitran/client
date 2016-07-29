@@ -142,7 +142,9 @@ end
 % If the file does not exist, then copy it from the path
 localAuthFile = fullfile(stDir, 'stAuth.json');
 if ~exist(localAuthFile, 'file')
-    copyfile(which('stAuth.json'), localAuthFile)
+    st = {};
+else
+    st = loadjson(localAuthFile);
 end
 
 
@@ -153,13 +155,9 @@ obj.token = '';
 
 %% Load instance and client information (used in python command)
 
-st = loadjson(localAuthFile);
-
 % Check for client/instance info in the localAuthFile
 % Prompt to add it if not found, then save it for next time.
 if ~isfield(st, instance)
-    disp('Known instances:');
-    disp(fieldnames(st));
     prompt = sprintf('Unknown instance: \n ''%s'' is not a known instance. \n Would you like to add it to your local config? (y/n): ', instance);
     response = input(prompt,'s');
     if lower(response) == 'y'
