@@ -21,17 +21,24 @@ p.CaseSensitive   = true;
 
 % Matlab struct
 p.addRequired('srch',@ischar)
+p.addParameter('all_data',false,@islogical);
 
 % Parse
 p.parse(srch,varargin{:});
 srch   = p.Results.srch;
 
+% Convert logical to string
+all_data = p.Results.all_data;
+if   all_data, all_data = 'true';
+else           all_data = 'false';
+end
+
 % Output file name, must end with a .json extension
 oFile = [tempname, '.json'];
 
 %% Build the command
-cmd = sprintf('curl -s -XPOST "%s/api/search" -H "Authorization":"%s" -k -d ''%s'' > %s && echo "%s"',...
-    obj.url, obj.token, srch, oFile, oFile);
-
+cmd = sprintf('curl -s -XPOST "%s/api/search?all_data=%s" -H "Authorization":"%s" -k -d ''%s'' > %s && echo "%s"',...
+    obj.url, all_data, obj.token, srch, oFile, oFile);
+    
 
 end

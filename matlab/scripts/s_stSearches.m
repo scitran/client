@@ -158,17 +158,35 @@ end
 
 %% Look for analyses in the GearTest collection
 
+% Returns analyses attached to anything in the collection, including
+% the collection itself, or the sessions and acquisitions in the
+% collection.
 clear srch
 srch.path = 'analyses';
 srch.collections.match.label = 'GearTest';
 analyses = st.search(srch);
+fprintf('Analyses in collections and sessions %d\n',length(analyses));
+
+% Returns analyses attached only to the collection, but not the sessions
+% and acquisitions in the collection.
+clear srch
+srch.path = 'collections/analyses';
+srch.collections.match.label = 'GearTest';
+analyses = st.search(srch);
+fprintf('Analyses in collections only %d\n',length(analyses));
 
 % Which collection is the analysis in?
 clear srch; 
 srch.path = 'collections';
 srch.collections.match.label = 'GearTest';
-s.json = srch;
 collections = st.search(srch);
+
+% Returns analyses attached only to the sessions in the collection, but not
+% to the collection as a whole.
+clear srch
+srch.path = 'sessions/analyses';
+srch.collections.match.label = 'GearTest';
+analyses = st.search(srch);
 
 % Find a session from that collection
 clear srch; 
@@ -291,14 +309,26 @@ for ii=1:length(files)
     files{ii}.source
 end
 
+%% Find sessions in this project that contain an analysis
+
+% In this case, we are searching through all the data, not just the data
+% that we have ownership on.
+clear srch
+srch.path = 'sessions';   
+srch.projects.match.exact_label = 'UMN';
+srch.sessions.bool.must(1).match.analyses_0x2E_label = 'AFQ';  % DOT
+srch.sessions.bool.must(2).match.subject_0x2E_code = '4279';
+sessions = st.search(srch,'all_data',true);
+
+
 %% Find Public Data
 %
-
-clear srch
-srch.path = 'projects';
-srch.projects.match.exact_label = 'Public Data';
-savejson('',srch)
-projects = st.search(srch);
+% 
+% clear srch
+% srch.path = 'projects';
+% srch.projects.match.exact_label = 'Public Data';
+% savejson('',srch)
+% projects = st.search(srch);
 
 
 

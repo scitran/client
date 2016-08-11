@@ -21,11 +21,12 @@ p.addRequired('srch');
 % If you want the json file returned by the search, then this should be a
 % legitimate file name for writing it.  It should have a .json extension.
 p.addParameter('oFile','',@ischar);
+p.addParameter('all_data',false,@islogical);
 
 p.parse(srch,varargin{:});
 srch  = p.Results.srch;
 oFile = p.Results.oFile;
-
+all_data = p.Results.all_data;
 
 %% The srch is a Matlab structure containing the search requirements.
 
@@ -35,7 +36,7 @@ if isstruct(srch)
     % It is a Matlab struct, so convert it to json notation.
     srch = savejson('',srch);
 end
-esCMD = obj.searchCmd(srch);
+esCMD = obj.searchCmd(srch,'all_data',all_data);
 
 % Could validate the oFile name
 %vFunc = @(x) isequal(x(end-5:end),'.json');
