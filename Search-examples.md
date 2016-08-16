@@ -31,6 +31,10 @@ The set of terms you can match is defined by the [scitran data model](https://gi
 
 The search 'operators' are 'match', 'bool', 'must', 'should' and 'range'.  For now, use the examples in the file [s_stSearches.m](https://github.com/scitran/client/blob/master/matlab/scripts/s_stSearches.m).  A more thorough document will appear.
 
+### Syntax on searches
+
+[Search syntax](Search syntax)
+
 ### Notes for Gear-heads
 
 Matlab uses '.' in structs, and json allows '.' as part of the variable name. So, we insert a dot on the Matlab side by inserting a string, _0x2E_.  For example, to create a json object like this:
