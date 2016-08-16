@@ -1,12 +1,13 @@
-function [result, srchFile] = search(obj,srch,varargin)
+function [result, srchFile, esCMD] = search(obj,srch,varargin)
 % Create a cmd and run an elastic search from the search struct
 %
-%  [srchResult, srchFile] = st.search(s)
+%  [srchResult, srchFile, esCMD] = st.search(s)
 %
 % Input:
 %  srch:  A struct containing the url, token and json fields needed to
 %         create the search command
 %  srchFile:  Name of json file if you want it returned by the search
+%  esCmd:     The command past for the Elastic Search
 %
 % Return:
 %  srchResult:  Struct of data from scitran
