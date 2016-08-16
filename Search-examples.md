@@ -2,7 +2,8 @@ Using Matlab, the basic syntax for the search is to create a Matlab structure wi
 
 The first field defines the type of object you would like returned.  This is specified by the 'path' slot, as in
 
-    % The value can be 'projects','sessions','acquisitions','files','collections', 'analyses', or 'subjects'
+    % The value can be 
+    %   'projects','sessions','acquisitions','files','collections', 'analyses', or 'subjects'
     srch.path = 'files';  
 
 Additional fields define the conditions of the search.  Suppose that you want files that are within a collection whose label matches 'GearTest'.  Then you add this term to the Matlab srch structure.
