@@ -92,7 +92,7 @@ switch  lower(upType)
             error('No analysis target was specified. Options are: (1) Session Analysis (2) Collection Analysis')
         end
 
-        curlCmd = sprintf('curl %s %s -F "metadata=%s" %s/api/%s/%s/analyses -H "Authorization":"%s"', inAnalysis, outAnalysis, stData, obj.url, target, id, obj.token ); %#ok<PFCEL>
+        curlCmd = sprintf('curl %s %s -F "metadata=%s" %s/api/%s/%s/analyses -H "Authorization":"%s"', inAnalysis, outAnalysis, stData, obj.url, target, id, obj.token );
 
         %% Execute the curl command with all the fields
 
