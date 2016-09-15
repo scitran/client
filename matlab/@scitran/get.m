@@ -1,7 +1,7 @@
-function [destination, curl_cmd] = get(obj,pLink,token,varargin)
+function [destination, curl_cmd] = get(obj,pLink,varargin)
 % Retrieve a file from an scitran instance
 %
-%   [fName, curl_cmd] = get(obj,pLink,token,'destination',filename,'size',size)
+%   [fName, curl_cmd] = get(obj,pLink,'destination',filename,'size',size)
 %
 % Required Inputs
 %  pLink:  Either a permalink or a files{} struct with a plink slot
@@ -33,7 +33,7 @@ p.addRequired('pLink',vFunc);
 p.addParameter('destination','',@ischar)
 p.addParameter('size',[],@isnumeric);
 
-p.parse(pLink,token,varargin{:});
+p.parse(pLink,varargin{:});
 
 pLink = p.Results.pLink;
 destination = p.Results.destination;
