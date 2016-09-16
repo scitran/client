@@ -77,8 +77,8 @@ srch.path = 'files';                         % Looking for files
 
 % These files match the following properties
 srch.collections.match.label  = 'GearTest';   % In this collection
-srch.acquisitions.match.label = 'T1w';        % Acquisition T1w
-srch.files.match.type         = 'nifti';      % A nifti type
+srch.acquisitions.match.label = 'T1w';            % Acquisition T1w
+srch.files.match.type         = 'nifti';                    % A nifti type
 
 % Run the search and get information about files
 files = st.search(srch);

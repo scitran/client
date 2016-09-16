@@ -62,10 +62,10 @@ end
 % This is now a Matlab struct with a lot of ugly terms.  We clean them up
 % below.
 tic
-disp('Loading json file');
+disp('Converting json file');
 if ~exist(srchFile,'file'), error('Results does not contain a valid search file');
 else
-    srchResult = loadjson(srchFile);
+    srchResult = loadjson(srchResult);
 end
 toc
 

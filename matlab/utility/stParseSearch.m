@@ -85,7 +85,7 @@ if strcmp(srchType,'files')
     
     % Sometimes just files, sometimes analyses/files
     switch result{1}.source.container_name
-        case 'files'
+        case 'acquisitions'
             for ii=1:n
                 cname = result{ii}.source.container_name;
                 if strcmpi(cname, 'acquisitions') % Only add files from acquisitions to result
@@ -111,7 +111,7 @@ if strcmp(srchType,'files')
             end
             
         otherwise
-            error('Unknown file search mode');
+            % error('Unknown file search mode');
     end
 end
 
