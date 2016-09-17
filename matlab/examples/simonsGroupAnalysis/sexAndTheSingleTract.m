@@ -38,9 +38,61 @@ srch.sessions.match.subject_0x2E_sex = 'female'; % Males
 femaleFiles = st.search(srch);
 fprintf('Found %d files\n',length(femaleFiles));
 
+%%  Download a tract and save it
+% Replace the _ with spaces ...
+
+tractNames = {'Left_Thalamic_Radiation','Right_Thalamic_Radiation','Left_Corticospinal',...
+    'Right_Corticospinal','Left_Cingulum_Cingulate','Right_Cingulum_Cingulate',...
+    'Left_Cingulum_Hippocampus','Right_Cingulum_Hippocampus','Callosum_Forceps_Major',...
+    'Callosum_Forceps_Minor','Left_IFOF','Right_IFOF','Left_ILF','Right_ILF',...
+    'Left_SLF','Right_SLF','Left_Uncinate','Right_Uncinate','Left_Arcuate','Right_Arcuate'};
+
 %%
-st.get(femaleFiles{1},'destination','female.csv');
-d = csvread('female.csv');
+
+tt = 19;
+nFemales = length(femaleFiles);
+femaleLeftArcuate = zeros(100,nFemales);
+
+tic
+for ii=1:nFemales
+    st.get(femaleFiles{ii},'destination','female.csv');
+    d = csvread('female.csv',1,0);
+    femaleLeftArcuate(:,ii) = d(:,tt);
+end
+toc
+
+%
+figure; 
+plot(femaleLeftArcuate);
+xlabel('Tract position'); ylabel('FA');
+
+%%  Now for the males
+
+tt = 19;
+nMales = length(maleFiles);
+maleLeftArcuate = zeros(100,nMales);
+
+tic
+for ii=1:nMales
+    st.get(maleFiles{ii},'destination','male.csv');
+    d = csvread('male.csv',1,0);
+    maleLeftArcuate(:,ii) = d(:,tt);
+end
+toc
+
+figure; 
+plot(maleLeftArcuate);
+xlabel('Tract position'); ylabel('FA');
+
+%%
+figure;
+plot(1:100,mean(maleLeftArcuate,2),'r-');
+hold on
+plot(1:100,mean(femaleLeftArcuate,2),'b-');
+hold off
+
+
+
 
 
 

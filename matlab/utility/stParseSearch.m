@@ -7,12 +7,17 @@ function result = stParseSearch(stObj,srchResult)
 
 %% Define the search type and re-write the data into result
 
+% Start empty.  Allocate later if there are data.
+result = [];
+
 % This is simply to clean up the look of the returned Matlab structure.
 srchType = fieldnames(srchResult);
 switch srchType{1}
     % TODO:  Sort several of these by their label before returning.
     case 'projects'
         nProjects = length(srchResult.projects);
+        if nProjects == 0; disp('No projects found'); return; end
+
         result = cell(1,nProjects);
         for ii=1:nProjects
             result{ii}.id     = srchResult.projects{ii}.x0x5F_id;
@@ -23,6 +28,8 @@ switch srchType{1}
         end
     case 'sessions'
         nSessions = length(srchResult.sessions);
+        if nSessions == 0; disp('No sessions found'); return; end
+
         result = cell(1,nSessions);
         for ii=1:nSessions
             result{ii}.id     = srchResult.sessions{ii}.x0x5F_id;
@@ -33,6 +40,8 @@ switch srchType{1}
         end
     case 'acquisitions'
         nAcquisitions = length(srchResult.acquisitions);
+        if nAcquisitions == 0; disp('No acquisitions found'); return; end
+
         result = cell(1,nAcquisitions);
         for ii=1:nAcquisitions
             result{ii}.id     = srchResult.acquisitions{ii}.x0x5F_id;
@@ -43,6 +52,8 @@ switch srchType{1}
         end
     case {'files','analyses/files'}
         nFiles = length(srchResult.files);
+        if nFiles == 0; disp('No files found'); return; end
+        
         result = cell(1,nFiles);
         for ii=1:nFiles
             result{ii}.id     = srchResult.files{ii}.x0x5F_id;
@@ -53,6 +64,8 @@ switch srchType{1}
         end
     case 'collections'
         nCollections = length(srchResult.collections);
+        if nCollections == 0; disp('No collections found'); return; end
+
         result = cell(1,nCollections);
         for ii=1:nCollections
             result{ii}.id     = srchResult.collections{ii}.x0x5F_id;
