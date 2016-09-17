@@ -65,6 +65,7 @@ toc
 figure; 
 plot(femaleLeftArcuate);
 xlabel('Tract position'); ylabel('FA');
+set(gca,'ylim',[0 0.8])
 
 %%  Now for the males
 
@@ -84,11 +85,13 @@ figure;
 plot(maleLeftArcuate);
 xlabel('Tract position'); ylabel('FA');
 
+% Remove the guy with the FA > 1
+set(gca,'ylim',[0 0.8])
 %%
 figure;
-plot(1:100,mean(maleLeftArcuate,2),'r-');
+plot(1:100,nanmean(maleLeftArcuate,2),'r-');
 hold on
-plot(1:100,mean(femaleLeftArcuate,2),'b-');
+plot(1:100,nanmean(femaleLeftArcuate,2),'b-');
 hold off
 
 
