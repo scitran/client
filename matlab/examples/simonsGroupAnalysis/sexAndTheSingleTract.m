@@ -22,81 +22,159 @@ st = scitran('action', 'create', 'instance', 'scitran');
 %   * Subject: is male
 
 clear srch
-srch.path = 'analyses/files';                % Files within an analysis
-srch.files.match.name = 'fa.csv';            % Result file
-srch.projects.match.label = 'SVIP';          % Any of the Simons VIP data
+srch.path = 'analyses/files';                  % Files within an analysis
+srch.files.match.name = 'fa.csv';              % Result file
+srch.projects.match.label = 'SVIP';            % Any of the Simons VIP data
 srch.sessions.match.subject_0x2E_sex = 'male'; % Males
+
 maleFiles = st.search(srch);
-fprintf('Found %d files\n',length(maleFiles));
+nMales = length(maleFiles);
+fprintf('Found %d files\n',nMales);
 
-%%
-clear srch
-srch.path = 'analyses/files';                % Files within an analysis
-srch.files.match.name = 'fa.csv';            % Result file
-srch.projects.match.label = 'SVIP';          % Any of the Simons VIP data
-srch.sessions.match.subject_0x2E_sex = 'female'; % Males
+%% Now switch to female subjects
+
+srch.sessions.match.subject_0x2E_sex = 'female'; % Females
+
 femaleFiles = st.search(srch);
-fprintf('Found %d files\n',length(femaleFiles));
-
-%%  Download a tract and save it
-% Replace the _ with spaces ...
-
-tractNames = {'Left_Thalamic_Radiation','Right_Thalamic_Radiation','Left_Corticospinal',...
-    'Right_Corticospinal','Left_Cingulum_Cingulate','Right_Cingulum_Cingulate',...
-    'Left_Cingulum_Hippocampus','Right_Cingulum_Hippocampus','Callosum_Forceps_Major',...
-    'Callosum_Forceps_Minor','Left_IFOF','Right_IFOF','Left_ILF','Right_ILF',...
-    'Left_SLF','Right_SLF','Left_Uncinate','Right_Uncinate','Left_Arcuate','Right_Arcuate'};
-
-%%
-
-tt = 19;
 nFemales = length(femaleFiles);
-femaleLeftArcuate = zeros(100,nFemales);
+fprintf('Found %d files\n',nFemales);
+
+%%  Download the files with the FA for the tracts
+
+% Accumulate them and and save in a single file for analysis
+
+tractNames = ...
+    {'Left Thalamic Radiation','Right Thalamic Radiation','Left Corticospinal',...
+    'Right Corticospinal','Left Cingulum Cingulate','Right Cingulum Cingulate',...
+    'Left Cingulum Hippocampus','Right Cingulum Hippocampus','Callosum Forceps Major',...
+    'Callosum Forceps Minor','Left IFOF','Right IFOF','Left ILF','Right ILF',...
+    'Left SLF','Right SLF','Left Uncinate','Right Uncinate','Left Arcuate','Right Arcuate'};
+
+nTracts = length(tractNames);
+
+%%  Accumulate the tract profiles in a single, position x tract x subject
+
+femaleTracts = zeros(100,nTracts,nFemales);
 
 tic
 for ii=1:nFemales
     st.get(femaleFiles{ii},'destination','female.csv');
     d = csvread('female.csv',1,0);
-    femaleLeftArcuate(:,ii) = d(:,tt);
+    femaleTracts(:,:,ii) = d;
 end
 toc
 
-%
-figure; 
-plot(femaleLeftArcuate);
-xlabel('Tract position'); ylabel('FA');
-set(gca,'ylim',[0 0.8])
+save femaleTracts
+
+%%
+stNewGraphWin; imagesc(nanmean(femaleTracts,3));
 
 %%  Now for the males
 
-tt = 19;
-nMales = length(maleFiles);
-maleLeftArcuate = zeros(100,nMales);
+maleTracts = zeros(100,nTracts,nMales);
 
 tic
 for ii=1:nMales
     st.get(maleFiles{ii},'destination','male.csv');
     d = csvread('male.csv',1,0);
-    maleLeftArcuate(:,ii) = d(:,tt);
+    maleTracts(:,:,ii) = d;
 end
 toc
 
-figure; 
-plot(maleLeftArcuate);
-xlabel('Tract position'); ylabel('FA');
+save maleTracts
 
-% Remove the guy with the FA > 1
-set(gca,'ylim',[0 0.8])
 %%
-figure;
-plot(1:100,nanmean(maleLeftArcuate,2),'r-');
-hold on
-plot(1:100,nanmean(femaleLeftArcuate,2),'b-');
-hold off
+stNewGraphWin; 
+imagesc(nanmean(maleTracts,3));
 
+%%
+stNewGraphWin('format','upperleftbig');
+for tt=1:nTracts
+    subplot(4,5,tt)
+    X = [1:100]'; Y = nanmean(maleTracts,3);
+    flag = 0; E = nanstd(maleTracts,flag,3);
+    errorbar(X,Y(:,tt)',E(:,tt)'/sqrt(nMales));
+    
+    Y = nanmean(femaleTracts,3);
+    flag = 0; E = nanstd(femaleTracts,flag,3);
+    hold on
+    errorbar(X,Y(:,tt)',E(:,tt)'/sqrt(nFemales));
+    pause(1);
+    set(gca,'xlim',[0 100],'ylim',[0.2 0.8],'fontsize',12);
+    title(sprintf('%s\n',tractNames{tt}),'fontsize',9);
+end
+legend({'Male','Female'})
 
+%% Search restricted to age 
 
+clear srch
+srch.path = 'analyses/files';                  % Files within an analysis
+srch.files.match.name = 'fa.csv';              % Result file
+srch.projects.match.label = 'SVIP';            % Any of the Simons VIP data
+srch.sessions.bool.must{1}.match.subject_0x2E_sex = 'male'; % Males
+ 
+srch.sessions.bool.must{2}.range.subject_0x2E_age.gt = year2sec(10);
+srch.sessions.bool.must{2}.range.subject_0x2E_age.lt = year2sec(25);
+ 
+youngMaleFiles = st.search(srch);
+fprintf('Younger males %d\n',length(youngMaleFiles));
 
+srch.sessions.bool.must{2}.range.subject_0x2E_age.gt = year2sec(25);
+srch.sessions.bool.must{2}.range.subject_0x2E_age.lt = year2sec(50);
+ 
+oldMaleFiles = st.search(srch);
+fprintf('Older males %d\n',length(oldMaleFiles));
 
+%% Older and Younger males
 
+oldMaleTracts = zeros(100,nTracts,length(oldMaleFiles));
 
+tic
+for ii=1:length(oldMaleFiles)
+    st.get(oldMaleFiles{ii},'destination','male.csv');
+    d = csvread('male.csv',1,0);
+    oldMaleTracts(:,:,ii) = d;
+end
+toc
+
+save oldMaleTracts
+%%
+stNewGraphWin; 
+imagesc(nanmean(oldMaleTracts,3));
+%%
+youngMaleTracts = zeros(100,nTracts,length(youngMaleFiles));
+
+tic
+for ii=1:length(youngMaleFiles)
+    st.get(youngMaleFiles{ii},'destination','male.csv');
+    d = csvread('male.csv',1,0);
+    youngMaleTracts(:,:,ii) = d;
+end
+toc
+
+save youngMaleTracts
+
+%%
+stNewGraphWin; 
+imagesc(nanmean(youngMaleTracts,3));
+%%
+%%
+stNewGraphWin('format','upperleftbig');
+for tt=1:nTracts
+    subplot(4,5,tt)
+    X = [1:100]'; Y = nanmean(youngMaleTracts,3);
+    flag = 0; E = nanstd(youngMaleTracts,flag,3);
+    errorbar(X,Y(:,tt)',E(:,tt)'/sqrt(length(youngMaleFiles)));
+    
+    Y = nanmean(oldMaleTracts,3);
+    flag = 0; E = nanstd(oldMaleTracts,flag,3);
+    hold on
+    errorbar(X,Y(:,tt)',E(:,tt)'/sqrt(length(oldMaleFiles)));
+    
+    pause(1);
+    set(gca,'xlim',[0 100],'ylim',[0.2 0.8],'fontsize',12);
+    title(sprintf('%s\n',tractNames{tt}),'fontsize',9);
+end
+legend({'Young','Old'})
+
+%%

@@ -58,33 +58,37 @@ nFemale  = sum(sex =='f');
 nUnknown = sum(sex == 'u');
 fprintf('%d Males\n%d Females\n%d Unknown\n',nMale,nFemale,nUnknown);
 
-%%  Pick all the projects with an SVIP in the title
+%%  Find the sessions in the SVIP Released project
 
 clear srch
 srch.path = 'sessions';
-srch.projects.match.label = 'SVIP';
+srch.projects.match.label = 'SVIP Released';
 sessions = st.search(srch);
-length(sessions)
+fprintf('Number of sessions:  %d\n',length(sessions))
 
+% Get the subject information from those sessions
 subjects = stSubjectInfo(sessions);
+
+% Specifically the ages
 ages = stSubjectGet(subjects,'age');
 
-fprintf('Subjects with unknown ages %d\n',sum(ages==0));
+% Summarize
+fprintf('Total subjects %d  (unknown ages %d)\n',length(subjects),sum(ages==0));
 
-figure; hist(ages,20); xlabel('Age in years'); ylabel('N subjects');
+% Plot
+stNewGraphWin('color',[0.8 0.8 0.8]); 
+hist(ages,20); xlabel('Age in years'); ylabel('N subjects');
 set(gca,'xlim',[0 100]);
-title(sprintf('Project: All SVIP data'));
+title(sprintf('Project: %s',srch.projects.match.label));
 
 sex = stSubjectGet(subjects,'sex');
 
 fprintf('\n---------\n');
-fprintf('Sessions with unknown subject sex:  %d\n',find(sex == 'u'));
-fprintf('---------\n');
-
 nMale    = sum(sex=='m');
 nFemale  = sum(sex =='f');
 nUnknown = sum(sex == 'u');
 fprintf('%d Males\n%d Females\n%d Unknown\n',nMale,nFemale,nUnknown);
+fprintf('---------\n');
 
 %%
 
