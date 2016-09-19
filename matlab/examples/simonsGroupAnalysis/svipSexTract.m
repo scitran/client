@@ -37,7 +37,7 @@ nTracts = length(tractNames);
 
 clear srch
 srch.path = 'analyses/files';                  % Files within an analysis
-srch.files.match.name = 'rd.csv';              % Result file
+srch.files.match.name = 'fa.csv';              % Result file
 srch.projects.match.label = 'SVIP';            % Any of the Simons VIP data
 
 % Male
@@ -101,10 +101,10 @@ for tt=1:nTracts
     flag = 0; E = nanstd(femaleTracts,flag,3);
     hold on
     errorbar(X,Y(:,tt)',E(:,tt)'/sqrt(nFemales));
-    pause(1);
     set(gca,'xlim',[0 100],'ylim',[0.2 0.8],'fontsize',12);
     title(sprintf('%s\n',tractNames{tt}),'fontsize',9);
-    if ~mod(tt-1,5), ylabel('RD'); end
+    
+    if ~mod(tt-1,5), ylabel('FA'); end
 end
 xlabel('Tract position')
 legend({'Male','Female'})

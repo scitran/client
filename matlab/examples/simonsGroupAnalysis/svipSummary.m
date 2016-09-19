@@ -1,11 +1,11 @@
 %% Summarize the sex and ages of the SVIP Released data set
 %
+% Subject age histogram
 %
+% BW/RF PoST Team, 2016
 
 %% Open up the scitran client
 
-% This has a permission that is hidden.  The user obtains this permission
-% by logging in to the site and using the UI
 st = scitran('action', 'create', 'instance', 'scitran');
 
 %%  Find the sessions in the SVIP Released project
@@ -25,7 +25,7 @@ ages = stSubjectGet(subjects,'age');
 % Summarize
 fprintf('Total subjects %d  (unknown ages %d)\n',length(subjects),sum(ages==0));
 
-% Plot
+%% Plot
 stNewGraphWin('color',[0.8 0.8 0.8]); 
 hist(ages,20); xlabel('Age in years'); ylabel('N subjects');
 set(gca,'xlim',[0 100]);
