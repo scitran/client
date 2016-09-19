@@ -1,9 +1,12 @@
-%%  Compare the FA on an individual tract of different SVIP groups
+%% Compare the tissue properties (FA) on 20 tracts
 %
-%    1.  Search to find all the CSV files of AFQ for male subjects
-%    2.  Pull out the FA tract profile of a particular tract
-%    3.  Do the same for all female subjects in the SVIP data set
-%    4.  Plot and compare the two distributions
+% We executed the AFQ Docker container on the Simons VIP data.  Here, we
+% perform the following analysis.
+%
+%  1.  Search to find all the CSV files of AFQ
+%  2.  Download these file and build a matrix of position x tract x subject 
+%  3.  Do this for male and female subjects separately
+%  4.  Plot and compare the male and female distributions on a single graph
 %
 % RF/BW PoST Team 2016
 
@@ -13,10 +16,7 @@
 % by logging in to the site and using the UI
 st = scitran('action', 'create', 'instance', 'scitran');
 
-%% Initialize for tracts
-
-% Download the files with the FA for the tracts
-% Accumulate them and and save in a single file for analysis
+%% Initialize tract names
 
 tractNames = ...
     {'Left Thalamic Radiation','Right Thalamic Radiation','Left Corticospinal',...
@@ -29,71 +29,62 @@ nTracts = length(tractNames);
 
 %% Run the Flywheel searches
 
-% We are looking for files that 
-%   * File:  is part of the AFQ analysis output
+% We are looking to return files that are part of the AFQ analysis output
+% Conditions:
 %   * File:  string ends in csv
 %   * Project: part of the Simons VIP project
-%   * Subject: is male
 
 clear srch
 srch.path = 'analyses/files';                  % Files within an analysis
 srch.files.match.name = 'fa.csv';              % Result file
 srch.projects.match.label = 'SVIP';            % Any of the Simons VIP data
 
-% Male
+% Male subjects
 srch.sessions.match.subject_0x2E_sex = 'male'; % Males
 maleFiles = st.search(srch);
 nMales = length(maleFiles);
 fprintf('Found %d files\n',nMales);
 
-% Female
+%% Female subjects
 srch.sessions.match.subject_0x2E_sex = 'female'; % Females
 femaleFiles = st.search(srch);
 nFemales = length(femaleFiles);
 fprintf('Found %d files\n',nFemales);
 
-%%  Accumulate the tract profiles in a single, position x tract x subject
+%% Accumulate the tract profiles in a single, position x tract x subject
 
-femaleTracts = zeros(100,nTracts,nFemales);
-wbar = waitbar(0,'Downloading');
-for ii=1:nFemales
-    wbar = waitbar(ii/nFemales,wbar,'Downloading');
-    st.get(femaleFiles{ii},'destination','female.csv');
-    d = csvread('female.csv',1,0);
-    femaleTracts(:,:,ii) = d;
-end
-delete(wbar);
-
-save femaleTracts
-
-%%
-% stNewGraphWin; imagesc(nanmean(femaleTracts,3)); colorbar;
-
-%%  Now for the males
-
+% Males
 maleTracts = zeros(100,nTracts,nMales);
-
-wbar = waitbar(0,'Downloading');
+str = sprintf('Downloading %d tracts',nTracts*nMales);
+wbar = waitbar(0,str);
 for ii=1:nMales
-    wbar = waitbar(ii/nMales,wbar,'Downloading');
+    wbar = waitbar(ii/nMales,wbar,str);
     st.get(maleFiles{ii},'destination','male.csv');
     d = csvread('male.csv',1,0);
     maleTracts(:,:,ii) = d;
 end
 delete(wbar);
-
 save maleTracts
 
-%%
-% stNewGraphWin; 
-% imagesc(nanmean(maleTracts,3)); colorbar;
+% Females
+femaleTracts = zeros(100,nTracts,nFemales);
+str = sprintf('Downloading %d tracts',nTracts*nFemales);
+wbar = waitbar(0,str);
+for ii=1:nFemales
+    wbar = waitbar(ii/nFemales,wbar,str);
+    st.get(femaleFiles{ii},'destination','female.csv');
+    d = csvread('female.csv',1,0);
+    femaleTracts(:,:,ii) = d;
+end
+delete(wbar);
+save femaleTracts
 
-%%  Graphs
+%%  Compare plots of tract profiles 
 
 stNewGraphWin('format','upper left big');
 for tt=1:nTracts
     subplot(4,5,tt)
-    X = [1:100]'; Y = nanmean(maleTracts,3);
+    X = (1:100)'; Y = nanmean(maleTracts,3);
     flag = 0; E = nanstd(maleTracts,flag,3);
     errorbar(X,Y(:,tt)',E(:,tt)'/sqrt(nMales));
     
