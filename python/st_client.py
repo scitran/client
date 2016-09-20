@@ -11,6 +11,7 @@ import json
 import shutil
 import st_docker
 from settings import *
+from tqdm import tqdm
 
 __author__ = 'vsitzmann'
 
@@ -203,7 +204,11 @@ class ScitranClient(object):
         response = self._request(endpoint=endpoint, method='GET')
 
         with open(abs_file_path, 'wb') as fd:
-            for chunk in response.iter_content():
+            for chunk in tqdm(
+                response.iter_content(),
+                desc=file_name, leave=False,
+                unit_scale=True, unit='B',
+            ):
                 fd.write(chunk)
 
         return abs_file_path
@@ -219,7 +224,7 @@ class ScitranClient(object):
             string: Destination directory.
         '''
         file_paths = []
-        for file_search_result in file_search_results:
+        for file_search_result in tqdm(file_search_results):
             container_id = file_search_result['_source']['container']['_id']
             container_name = file_search_result['_source']['container_name']
             file_name = file_search_result['_source']['name']

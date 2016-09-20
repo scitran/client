@@ -29,5 +29,6 @@ scipy==0.17.0
 simplegeneric==0.8.1
 six==1.10.0
 traitlets==4.2.1
+tqdm==4.8.4
 urllib3==1.15.1
 websocket-client==0.37.0
