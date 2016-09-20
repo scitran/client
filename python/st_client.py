@@ -1,5 +1,4 @@
 from __future__ import print_function
-from pprint import pprint
 
 import requests_toolbelt
 import os
@@ -90,14 +89,12 @@ class ScitranClient(object):
         '''
         prepared_request = response.request
 
-        print("\nRequest dump:\n")
-
-        pprint(prepared_request.method)
-        pprint(prepared_request.url)
-        pprint(prepared_request.headers)
-        pprint(prepared_request.body)
-
-        print('\n')
+        print('DEBUG {} {}\n{}\n{}\n'.format(
+            prepared_request.method,
+            prepared_request.url,
+            prepared_request.headers,
+            prepared_request.body,
+        ))
 
     def _authenticate_request(self, request):
         '''Automatically appends the authorization token to every request sent out.'''
@@ -163,7 +160,7 @@ class ScitranClient(object):
         if num_results != -1:
             search_body.update({'size':num_results})
 
-        response = self._request(endpoint="search", data=json.dumps(search_body), params={'size':num_results})
+        response = self._request(endpoint="search", method='POST', data=json.dumps(search_body), params={'size':num_results})
 
         return json.loads(response.text)
 
@@ -225,7 +222,7 @@ class ScitranClient(object):
         '''
         file_paths = []
         for file_search_result in tqdm(file_search_results):
-            container_id = file_search_result['_source']['container']['_id']
+            container_id = file_search_result['_source']['acquisition']['_id']
             container_name = file_search_result['_source']['container_name']
             file_name = file_search_result['_source']['name']
             abs_file_path = self.download_file(container_name, container_id, file_name, dest_dir=dest_dir)
@@ -349,7 +346,3 @@ class ScitranClient(object):
                 pass
 
         pass
-
-
-
-

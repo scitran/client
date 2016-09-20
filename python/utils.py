@@ -87,4 +87,8 @@ def fulltext_df_search(key_value_pairs, dataframe):
     return overall_matches
 
 def get_search_result_df(search_results):
+    if not search_results:
+        # return None when there are no results because json_normalize crashes
+        # with empty lists.
+        return None
     return pd.io.json.json_normalize(search_results)
