@@ -5,7 +5,6 @@ import sys, os
 
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
-from pprint import pprint
 from elasticsearch_helper import *
 import st_client
 import pandas as pd

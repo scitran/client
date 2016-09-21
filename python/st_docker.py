@@ -69,7 +69,10 @@ def run_container(container, command, in_dir='input', out_dir='output', machine=
         add_docker_machine_to_env(machine)
         docker_client = docker.from_env(assert_hostname=False)
 
-    host_config = docker_client.create_host_config(binds=[in_dir+':/input', out_dir+':/output'])
+    host_config = docker_client.create_host_config(binds=[
+        '{}:/flywheel/v0/input:ro'.format(in_dir),
+        '{}:/flywheel/v0/output'.format(out_dir),
+    ])
     docker_client.pull(container)
 
     try:

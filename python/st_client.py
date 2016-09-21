@@ -1,6 +1,5 @@
 from __future__ import print_function
 
-import requests_toolbelt
 import os
 import requests
 import st_exceptions
@@ -230,37 +229,61 @@ class ScitranClient(object):
 
         return file_paths
 
-    def upload_analysis(self, in_file_path, out_file_path, metadata, target_collection_id):
+    def upload_analysis(self, in_dir, out_dir, metadata, target_collection_id):
         '''Attaches an input file and an output file to a collection on the remote end.
 
         Args:
-            in_file_path (str): The path to the input file.
-            out_file_path (str): The path to the output file.
+            in_dir (str): The path to the directory with input files.
+            out_dir (str): The path to the directory with output files.
             metadata (dict): A dictionary with metadata.
             target_collection_id (str): The id of the collection the file will be attached to.
 
         Returns:
             requests Request object of the POST request.
         '''
-        endpoint = "collections/%s/analyses"%(target_collection_id)
 
-        in_filename= os.path.split(in_file_path)[1]
-        out_filename = os.path.split(out_file_path)[1]
+        def _find_files(dir):
+            # This will eventually recurse into directories, but for now we throw.
+            for basename in os.listdir(dir):
+                filename = os.path.join(dir, basename)
+                assert not os.path.islink(filename), '_find_files does not support symlinks'
+                assert not os.path.isdir(filename), '_find_files does not support subdirectories'
+                yield filename
 
-        # If metadata doesn't contain it yet, add the output and the input file names.
-        metadata.update({
-            'outputs':[{'name':out_filename}],
-            'inputs':[{'name':in_filename}]
-        })
+        metadata['inputs'] = []
+        metadata['outputs'] = []
+        multipart_data = []
+        filehandles = []
+
+        def _add_file_to_request(filename, metadata_value):
+            basename = os.path.basename(filename)
+            fh = open(filename, 'rb')
+            filehandles.append(fh)
+            metadata_value.append({'name': basename})
+            key = 'file{}'.format(len(multipart_data) + 1)
+            multipart_data.append((key, (basename, fh)))
+
+        endpoint = 'sessions/{}/analyses'.format(target_collection_id)
 
         try:
-            with open(in_file_path, 'rb') as in_file, open(out_file_path, 'rb') as out_file:
-                mpe = requests_toolbelt.multipart.encoder.MultipartEncoder(
-                    fields={'metadata': json.dumps(metadata), 'file1': (in_filename, in_file), 'file2':(out_filename, out_file)}
-                )
-                response = self._request(endpoint, method='POST', data=mpe, headers={'Content-Type':mpe.content_type})
-        except st_exceptions.BadRequest:
-            return -1
+            for filename in _find_files(in_dir):
+                _add_file_to_request(filename, metadata['inputs'])
+            for filename in _find_files(out_dir):
+                _add_file_to_request(filename, metadata['outputs'])
+            response = self._request(
+                endpoint, method='POST',
+                data={'metadata': json.dumps(metadata)}, files=multipart_data)
+        finally:
+            error = None
+            for fh in filehandles:
+                try:
+                    fh.close()
+                except Exception as e:
+                    if not error:
+                        error = e
+            # We only throw the first error, but we make sure that we close files before we throw.
+            if error:
+                raise error
 
         return response
 
@@ -288,7 +311,7 @@ class ScitranClient(object):
                                  headers={'X-SciTran-Name:live.sh', 'X-SciTran-Method:script'})
         return response
 
-    def run_gear_and_upload_analysis(self, metadata_label, container, target_collection_id, in_dir=None, out_dir=None):
+    def run_gear_and_upload_analysis(self, metadata_label, container, target_collection_id, command, in_dir=None, out_dir=None):
         '''Runs a docker container on all files in an input directory and uploads input and output file in an analysis.
 
         Args:
@@ -306,43 +329,28 @@ class ScitranClient(object):
         if not in_dir:
             in_dir = self.gear_in_dir
 
-            try:
-                shutil.rmtree(in_dir)
-                os.mkdir(in_dir)
-            except:
-                pass
+        if not os.path.exists(in_dir):
+            os.mkdir(in_dir)
 
         if not out_dir:
             out_dir = self.gear_out_dir
 
-            try:
-                shutil.rmtree(out_dir)
-                os.mkdir(out_dir)
-            except:
-                pass
-        elif os.listdir(out_dir):
-            print("Output directory is not empty!")
-            return
+        if os.path.exists(out_dir):
+            if os.listdir(out_dir):
+                print('Output directory {} is not empty!'.format(out_dir))
+                return
+        else:
+            os.mkdir(out_dir)
 
-        for in_file in os.listdir(in_dir):
-            print("\nRunning container %s on file %s..."%(container, in_file))
-            out_file = in_file[:-7] + '_bet'
-            command ='/input/%s /output/%s'%(in_file, out_file)
-            st_docker.run_container(container, command=command, in_dir=in_dir, out_dir=out_dir)
+        try:
+            print('Running container {} on with input {} and output {}'.format(container, in_dir, out_dir))
+            st_docker.run_container(container, command='', in_dir=in_dir, out_dir=out_dir)
 
-            print("Reuploading result to collection with id %s."%(target_collection_id))
-            in_file_path = os.path.join(in_dir, in_file)
-            out_file_path = os.path.join(out_dir, out_file + '.nii.gz')
+            print('Uploading results to collection with id {}.'.format(target_collection_id))
             metadata = {'label': metadata_label}
-            response = self.upload_analysis(in_file_path, out_file_path, metadata, target_collection_id=target_collection_id)
-            # analyses_id = json.loads(response.text)['_id']
-            print("Uploaded the analysis.\n")
-            # print("Uploaded the analyses. Saved in database under ID %s"%analyses_id)
-
-            try:
-                shutil.rmtree(out_dir)
-                os.mkdir(out_dir)
-            except:
-                pass
-
-        pass
+            response = self.upload_analysis(in_dir, out_dir, metadata, target_collection_id=target_collection_id)
+            print(
+                'Uploaded analysis has ID {}. Server responded with {}.'
+                .format(json.loads(response.text)['_id'], response.status_code))
+        finally:
+            shutil.rmtree(out_dir)
