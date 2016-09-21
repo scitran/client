@@ -68,10 +68,10 @@ class ScitranClient(object):
             500: st_exceptions.BadRequest
         }
 
-        exception = exceptions_dict.get(status_code)
+        # we default to APIException for other status codes.
+        exception = exceptions_dict.get(status_code, st_exceptions.APIException)
 
-        if exception:
-            raise exception(response.text)
+        raise exception(response.text, response=response)
 
     def _url(self, path):
         '''Assembles a url from this classes's base_url and the given path.
