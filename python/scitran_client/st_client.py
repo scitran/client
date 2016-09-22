@@ -11,12 +11,15 @@ import st_docker
 from settings import *
 from tqdm import tqdm
 import ssl
+import hashlib
 
 if not hasattr(ssl, 'PROTOCOL_TLSv1_2'):
     print('You are missing suppport for TLS 1.2, which is required to connect to flywheel servers. Try upgrading your version of openssl.')
     raise Exception('Missing support for TLS 1.2')
 
 __author__ = 'vsitzmann'
+
+HASH_PREFIX = 'v0-sha384-'
 
 class ScitranClient(object):
     '''Handles api calls to a certain instance.
@@ -183,7 +186,15 @@ class ScitranClient(object):
     def search_acquisitions(self, constraints, num_results=-1):
         return self.search(path='acquisitions', constraints=constraints, num_results=num_results)['acquisitions']
 
-    def download_file(self, container_type, container_id, file_name, dest_dir=None):
+    def _file_matches_hash(self, abs_file_path, file_hash):
+        assert file_hash.startswith(HASH_PREFIX)
+        h = hashlib.new('sha384')
+        with open(abs_file_path, 'rb') as f:
+            for chunk in iter(lambda: f.read(4096), b""):
+                h.update(chunk)
+        return h.hexdigest() == file_hash[len(HASH_PREFIX):]
+
+    def download_file(self, container_type, container_id, file_name, file_hash, dest_dir=None):
         '''Download a file that resides in a specified container.
 
         Args:
@@ -202,6 +213,11 @@ class ScitranClient(object):
         endpoint = "%s/%s/files/%s"%(container_type, container_id, file_name)
         abs_file_path = os.path.join(dest_dir, file_name)
 
+        if os.path.exists(abs_file_path):
+            if self._file_matches_hash(abs_file_path, file_hash):
+                print('Found local copy of {} with correct content.'.format(file_name))
+                return abs_file_path
+
         response = self._request(endpoint=endpoint, method='GET')
 
         with open(abs_file_path, 'wb') as fd:
@@ -211,6 +227,9 @@ class ScitranClient(object):
                 unit_scale=True, unit='B',
             ):
                 fd.write(chunk)
+
+        if not self._file_matches_hash(abs_file_path, file_hash):
+            raise Exception('Downloaded file {} has incorrect hash. Should be {}'.format(abs_file_path, file_hash))
 
         return abs_file_path
 
@@ -229,7 +248,8 @@ class ScitranClient(object):
             container_id = file_search_result['_source']['acquisition']['_id']
             container_name = file_search_result['_source']['container_name']
             file_name = file_search_result['_source']['name']
-            abs_file_path = self.download_file(container_name, container_id, file_name, dest_dir=dest_dir)
+            file_hash = file_search_result['_source']['hash']
+            abs_file_path = self.download_file(container_name, container_id, file_name, file_hash, dest_dir=dest_dir)
             file_paths.append(abs_file_path)
 
         return file_paths
