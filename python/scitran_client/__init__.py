@@ -5,3 +5,7 @@
 """
 SDM interaction python module.
 """
+from st_client import ScitranClient
+import elasticsearch_helper
+# alias elasticsearch_helper
+el = elasticsearch_helper
