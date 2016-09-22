@@ -10,6 +10,11 @@ import shutil
 import st_docker
 from settings import *
 from tqdm import tqdm
+import ssl
+
+if not hasattr(ssl, 'PROTOCOL_TLSv1_2'):
+    print('You are missing suppport for TLS 1.2, which is required to connect to flywheel servers. Try upgrading your version of openssl.')
+    raise Exception('Missing support for TLS 1.2')
 
 __author__ = 'vsitzmann'
 
