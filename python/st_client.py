@@ -209,7 +209,7 @@ class ScitranClient(object):
 
         return abs_file_path
 
-    def download_all_file_search_results(self, file_search_results, dest_dir):
+    def download_all_file_search_results(self, file_search_results, dest_dir=None):
         '''Download all files contained in the list returned by a call to ScitranClient.search_files()
 
         Args:

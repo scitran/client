@@ -116,7 +116,7 @@ def Filter_ADNIT1_subject_metadata():
 
     if prompt_result.lower() == 'y':
         # Download all files.
-        scitran_client.download_all_file_search_results(relevant_files, download_dir)
+        scitran_client.download_all_file_search_results(relevant_files)
 
     joined_df = utils.join_subject_acquisition_file_data(session_df=sessions_df,
                                                          acquisition_df=acqs_df,
@@ -184,7 +184,7 @@ def ENGAGE_nifti_bval_bvec_diffusion_files():
     print("\n")
 
     if prompt_result.lower() == 'y':
-        scitran_client.download_all_file_search_results(relevant_files, download_dir)
+        scitran_client.download_all_file_search_results(relevant_files)
 
     joined_df = utils.join_subject_acquisition_file_data(session_df=sessions_df,
                                                          acquisition_df=acqs_df,
@@ -240,7 +240,7 @@ def ENGAGE_anatomy_acquisitions_niftis():
     prompt_result = input("Download those files to %s (y/n)? " % download_dir)
 
     if prompt_result.lower() == 'y':
-        scitran_client.download_all_file_search_results(relevant_files, download_dir)
+        scitran_client.download_all_file_search_results(relevant_files)
 
     joined_df = utils.join_subject_acquisition_file_data(session_df=sessions_df,
                                                          acquisition_df=acqs_df,
@@ -302,6 +302,6 @@ def qa_reports_functional_acqs_females():
     prompt_result = input("Download those files to %s (y/n)? " % download_dir)
 
     if prompt_result.lower() == 'y':
-        scitran_client.download_all_file_search_results(relevant_files, download_dir)
+        scitran_client.download_all_file_search_results(relevant_files)
 
     return joined_df
