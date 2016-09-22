@@ -252,29 +252,32 @@ class ScitranClient(object):
             for basename in os.listdir(dir):
                 filename = os.path.join(dir, basename)
                 assert not os.path.islink(filename), '_find_files does not support symlinks'
-                assert not os.path.isdir(filename), '_find_files does not support subdirectories'
-                yield filename
+                if os.path.isdir(filename):
+                    for f in _find_files(filename):
+                        yield f
+                else:
+                    yield filename
 
         metadata['inputs'] = []
         metadata['outputs'] = []
         multipart_data = []
         filehandles = []
 
-        def _add_file_to_request(filename, metadata_value):
-            basename = os.path.basename(filename)
+        def _add_file_to_request(filename, dir, metadata_value):
+            relative = os.path.relpath(filename, dir)
             fh = open(filename, 'rb')
             filehandles.append(fh)
-            metadata_value.append({'name': basename})
+            metadata_value.append({'name': relative})
             key = 'file{}'.format(len(multipart_data) + 1)
-            multipart_data.append((key, (basename, fh)))
+            multipart_data.append((key, (relative, fh)))
 
         endpoint = 'sessions/{}/analyses'.format(target_collection_id)
 
         try:
             for filename in _find_files(in_dir):
-                _add_file_to_request(filename, metadata['inputs'])
+                _add_file_to_request(filename, in_dir, metadata['inputs'])
             for filename in _find_files(out_dir):
-                _add_file_to_request(filename, metadata['outputs'])
+                _add_file_to_request(filename, out_dir, metadata['outputs'])
             response = self._request(
                 endpoint, method='POST',
                 data={'metadata': json.dumps(metadata)}, files=multipart_data)
