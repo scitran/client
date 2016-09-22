@@ -47,7 +47,7 @@ def add_docker_machine_to_env(machine):
 
 def run_container(container, command, in_dir='input', out_dir='output', machine='default'):
     '''
-    in_dir and out_dir should be named /input and /output respectively
+    in_dir and out_dir should be named /flywheel/v0/input and /flywheel/v0/output respectively
 
     Args:
         container:
@@ -73,7 +73,8 @@ def run_container(container, command, in_dir='input', out_dir='output', machine=
         '{}:/flywheel/v0/input:ro'.format(in_dir),
         '{}:/flywheel/v0/output'.format(out_dir),
     ])
-    docker_client.pull(container)
+    # using subprocess instead of docker_client.pull(container) so the user can see real-time output
+    subprocess.call(['docker', 'pull', container], stderr=subprocess.STDOUT)
 
     try:
         container_instance = docker_client.create_container(host_config=host_config,

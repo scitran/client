@@ -352,7 +352,7 @@ class ScitranClient(object):
 
         try:
             print('Running container {} on with input {} and output {}'.format(container, in_dir, out_dir))
-            st_docker.run_container(container, command='', in_dir=in_dir, out_dir=out_dir)
+            st_docker.run_container(container, command=command, in_dir=in_dir, out_dir=out_dir)
 
             print('Uploading results to collection with id {}.'.format(target_collection_id))
             metadata = {'label': metadata_label}
