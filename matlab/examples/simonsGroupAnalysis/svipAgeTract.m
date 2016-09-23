@@ -13,6 +13,18 @@
 % by logging in to the site and using the UI
 st = scitran('action', 'create', 'instance', 'scitran');
 
+
+%% Initialize tract names
+
+tractNames = ...
+    {'Left Thalamic Radiation','Right Thalamic Radiation','Left Corticospinal',...
+    'Right Corticospinal','Left Cingulum Cingulate','Right Cingulum Cingulate',...
+    'Left Cingulum Hippocampus','Right Cingulum Hippocampus','Callosum Forceps Major',...
+    'Callosum Forceps Minor','Left IFOF','Right IFOF','Left ILF','Right ILF',...
+    'Left SLF','Right SLF','Left Uncinate','Right Uncinate','Left Arcuate','Right Arcuate'};
+
+nTracts = length(tractNames);
+
 %% Set up the search by age
 
 clear srch
