@@ -364,21 +364,15 @@ class ScitranClient(object):
             out_dir = self.gear_out_dir
 
         if os.path.exists(out_dir):
-            if os.listdir(out_dir):
-                print('Output directory {} is not empty!'.format(out_dir))
-                return
-        else:
-            os.mkdir(out_dir)
-
-        try:
-            print('Running container {} on with input {} and output {}'.format(container, in_dir, out_dir))
-            st_docker.run_container(container, command=command, in_dir=in_dir, out_dir=out_dir)
-
-            print('Uploading results to collection with id {}.'.format(target_collection_id))
-            metadata = {'label': metadata_label}
-            response = self.upload_analysis(in_dir, out_dir, metadata, target_collection_id=target_collection_id)
-            print(
-                'Uploaded analysis has ID {}. Server responded with {}.'
-                .format(json.loads(response.text)['_id'], response.status_code))
-        finally:
             shutil.rmtree(out_dir)
+        os.mkdir(out_dir)
+
+        print('Running container {} on with input {} and output {}'.format(container, in_dir, out_dir))
+        st_docker.run_container(container, command=command, in_dir=in_dir, out_dir=out_dir)
+
+        print('Uploading results to collection with id {}.'.format(target_collection_id))
+        metadata = {'label': metadata_label}
+        response = self.upload_analysis(in_dir, out_dir, metadata, target_collection_id=target_collection_id)
+        print(
+            'Uploaded analysis has ID {}. Server responded with {}.'
+            .format(json.loads(response.text)['_id'], response.status_code))
