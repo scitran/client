@@ -9,9 +9,15 @@ import json
 import shutil
 import st_docker
 from settings import *
-from tqdm import tqdm
+import tqdm as tqdm_module
 import ssl
 import hashlib
+
+try:
+    __IPYTHON__  # NOQA
+    tqdm = tqdm_module.tqdm_notebook
+except NameError:
+    tqdm = tqdm_module.tqdm
 
 if not hasattr(ssl, 'PROTOCOL_TLSv1_2'):
     print('You are missing suppport for TLS 1.2, which is required to connect to flywheel servers. Try upgrading your version of openssl.')
