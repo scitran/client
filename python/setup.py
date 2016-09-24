@@ -12,5 +12,6 @@ dist = setup(
     author='vistalab',
     install_requires=install_requires,
     packages=['scitran_client'],
+    package_data={'': ['stAuth.json.example']},
     platforms=['CPython 2.7'],
 )
