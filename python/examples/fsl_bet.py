@@ -1,22 +1,20 @@
-from scitran_client import ScitranClient, el
+from scitran_client import ScitranClient, query, Projects, Files, Acquisitions, Sessions
 import os
 
 client = ScitranClient('scitran')
 
 # Sessions belong to projects. We can thus directly the 'label' field of 'projects'.
-query = el.filter_('projects', el.term('label', 'vwfa'))
-sessions = client.search_sessions(query)
+sessions = client.search(query(Sessions).filter(Projects.label.match('vwfa')))
 
 # Files belong to acquisitions. We can filter files by their type (nifti, in this
 # example), as well as by properties of their acquisitions.
-query = el.filter_('files', el.term('type', 'nifti'))
-# Acquisitions belong to sessions. We can make sure the acquisitions correspond
-# to a session we are interested in and make sure they have a useful type for us.
-query.update(el.filter_('acquisitions', el.and_(
-    el.term('measurement', 'anatomy_t1w'),
-    el.or_(*[el.term('session', session['_id']) for session in sessions]),
-)))
-files = client.search_files(query)
+files = client.search(query(Files).filter(
+    Files.type.match('nifti'),
+    # Acquisitions belong to sessions. We can make sure the acquisitions correspond
+    # to a session we are interested in and make sure they have a useful type for us.
+    Acquisitions.measurement.match('anatomy_t1w'),
+    Acquisitions.session.in_(session['_id'] for session in sessions),
+))
 
 # Let's analyze the first file.
 example_file = files[0]

@@ -50,13 +50,3 @@ def range_from_to(field_name, from_value, to_value):
 # Modifiers
 def bool_minimum_should_match(minimum_should_match):
     return {'minimum_should_match':minimum_should_match}
-
-# Filtering
-def filter_(table, body):
-    return constrain_element(table, dict(filtered=dict(filter=body)))
-
-def and_(*predicates):
-    return {'and': list(predicates)}
-
-def or_(*predicates):
-    return {'or': list(predicates)}

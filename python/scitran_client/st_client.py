@@ -8,7 +8,12 @@ import urlparse
 import json
 import shutil
 import st_docker
-from settings import *
+from settings import (
+    AUTH_DIR,
+    DEFAULT_DOWNLOADS_DIR,
+    DEFAULT_INPUT_DIR,
+    DEFAULT_OUTPUT_DIR,
+)
 import tqdm as tqdm_module
 import ssl
 import hashlib
@@ -27,6 +32,7 @@ __author__ = 'vsitzmann'
 
 HASH_PREFIX = 'v0-sha384-'
 
+
 class ScitranClient(object):
     '''Handles api calls to a certain instance.
 
@@ -38,9 +44,9 @@ class ScitranClient(object):
     '''
 
     def __init__(self,
-                 instance_name,
+                 instance_name='scitran',
                  debug=False,
-                 st_dir = AUTH_DIR,
+                 st_dir=AUTH_DIR,
                  downloads_dir=DEFAULT_DOWNLOADS_DIR,
                  gear_in_dir=DEFAULT_INPUT_DIR,
                  gear_out_dir=DEFAULT_OUTPUT_DIR):
@@ -151,46 +157,47 @@ class ScitranClient(object):
         self._check_status_code(response)
         return response
 
-    def search(self, path, constraints, num_results=-1):
-        '''Searches remote "path" objects with constraints.
+    def search(self, constraints, num_results=-1):
+        '''Searches given constraints (which supplies a path).
 
         This is the most general function for an elastic search that allows to pass in a "path" as well as
         a user-assembled list of constraints.
 
         Args:
-            path (string): The path that should be searched, i.e. 'acquisitions/files'
-            constraints (dict): The constraints of the search, i.e. {'collections':{'should':[{'match':...}, ...]}, 'sessions':{'should':[{'match':...}, ...]}}
+            constraints (dict): The constraints of the search, i.e.
+                {'collections':{'should':[{'match':...}, ...]}, 'sessions':{'should':[{'match':...}, ...]}}
 
         Returns:
             python dict of search results.
         '''
-        search_body = {
-            'path':path
-        }
-
-        search_body.update(constraints)
+        assert 'path' in constraints, 'must supply path in constraints'
+        path = constraints['path']
+        search_body = constraints.copy()
 
         if num_results != -1:
-            search_body.update({'size':num_results})
+            search_body.update({'size': num_results})
 
-        response = self._request(endpoint="search", method='POST', data=json.dumps(search_body), params={'size':num_results})
+        response = self._request(
+            endpoint='search', method='POST', data=json.dumps(search_body), params={'size': num_results})
 
-        return json.loads(response.text)
+        # ensure we get the last path part to make this work for `analyses/files` queries
+        last_path_part = path.split('/')[-1]
+        return json.loads(response.text)[last_path_part]
 
-    def search_files(self, constraints, num_results=-1):
-        return self.search(path='files', constraints=constraints, num_results=num_results)['files']
+    def search_files(self, constraints, **kwargs):
+        return self.search(dict(constraints, path='files'), **kwargs)
 
-    def search_collections(self, constraints, num_results=-1):
-        return self.search(path='collections', constraints=constraints, num_results=num_results)['collections']
+    def search_collections(self, constraints, **kwargs):
+        return self.search(dict(constraints, path='collections'), **kwargs)
 
-    def search_sessions(self, constraints, num_results=-1):
-        return self.search(path='sessions', constraints=constraints, num_results=num_results)['sessions']
+    def search_sessions(self, constraints, **kwargs):
+        return self.search(dict(constraints, path='sessions'), **kwargs)
 
-    def search_projects(self, constraints, num_results=-1):
-        return self.search(path='projects', constraints=constraints, num_results=num_results)['projects']
+    def search_projects(self, constraints, **kwargs):
+        return self.search(dict(constraints, path='projects'), **kwargs)
 
-    def search_acquisitions(self, constraints, num_results=-1):
-        return self.search(path='acquisitions', constraints=constraints, num_results=num_results)['acquisitions']
+    def search_acquisitions(self, constraints, **kwargs):
+        return self.search(dict(constraints, path='acquisitions'), **kwargs)
 
     def _file_matches_hash(self, abs_file_path, file_hash):
         assert file_hash.startswith(HASH_PREFIX)
