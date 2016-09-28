@@ -23,11 +23,11 @@ python-dateutil==2.5.3
 python-gflags==3.0.5
 pytz==2016.4
 requests==2.10.0
-requests-toolbelt==0.6.2
 rsa==3.4.2
 scipy==0.17.0
 simplegeneric==0.8.1
 six==1.10.0
 traitlets==4.2.1
+tqdm==4.8.4
 urllib3==1.15.1
 websocket-client==0.37.0

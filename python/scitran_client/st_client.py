@@ -1,7 +1,5 @@
 from __future__ import print_function
-from pprint import pprint
 
-import requests_toolbelt
 import os
 import requests
 import st_exceptions
@@ -10,9 +8,30 @@ import urlparse
 import json
 import shutil
 import st_docker
-from settings import *
+from settings import (
+    AUTH_DIR,
+    DEFAULT_DOWNLOADS_DIR,
+    DEFAULT_INPUT_DIR,
+    DEFAULT_OUTPUT_DIR,
+)
+import tqdm as tqdm_module
+import ssl
+import hashlib
+
+try:
+    __IPYTHON__  # NOQA
+    tqdm = tqdm_module.tqdm_notebook
+except NameError:
+    tqdm = tqdm_module.tqdm
+
+if not hasattr(ssl, 'PROTOCOL_TLSv1_2'):
+    print('You are missing suppport for TLS 1.2, which is required to connect to flywheel servers. Try upgrading your version of openssl.')
+    raise Exception('Missing support for TLS 1.2')
 
 __author__ = 'vsitzmann'
+
+HASH_PREFIX = 'v0-sha384-'
+
 
 class ScitranClient(object):
     '''Handles api calls to a certain instance.
@@ -25,9 +44,9 @@ class ScitranClient(object):
     '''
 
     def __init__(self,
-                 instance_name,
+                 instance_name='scitran',
                  debug=False,
-                 st_dir = AUTH_DIR,
+                 st_dir=AUTH_DIR,
                  downloads_dir=DEFAULT_DOWNLOADS_DIR,
                  gear_in_dir=DEFAULT_INPUT_DIR,
                  gear_out_dir=DEFAULT_OUTPUT_DIR):
@@ -68,10 +87,10 @@ class ScitranClient(object):
             500: st_exceptions.BadRequest
         }
 
-        exception = exceptions_dict.get(status_code)
+        # we default to APIException for other status codes.
+        exception = exceptions_dict.get(status_code, st_exceptions.APIException)
 
-        if exception:
-            raise exception(response.text)
+        raise exception(response.text, response=response)
 
     def _url(self, path):
         '''Assembles a url from this classes's base_url and the given path.
@@ -89,14 +108,12 @@ class ScitranClient(object):
         '''
         prepared_request = response.request
 
-        print("\nRequest dump:\n")
-
-        pprint(prepared_request.method)
-        pprint(prepared_request.url)
-        pprint(prepared_request.headers)
-        pprint(prepared_request.body)
-
-        print('\n')
+        print('DEBUG {} {}\n{}\n{}\n'.format(
+            prepared_request.method,
+            prepared_request.url,
+            prepared_request.headers,
+            prepared_request.body,
+        ))
 
     def _authenticate_request(self, request):
         '''Automatically appends the authorization token to every request sent out.'''
@@ -140,48 +157,57 @@ class ScitranClient(object):
         self._check_status_code(response)
         return response
 
-    def search(self, path, constraints, num_results=-1):
-        '''Searches remote "path" objects with constraints.
+    def search(self, constraints, num_results=-1):
+        '''Searches given constraints (which supplies a path).
 
         This is the most general function for an elastic search that allows to pass in a "path" as well as
         a user-assembled list of constraints.
 
         Args:
-            path (string): The path that should be searched, i.e. 'acquisitions/files'
-            constraints (dict): The constraints of the search, i.e. {'collections':{'should':[{'match':...}, ...]}, 'sessions':{'should':[{'match':...}, ...]}}
+            constraints (dict): The constraints of the search, i.e.
+                {'collections':{'should':[{'match':...}, ...]}, 'sessions':{'should':[{'match':...}, ...]}}
 
         Returns:
             python dict of search results.
         '''
-        search_body = {
-            'path':path
-        }
-
-        search_body.update(constraints)
+        assert 'path' in constraints, 'must supply path in constraints'
+        path = constraints['path']
+        search_body = constraints.copy()
 
         if num_results != -1:
-            search_body.update({'size':num_results})
+            search_body.update({'size': num_results})
 
-        response = self._request(endpoint="search", data=json.dumps(search_body), params={'size':num_results})
+        response = self._request(
+            endpoint='search', method='POST', data=json.dumps(search_body), params={'size': num_results})
 
-        return json.loads(response.text)
+        # ensure we get the last path part to make this work for `analyses/files` queries
+        last_path_part = path.split('/')[-1]
+        return json.loads(response.text)[last_path_part]
 
-    def search_files(self, constraints, num_results=-1):
-        return self.search(path='files', constraints=constraints, num_results=num_results)['files']
+    def search_files(self, constraints, **kwargs):
+        return self.search(dict(constraints, path='files'), **kwargs)
 
-    def search_collections(self, constraints, num_results=-1):
-        return self.search(path='collections', constraints=constraints, num_results=num_results)['collections']
+    def search_collections(self, constraints, **kwargs):
+        return self.search(dict(constraints, path='collections'), **kwargs)
 
-    def search_sessions(self, constraints, num_results=-1):
-        return self.search(path='sessions', constraints=constraints, num_results=num_results)['sessions']
+    def search_sessions(self, constraints, **kwargs):
+        return self.search(dict(constraints, path='sessions'), **kwargs)
 
-    def search_projects(self, constraints, num_results=-1):
-        return self.search(path='projects', constraints=constraints, num_results=num_results)['projects']
+    def search_projects(self, constraints, **kwargs):
+        return self.search(dict(constraints, path='projects'), **kwargs)
 
-    def search_acquisitions(self, constraints, num_results=-1):
-        return self.search(path='acquisitions', constraints=constraints, num_results=num_results)['acquisitions']
+    def search_acquisitions(self, constraints, **kwargs):
+        return self.search(dict(constraints, path='acquisitions'), **kwargs)
 
-    def download_file(self, container_type, container_id, file_name, dest_dir=None):
+    def _file_matches_hash(self, abs_file_path, file_hash):
+        assert file_hash.startswith(HASH_PREFIX)
+        h = hashlib.new('sha384')
+        with open(abs_file_path, 'rb') as f:
+            for chunk in iter(lambda: f.read(4096), b""):
+                h.update(chunk)
+        return h.hexdigest() == file_hash[len(HASH_PREFIX):]
+
+    def download_file(self, container_type, container_id, file_name, file_hash, dest_dir=None):
         '''Download a file that resides in a specified container.
 
         Args:
@@ -200,15 +226,27 @@ class ScitranClient(object):
         endpoint = "%s/%s/files/%s"%(container_type, container_id, file_name)
         abs_file_path = os.path.join(dest_dir, file_name)
 
+        if os.path.exists(abs_file_path):
+            if self._file_matches_hash(abs_file_path, file_hash):
+                print('Found local copy of {} with correct content.'.format(file_name))
+                return abs_file_path
+
         response = self._request(endpoint=endpoint, method='GET')
 
         with open(abs_file_path, 'wb') as fd:
-            for chunk in response.iter_content():
+            for chunk in tqdm(
+                response.iter_content(),
+                desc=file_name, leave=False,
+                unit_scale=True, unit='B',
+            ):
                 fd.write(chunk)
+
+        if not self._file_matches_hash(abs_file_path, file_hash):
+            raise Exception('Downloaded file {} has incorrect hash. Should be {}'.format(abs_file_path, file_hash))
 
         return abs_file_path
 
-    def download_all_file_search_results(self, file_search_results, dest_dir):
+    def download_all_file_search_results(self, file_search_results, dest_dir=None):
         '''Download all files contained in the list returned by a call to ScitranClient.search_files()
 
         Args:
@@ -219,46 +257,74 @@ class ScitranClient(object):
             string: Destination directory.
         '''
         file_paths = []
-        for file_search_result in file_search_results:
-            container_id = file_search_result['_source']['container']['_id']
+        for file_search_result in tqdm(file_search_results):
+            container_id = file_search_result['_source']['acquisition']['_id']
             container_name = file_search_result['_source']['container_name']
             file_name = file_search_result['_source']['name']
-            abs_file_path = self.download_file(container_name, container_id, file_name, dest_dir=dest_dir)
+            file_hash = file_search_result['_source']['hash']
+            abs_file_path = self.download_file(container_name, container_id, file_name, file_hash, dest_dir=dest_dir)
             file_paths.append(abs_file_path)
 
         return file_paths
 
-    def upload_analysis(self, in_file_path, out_file_path, metadata, target_collection_id):
+    def upload_analysis(self, in_dir, out_dir, metadata, target_collection_id):
         '''Attaches an input file and an output file to a collection on the remote end.
 
         Args:
-            in_file_path (str): The path to the input file.
-            out_file_path (str): The path to the output file.
+            in_dir (str): The path to the directory with input files.
+            out_dir (str): The path to the directory with output files.
             metadata (dict): A dictionary with metadata.
             target_collection_id (str): The id of the collection the file will be attached to.
 
         Returns:
             requests Request object of the POST request.
         '''
-        endpoint = "collections/%s/analyses"%(target_collection_id)
 
-        in_filename= os.path.split(in_file_path)[1]
-        out_filename = os.path.split(out_file_path)[1]
+        def _find_files(dir):
+            # This will eventually recurse into directories, but for now we throw.
+            for basename in os.listdir(dir):
+                filename = os.path.join(dir, basename)
+                assert not os.path.islink(filename), '_find_files does not support symlinks'
+                if os.path.isdir(filename):
+                    for f in _find_files(filename):
+                        yield f
+                else:
+                    yield filename
 
-        # If metadata doesn't contain it yet, add the output and the input file names.
-        metadata.update({
-            'outputs':[{'name':out_filename}],
-            'inputs':[{'name':in_filename}]
-        })
+        metadata['inputs'] = []
+        metadata['outputs'] = []
+        multipart_data = []
+        filehandles = []
+
+        def _add_file_to_request(filename, dir, metadata_value):
+            relative = os.path.relpath(filename, dir)
+            fh = open(filename, 'rb')
+            filehandles.append(fh)
+            metadata_value.append({'name': relative})
+            key = 'file{}'.format(len(multipart_data) + 1)
+            multipart_data.append((key, (relative, fh)))
+
+        endpoint = 'sessions/{}/analyses'.format(target_collection_id)
 
         try:
-            with open(in_file_path, 'rb') as in_file, open(out_file_path, 'rb') as out_file:
-                mpe = requests_toolbelt.multipart.encoder.MultipartEncoder(
-                    fields={'metadata': json.dumps(metadata), 'file1': (in_filename, in_file), 'file2':(out_filename, out_file)}
-                )
-                response = self._request(endpoint, method='POST', data=mpe, headers={'Content-Type':mpe.content_type})
-        except st_exceptions.BadRequest:
-            return -1
+            for filename in _find_files(in_dir):
+                _add_file_to_request(filename, in_dir, metadata['inputs'])
+            for filename in _find_files(out_dir):
+                _add_file_to_request(filename, out_dir, metadata['outputs'])
+            response = self._request(
+                endpoint, method='POST',
+                data={'metadata': json.dumps(metadata)}, files=multipart_data)
+        finally:
+            error = None
+            for fh in filehandles:
+                try:
+                    fh.close()
+                except Exception as e:
+                    if not error:
+                        error = e
+            # We only throw the first error, but we make sure that we close files before we throw.
+            if error:
+                raise error
 
         return response
 
@@ -286,7 +352,7 @@ class ScitranClient(object):
                                  headers={'X-SciTran-Name:live.sh', 'X-SciTran-Method:script'})
         return response
 
-    def run_gear_and_upload_analysis(self, metadata_label, container, target_collection_id, in_dir=None, out_dir=None):
+    def run_gear_and_upload_analysis(self, metadata_label, container, target_collection_id, command, in_dir=None, out_dir=None):
         '''Runs a docker container on all files in an input directory and uploads input and output file in an analysis.
 
         Args:
@@ -304,47 +370,22 @@ class ScitranClient(object):
         if not in_dir:
             in_dir = self.gear_in_dir
 
-            try:
-                shutil.rmtree(in_dir)
-                os.mkdir(in_dir)
-            except:
-                pass
+        if not os.path.exists(in_dir):
+            os.mkdir(in_dir)
 
         if not out_dir:
             out_dir = self.gear_out_dir
 
-            try:
-                shutil.rmtree(out_dir)
-                os.mkdir(out_dir)
-            except:
-                pass
-        elif os.listdir(out_dir):
-            print("Output directory is not empty!")
-            return
+        if os.path.exists(out_dir):
+            shutil.rmtree(out_dir)
+        os.mkdir(out_dir)
 
-        for in_file in os.listdir(in_dir):
-            print("\nRunning container %s on file %s..."%(container, in_file))
-            out_file = in_file[:-7] + '_bet'
-            command ='/input/%s /output/%s'%(in_file, out_file)
-            st_docker.run_container(container, command=command, in_dir=in_dir, out_dir=out_dir)
+        print('Running container {} on with input {} and output {}'.format(container, in_dir, out_dir))
+        st_docker.run_container(container, command=command, in_dir=in_dir, out_dir=out_dir)
 
-            print("Reuploading result to collection with id %s."%(target_collection_id))
-            in_file_path = os.path.join(in_dir, in_file)
-            out_file_path = os.path.join(out_dir, out_file + '.nii.gz')
-            metadata = {'label': metadata_label}
-            response = self.upload_analysis(in_file_path, out_file_path, metadata, target_collection_id=target_collection_id)
-            # analyses_id = json.loads(response.text)['_id']
-            print("Uploaded the analysis.\n")
-            # print("Uploaded the analyses. Saved in database under ID %s"%analyses_id)
-
-            try:
-                shutil.rmtree(out_dir)
-                os.mkdir(out_dir)
-            except:
-                pass
-
-        pass
-
-
-
-
+        print('Uploading results to collection with id {}.'.format(target_collection_id))
+        metadata = {'label': metadata_label}
+        response = self.upload_analysis(in_dir, out_dir, metadata, target_collection_id=target_collection_id)
+        print(
+            'Uploaded analysis has ID {}. Server responded with {}.'
+            .format(json.loads(response.text)['_id'], response.status_code))

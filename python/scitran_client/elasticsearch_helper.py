@@ -50,4 +50,3 @@ def range_from_to(field_name, from_value, to_value):
 # Modifiers
 def bool_minimum_should_match(minimum_should_match):
     return {'minimum_should_match':minimum_should_match}
-

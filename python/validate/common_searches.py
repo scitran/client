@@ -5,7 +5,6 @@ import sys, os
 
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
-from pprint import pprint
 from elasticsearch_helper import *
 import st_client
 import pandas as pd
@@ -42,6 +41,9 @@ def Filter_ADNIT1_subject_metadata():
     # session_constraints.update(constrain_element('sessions', range_from_to('subject.metadata.bAGE', from_value=0, to_value=75)))
     # run the search for sessions by passing the constraint dictionary to the scitran_client.search_sessions() function.
     relevant_sessions = scitran_client.search_sessions(session_constraints)
+    if not relevant_sessions:
+        print('Could not find relevant sessions.')
+        return
     # Convert the search result into a pandas dataframe for easier data analysis.
     sessions_df = utils.get_search_result_df(relevant_sessions)
 
@@ -110,7 +112,7 @@ def Filter_ADNIT1_subject_metadata():
     files_df = utils.get_search_result_df(relevant_files)
 
     print("Found %d relevant files." % len(relevant_files))
-    prompt_result = input("Download those files to %s (y/n)?" % download_dir)
+    prompt_result = input("Download those files to %s (y/n)? " % download_dir)
 
     if prompt_result.lower() == 'y':
         # Download all files.
@@ -178,7 +180,7 @@ def ENGAGE_nifti_bval_bvec_diffusion_files():
     relevant_files = scitran_client.search_files(file_constraints)
     files_df = pd.io.json.json_normalize(relevant_files)
     print("Found %d relevant files." % len(relevant_files))
-    prompt_result = input("Download those files to %s (y/n)?" % download_dir)
+    prompt_result = input("Download those files to %s (y/n)? " % download_dir)
     print("\n")
 
     if prompt_result.lower() == 'y':
@@ -235,7 +237,7 @@ def ENGAGE_anatomy_acquisitions_niftis():
     file_df = pd.io.json.json_normalize(relevant_files)
 
     print("Found %d relevant files." % len(relevant_files))
-    prompt_result = input("Download those files to %s (y/n)?" % download_dir)
+    prompt_result = input("Download those files to %s (y/n)? " % download_dir)
 
     if prompt_result.lower() == 'y':
         scitran_client.download_all_file_search_results(relevant_files)
@@ -297,7 +299,7 @@ def qa_reports_functional_acqs_females():
                                                          acquisition_df=acqs_df,
                                                          file_df=files_df)
 
-    prompt_result = input("Download those files to %s (y/n)?" % download_dir)
+    prompt_result = input("Download those files to %s (y/n)? " % download_dir)
 
     if prompt_result.lower() == 'y':
         scitran_client.download_all_file_search_results(relevant_files)
