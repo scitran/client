@@ -1,7 +1,7 @@
 from scitran_client import ScitranClient, query, Projects, Files, Acquisitions, Sessions
 import os
 
-client = ScitranClient('scitran')
+client = ScitranClient()
 
 # Sessions belong to projects. We can thus directly the 'label' field of 'projects'.
 sessions = client.search(query(Sessions).filter(Projects.label.match('vwfa')))

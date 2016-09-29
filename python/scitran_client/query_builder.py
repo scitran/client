@@ -1,5 +1,19 @@
 from collections import namedtuple
 
+'''
+When trying to use filters that this query builder doesn't support, you can directly
+use FieldQuery to generate appropriate queries that can be passed to `query(...).filter()`.
+
+For example, to find projects that start with "psy" that belong to a group, you might do
+client.search(query(Projects).filter(
+    FieldQuery('projects', {
+        "prefix": {
+            "label": "psy"
+        }
+    }),
+    Groups.name.match('myGroup'),
+))
+'''
 FieldQuery = namedtuple('FieldQuery', ['document_name', 'query'])
 
 
@@ -9,8 +23,7 @@ class FieldQueryBuilder(object):
         self.name = name
 
     def _match(self, item):
-        # TODO figure out how to actually make this into a match query
-        return {'term': {self.name: item}}
+        return {'query': {'match': {self.name: item}}}
 
     def match(self, item):
         return FieldQuery(self.document._name, self._match(item))
@@ -71,3 +84,4 @@ Collections = DocumentQueryBuilder('collections')
 Sessions = DocumentQueryBuilder('sessions')
 Projects = DocumentQueryBuilder('projects')
 Acquisitions = DocumentQueryBuilder('acquisitions')
+Groups = DocumentQueryBuilder('groups')

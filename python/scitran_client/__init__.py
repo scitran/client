@@ -13,4 +13,5 @@ from query_builder import (
     Sessions,
     Projects,
     Acquisitions,
+    Groups,
 )
