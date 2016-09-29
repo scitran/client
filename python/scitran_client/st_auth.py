@@ -1,176 +1,71 @@
 from __future__ import print_function
-from builtins import input
 
-import httplib2
-import argparse
-from oauth2client import client, file, tools
 import os
-import shutil
+from shutil import copyfile
 import json
 import settings
+from getpass import getpass
+from requests import request
 
-__author__ = 'vsitzmann'
 
-def _handle_instance_auth(instance, st_dir):
+def _is_valid_token(url, api_key):
+    # wish it were easier to share this code with ScitranClient, but
+    # that would require more tightly coupling this to that.
+    return request('GET', url + '/api/users/self', headers={
+        'Authorization': 'scitran-user ' + api_key
+    }).status_code == 200
+
+
+def _prompt_for_valid_api_key(url):
+    prompt = 'Enter your API key here: '
+    api_key = getpass(prompt)
+    while not _is_valid_token(url, api_key):
+        print('Sorry, that key was not valid for {}'.format(url))
+        api_key = getpass(prompt)
+    return api_key
+
+
+def create_token(instance_name, config_dir):
     '''
-    Provides client_ID, client_secret and client_url of the given instance,
-    reading it from stAuth.json file or querying the user (and saving it for later reference) if unavailable
+    Get an API key for this instance, requesting a new one if no previous one exists.
 
     Args:
-        instance (str): The instance that information is requested for
-        st_dir (str): Path to the directory where the stAuth.json file is located / should be created
-
-    Returns:
-        tuple of client_ID, client_secret and client_url (all strings) for the given instance
-    '''
-    if not os.path.isdir(st_dir):
-        os.mkdir(st_dir)
-
-    local_auth_file_path = os.path.join(st_dir, 'stAuth.json')
-    # TODO (Vincent): where to put stAuth.json file?
-    if not os.path.isfile(local_auth_file_path):
-        shutil.copyfile(os.path.join(settings.EXEC_HOME, 'stAuth.json.example'), local_auth_file_path)
-
-
-    with open(local_auth_file_path, 'r') as local_auth_file:
-        local_auth = json.load(local_auth_file)
-
-    if not instance in local_auth:
-        print('Known instances:')
-        print(instance.keys())
-
-        prompt_txt = 'Unknown instance: \n \'%s\' is not a known instance. ' \
-                     '\n Would you like to add it to your local config? (y/n)'%instance
-
-        if input(prompt_txt) == 'y':
-            try:
-                client_id = input('Please enter the client_id: ')
-                client_secret = input('Please enter the client secret: ')
-                client_url = input('Please enter the instance url: ')
-            except EOFError:
-                print('One or more fields have been left entry. Abort.')
-                return -1
-
-            local_auth[instance] = dict()
-            local_auth[instance]['client_id'] = client_id
-            local_auth[instance]['client_secret'] = client_secret
-            local_auth[instance]['client_url'] = client_url
-
-            with open(local_auth_file_path, 'w') as local_auth_file:
-                json.dump(local_auth, local_auth_file)
-
-            print('Instance ID, URL, and secret saved.')
-
-        else:
-            print('Abort.')
-
-    if not local_auth[instance]['client_secret']:
-        prompt_txt = 'AUTH: Connecting to \'%s\'. \n Please enter the client secret:'%instance
-
-        try:
-            client_secret = input(prompt_txt)
-        except EOFError:
-            print("Abort.")
-            return -1
-
-        local_auth[instance]['client_secret'] = client_secret
-
-        with open(local_auth_file_path, 'w') as local_auth_file:
-            json.dump(local_auth, local_auth_file)
-
-        print("Client secret saved.")
-
-    instance_info = local_auth[instance]
-
-    return instance_info['client_id'], instance_info['client_secret'], instance_info['client_url']
-
-
-def create_token(instance, st_dir):
-    '''
-    Get an authentication token for instance, refreshing an existing one or requesting a new one if no previous one exists.
-
-    Args:
-        instance (str): The instance to generate a token for.
-        st_dir (str): Path of directory where the tokens live.
+        instance_name (str): The instance to generate a token for.
+        config_dir (str): Path of directory where the tokens live.
 
     Returns:
         Python tuple: (token (str), client_url (str)): (The requested token, the base url for this client)
     '''
+    if not os.path.exists(config_dir):
+        os.mkdir(config_dir)
 
-    try:
-        client_id, client_secret, client_url = _handle_instance_auth(instance, st_dir)
-    except TypeError:
-        print('The authentication details for instance %s could not be fetched. Aborting.'%instance )
+    # Copy the example file over if we don't have auth configuration.
+    auth_path = os.path.join(config_dir, 'auth.json')
+    if not os.path.exists(auth_path):
+        copyfile(os.path.join(settings.EXEC_HOME, 'auth.json.example'), auth_path)
 
-    token_file_path = os.path.join(st_dir, 'st_token_' + instance)
+    with open(auth_path, 'r') as f:
+        auth_config = json.load(f)
 
-    if os.path.isfile(token_file_path):
-        with open(token_file_path, 'r') as token_file:
-            token = json.load(token_file)
+    auth = auth_config.get(instance_name)
 
-        if not token['client_id'] == client_id:
-            os.remove(token_file_path)
+    example = json.dumps(dict(api_key='<secret>', url='https://myflywheel.io'), indent=4)
+    assert isinstance(auth, dict) and set(auth.keys()) == {'api_key', 'url'}, (
+        'Missing or invalid entry in {0} for instance {1}. You can fix this issue by '
+        'adding an entry for {1} or making it look more like this: {2}'
+        .format(auth_path, instance_name, example))
 
-    if os.path.isfile(token_file_path):
-        print('Found an existing token for this instance.')
+    # We just wipe out keys that are invalid.
+    if auth['api_key'] and not _is_valid_token(auth['url'], auth['api_key']):
+        auth['api_key'] = None
 
-        with open(token_file_path) as token_file:
-            credentials = client.OAuth2Credentials.from_json(token_file.read())
+    if not auth['api_key']:
+        print('You can find your API key by visiting {} and scrolling to the bottom of the page.'.format(
+            auth['url'] + '/#/profile'))
+        print('If your key is blank, then click "Generate API Key"')
+        auth['api_key'] = _prompt_for_valid_api_key(auth['url'])
 
-        try:
-            credentials.refresh(httplib2.Http())
-            storage = file.Storage(token_file_path)
-            storage.put(credentials)
-            credentials.set_store(storage)
-            print('The existing token has been refreshed.')
-        except client.HttpAccessTokenRefreshError:
-            print('This token has been revoked. Deleting it...')
-            os.remove(token_file_path)
+        with open(auth_path, 'w') as f:
+            json.dump(auth_config, f, indent=4)
 
-    if not os.path.isfile(token_file_path):
-        print('Requesting a new token.')
-
-        parser = argparse.ArgumentParser(parents=[tools.argparser])
-        parser.set_defaults(auth_host_port=[9000])
-        flags = parser.parse_args()
-
-        flow = client.OAuth2WebServerFlow(client_id=client_id,
-                                          client_secret=client_secret,
-                                          scope='https://www.googleapis.com/auth/userinfo.email')
-        storage = file.Storage(token_file_path)
-        credentials = tools.run_flow(flow, storage, flags)
-
-    return (credentials.access_token, client_url)
-
-def revoke_token(instance, st_dir):
-    '''
-    Deletes an existing token for instance.
-
-    Args:
-        instance (str): Instance with a (supposedly) existing token that should be revoked and removed.
-        st_dir (str): Path of directory where the tokens live.
-
-    Returns:
-        int: 0 if successful, -1 if not.
-    '''
-    token_file_path = os.path.join(st_dir, 'st_token_' + instance)
-
-    try:
-        with open(token_file_path) as token_file:
-            credentials = client.OAuth2Credentials.from_json(token_file.read())
-    except IOError:
-        print('No token exists for instance %s: File %s does not exist.'%(instance, token_file_path))
-        return -1
-
-    try:
-        credentials.revoke(httplib2.Http())
-        storage = file.Storage(token_file_path)
-        storage.put(credentials)
-        credentials.set_store(credentials)
-    except client.TokenRevokeError:
-        print('This token has been revoked previously.')
-
-    os.remove(token_file_path)
-    print('Successfully removed token for instance %s.'%instance)
-
-    return 0
+    return auth['api_key'], auth['url']

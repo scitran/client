@@ -5,9 +5,6 @@ class APIException(Exception):
         self.response = kwargs.pop('response', None)
         super(APIException, self).__init__(*args, **kwargs)
 
-class InvalidToken(APIException):
-    pass
-
 class NoPermission(APIException):
     pass
 
