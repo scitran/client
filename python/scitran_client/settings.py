@@ -5,7 +5,7 @@ EXEC_HOME = os.path.dirname(__file__)
 # The user home directory
 USER_HOME = os.path.expanduser("~")
 
-AUTH_DIR = os.path.join(USER_HOME, '.stclient')
+AUTH_DIR = os.path.join(USER_HOME, '.scitran_client')
 
 DEFAULT_DOWNLOADS_DIR = os.path.join(USER_HOME, 'Downloads')
 DEFAULT_INPUT_DIR = os.path.join(DEFAULT_DOWNLOADS_DIR, 'input')

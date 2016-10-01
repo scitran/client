@@ -117,14 +117,8 @@ class ScitranClient(object):
 
     def _authenticate_request(self, request):
         '''Automatically appends the authorization token to every request sent out.'''
-        if self.token:
-            request.headers.update({
-                'Authorization':self.token
-            })
-
-            return request
-        else:
-            raise st_exceptions.InvalidToken('Not Authenticated!')
+        request.headers.update({'Authorization': 'scitran-user ' + self.token})
+        return request
 
     def _authenticate(self):
         self.token, self.base_url = st_auth.create_token(self.instance, self.st_dir)
@@ -144,7 +138,6 @@ class ScitranClient(object):
         Raises:
             http code 403: st_exceptions.NoPermission,
             http code 404: st_exceptions.NotFound
-            no token available: st_exceptions.InvalidToken
         '''
         response = self.session.request(url=self._url(endpoint),
                                         method=method,
