@@ -15,3 +15,14 @@ from query_builder import (
     Acquisitions,
     Groups,
 )
+
+__all__ = [
+    'ScitranClient',
+    'query',
+    'Files',
+    'Collections',
+    'Sessions',
+    'Projects',
+    'Acquisitions',
+    'Groups',
+]

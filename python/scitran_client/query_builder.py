@@ -23,6 +23,10 @@ class FieldQueryBuilder(object):
         self.name = name
 
     def _match(self, item):
+        # match is preferred over term because it analyzes
+        # the supplied query. In particular, this will automatically
+        # analyze/lowercase queries, helping avoid empty
+        # for queries with upper-case characters, for instance.
         return {'query': {'match': {self.name: item}}}
 
     def match(self, item):
@@ -36,6 +40,9 @@ class FieldQueryBuilder(object):
             ]
         })
 
+    def term(self, item):
+        return FieldQuery(self.document._name, {'term': {self.name: item}})
+
 
 class DocumentQueryBuilder(object):
     def __init__(self, name):
@@ -46,6 +53,19 @@ class DocumentQueryBuilder(object):
 
 
 class Query(object):
+    '''
+    Query makes it easy to build an elastic search query
+    for results that will match all supplied filters.
+
+    `filter` is preferred over `bool` because it avoids
+    scoring, which makes it simpler to compute.
+    (although that point may be moot as
+    `constant_score` might accomplish the same thing)
+    It is also preferred because it permits boolean
+    logic, which is supported in a limited way by
+    finagling with `should` and `minimum_should_match`.
+    '''
+
     def __init__(self, path):
         if isinstance(path, DocumentQueryBuilder):
             self.path = path._name
