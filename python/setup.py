@@ -5,7 +5,7 @@ requirements_path = os.path.join(os.path.dirname(__file__), 'requirements.txt')
 with open(requirements_path, 'r') as f:
     install_requires = [line.rstrip() for line in f]
 
-# XXX license?
+# TODO add license
 
 dist = setup(
     name='Scitran Client',
