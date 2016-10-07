@@ -52,4 +52,4 @@ The MATLAB SciTran client uses JSONlab to load, save, and parse json objects. He
 
 
 ## Python Client
-Coming soon...
+[Check out the docs!](python/README.md)
