@@ -37,16 +37,17 @@ def _session_id(session):
 def report(group, project):
     client = ScitranClient()
     # querying for acquisitions first since we have to fetch for them anyway.
-    results = client.search(query(Acquisitions).filter(
+    raw_results = client.search(query(Acquisitions).filter(
         Projects.label.match(project),
         Groups.name.match(group),
     ))
+    results = [a['_source'] for a in raw_results]
 
     assert results, 'Could not find results for project {} for group {}.'.format(project, group)
 
     acquisitions_by_session = {}
     for result in results:
-        session = result['_source']['session']
+        session = result['session']
         acquisitions_by_session.setdefault(
             _session_id(session), []).append(result)
 
@@ -54,7 +55,7 @@ def report(group, project):
     sessions_by_id = {
         _session_id(session): session
         for session in (
-            result['_source']['session']
+            result['session']
             for result in results
         )
     }
@@ -78,7 +79,7 @@ def report(group, project):
             subject for subject in subjects
             if subject.get('sex') == sex
         ]
-        ages = [s['age'] for s in subjects]
+        ages = [s['age'] for s in subjects if s.get('age')]
         return '{} {}s between ages of {} and {}'.format(
             len(subjects),
             sex,
@@ -92,7 +93,7 @@ def report(group, project):
         subject_code
         for subject_code in subjects_by_code.keys()
         if not any(
-            acquisition['_source']['label'] == 'T1w 1mm'
+            acquisition['label'] == 'T1w 1mm'
             for session in sessions_by_subject[subject_code]
             for acquisition in acquisitions_by_session[_session_id(session)]
         )
