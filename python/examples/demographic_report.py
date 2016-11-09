@@ -10,6 +10,8 @@ from docopt import docopt
 from scitran_client import ScitranClient, query, Projects, Acquisitions, Groups
 import re
 import math
+from dateutil import parser
+import pytz
 
 
 def _subject_code(subject):
@@ -32,6 +34,14 @@ def _session_id(session):
         return session['label']
     else:
         raise Exception('missing uid and label keys in {}'.format(session))
+
+
+def _session_day(session):
+    return (
+        parser.parse(session['timestamp'] + 'Z')
+        .astimezone(pytz.timezone('America/Los_Angeles'))
+        .strftime('%Y-%m-%d')
+    )
 
 
 def report(group, project):
@@ -89,15 +99,37 @@ def report(group, project):
 
     subjects = subjects_by_code.values()
 
-    missing_t1w = [
+    subject_codes = set(
         subject_code
         for subject_code in subjects_by_code.keys()
+    )
+    missing = dict(
+        t1w=set(subject_codes),
+        GoNoGo=set()
+    )
+
+    for subject_code in subject_codes:
         if not any(
             acquisition['label'] == 'T1w 1mm'
             for session in sessions_by_subject[subject_code]
             for acquisition in acquisitions_by_session[_session_id(session)]
-        )
-    ]
+        ):
+            missing['t1w'].remove(subject_code)
+
+        for session in sessions_by_subject[subject_code]:
+            acquisitions = acquisitions_by_session[_session_id(session)]
+            behavioral = next((
+                acquisition
+                for acquisition in acquisitions
+                if (acquisition.get('uid') or '').startswith('behavioral_and_physiological:')
+            ), None)
+            if not (
+                behavioral and any(
+                    file['name'].endswith('_GoNoGo.txt')
+                    for file in behavioral['files']
+                )
+            ):
+                missing['GoNoGo'].add('{}:{}'.format(subject_code, _session_day(session)))
 
     print '''{}: {}
 Total # of subjects: {}
@@ -105,13 +137,15 @@ Total # of subjects: {}
 {}
 {} subjects with unspecified sex
 {} missing T1w 1mm: {}
+{} missing GoNoGo: {}
 '''.format(
         group, project,
         len(subjects_by_code),
         _report_by_sex(subjects, 'male'),
         _report_by_sex(subjects, 'female'),
         len([s for s in subjects if s.get('sex') is None]),
-        len(missing_t1w), ', '.join(missing_t1w),
+        len(missing['t1w']), ', '.join(missing['t1w']),
+        len(missing['GoNoGo']), ', '.join(missing['GoNoGo']),
     )
 
 
