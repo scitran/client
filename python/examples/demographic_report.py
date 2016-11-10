@@ -105,8 +105,27 @@ def report(group, project):
     )
     missing = dict(
         t1w=set(subject_codes),
-        GoNoGo=set()
+        GoNoGo=set(),
+        Consc=set(),
+        NonConsc=set()
     )
+    all_subject_visits = 0
+
+    def _missing_file(acquisition, key, file_predicate):
+        if not (
+            acquisition and any(
+                file_predicate(f)
+                for f in acquisition['files']
+            )
+        ):
+            missing[key].add('{}:{}'.format(_session_day(session), subject_code))
+
+    def _missing_file_msg(key):
+        return '{:.1f}% missing {}: {}'.format(
+            len(missing[key]) * 100. / all_subject_visits,
+            key,
+            ', '.join(sorted(missing[key]))
+        )
 
     for subject_code in subject_codes:
         if not any(
@@ -123,13 +142,10 @@ def report(group, project):
                 for acquisition in acquisitions
                 if (acquisition.get('uid') or '').startswith('behavioral_and_physiological:')
             ), None)
-            if not (
-                behavioral and any(
-                    file['name'].endswith('_GoNoGo.txt')
-                    for file in behavioral['files']
-                )
-            ):
-                missing['GoNoGo'].add('{}:{}'.format(subject_code, _session_day(session)))
+            _missing_file(behavioral, 'GoNoGo', lambda file: file['name'].endswith('_GoNoGo.txt'))
+            _missing_file(behavioral, 'Consc', lambda file: file['name'].endswith('_EmotionConscious.txt'))
+            _missing_file(behavioral, 'NonConsc', lambda file: file['name'].endswith('_EmotionNonconscious.txt'))
+            all_subject_visits += 1
 
     print '''{}: {}
 Total # of subjects: {}
@@ -137,7 +153,9 @@ Total # of subjects: {}
 {}
 {} subjects with unspecified sex
 {} missing T1w 1mm: {}
-{} missing GoNoGo: {}
+{}
+{}
+{}
 '''.format(
         group, project,
         len(subjects_by_code),
@@ -145,7 +163,9 @@ Total # of subjects: {}
         _report_by_sex(subjects, 'female'),
         len([s for s in subjects if s.get('sex') is None]),
         len(missing['t1w']), ', '.join(missing['t1w']),
-        len(missing['GoNoGo']), ', '.join(missing['GoNoGo']),
+        _missing_file_msg('GoNoGo'),
+        _missing_file_msg('Consc'),
+        _missing_file_msg('NonConsc'),
     )
 
 
