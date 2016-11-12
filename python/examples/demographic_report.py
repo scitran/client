@@ -104,14 +104,13 @@ def report(group, project):
         for subject_code in subjects_by_code.keys()
     )
     missing = dict(
-        t1w=set(subject_codes),
-        GoNoGo=set(),
-        Consc=set(),
-        NonConsc=set()
+        t1w=set(subject_codes)
     )
     all_subject_visits = 0
 
     def _missing_file(acquisition, key, file_predicate):
+        if key not in missing:
+            missing[key] = set()
         if not (
             acquisition and any(
                 file_predicate(f)
@@ -142,9 +141,23 @@ def report(group, project):
                 for acquisition in acquisitions
                 if (acquisition.get('uid') or '').startswith('behavioral_and_physiological:')
             ), None)
-            _missing_file(behavioral, 'GoNoGo', lambda file: file['name'].endswith('_GoNoGo.txt'))
-            _missing_file(behavioral, 'Consc', lambda file: file['name'].endswith('_EmotionConscious.txt'))
-            _missing_file(behavioral, 'NonConsc', lambda file: file['name'].endswith('_EmotionNonconscious.txt'))
+            _missing_file(behavioral, 'Behavioral-GoNoGo', lambda file: file['name'].endswith('_GoNoGo.txt'))
+            _missing_file(behavioral, 'Behavioral-Consc', lambda file: file['name'].endswith('_EmotionConscious.txt'))
+            _missing_file(
+                behavioral, 'Behavioral-NonConsc',
+                lambda file: file['name'].endswith('_EmotionNonconscious.txt'))
+            _missing_file(
+                behavioral, 'Physio-GoNoGo',
+                lambda file: file['name'].startswith('gonogo_') and file['name'].endswith('.csv'))
+            _missing_file(
+                behavioral, 'Physio-Consc',
+                lambda file: file['name'].startswith('consc_') and file['name'].endswith('.csv'))
+            _missing_file(
+                behavioral, 'Physio-NonConsc',
+                lambda file: file['name'].startswith('nonconsc_') and file['name'].endswith('.csv'))
+            _missing_file(
+                behavioral, 'Physio-EmoReg',
+                lambda file: file['name'].startswith('emoreg_') and file['name'].endswith('.csv'))
             all_subject_visits += 1
 
     print '''{}: {}
@@ -156,6 +169,10 @@ Total # of subjects: {}
 {}
 {}
 {}
+{}
+{}
+{}
+{}
 '''.format(
         group, project,
         len(subjects_by_code),
@@ -163,9 +180,13 @@ Total # of subjects: {}
         _report_by_sex(subjects, 'female'),
         len([s for s in subjects if s.get('sex') is None]),
         len(missing['t1w']), ', '.join(missing['t1w']),
-        _missing_file_msg('GoNoGo'),
-        _missing_file_msg('Consc'),
-        _missing_file_msg('NonConsc'),
+        _missing_file_msg('Behavioral-GoNoGo'),
+        _missing_file_msg('Behavioral-Consc'),
+        _missing_file_msg('Behavioral-NonConsc'),
+        _missing_file_msg('Physio-GoNoGo'),
+        _missing_file_msg('Physio-Consc'),
+        _missing_file_msg('Physio-NonConsc'),
+        _missing_file_msg('Physio-EmoReg'),
     )
 
 
