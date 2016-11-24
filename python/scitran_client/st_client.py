@@ -209,7 +209,7 @@ class ScitranClient(object):
         assert file_hash.startswith(HASH_PREFIX)
         return compute_file_hash(abs_file_path) == file_hash
 
-    def download_file(self, container_type, container_id, file_name, file_hash, dest_dir=None):
+    def download_file(self, container_type, container_id, file_name, file_hash, dest_dir=None, analysis_id=None):
         '''Download a file that resides in a specified container.
 
         Args:
@@ -217,6 +217,7 @@ class ScitranClient(object):
             container_id (str): The elasticsearch id of the specific container the file resides in.
             dest_dir (str): Path to where the acquisition should be downloaded to.
             file_name (str): Name of the file.
+            analysis_id (str, optional): ID of analysis that file is from.
 
         Returns:
             string. The absolute file path to the downloaded acquisition.
@@ -225,7 +226,15 @@ class ScitranClient(object):
         if not dest_dir:
             dest_dir = self.gear_in_dir
 
-        endpoint = "%s/%s/files/%s"%(container_type, container_id, file_name)
+        analysis_path_segments = []
+        if analysis_id is not None:
+            assert container_type == 'sessions', 'only sessions can have analysis'
+            analysis_path_segments = ['analyses', analysis_id]
+        endpoint = '/'.join(
+            [container_type, container_id] +
+            analysis_path_segments +
+            ['files', file_name]
+        )
         abs_file_path = os.path.join(dest_dir, file_name)
 
         if os.path.exists(abs_file_path):
@@ -233,7 +242,13 @@ class ScitranClient(object):
                 print('Found local copy of {} with correct content.'.format(file_name))
                 return abs_file_path
 
-        response = self._request(endpoint=endpoint, method='GET')
+        if analysis_id:
+            ticket_response = json.loads(self._request(
+                endpoint=endpoint, params=dict(ticket='')
+            ).text)
+            response = self._request(endpoint=endpoint, params=dict(ticket=ticket_response['ticket']))
+        else:
+            response = self._request(endpoint=endpoint)
 
         with open(abs_file_path, 'wb') as fd:
             for chunk in tqdm(
