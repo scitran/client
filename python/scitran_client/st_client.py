@@ -33,6 +33,19 @@ __author__ = 'vsitzmann'
 HASH_PREFIX = 'v0-sha384-'
 
 
+def compute_file_hash(abs_file_path):
+    '''
+    Computes the hash used by Flywheel for this file.
+    Uses sha384 hash, along with Flywheel's hash prefix. Data is read from
+    the file in chunks to avoid loading it all in memory.
+    '''
+    h = hashlib.new('sha384')
+    with open(abs_file_path, 'rb') as f:
+        for chunk in iter(lambda: f.read(4096), b""):
+            h.update(chunk)
+    return HASH_PREFIX + h.hexdigest()
+
+
 class ScitranClient(object):
     '''Handles api calls to a certain instance.
 
@@ -194,11 +207,7 @@ class ScitranClient(object):
 
     def _file_matches_hash(self, abs_file_path, file_hash):
         assert file_hash.startswith(HASH_PREFIX)
-        h = hashlib.new('sha384')
-        with open(abs_file_path, 'rb') as f:
-            for chunk in iter(lambda: f.read(4096), b""):
-                h.update(chunk)
-        return h.hexdigest() == file_hash[len(HASH_PREFIX):]
+        return compute_file_hash(abs_file_path) == file_hash
 
     def download_file(self, container_type, container_id, file_name, file_hash, dest_dir=None):
         '''Download a file that resides in a specified container.

@@ -5,7 +5,7 @@
 """
 SDM interaction python module.
 """
-from st_client import ScitranClient
+from st_client import ScitranClient, compute_file_hash
 from query_builder import (
     query,
     Files,
@@ -25,4 +25,5 @@ __all__ = [
     'Projects',
     'Acquisitions',
     'Groups',
+    'compute_file_hash',
 ]
