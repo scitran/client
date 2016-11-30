@@ -14,6 +14,18 @@ result = [];
 srchType = fieldnames(srchResult);
 switch srchType{1}
     % TODO:  Sort several of these by their label before returning.
+    case 'groups'
+        nGroups = length(srchResult.groups);
+        if nGroups == 0; disp('No groups found'); return; end
+        
+        result = cell(1,nGroups);
+        for ii=1:nGroups
+            result{ii}.id     = srchResult.groups{ii}.x0x5F_id;
+            result{ii}.type   = srchResult.groups{ii}.x0x5F_type;
+            result{ii}.source = srchResult.groups{ii}.x0x5F_source;
+            result{ii}.score  = srchResult.groups{ii}.x0x5F_score;
+            result{ii}.index  = srchResult.groups{ii}.x0x5F_index;
+        end
     case 'projects'
         nProjects = length(srchResult.projects);
         if nProjects == 0; disp('No projects found'); return; end

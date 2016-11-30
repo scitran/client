@@ -1,4 +1,4 @@
-function id = create(obj,project, varargin)
+function id = create(obj, group, project, varargin)
 % Create a project, session or acquisition on a flywheel instance
 %
 %   st.create(group, project,'session',sessionLabel,'acquisition',acquisitionLabel)
@@ -70,11 +70,14 @@ id = [];
 %% Check whether the project exists
 
 % If it does not exist, we check with the user and then create it.
-[status, projectID] = st.exist(project);
+[status, projectID] = st.exist(project, 'project', group);
 
 if ~status
     cmd = st.createCmd(project);
     [status, result] = stCurlRun(cmd);
+elseif status ~= 1
+    
+    return
 end
 
 % We now have a project id
@@ -84,7 +87,7 @@ end
 % If no session is passed, then we are done and return the project ID
 if isempty(session), id = projectID; return; end
 
-if ~stExist(project,'session',session)
+if ~stExist(session, 'session', projectId)
     % If not, create it
     
 end
@@ -100,7 +103,7 @@ end
 % In this case, return the session ID
 if isempty(acquisition), return; end
 
-if ~stExist(project,'session',session,'acquisition',acquisition)
+if ~stExist(acquisition, 'acquisition', sessionId)
     % If not, create it
     
     % In this case, return the acquisition id
