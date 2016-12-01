@@ -20,13 +20,13 @@ function id = create(obj, group, project, varargin)
 % Examples:
 %
 %  Create a project
-%    idP = st.create(pLabel);
+%    idP = st.create(gName, pLabel);
 %
 % Create a session within a project
-%    idS = st.create(pLabel,'session',sLabel);
+%    idS = st.create(gName, pLabel,'session',sLabel);
 %
 % Create an acquisition within a session within a project
-%    idA = st.create(pLabel,'session',sLabel,'acquisition',aLabel);
+%    idA = st.create(gName, pLabel,'session',sLabel,'acquisition',aLabel);
 %
 % When you create an acquisition, you can use the returned idA to put a
 % file, as in
@@ -34,18 +34,10 @@ function id = create(obj, group, project, varargin)
 %     st.put('file',filename,'id',idA);
 %
 % For example, we add an acquisition to the Logothetis_DES
-% 
-% There is a test session.  That's where we create the acquisition
-%   srch.path = 'sessions';
-%   srch.projects.match.label = 'Logothetis';
-%   srch.sessions.match.label = 'Test';
-%   sessions = st.search(srch);
-%   if length(sessions) ~= 1
-%     disp('Too hot or too cold')
-%   end
 %
-% Note: The endpoint will not over-write existing data (until someday we
-% write a 'force' option).
+%   st.create('Logothetis_DES','session','folderName','acquisition','FMRI');
+% or
+%   st.create('Logothetis_DES','session','folderName','acquisition','Anatomical');
 %
 % RF/BW Scitran Team, 2016
 
@@ -59,7 +51,7 @@ p.addParameter('acquisition',[],@ischar);
 
 p.parse(group,project,varargin{:});
 
-group     = p.Results.group;
+group       = p.Results.group;
 project     = p.Results.project;
 session     = p.Results.session;
 acquisition = p.Results.acquisition;
@@ -67,67 +59,74 @@ acquisition = p.Results.acquisition;
 % Returned value is only empty on an error
 id = [];
 
-%% Check whether the project exists
-
-% If it does not exist, we check with the user and then create it.
-[status, projectID] = st.exist(project, 'project', group);
+%% Check whether the group exists
+[status, groupID] = obj.exist(group, 'groups');
 
 if ~status
-    cmd = st.createCmd(project);
-    [status, result] = stCurlRun(cmd);
+    error('group does not exist');
 elseif status ~= 1
-    
+    error('multiple group found with name %s', group);
+end
+
+
+
+%% Test for the project label; does it exist on flywheel? If not create it
+[status, projectID] = obj.exist(project, 'projects', 'parentID', groupID{1});
+
+% If it does not exist, we check with the user and then create it.
+if ~status
+    projectID = createPrivate(obj, 'projects', project, 'group', groupID{1});
+elseif status ~= 1
     return
+else
+    projectID = projectID{1};
 end
 
 % We now have a project id
 
-%% Test for the session label; does it exist on flywheel?
-
 % If no session is passed, then we are done and return the project ID
 if isempty(session), id = projectID; return; end
 
-if ~stExist(session, 'session', projectId)
-    % If not, create it
-    
+
+%% Test for the session label; does it exist on flywheel? If not create it
+[status, sessionID] = obj.exist(session, 'sessions', 'parentID', projectID);
+
+if ~status
+    sessionID = createPrivate(obj, 'sessions', session, 'project', projectID);
+elseif status ~= 1
+    return
+else
+    sessionID = sessionID{1};
 end
-
-%% Test for the acquisition label; does it exist on flywheel
-
-% This is an example call for an acquisition
-%
-%   st.create('Logothetis','session','folderName','acquisition','FMRI');
-% or
-%   st.create('Logothetis','session','folderName','acquisition','Anatomical');
 
 % In this case, return the session ID
-if isempty(acquisition), return; end
+if isempty(acquisition), id = sessionID; return; end
 
-if ~stExist(acquisition, 'acquisition', sessionId)
-    % If not, create it
-    
-    % In this case, return the acquisition id
-    % We build the curl command for creating an acquisition in a session
-    make.label = 'FMRI';
-    make.session = sessions{1}.id;
-    jsonData = savejson('',make);
-    
-    cmd = sprintf('curl -s -XPOST "%s/api/acquisitions" -H "Authorization":"%s" -k -d ''%s'' ',...
-        obj.url, obj.token, jsonData);
-    
-    [status, result] = stCurlRun(cmd);
 
+%% Test for the acquisition label; does it exist on flywheel? If not create it
+[status, acquisitionID] = obj.exist(acquisition, 'acquisitions', 'parentID', sessionID);
+
+if ~status
+    id = createPrivate(obj, 'acquisitions', acquisition, 'session', sessionID);
+elseif status ~= 1
+    return
+else
+    id = acquisitionID{1};
 end
     
 
 end
 
-%% A method for building the curl command
-
-
-
-
-
-
-
-%%
+%% Private method that creates a single container
+function id = createPrivate(obj, containerType, label, parentType, parentID)
+    payload.(parentType) = parentID;
+    payload.label = label;
+    payload = savejson('',payload);
+    cmd = obj.createCmd(containerType, payload);
+    [status, result] = system(cmd);
+    if status
+        error(result);
+    end
+    result = loadjson(result);
+    id = result.x0x5F_id;
+end

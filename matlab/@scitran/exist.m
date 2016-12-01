@@ -35,7 +35,7 @@ parentID          = p.Results.parentID;
 
 srch.path = containerType;
 if strcmp(containerType, 'groups')
-    srch.(containerType).match.exact_name = label;
+    srch.(containerType).match.name = label;
 else
     srch.(containerType).match.exact_label = label;
 end

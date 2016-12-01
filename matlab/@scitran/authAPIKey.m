@@ -143,7 +143,7 @@ if ~isfield(st, instance)
     end
 else
     obj.token = st.(instance).token;
-    obj.url = st.(instance).url;
+    obj.url = st.(instance).client_url;
 end
 
 end
