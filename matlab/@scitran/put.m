@@ -101,47 +101,18 @@ switch  lower(upType)
    case {'files','file'}
 
         % Not checked.  Do with LMP.
-
-        % Handle permalinks which may have '?user='
-        pLink = strsplit(pLink, '?');
-        pLink = pLink{1};
-
-        % Build the url from the permalink by removing the endpart
-        url = fileparts(pLink);
-
-        % Get the URL with the file name appended to it
-        [~,n,e] = fileparts(fName);
-        urlAndName = fullfile(url,[n,e]);
-
-
-        %% Generate MD5 checksum
-
-        % MAC
-        if ismac
-            md5_cmd = sprintf('md5 %s',fName);
-            [md5_status, md5_result] = system(md5_cmd);
-            checkSum = md5_result(end-32:end-1);
-
-        % Linux
-        elseif (isunix && ~ismac)
-            md5_cmd = sprintf('md5sum %s',fName);
-            [md5_status, md5_result] = system(md5_cmd);
-            checkSum = md5_result(1:32);
-
-        % Other/Unknown
-        else
-            error('Unsupported system.\n');
+        containerType = stData.containerType;
+        id = stData.id;
+        file = stData.file;
+        [~, fname, ext] = fileparts(file);
+        fname = [fname, ext];
+        if isempty(stData.id) || isempty(stData.file) || isempty(containerType)
+            error('field missing on stData');
         end
-
-        % Check that it worked
-        if md5_status
-            error('System checksum command failed');
-        end
-
-
         %% Build and execute the curl command
 
-        curl_cmd = sprintf('/usr/bin/curl -v -X PUT --data-binary @%s -H "Content-MD5:%s" -H "Content-Type:application/octet-stream" -H "Authorization:%s" "%s?flavor=attachment"\n', fName, checkSum, token, urlAndName);
+        curl_cmd = sprintf('curl -s -F "file=@%s;filename=%s" "%s/api/%s/%s/files" -H "Authorization":"%s" -k',...
+            file, fname, obj.url, containerType, id, obj.token);
 
         % Execute the command
         fprintf('Sending... ');
