@@ -12,25 +12,30 @@ class APIException(Exception):
         )
         super(APIException, self).__init__(message, *args, **kwargs)
 
+
 class NoPermission(APIException):
     pass
+
 
 class NotFound(APIException):
     pass
 
+
 class BadRequest(APIException):
     pass
+
 
 class WrongFormat(APIException):
     pass
 
 
-
 class DockerException(Exception):
     pass
 
+
 class MachineSetupError(DockerException):
     pass
+
 
 class MachineNotInstalled(DockerException):
     pass

@@ -25,7 +25,9 @@ except NameError:
     tqdm = tqdm_module.tqdm
 
 if not hasattr(ssl, 'PROTOCOL_TLSv1_2'):
-    print('You are missing suppport for TLS 1.2, which is required to connect to flywheel servers. Try upgrading your version of openssl.')
+    print(
+        'You are missing suppport for TLS 1.2, which is required to connect to flywheel servers. '
+        'Try upgrading your version of openssl.')
     raise Exception('Missing support for TLS 1.2')
 
 __author__ = 'vsitzmann'
@@ -138,7 +140,8 @@ class ScitranClient(object):
         self.base_url = urlparse.urljoin(self.base_url, 'api/')
 
     def _request(self, endpoint, method='GET', params=None, data=None, headers=None, files=None):
-        '''Dispatches requests, taking care of the instance-specific base_url and authentication. Also raises appropriate HTTP errors.
+        '''Dispatches requests, taking care of the instance-specific base_url and authentication.
+        Also raises appropriate HTTP errors.
         Args:
             method (str): The HTTP method to perform ('GET', 'POST'...)
             params (dict): Dict of http parameters.
@@ -361,22 +364,26 @@ class ScitranClient(object):
 
         '''
         # submit_job_command = sprintf(
-            # 'curl -k -X POST %s/%s -d ''%s'' -H "X-SciTran-Auth:%s" -H "X-SciTran-Name:live.sh" -H "X-SciTran-Method:script" ',
-            # st.url, endpoint, job_body, drone_secret);
+        # 'curl -k -X POST %s/%s -d ''%s'' -H "X-SciTran-Auth:%s"
+        # -H "X-SciTran-Name: live.sh" -H "X-SciTran-Method:script" ',
+        # st.url, endpoint, job_body, drone_secret);
 
         endpoint = 'jobs/add'
 
         job_dict = {}
-        job_dict.update({'inputs':inputs})
-        job_dict.update({'tags':tags})
-        job_dict.update({'destination':destination})
+        job_dict.update({'inputs': inputs})
+        job_dict.update({'tags': tags})
+        job_dict.update({'destination': destination})
 
         response = self._request(endpoint=endpoint,
                                  data=json.dumps(job_dict),
                                  headers={'X-SciTran-Name:live.sh', 'X-SciTran-Method:script'})
         return response
 
-    def run_gear_and_upload_analysis(self, metadata_label, container, target_collection_id, command, in_dir=None, out_dir=None):
+    def run_gear_and_upload_analysis(
+        self, metadata_label, container, target_collection_id, command,
+        in_dir=None, out_dir=None
+    ):
         '''Runs a docker container on all files in an input directory and uploads input and output file in an analysis.
 
         Args:

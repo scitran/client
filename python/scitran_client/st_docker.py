@@ -9,11 +9,13 @@ import os
 
 __author__ = 'vsitzmann'
 
+
 def ensure_docker_machine(machine):
     try:
         subprocess.check_call(['docker-machine', '-v'])
     except OSError:
-        raise st_exceptions.MachineNotInstalled("docker-machine is required, but not installed. Please install docker-machine.")
+        raise st_exceptions.MachineNotInstalled(
+            "docker-machine is required, but not installed. Please install docker-machine.")
 
     try:
         subprocess.check_output(['docker-machine', 'status', machine])
@@ -37,9 +39,9 @@ def ensure_docker_machine(machine):
 
 def add_docker_machine_to_env(machine):
     env_vars_string = subprocess.check_output(['docker-machine', 'env', machine])
-    relevant_indices = [1,3,5,7]
+    relevant_indices = [1, 3, 5, 7]
     new_env_vars = [env_vars_string.split()[i] for i in relevant_indices]
-    new_env_var_dict = dict([env_var_string.replace('\"','').split('=') for env_var_string in new_env_vars])
+    new_env_var_dict = dict([env_var_string.replace('\"', '').split('=') for env_var_string in new_env_vars])
 
     for key, value in new_env_var_dict.iteritems():
         os.environ[key] = value
