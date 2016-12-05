@@ -6,8 +6,10 @@ import sys
 import subprocess
 import st_exceptions
 import os
+import logging
 
 __author__ = 'vsitzmann'
+log = logging.getLogger('scitran.client.docker')
 
 
 def ensure_docker_machine(machine):
@@ -19,9 +21,9 @@ def ensure_docker_machine(machine):
 
     try:
         subprocess.check_output(['docker-machine', 'status', machine])
-        print("docker-machine %s is running." % machine)
+        log.info("docker-machine %s is running." % machine)
     except subprocess.CalledProcessError:
-        print("Starting docker-machine %s..." % machine)
+        log.info("Starting docker-machine %s..." % machine)
 
         try:
             subprocess.check_output(['docker-machine', 'start', machine])
@@ -34,7 +36,7 @@ def ensure_docker_machine(machine):
                 if status:
                     raise st_exceptions.MachineSetupError("Error creating the docker machine.")
                 else:
-                    print("The machine %s is up and running!" % machine)
+                    log.info("The machine %s is up and running!" % machine)
 
 
 def add_docker_machine_to_env(machine):
@@ -85,16 +87,16 @@ def run_container(container, command, in_dir='input', out_dir='output', machine=
                                                             tty=True,
                                                             command=command)
     except requests.ConnectionError as e:
-        print('Error creating the container: {}.'.format(e.message))
+        log.error('Error creating the container: {}.'.format(e.message))
 
     docker_client.start(container_instance)
     for item in docker_client.logs(container_instance, stream=True):
         print(item, end='')
     exit_code = docker_client.wait(container_instance)
-    print('Docker container finished with exit code {}'.format(exit_code))
+    log.info('Docker container finished with exit code {}'.format(exit_code))
 
     # Remove the container after running it.
     docker_client.remove_container(container_instance)
 
     if exit_code:
-        raise Exception('error')
+        raise Exception('error {} {} exited with {}'.format(container, command, exit_code))
