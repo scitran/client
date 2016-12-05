@@ -4,33 +4,31 @@ import os
 import json
 import glob
 import time
-import datetime
 import urllib
 import shutil
 import hashlib
-import argparse
 import requests
 from time import sleep
-from pprint import pprint
-
 
 
 def convert_age(seconds):
     '''
-    Converts a given age in seconds [type=float,int] to a more reasonable string (e.g. days, years, months) [type=string].
+    Converts a given age in seconds [type=float,int] to a more reasonable string
+    (e.g. days, years, months) [type=string].
 
-        INPUT: 
-            age [float, int] - An age in seconds. If 'seconds' is not an 'int' or 'float', 'age' is returned as an empty string.
+        INPUT:
+            age [float, int] - An age in seconds. If 'seconds' is not an 'int' or 'float',
+                               'age' is returned as an empty string.
 
         RETURN:
-            age [string]     - A string representing age in days, months, or years. 
-                                If age < 1Mo, then age is returned in days. 
+            age [string]     - A string representing age in days, months, or years.
+                                If age < 1Mo, then age is returned in days.
                                 If age < 1Y and age > 1Mo, then age is retunred in months.
                                 Else age is returned in years.
 
         EXAMPLE:
             > age_string = sdm.convert_age(1388488493.)
-                
+
                 '44Y'
 
     '''
@@ -50,11 +48,12 @@ def convert_age(seconds):
     else:
         return ''
 
+
 def print_acq_metadata(code, series, description, sex, age, urls):
     '''
     Print the metadata content to the screen.
-        
-        Example Usage: 
+
+        Example Usage:
             description, series, code, sex, age, urls = sdm.get_acq_metadata(acquisitions[acq])
             print_acq_metadata(code, series, description, sex, age, urls)
 
@@ -64,15 +63,15 @@ def print_acq_metadata(code, series, description, sex, age, urls):
     print description
     print sex
     print age
-    print nifti_urls
     sleep(1)
     return
+
 
 def get_urls(acqs, filter=''):
     '''
     Filter URLs in acquisitions to return only those with that filter in the url.
-    
-        INPUT: 
+
+        INPUT:
             acqs   [type=list]   - A list of acquisitions
             filter [type=string] - A text string which must exist in a url to be returned.
 
@@ -91,13 +90,14 @@ def get_urls(acqs, filter=''):
                 urls.append(this_url)
     return urls
 
+
 def filter_urls(urls_to_filter, filter=''):
     '''
     Filter a list of URLs and return only those with that filter in the url.
-        
+
         INPUT:
             urls_to_filter - A list of urls.
-            filter         - A text string containing the filter. 
+            filter         - A text string containing the filter.
 
         OUTPUT:
             urls - a filtered list of urls.
@@ -109,14 +109,15 @@ def filter_urls(urls_to_filter, filter=''):
             urls.append(this_url)
     return urls
 
+
 def get_data_from_json(json_file):
     '''
-    Load the json data from file. 
+    Load the json data from file.
         INPUT:
             json_file - An SDM json text file.
 
-        OUTPUT: 
-            acquisitions - an array of acquisitions 
+        OUTPUT:
+            acquisitions - an array of acquisitions
             sessions     - an array of sessions
     '''
     with open(json_file, 'r') as data_file:
@@ -124,6 +125,7 @@ def get_data_from_json(json_file):
     acquisitions = data['acquisitions']
     sessions = data['sessions']
     return acquisitions, sessions
+
 
 def get_acq_metadata(acq):
     '''
@@ -139,26 +141,27 @@ def get_acq_metadata(acq):
     code = acq['subject_code']
     urls = acq['urls']
 
-    if acq.has_key('description'):
+    if 'description' in acq:
         description = acq['description']
     else:
         description = ''
-    
-    if acq.has_key('subject_sex'):
+
+    if 'subject_sex' in acq:
         sex = acq['subject_sex']
     else:
         sex = ''
-    
-    if acq.has_key('subject_age'):
+
+    if 'subject_age' in acq:
         age = convert_age(float(acq['subject_age']))
         age = ''
-    
-    return description,series,code,sex,age,urls
+
+    return description, series, code, sex, age, urls
+
 
 def sdm_get_file(url, username, path):
     '''
     For a given url, append the 'username' and download the file to 'path' on disk.
-    
+
         INPUT:
             url      - SDM url from which to download the file
             username - A valid SDM username with download permissions
@@ -176,6 +179,7 @@ def sdm_get_file(url, username, path):
         status = False
     return status, save_name
 
+
 def sdm_put_file(url, username, file_path):
     '''
     Upload a file to an sdm instance.
@@ -184,7 +188,7 @@ def sdm_put_file(url, username, file_path):
         url       = the url in sdm where the attachment should go
         username  = the userid or username of the user that has rights
         file_path = the path to the file on disk to be uploaded
-    
+
     OUTPUT:
         req - obj, where req.ok is the indication that it succeeded.
     '''
@@ -195,10 +199,10 @@ def sdm_put_file(url, username, file_path):
     put_url = base_url + "/" + urllib.quote(fName)
 
     # Get the MD5 of the file being uploaded
-    with open(file_path,'rb') as f:
+    with open(file_path, 'rb') as f:
         checkSum = hashlib.md5(f.read()).hexdigest()
 
-    ## Use REQUESTS to send the file
+    # Use REQUESTS to send the file
     requests.packages.urllib3.disable_warnings()
 
     with open(file_path, 'rb') as f:
@@ -211,7 +215,8 @@ def sdm_put_file(url, username, file_path):
     else:
         print 'Failed'
 
-    return req # Returns true of the request was successful.
+    return req  # Returns true of the request was successful.
+
 
 def create_docker_job(code, series, url, project_dir, user_name, log_file, container="recon-all"):
     '''
@@ -236,20 +241,23 @@ def create_docker_job(code, series, url, project_dir, user_name, log_file, conta
     docker_job['user_name'] = user_name
     docker_job['nifti_file'] = url.split("/")[-1]
     docker_job['project_dir'] = project_dir
-    docker_job['base_dir'] = os.path.join(project_dir, '%s_%s/' % (code,series))
+    docker_job['base_dir'] = os.path.join(project_dir, '%s_%s/' % (code, series))
     docker_job['log_file'] = log_file
-    docker_job['input_vol'] =  os.path.join(docker_job['base_dir'], 'input')
-    docker_job['output_vol'] =  os.path.join(docker_job['base_dir'], 'output')
+    docker_job['input_vol'] = os.path.join(docker_job['base_dir'], 'input')
+    docker_job['output_vol'] = os.path.join(docker_job['base_dir'], 'output')
 
     if container == "recon-all":
         docker_job['command'] = 'docker run --rm -ti \
-                                    -v %s:/input -v %s:/output vistalab/recon-all -i /input/%s -subjid %s -all -qcache' % (docker_job['input_vol'], docker_job['output_vol'], docker_job['nifti_file'], code)
+                                -v %s:/input -v %s:/output vistalab/recon-all -i /input/%s -subjid %s -all -qcache' %\
+                                (docker_job['input_vol'], docker_job['output_vol'], docker_job['nifti_file'], code)
     elif container == "bet":
         docker_job['command'] = 'docker run --rm -ti \
                                     -v %s:/input \
                                     -v %s:/output \
                                     vistalab/bet /input/%s /output/bet2_%s_ \
-                                    ' % (docker_job['input_vol'], docker_job['output_vol'], docker_job['nifti_file'], code)
+                                    ' % (
+                                        docker_job['input_vol'], docker_job['output_vol'],
+                                        docker_job['nifti_file'], code)
     elif container == "hippovol":
         docker_job['command'] = 'docker run --rm -ti \
                                     -v %s:/input \
@@ -261,6 +269,7 @@ def create_docker_job(code, series, url, project_dir, user_name, log_file, conta
         print 'No Docker job could be specified.'
 
     return docker_job
+
 
 def run_docker_job(docker_job):
     '''
@@ -302,7 +311,8 @@ def run_docker_job(docker_job):
 
     # Log if log_file exists
     if docker_job['log_file'] and os.path.isfile(docker_job['log_file']):
-        command = 'echo Starting: %s: %s >> %s' % (time.strftime("%H:%M:%S"), str(docker_job['base_dir']), docker_job['log_file'])
+        command = 'echo Starting: %s: %s >> %s' % (
+            time.strftime("%H:%M:%S"), str(docker_job['base_dir']), docker_job['log_file'])
 
     # RUN the docker command on the system (what happens to the stdout?)
     os.system(command)
@@ -323,18 +333,13 @@ def run_docker_job(docker_job):
     shutil.rmtree(docker_job['base_dir'])
 
     if not results_status:
-        command = 'echo Finished: %s: %s >> %s' % (time.strftime("%H:%M:%S"), str(docker_job['base_dir']), docker_job['log_file'])
+        command = 'echo Finished: %s: %s >> %s' % (
+            time.strftime("%H:%M:%S"), str(docker_job['base_dir']), docker_job['log_file'])
         os.system(command)
 
     if job_status != 0:
-        command = 'echo ERROR: %s: %s >> %s' % (time.strftime("%H:%M:%S"), str(docker_job['base_dir']), docker_job['log_file'])
+        command = 'echo ERROR: %s: %s >> %s' % (
+            time.strftime("%H:%M:%S"), str(docker_job['base_dir']), docker_job['log_file'])
         os.system(command)
 
-
     return job_status, results_status
-
-
-
-
-
-

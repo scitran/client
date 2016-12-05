@@ -31,3 +31,4 @@ traitlets==4.2.1
 tqdm==4.8.4
 urllib3==1.15.1
 websocket-client==0.37.0
+flake8==3.0.4
