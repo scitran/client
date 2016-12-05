@@ -209,7 +209,11 @@ class ScitranClient(object):
         assert file_hash.startswith(HASH_PREFIX)
         return compute_file_hash(abs_file_path) == file_hash
 
-    def download_file(self, container_type, container_id, file_name, file_hash, dest_dir=None, analysis_id=None):
+    def download_file(
+        self, container_type, container_id,
+        file_name, file_hash,
+        dest_dir=None, analysis_id=None, tqdm_kwargs=None
+    ):
         '''Download a file that resides in a specified container.
 
         Args:
@@ -218,6 +222,7 @@ class ScitranClient(object):
             dest_dir (str): Path to where the acquisition should be downloaded to.
             file_name (str): Name of the file.
             analysis_id (str, optional): ID of analysis that file is from.
+            tqdm_kwargs (dict, optional): kwargs to pass to tqdm progress bar.
 
         Returns:
             string. The absolute file path to the downloaded acquisition.
@@ -225,6 +230,7 @@ class ScitranClient(object):
         # If no destination directory is given, default to the gear_in_dir of the object.
         if not dest_dir:
             dest_dir = self.gear_in_dir
+        tqdm_kwargs = tqdm_kwargs or {}
 
         analysis_path_segments = []
         if analysis_id is not None:
@@ -255,6 +261,7 @@ class ScitranClient(object):
                 response.iter_content(),
                 desc=file_name, leave=False,
                 unit_scale=True, unit='B',
+                **tqdm_kwargs
             ):
                 fd.write(chunk)
 
