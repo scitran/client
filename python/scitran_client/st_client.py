@@ -233,7 +233,7 @@ class ScitranClient(object):
         # If no destination directory is given, default to the gear_in_dir of the object.
         if not dest_dir:
             dest_dir = self.gear_in_dir
-        tqdm_kwargs = tqdm_kwargs or {}
+        tqdm_kwargs = dict(tqdm_kwargs or {})
 
         analysis_path_segments = []
         if analysis_id is not None:
@@ -259,10 +259,12 @@ class ScitranClient(object):
         else:
             response = self._request(endpoint=endpoint)
 
+        desc = tqdm_kwargs.pop('desc', file_name)
+        leave = tqdm_kwargs.pop('leave', False)
         with open(abs_file_path, 'wb') as fd:
             for chunk in tqdm(
                 response.iter_content(),
-                desc=file_name, leave=False,
+                desc=desc, leave=leave,
                 unit_scale=True, unit='B',
                 **tqdm_kwargs
             ):
