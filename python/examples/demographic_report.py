@@ -159,6 +159,14 @@ def report(group, project):
                 behavioral, 'Physio-EmoReg',
                 lambda file: file['name'].startswith('emoreg_') and file['name'].endswith('.csv'))
             all_subject_visits += 1
+        missing['base files'] = (
+            missing['Behavioral-GoNoGo'] |
+            missing['Behavioral-Consc'] |
+            missing['Behavioral-NonConsc'] |
+            missing['Behavioral-GoNoGo'] |
+            missing['Physio-Consc'] |
+            missing['Physio-Consc']
+        )
 
     print '''{}: {}
 Total # of subjects: {}
@@ -166,6 +174,7 @@ Total # of subjects: {}
 {}
 {} subjects with unspecified sex
 {} missing T1w 1mm: {}
+{}
 {}
 {}
 {}
@@ -187,6 +196,7 @@ Total # of subjects: {}
         _missing_file_msg('Physio-Consc'),
         _missing_file_msg('Physio-NonConsc'),
         _missing_file_msg('Physio-EmoReg'),
+        _missing_file_msg('base files'),
     )
 
 
