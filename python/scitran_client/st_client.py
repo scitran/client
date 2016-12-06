@@ -218,7 +218,8 @@ class ScitranClient(object):
     def download_file(
         self, container_type, container_id,
         file_name, file_hash,
-        dest_dir=None, analysis_id=None, tqdm_kwargs=None
+        dest_dir=None, analysis_id=None,
+        tqdm_kwargs=None, tqdm_disable=False
     ):
         '''Download a file that resides in a specified container.
 
@@ -229,6 +230,7 @@ class ScitranClient(object):
             file_name (str): Name of the file.
             analysis_id (str, optional): ID of analysis that file is from.
             tqdm_kwargs (dict, optional): kwargs to pass to tqdm progress bar.
+            tqdm_disable (bool, optional): if true, tqdm will not wrap response download
 
         Returns:
             string. The absolute file path to the downloaded acquisition.
@@ -265,12 +267,15 @@ class ScitranClient(object):
         desc = tqdm_kwargs.pop('desc', file_name)
         leave = tqdm_kwargs.pop('leave', False)
         with open(abs_file_path, 'wb') as fd:
-            for chunk in tqdm(
-                response.iter_content(),
-                desc=desc, leave=leave,
-                unit_scale=True, unit='B',
-                **tqdm_kwargs
-            ):
+            content = response.iter_content()
+            if not tqdm_disable:
+                content = tqdm(
+                    response.iter_content(),
+                    desc=desc, leave=leave,
+                    unit_scale=True, unit='B',
+                    **tqdm_kwargs
+                )
+            for chunk in content:
                 fd.write(chunk)
 
         if not self._file_matches_hash(abs_file_path, file_hash):
