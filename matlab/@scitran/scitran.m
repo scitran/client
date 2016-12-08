@@ -42,7 +42,8 @@ classdef scitran < handle
             %   'actions' - 'create', 'refresh', 'revoke'
             %  'instance' -  String denoting the st instance to authorize
             %
-            auth(obj,varargin{:});
+            
+            authAPIKey(obj,varargin{:});
         end
         
     end
