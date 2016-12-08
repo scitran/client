@@ -17,10 +17,7 @@ function [] = authAPIKey(obj, varargin)
 %                   'create'  - [default] generate a new token. This will
 %                               refresh the token if one exists.
 %                   'refresh' - refresh an existing token.
-%                   'revoke'  - revoke an existing token. For security this
-%                               should be done by the user when they are
-%                               no longer in need of the token. Each token
-%                               and stAuth profile will be deleted.
+%                   'remove'  - remove an existing token.
 %
 %       'instance' - String denoting the st instance to authorize
 %                     against. Information about the instance is saved
@@ -38,42 +35,19 @@ function [] = authAPIKey(obj, varargin)
 %       status      - boolean where 0=success and >0 denotes failure.
 %
 % EXAMPLES:
+% st = scitran('action', 'create', 'instance', 'local')
+% st = scitran('action', 'refresh', 'instance', 'local')
+% st = scitran('action', 'remove', 'instance', 'local')
 %
-%  (Default)
-%  status = obj.auth('action', 'create', 'instance', 'scitran', 'init',false);
-%
-%  p.action = 'create'; p.init = true; p.instance = 'scitran';
-%  st = scitran;
-%  status = st.auth(p);
-%
-%  SEE ALSO:
-%       stGet.m, stPut.m,
-%       https://github.com/scitran/scripts/blob/master/oauth2cli.py
-%
-% NOTES:
-%  The python code requires that:
-%       1) Start matlab from a terminal (to inheret your ENV) OR
-%          otherwise properly set your ENV (PATH) to include paths to
-%          python & required libs.
-%       2) Have certain python libs installed and on your path.
-%          Those libs are:
-%               oauth2client. * Hint: "pip install oauth2client" *
-%       3) Have access to port 9000 to open a browser window/tab. By
-%          default this should work just fine.
-%       4) Note that you will be prompted for the client secret
-%          (which will be saved for you in an stAuth.mat file). This
-%          secret can only be given by an administrator of the instance you
-%          wish to connect to.
-
-% TODO: Add message about the oauth2cli popout that warns it's aobut to happen
 % (C) Stanford VISTA Lab, 2016 - LMP
-actions = {'create'};
+actions = {'create', 'refresh', 'remove'};
 
 p = inputParser;
 p.addParameter('action', 'create', @(x) any(strcmp(x,actions)));
 p.addParameter('instance', 'scitran', @ischar);
 p.parse(varargin{:})
 
+action = p.Results.action;
 instance = p.Results.instance;
 if isempty(instance)
     disp('instance empty. Aborting...');
@@ -121,11 +95,18 @@ end
 
 % Check for client/instance info in the localAuthFile
 % Prompt to add it if not found, then save it for next time.
-if ~isfield(st, instance)
-    prompt = sprintf('Unknown instance: \n ''%s'' is not a known instance. \n Would you like to add it to your local config? (y/n): ', instance);
+if strcmp(action, 'remove')
+    st = rmfield(st, instance);
+    savejson('', st, tokenFile);
+elseif ~isfield(st, instance) || strcmp(action, 'refresh')
+    prompt = sprintf('Would you like to %s token for instance %s in your local config? (y/n): ', action, instance);
     response = input(prompt,'s');
     if lower(response) == 'y'
-        obj.url    = input('Please enter the instance url: ', 's');
+        if strcmp(action, 'refresh')
+            obj.url = st.(instance).client_url;
+        else
+            obj.url    = input('Please enter the instance url: ', 's');
+        end
         obj.token    = ['scitran-user ', input('Please enter the instance token: ', 's')];
         % Check that fields are not blank
         if isempty(obj.token) || isempty(obj.url);
@@ -142,6 +123,8 @@ if ~isfield(st, instance)
         return
     end
 else
+    prompt = sprintf('\nAPI key found for instance %s', instance);
+    disp(prompt)
     obj.token = st.(instance).token;
     obj.url = st.(instance).client_url;
 end
