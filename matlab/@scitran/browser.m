@@ -1,13 +1,12 @@
-function url = browser(obj, stdata, varargin)
+function url = browser(obj, varargin)
 % Open up the scitran URL to the object id
 %
-%  url = st.browser(obj, dType, varargin)
+%    url = st.browser(obj, varargin)
 %
-% Inputs:
+% Optional parameter/value pairs:
 %  stdata:    A struct returned by an st.search command.  We display
 %             projects, sessions, acquisitions, and analyses.
 %
-% Optional parameter/value pairs
 %  browse:      Bring up the browser (default is true). If set to false,
 %               the url is returned, which may be useful.
 %  collection:  Set to true to show a session from a collection
@@ -38,8 +37,9 @@ p = inputParser;
 
 % stdata is a returned search object from the st.search The browser can
 % open up an object that is a project, session, acquisition, or analysis
-vFunc = @(x) (isstruct(x) && ismember(x.type, {'projects','sessions','acquisitions','collections','analyses'}));
-p.addRequired('stdata',vFunc);
+% If none is passed in, then we just open up the url of the instance ('').
+vFunc = @(x) (isstruct(x) && ismember(x.type, {'projects','sessions','acquisitions','collections','analyses',''}));
+p.addParameter('stdata','',vFunc);
 
 % Bring up the browser window
 p.addParameter('browse',true,@islogical);
@@ -48,23 +48,27 @@ p.addParameter('browse',true,@islogical);
 c.c = false;
 p.addParameter('collection',c,@isstruct);
 
-p.parse(stdata,varargin{:});
+p.parse(varargin{:});
 stdata      = p.Results.stdata;
 browse      = p.Results.browse;
 collection  = p.Results.collection;
 
-%% Build and show the web URL
+%% Build the web URL
+
+if isempty(stdata)
+    % No st data sent in, so upon up the root
+    url = sprintf('%s',obj.url);
+end
 
 if isfield(collection,'id')
     % Show a session in the context of a collection.
     url = sprintf('%s/#/dashboard/collection/%s/session/%s?tab=data',obj.url,collection.id,stdata.id);
-else
+elseif ~isempty(stdata)
     % We show a session, acquisition in the context of the project, not 
     switch stdata.type
-        
         case {'acquisitions'}
             % We show the session for an acquisition.
-            url = sprintf('%s/#/dashboard/session/%s',ob.url,stdata.source.session);
+            url = sprintf('%s/#/dashboard/session/%s',obj.url,stdata.source.session);
         case {'analyses'}
             % Analyses are always part of a collection or session. If part
             % of a collection, we show the session within the collection.
@@ -79,6 +83,7 @@ else
     end
 end
 
+%% Show, if requested
 
 if browse, web(url,'-browser'); end
 

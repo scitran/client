@@ -1,5 +1,7 @@
 %% Use Elastic Search to Query the database
 %
+% Deprecate - OLD STUFF.
+%
 %    * Authorize - use stAuth
 %    * Set base parameters (e.g., url and token)
 %  
@@ -33,8 +35,7 @@
 
 %% Authorization
 % The auth returns both a token and the url of the flywheel instance
-[token, furl, ~] = stAuth('action', 'create', 'instance', 'scitran');
-fprintf('Token length %d\nConnected to: %s\n',length(token),furl)
+st = scitran('action', 'create', 'instance', 'scitran');
 
 %% Does a search for bvec files.
 

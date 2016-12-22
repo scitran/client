@@ -1,5 +1,7 @@
 %% v_stJobSubmit
 %
+% DEPRECATE
+%
 % This validation script shows how to create a job from a search result and
 % how to use the output of that job (provided you know something about it)
 % as the input for another job.
