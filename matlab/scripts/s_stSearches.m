@@ -100,12 +100,12 @@ projectID    = projects{1}.id;
 projectLabel = projects{1}.source.label;
 
 % You can browse to the project this way
-%   st.browser(projects{1});
+%   st.browser('stdata',projects{1});
 
 %% Get all the sessions within a specific collection
 clear srch; 
 srch.path = 'sessions';
-srch.collections.match.label = 'GearTest';
+srch.collections.match.label = 'Anatomy Male 45-55';
 sessions = st.search(srch);
 
 fprintf('Found %d sessions in GearTest\n',length(sessions));
