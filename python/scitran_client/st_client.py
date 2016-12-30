@@ -17,6 +17,9 @@ from settings import (
 import tqdm as tqdm_module
 import ssl
 import hashlib
+import logging
+
+log = logging.getLogger('scitran.client')
 
 try:
     __IPYTHON__  # NOQA
@@ -123,7 +126,7 @@ class ScitranClient(object):
         '''
         prepared_request = response.request
 
-        print('DEBUG {} {}\n{}\n{}\n'.format(
+        log.debug('{} {}\n{}\n{}\n'.format(
             prepared_request.method,
             prepared_request.url,
             prepared_request.headers,
@@ -215,7 +218,8 @@ class ScitranClient(object):
     def download_file(
         self, container_type, container_id,
         file_name, file_hash,
-        dest_dir=None, analysis_id=None, tqdm_kwargs=None
+        dest_dir=None, analysis_id=None,
+        tqdm_kwargs=None, tqdm_disable=False
     ):
         '''Download a file that resides in a specified container.
 
@@ -226,6 +230,7 @@ class ScitranClient(object):
             file_name (str): Name of the file.
             analysis_id (str, optional): ID of analysis that file is from.
             tqdm_kwargs (dict, optional): kwargs to pass to tqdm progress bar.
+            tqdm_disable (bool, optional): if true, tqdm will not wrap response download
 
         Returns:
             string. The absolute file path to the downloaded acquisition.
@@ -233,7 +238,7 @@ class ScitranClient(object):
         # If no destination directory is given, default to the gear_in_dir of the object.
         if not dest_dir:
             dest_dir = self.gear_in_dir
-        tqdm_kwargs = tqdm_kwargs or {}
+        tqdm_kwargs = dict(tqdm_kwargs or {})
 
         analysis_path_segments = []
         if analysis_id is not None:
@@ -248,7 +253,7 @@ class ScitranClient(object):
 
         if os.path.exists(abs_file_path):
             if self._file_matches_hash(abs_file_path, file_hash):
-                print('Found local copy of {} with correct content.'.format(file_name))
+                log.info('Found local copy of {} with correct content.'.format(file_name))
                 return abs_file_path
 
         if analysis_id:
@@ -259,13 +264,18 @@ class ScitranClient(object):
         else:
             response = self._request(endpoint=endpoint)
 
+        desc = tqdm_kwargs.pop('desc', file_name)
+        leave = tqdm_kwargs.pop('leave', False)
         with open(abs_file_path, 'wb') as fd:
-            for chunk in tqdm(
-                response.iter_content(),
-                desc=file_name, leave=False,
-                unit_scale=True, unit='B',
-                **tqdm_kwargs
-            ):
+            content = response.iter_content()
+            if not tqdm_disable:
+                content = tqdm(
+                    response.iter_content(),
+                    desc=desc, leave=leave,
+                    unit_scale=True, unit='B',
+                    **tqdm_kwargs
+                )
+            for chunk in content:
                 fd.write(chunk)
 
         if not self._file_matches_hash(abs_file_path, file_hash):
@@ -411,12 +421,12 @@ class ScitranClient(object):
             shutil.rmtree(out_dir)
         os.mkdir(out_dir)
 
-        print('Running container {} on with input {} and output {}'.format(container, in_dir, out_dir))
+        log.info('Running container {} on with input {} and output {}'.format(container, in_dir, out_dir))
         st_docker.run_container(container, command=command, in_dir=in_dir, out_dir=out_dir)
 
-        print('Uploading results to collection with id {}.'.format(target_collection_id))
+        log.info('Uploading results to collection with id {}.'.format(target_collection_id))
         metadata = {'label': metadata_label}
         response = self.upload_analysis(in_dir, out_dir, metadata, target_collection_id=target_collection_id)
-        print(
+        log.info(
             'Uploaded analysis has ID {}. Server responded with {}.'
             .format(json.loads(response.text)['_id'], response.status_code))
