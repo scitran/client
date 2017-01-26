@@ -37,6 +37,8 @@ if isstruct(srch)
     % It is a Matlab struct, so convert it to json notation.
     srch = savejson('',srch);
 end
+srch = regexprep(srch, '\n|\t', ' ');
+srch = regexprep(srch, ' *', ' ');
 esCMD = obj.searchCmd(srch,'all_data',all_data);
 
 % Could validate the oFile name
