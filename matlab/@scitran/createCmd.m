@@ -1,4 +1,5 @@
 function cmd = createCmd(obj, containerType, payload, varargin)
+
 % Build the command to create a project/session/acquisition
 %
 %
