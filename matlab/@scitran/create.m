@@ -121,12 +121,13 @@ end
 function id = createPrivate(obj, containerType, label, parentType, parentID)
     payload.(parentType) = parentID;
     payload.label = label;
-    payload = savejson('',payload);
+    payload = jsonwrite(payload);
     cmd = obj.createCmd(containerType, payload);
     [status, result] = system(cmd);
     if status
         error(result);
     end
-    result = loadjson(result);
+    % result = loadjson(result);
+    result = jsonread(result);
     id = result.x0x5F_id;
 end

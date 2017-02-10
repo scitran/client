@@ -57,7 +57,7 @@ switch  lower(upType)
             outAnalysis = strcat(outAnalysis, sprintf(' -F "file%s=@%s" ', num2str(ii + numel(stData.inputs)), stData.outputs{ii}.name));
         end
 
-        % We have to pad the json struct or savejson will not give us a list
+        % We have to pad the json struct or jsonwrite?? will not give us a list
         if length(stData.inputs) == 1
             stData.inputs{end+1}.name = '';
         end
@@ -78,7 +78,7 @@ switch  lower(upType)
 
         % Jsonify the payload (assuming it is necessary)
         if isstruct(stData)
-            stData = savejson('',stData);
+            stData = jsonwrite(stData);
             % Escape the " or the cmd will fail.
             stData = strrep(stData, '"', '\"');
         end

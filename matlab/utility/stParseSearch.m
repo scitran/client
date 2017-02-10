@@ -20,11 +20,11 @@ switch srchType{1}
         
         result = cell(1,nGroups);
         for ii=1:nGroups
-            result{ii}.id     = srchResult.groups{ii}.x0x5F_id;
-            result{ii}.type   = srchResult.groups{ii}.x0x5F_type;
-            result{ii}.source = srchResult.groups{ii}.x0x5F_source;
-            result{ii}.score  = srchResult.groups{ii}.x0x5F_score;
-            result{ii}.index  = srchResult.groups{ii}.x0x5F_index;
+            result{ii}.id     = srchResult.groups(ii).x_id;
+            result{ii}.type   = srchResult.groups(ii).x_type;
+            result{ii}.source = srchResult.groups(ii).x_source;
+            result{ii}.score  = srchResult.groups(ii).x_score;
+            result{ii}.index  = srchResult.groups(ii).x_index;
         end
     case 'projects'
         nProjects = length(srchResult.projects);
@@ -32,11 +32,11 @@ switch srchType{1}
 
         result = cell(1,nProjects);
         for ii=1:nProjects
-            result{ii}.id     = srchResult.projects{ii}.x0x5F_id;
-            result{ii}.type   = srchResult.projects{ii}.x0x5F_type;
-            result{ii}.source = srchResult.projects{ii}.x0x5F_source;
-            result{ii}.score  = srchResult.projects{ii}.x0x5F_score;
-            result{ii}.index  = srchResult.projects{ii}.x0x5F_index;
+            result{ii}.id     = srchResult.projects(ii).x_id;
+            result{ii}.type   = srchResult.projects(ii).x_type;
+            result{ii}.source = srchResult.projects(ii).x_source;
+            result{ii}.score  = srchResult.projects(ii).x_score;
+            result{ii}.index  = srchResult.projects(ii).x_index;
         end
     case 'sessions'
         nSessions = length(srchResult.sessions);
@@ -44,11 +44,11 @@ switch srchType{1}
 
         result = cell(1,nSessions);
         for ii=1:nSessions
-            result{ii}.id     = srchResult.sessions{ii}.x0x5F_id;
-            result{ii}.type   = srchResult.sessions{ii}.x0x5F_type;
-            result{ii}.source = srchResult.sessions{ii}.x0x5F_source;
-            result{ii}.score  = srchResult.sessions{ii}.x0x5F_score;
-            result{ii}.index  = srchResult.sessions{ii}.x0x5F_index;
+            result{ii}.id     = srchResult.sessions(ii).x_id;
+            result{ii}.type   = srchResult.sessions(ii).x_type;
+            result{ii}.source = srchResult.sessions(ii).x_source;
+            result{ii}.score  = srchResult.sessions(ii).x_score;
+            result{ii}.index  = srchResult.sessions(ii).x_index;
         end
     case 'acquisitions'
         nAcquisitions = length(srchResult.acquisitions);
@@ -56,11 +56,11 @@ switch srchType{1}
 
         result = cell(1,nAcquisitions);
         for ii=1:nAcquisitions
-            result{ii}.id     = srchResult.acquisitions{ii}.x0x5F_id;
-            result{ii}.type   = srchResult.acquisitions{ii}.x0x5F_type;
-            result{ii}.source = srchResult.acquisitions{ii}.x0x5F_source;
-            result{ii}.score  = srchResult.acquisitions{ii}.x0x5F_score;
-            result{ii}.index  = srchResult.acquisitions{ii}.x0x5F_index;
+            result{ii}.id     = srchResult.acquisitions(ii).x_id;
+            result{ii}.type   = srchResult.acquisitions(ii).x_type;
+            result{ii}.source = srchResult.acquisitions(ii).x_source;
+            result{ii}.score  = srchResult.acquisitions(ii).x_score;
+            result{ii}.index  = srchResult.acquisitions(ii).x_index;
         end
     case {'files','analyses/files'}
         nFiles = length(srchResult.files);
@@ -68,11 +68,11 @@ switch srchType{1}
         
         result = cell(1,nFiles);
         for ii=1:nFiles
-            result{ii}.id     = srchResult.files{ii}.x0x5F_id;
-            result{ii}.type   = srchResult.files{ii}.x0x5F_type;
-            result{ii}.source = srchResult.files{ii}.x0x5F_source;
-            result{ii}.score  = srchResult.files{ii}.x0x5F_score;
-            result{ii}.index  = srchResult.files{ii}.x0x5F_index;
+            result{ii}.id     = srchResult.files(ii).x_id;
+            result{ii}.type   = srchResult.files(ii).x_type;
+            result{ii}.source = srchResult.files(ii).x_source;
+            result{ii}.score  = srchResult.files(ii).x_score;
+            result{ii}.index  = srchResult.files(ii).x_index;
         end
     case 'collections'
         nCollections = length(srchResult.collections);
@@ -80,21 +80,21 @@ switch srchType{1}
 
         result = cell(1,nCollections);
         for ii=1:nCollections
-            result{ii}.id     = srchResult.collections{ii}.x0x5F_id;
-            result{ii}.type   = srchResult.collections{ii}.x0x5F_type;
-            result{ii}.source = srchResult.collections{ii}.x0x5F_source;
-            result{ii}.score  = srchResult.collections{ii}.x0x5F_score;
-            result{ii}.index  = srchResult.collections{ii}.x0x5F_index;
+            result{ii}.id     = srchResult.collections(ii).x_id;
+            result{ii}.type   = srchResult.collections(ii).x_type;
+            result{ii}.source = srchResult.collections(ii).x_source;
+            result{ii}.score  = srchResult.collections(ii).x_score;
+            result{ii}.index  = srchResult.collections(ii).x_index;
         end
     case 'analyses'
         nAnalyses = length(srchResult.analyses);
         result = cell(1,nAnalyses);
         for ii=1:nAnalyses
-            result{ii}.id     = srchResult.analyses{ii}.x0x5F_id;
-            result{ii}.type   = srchResult.analyses{ii}.x0x5F_type;
-            result{ii}.source = srchResult.analyses{ii}.x0x5F_source;
-            result{ii}.score  = srchResult.analyses{ii}.x0x5F_score;
-            result{ii}.index  = srchResult.analyses{ii}.x0x5F_index;
+            result{ii}.id     = srchResult.analyses(ii).x_id;
+            result{ii}.type   = srchResult.analyses(ii).x_type;
+            result{ii}.source = srchResult.analyses(ii).x_source;
+            result{ii}.score  = srchResult.analyses(ii).x_score;
+            result{ii}.index  = srchResult.analyses(ii).x_index;
         end
     otherwise
         error('Unknown search type %s\n',srchType{1})

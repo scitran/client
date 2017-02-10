@@ -195,7 +195,7 @@ srch.collections.match.label = 'GearTest';
 sessions = st.search(srch);
 
 % Bring up the browser to that collection and session
-url = st.browser(sessions{1},'collection',collections{1});
+url = st.browser('stdata',sessions{1},'collection',collections{1});
 
 %% Count the number of sessions created in a recent time period
 

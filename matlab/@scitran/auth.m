@@ -144,7 +144,8 @@ localAuthFile = fullfile(stDir, 'stAuth.json');
 if ~exist(localAuthFile, 'file')
     st = {};
 else
-    st = loadjson(localAuthFile);
+    % st = loadjson(localAuthFile);
+    st = jsonread(localAuthFile);
 end
 
 
@@ -172,7 +173,8 @@ if ~isfield(st, instance)
             st.(instance).client_id = client_id;
             st.(instance).client_secret = client_secret;
             st.(instance).client_url = obj.url;
-            savejson('', st, localAuthFile);
+            % savejson('', st, localAuthFile);
+            jsonwrite(localAuthFile,st);
             disp('Instance ID, URL, and Secret saved.');
         end
     else
@@ -196,7 +198,8 @@ if isempty(client_secret);
     else
         % Save the value to st and save to file for next time
         st.(instance).client_secret = client_secret;
-        savejson('', st, localAuthFile);
+        % savejson('', st, localAuthFile);
+        jsonwrite(localAuthFile,st);
         disp('Client Secret saved.');
     end
 end
@@ -220,7 +223,8 @@ fileattrib(oauth2cli_code, '+x');
 % check that the instance chosen now is the same as the one in the
 % tokenFile. If not, we need to remove the tokenFile to create a new one.
 if exist(tokenFile,'file')
-    T = loadjson(tokenFile);
+    % T = loadjson(tokenFile);
+    T = jsonread(tokenFile);
     if ~strcmp(T.client_id, client_id)
         delete(tokenFile);
     end
