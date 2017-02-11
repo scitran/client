@@ -114,6 +114,10 @@ projectLabel = projects{1}.source.label;
 %   st.browser('stdata',projects{1});
 
 %% Get all the sessions within a specific collection
+
+
+% I think this is not working.  The return is too large.  It should be 22
+% and it is 4400.  RF to debug.
 clear srch; 
 srch.path = 'sessions';
 srch.collections.match.label = 'Anatomy Male 45-55';
@@ -281,23 +285,32 @@ fprintf('Found %d matches to this files label\n',length(files));
 %  d = niftiRead(dl_file);
 
 
-%%
+%% Search for files in collection; find session names
 clear srch
 srch.path = 'files';   
-srch.collections.match.label = 'Young Males';
-srch.acquisitions.match.label = 'SPGR 1mm 30deg';
-srch.files.match.type = 'nifti';
+srch.collections.match.label = 'DWI';
+srch.acquisitions.match.label = '00 Coil Survey';
 
 files = st.search(srch);
+fprintf('Found %d files\n',length(files));
 
-%%
+% Find the session names
 clear srch
-srch.path = 'files';   
-srch.collections.match.label = 'Young Males';
-srch.acquisitions.match.measurement = 'Diffusion';
-srch.files.match.type = 'bvec';
+srch.path = 'sessions';
+srch.collections.match.label = 'DWI';
+sessionNames = cell(1,length(files));
+for ii=1:length(files)
+    srch.sessions.match.label = files{ii}.source.session.label;
+    thisSession = st.search(srch);
+    sessionNames{ii} = thisSession{1}.source.label;
+end
 
-files = st.search(srch);
+sessionNames = unique(sessionNames);
+fprintf('\n---------\n');
+for ii=1:length(sessionNames)
+    fprintf('%3d:  Session name %s\n',ii,sessionNames{ii});
+end
+fprintf('---------\n');
 
 %% get files in project/session/acquisition/collection
 
@@ -310,11 +323,12 @@ fprintf('Found %d matching files\n',length(files))
 
 %% get files from a collection
 
+% Broken -
 clear srch
 srch.path = 'files'; 
-srch.collections.match.label = 'Young Males';   
-srch.acquisitions.match.label = 'SPGR 1mm 30deg';   
-srch.files.match.name = '16.1_dicom_nifti.nii.gz';
+srch.collections.match.label = 'Anatomy Male 45-55';   
+% srch.acquisitions.match.label = 'Localizer';   
+% srch.files.match.type = 'nifti';
 
 files = st.search(srch);
 fprintf('Found %d matching files\n',length(files))
@@ -336,6 +350,7 @@ srch.sessions.bool.must(2).match.subject_0x2E_code = '4279';
 % srch.sessions.bool.must(2).match.subject_code = '4279';
 sessions = st.search(srch,'all_data',true);
 
+fprintf('Found %d matching sessions\n',length(sessions))
 
 %% Find Public Data
 %
