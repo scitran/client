@@ -27,7 +27,7 @@ targetContainer    = p.Results.container;
 replaceMetadata    = p.Results.replaceMetadata;
 
 if isempty(targetContainer) && ~isempty(srch)
-    % exec the search
+    % if the target container is empty exec the search
     results = obj.search(srch);
     if isempty(results)
         error('Results of the search returned zero objects');
