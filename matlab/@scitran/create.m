@@ -48,6 +48,8 @@ p.addRequired('group',@ischar);
 p.addRequired('project',@ischar);
 p.addParameter('session',[],@ischar);
 p.addParameter('acquisition',[],@ischar);
+p.addParameter('additionalData', struct, @isstruct);
+
 
 p.parse(group,project,varargin{:});
 
@@ -55,6 +57,7 @@ group       = p.Results.group;
 project     = p.Results.project;
 session     = p.Results.session;
 acquisition = p.Results.acquisition;
+additionalData = p.Results.additionalData;
 
 % Returned value is only empty on an error
 id = [];
@@ -62,20 +65,19 @@ id = [];
 %% Check whether the group exists
 [status, groupID] = obj.exist(group, 'groups');
 
-if ~status
-    error('group does not exist');
-elseif status ~= 1
-    error('multiple group found with name %s', group);
+
+if isfield(additionalData, 'project')
+    prjData = additionalData.project;
+else
+    prjData = struct;
 end
 
-
-
-%% Test for the project label; does it exist on flywheel? If not create it
-[status, projectID] = obj.exist(project, 'projects', 'parentID', groupID{1});
+% If it does not exist, we check with the user and then create it.
+[status, projectID] =  obj.exist(project, 'projects', 'parentID', groupID{1});;
 
 % If it does not exist, we check with the user and then create it.
 if ~status
-    projectID = createPrivate(obj, 'projects', project, 'group', groupID{1});
+    projectID = createPrivate(obj, 'projects', project, 'group', groupID{1}, prjData);
 elseif status ~= 1
     return
 else
@@ -88,26 +90,40 @@ end
 if isempty(session), id = projectID; return; end
 
 
+
 %% Test for the session label; does it exist on flywheel? If not create it
+
+
+
+%% Test for the session label; does it exist on flywheel? If not create it
+
+if isfield(additionalData, 'session')
+    sesData = additionalData.session;
+else
+    sesData = struct;
+end
+
 [status, sessionID] = obj.exist(session, 'sessions', 'parentID', projectID);
 
 if ~status
-    sessionID = createPrivate(obj, 'sessions', session, 'project', projectID);
+    sessionID = createPrivate(obj, 'sessions', session, 'project', projectID, sesData);
 elseif status ~= 1
     return
 else
     sessionID = sessionID{1};
 end
 
-% In this case, return the session ID
-if isempty(acquisition), id = sessionID; return; end
-
-
 %% Test for the acquisition label; does it exist on flywheel? If not create it
 [status, acquisitionID] = obj.exist(acquisition, 'acquisitions', 'parentID', sessionID);
 
+if isfield(additionalData, 'acquisition')
+    acqData = additionalData.acquisition;
+else
+    acqData = struct;
+end
+
 if ~status
-    id = createPrivate(obj, 'acquisitions', acquisition, 'session', sessionID);
+    id = createPrivate(obj, 'acquisitions', acquisition, 'session', sessionID, acqData);
 elseif status ~= 1
     return
 else
@@ -117,11 +133,18 @@ end
 
 end
 
+
+%%
+
 %% Private method that creates a single container
-function id = createPrivate(obj, containerType, label, parentType, parentID)
+function id = createPrivate(obj, containerType, label, parentType, parentID, additionalContent)
     payload.(parentType) = parentID;
     payload.label = label;
-    payload = jsonwrite(payload);
+    additionalFields = fieldnames(additionalContent);
+    for i = 1:length(additionalFields)
+        payload.(additionalFields{i}) = additionalContent.(additionalFields{i});
+    end
+    payload = savejson('',payload);
     cmd = obj.createCmd(containerType, payload);
     [status, result] = system(cmd);
     if status
@@ -129,5 +152,7 @@ function id = createPrivate(obj, containerType, label, parentType, parentID)
     end
     % result = loadjson(result);
     result = jsonread(result);
-    id = result.x0x5F_id;
+    % id = result.x0x5F_id;
+    id = result.x_id;
+    
 end

@@ -1,4 +1,5 @@
 function cmd = createCmd(obj, containerType, payload, varargin)
+
 % Build the command to create a project/session/acquisition
 %
 %
@@ -13,4 +14,7 @@ payload            = p.Results.payload;
 
 cmd = sprintf('curl -s -XPOST "%s/api/%s" -H "Authorization":"%s" -k -d ''%s''',...
     obj.url, containerType, obj.token, payload);
+cmd = regexprep(cmd, '\n|\t', ' ');
+cmd = regexprep(cmd, ' *', ' ');
+
 end
