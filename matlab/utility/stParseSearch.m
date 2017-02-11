@@ -1,7 +1,20 @@
-function result = stParseSearch(stObj,srchResult)
-% Parse the scitran object and a search structure
+function result = stParseSearch(stClient,srchResult)
+% Simplify the fields in the struct returned by scitran search
 %
+%    result = stParseSearch(stClient,srchResult)
 %
+% The Flywheel search returns a JSON file that we read with jsonio (or
+% JSONLAB).  The returned object is a Matlab struct.  Some of the fields in
+% the struct are a bit awkward or ugly.  This routine re-writes the
+% returned struct making the variables clearer.
+%
+% For JSONLAB, the returned object (files, sessions, acquisitions ...) is a
+% cell array.  But for jsonio the returned object is an array of structs.
+% In the jsonio case we convert the array of structs into a cell array of
+% structs.
+%
+% For jsonio variables that are struct._FOO are returned as struct.x_FOO
+% That is a key transformation here.
 %
 % LMP/BW Scitran Team, 2016
 
@@ -114,9 +127,10 @@ if strcmp(srchType,'files')
             for ii=1:n
                 cname = result{ii}.source.container_name;
                 if strcmpi(cname, 'acquisitions') % Only add files from acquisitions to result
-                    acquisitionid = result{ii}.source.acquisition.x0x5F_id;
+                    % acquisitionid = result{ii}.source.acquisition.x0x5F_id;
+                    acquisitionid = result{ii}.source.acquisition.x_id;
                     fname = result{ii}.source.name;
-                    result{ii}.plink = sprintf('%s/api/%s/%s/files/%s',stObj.url, cname, acquisitionid, fname);
+                    result{ii}.plink = sprintf('%s/api/%s/%s/files/%s',stClient.url, cname, acquisitionid, fname);
                 end
             end
             
@@ -126,12 +140,15 @@ if strcmp(srchType,'files')
             for ii=1:n
                 cname = result{ii}.source.container_name;
                 if strcmpi(cname, 'analyses') % Only add files from acquisitions to result
-                    sessionid = result{ii}.source.analyse.container.x0x5F_id;
-                    analyseid = result{ii}.source.analyse.x0x5F_id;
+                    % sessionid = result{ii}.source.analyse.container.x0x5F_id;
+                    % analyseid = result{ii}.source.analyse.x0x5F_id;
+                    sessionid = result{ii}.source.analyse.container.x_id;
+                    analyseid = result{ii}.source.analyse.x_id;
+
                     fname = result{ii}.source.name;
                     result{ii}.plink = ...
                         sprintf('%s/api/sessions/%s/%s/%s/files/%s',...
-                        stObj.url, sessionid, cname, analyseid, fname);
+                        stClient.url, sessionid, cname, analyseid, fname);
                 end
             end
             

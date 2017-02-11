@@ -35,7 +35,8 @@ all_data = p.Results.all_data;
 % notation for the srch.
 if isstruct(srch)
     % It is a Matlab struct, so convert it to json notation.
-    srch = jsonwrite(srch);
+    % srch = jsonwrite(srch);   % Doesn't work for _id, so using JSONLAB
+    srch = savejson('',srch);
 end
 srch = regexprep(srch, '\n|\t', ' ');
 srch = regexprep(srch, ' *', ' ');

@@ -1,23 +1,32 @@
 %% Scitran search
 %
 % It is possible to interact with the database, either to process the files
-% or to discover content, using Matlab or Python.  This script illustrates
-% various ways to search the database to find files and experiments.
+% or to discover content, using Matlab (or Python).  This script
+% illustrates various ways to search the database to find files and
+% experiments.
 %
-% The basic objects in the data base comprise individual files,
+% The methods illustrated here are very general and the syntax can be a bit
+% complex (but not too bad).  We are writing a simpler search interface for
+% the most common cases, which will be implemented as
+%
+%         @scitran.simpleSearch()
+%
+% The search data returned from Flywheel can be cell arrays descring files,
 % acquisitions (groups of related files), sessions, and projects. These
 % objects are described a little more below and also on the scitran/client
-% wiki page.
+% wiki page.  The search returns information about these Flywheel data.  To
+% retrieve the data for local processing we use 
 %
-% The scitran client supports search the data base to identify these
-% objects. The principle of the search is simple:
+%         @scitran.get()
 %
-%    * Authorization to access the scitran site (st = scitran)
+% The principle of the search command is this:
+%
+%    * Get authorization to access the scitran site (st = scitran)
 %    * Create a Matlab structure (srch) to specify search requirements
-%    * Run Search (results = st.search(srch))
-%    * Results are a cell array of objects that meet the search criterion
+%    * Run this search (results = @scitran.search(srch))
+%    * Results is a cell array of objects that meet the search criterion
 % 
-% For further and developing documentation, see
+% For further documentation, see
 %
 %  * <https://github.com/scitran/client/wiki scitran/client wiki page>, and
 %  specifically the pages on 
@@ -25,7 +34,9 @@
 %  * <https://github.com/scitran/client/wiki/Search Search> and the
 %  * <https://github.com/scitran/client/wiki/Search-examples search examples>
 %  
-% Searching for an object
+% This should go on the wiki page, not here.
+% 
+%   Searching for an object
 %
 %  Searches begin by defining the type of object you are looking for (e.g.,
 %  files).  Then we define the required features of the object.
@@ -115,6 +126,7 @@ fprintf('Found %d sessions\n',length(sessions));
 clear srch
 srch.path = 'sessions';
 srch.projects.match.x0x5F_id = projectID;   % Note the ugly x0x5F.  See notes.
+% srch.projects.match.x_id = projectID;
 sessions = st.search(srch);
 fprintf('Found %d sessions in the project %s\n',length(sessions),projectLabel);
 
@@ -130,7 +142,6 @@ sessionLabel = sessions{1}.source.label;
 clear srch
 srch.path = 'acquisitions';
 srch.sessions.match.x0x5F_id = sessionID;
-s.json = srch;
 acquisitions = st.search(srch);
 fprintf('Found %d acquisitions in the session %s\n',length(acquisitions),sessionLabel);
 
@@ -218,6 +229,7 @@ clear srch
 srch.path = 'sessions';
 subjectCode = 'ex4842';
 srch.sessions.match.subject_0x2E_code = subjectCode;
+% srch.sessions.match.subject_code = subjectCode;
 sessions = st.search(srch);
 fprintf('Found %d sessions with subject code %s\n',length(sessions),subjectCode)
 
@@ -230,6 +242,8 @@ clear srch
 srch.path = 'sessions';
 srch.sessions.bool.must{1}.range.subject_0x2E_age.gt = year2sec(10);
 srch.sessions.bool.must{1}.range.subject_0x2E_age.lt = year2sec(15);
+% srch.sessions.bool.must{1}.range.subject_age.gt = year2sec(10);
+% srch.sessions.bool.must{1}.range.subject_age.lt = year2sec(15);
 sessions = st.search(srch);
 
 fprintf('Found %d sessions\n',length(sessions))
@@ -318,6 +332,8 @@ srch.path = 'sessions';
 srch.projects.match.exact_label = 'UMN';
 srch.sessions.bool.must(1).match.analyses_0x2E_label = 'AFQ';  % DOT
 srch.sessions.bool.must(2).match.subject_0x2E_code = '4279';
+% srch.sessions.bool.must(1).match.analyses_label = 'AFQ';  % DOT
+% srch.sessions.bool.must(2).match.subject_code = '4279';
 sessions = st.search(srch,'all_data',true);
 
 
