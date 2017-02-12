@@ -121,41 +121,42 @@ end
 if strcmp(srchType,'files')
     n = length(result);
     
-    % Sometimes just files, sometimes analyses/files
-    switch result{1}.source.container_name
-        case 'acquisitions'
-            for ii=1:n
-                cname = result{ii}.source.container_name;
-                if strcmpi(cname, 'acquisitions') % Only add files from acquisitions to result
-                    % acquisitionid = result{ii}.source.acquisition.x0x5F_id;
-                    acquisitionid = result{ii}.source.acquisition.x_id;
-                    fname = result{ii}.source.name;
-                    result{ii}.plink = sprintf('%s/api/%s/%s/files/%s',stClient.url, cname, acquisitionid, fname);
-                end
-            end
-            
-        case 'analyses'
-            % The analysis files are stored within the session.  So we need
-            % that id in addition to the analyseid.
-            for ii=1:n
-                cname = result{ii}.source.container_name;
-                if strcmpi(cname, 'analyses') % Only add files from acquisitions to result
-                    % sessionid = result{ii}.source.analyse.container.x0x5F_id;
-                    % analyseid = result{ii}.source.analyse.x0x5F_id;
-                    sessionid = result{ii}.source.analyse.container.x_id;
-                    analyseid = result{ii}.source.analyse.x_id;
-
-                    fname = result{ii}.source.name;
-                    result{ii}.plink = ...
-                        sprintf('%s/api/sessions/%s/%s/%s/files/%s',...
-                        stClient.url, sessionid, cname, analyseid, fname);
-                end
-            end
-            
-        otherwise
-            % error('Unknown file search mode');
+    % For each file in the return, find its container and create the
+    % permalink.
+    for ii=1:n
+        cname = result{ii}.source.container_name;  % File's container
+        
+        % Files can be in an acquisition or session or analysis.
+        % What about project?
+        switch cname
+            case 'acquisitions'
+                % acquisitionid = result{ii}.source.acquisition.x0x5F_id;
+                acquisitionid = result{ii}.source.acquisition.x_id;
+                fname = result{ii}.source.name;
+                result{ii}.plink = sprintf('%s/api/%s/%s/files/%s',stClient.url, cname, acquisitionid, fname);
+                
+            case 'sessions'
+                % TO DEBUG ...
+                sessionid = result{ii}.source.session.x_id;
+                fname = result{ii}.source.name;
+                result{ii}.plink = sprintf('%s/api/%s/%s/files/%s',stClient.url, cname, sessionid, fname);
+                  
+            case 'analyses'
+                % The analysis files are stored within the session.  So we need
+                % that id in addition to the analyseid.
+                % sessionid = result{ii}.source.analyse.container.x0x5F_id;
+                % analyseid = result{ii}.source.analyse.x0x5F_id;
+                sessionid = result{ii}.source.analyse.container.x_id;
+                analyseid = result{ii}.source.analyse.x_id;
+                
+                fname = result{ii}.source.name;
+                result{ii}.plink = ...
+                    sprintf('%s/api/sessions/%s/%s/%s/files/%s',...
+                    stClient.url, sessionid, cname, analyseid, fname);            
+            otherwise
+                % error('Unknown file search mode');
+        end
     end
 end
-
 
 end
