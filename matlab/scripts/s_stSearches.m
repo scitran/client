@@ -123,7 +123,7 @@ srch.path = 'sessions';
 srch.collections.match.label = 'Anatomy Male 45-55';
 sessions = st.search(srch);
 
-fprintf('Found %d sessions\n',length(sessions));
+fprintf('Found %d sessions in the collection %s\n',length(sessions),srch.collections.match.label);
 
 %% Get the sessions within the first project
 
