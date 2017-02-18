@@ -51,7 +51,12 @@ def report(group, project):
         Projects.label.match(project),
         Groups.name.match(group),
     ))
-    results = [a['_source'] for a in raw_results]
+    results = [
+        a['_source']
+        for a in raw_results
+        if 'test' not in a['_source']['session']['subject']['code']
+        if 'NO00000' not in a['_source']['session']['subject']['code'].upper()
+    ]
 
     assert results, 'Could not find results for project {} for group {}.'.format(project, group)
 
@@ -146,6 +151,11 @@ def report(group, project):
             _missing_file(
                 behavioral, 'Behavioral-NonConsc',
                 lambda file: file['name'].endswith('_EmotionNonconscious.txt'))
+            if '2016-08-23' < session['timestamp']:
+                _missing_file(
+                    behavioral, 'Behavioral-EmoReg', lambda file:
+                        file['name'].endswith('_EmoReg08252016.csv') or
+                        file['name'].endswith('_EmoReg09202016.csv'))
             _missing_file(
                 behavioral, 'Physio-GoNoGo',
                 lambda file: file['name'].startswith('gonogo_') and file['name'].endswith('.csv'))
@@ -154,7 +164,8 @@ def report(group, project):
                 lambda file: file['name'].startswith('consc_') and file['name'].endswith('.csv'))
             _missing_file(
                 behavioral, 'Physio-NonConsc',
-                lambda file: file['name'].startswith('nonconsc_') and file['name'].endswith('.csv'))
+                # helpful to do noncon, because some are nonconsc_ and others are noncons_
+                lambda file: file['name'].startswith('noncon') and file['name'].endswith('.csv'))
             _missing_file(
                 behavioral, 'Physio-EmoReg',
                 lambda file: file['name'].startswith('emoreg_') and file['name'].endswith('.csv'))
@@ -163,9 +174,7 @@ def report(group, project):
             missing['Behavioral-GoNoGo'] |
             missing['Behavioral-Consc'] |
             missing['Behavioral-NonConsc'] |
-            missing['Behavioral-GoNoGo'] |
-            missing['Physio-Consc'] |
-            missing['Physio-Consc']
+            missing['Behavioral-EmoReg']
         )
 
     print '''{}: {}
@@ -174,6 +183,7 @@ Total # of subjects: {}
 {}
 {} subjects with unspecified sex
 {} missing T1w 1mm: {}
+{}
 {}
 {}
 {}
@@ -192,6 +202,7 @@ Total # of subjects: {}
         _missing_file_msg('Behavioral-GoNoGo'),
         _missing_file_msg('Behavioral-Consc'),
         _missing_file_msg('Behavioral-NonConsc'),
+        _missing_file_msg('Behavioral-EmoReg'),
         _missing_file_msg('Physio-GoNoGo'),
         _missing_file_msg('Physio-Consc'),
         _missing_file_msg('Physio-NonConsc'),
