@@ -35,7 +35,7 @@ parentID          = p.Results.parentID;
 
 srch.path = containerType;
 if strcmp(containerType, 'groups')
-    srch.(containerType).match.name = label;
+    srch.(containerType).match.x0x5F_id = label;
 else
     srch.(containerType).match.exact_label = label;
 end
@@ -52,7 +52,7 @@ if ~isempty(parentID)
    end
    srch.(parentType).match.x0x5F_id = parentID;
 end
-results = obj.search(srch);
+results = obj.search(srch, 'all_data', true);
 id = cell(1,length(results));
 for ii = 1:length(results)
     id{ii} = results{ii}.id;

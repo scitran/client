@@ -119,9 +119,9 @@ projectLabel = projects{1}.source.label;
 % I think this is not working.  The return is too large.  It should be 22
 % and it is 4400.  RF to debug.
 clear srch; 
-srch.path = 'sessions';
+srch.path = 'collections/sessions';
 srch.collections.match.label = 'Anatomy Male 45-55';
-sessions = st.search(srch);
+[sessions, srchCmd] = st.search(srch);
 
 fprintf('Found %d sessions in the collection %s\n',length(sessions),srch.collections.match.label);
 
