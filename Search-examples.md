@@ -26,8 +26,8 @@ The set of terms you can match is defined by the [scitran data model](https://gi
     srch.projects.bool.must(1).match.group = 'wandell';
     srch.projects.bool.must(2).match.label = 'vwfa';
 
-    srch.sessions.bool.must{1}.range.subject_0x2E_age.gt = year2sec(10);
-    srch.sessions.bool.must{1}.range.subject_0x2E_age.lt = year2sec(15);
+    srch.sessions.bool.must{1}.range.subject0x2E_age.gt = year2sec(10);
+    srch.sessions.bool.must{1}.range.subject0x2E_age.lt = year2sec(15);
 
 The search 'operators' are 'match', 'bool', 'must', 'should' and 'range'.  For now, use the examples in the file [s_stSearches.m](https://github.com/scitran/client/blob/master/matlab/scripts/s_stSearches.m).  A more thorough document will appear.
 
