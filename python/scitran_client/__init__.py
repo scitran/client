@@ -15,6 +15,7 @@ from query_builder import (
     Acquisitions,
     Groups,
 )
+import flywheel_analyzer
 
 __all__ = [
     'ScitranClient',
@@ -26,4 +27,5 @@ __all__ = [
     'Acquisitions',
     'Groups',
     'compute_file_hash',
+    'flywheel_analyzer',
 ]
