@@ -2,13 +2,14 @@
 %
 %  1) Download an AFQ data set
 %  2) Convert the fiber data in Matlab format to MNI_OBJ
-%  3) Put the images somewhere back on Flywheel
-%  4) Click and view
+%  3) By hand:  Put the images somewhere back on Flywheel
+%  4)           Click and view
 %
+% RF/BW - We did this with GearTest collection
 
-%% Path
-% Vistasoft
-% scitran/client 
+%% Paths
+%   Vistasoft
+%   scitran/client 
 
 %% Get an AFQ output with all the stuff in it
 
@@ -38,7 +39,8 @@ cd('fibers');
 d = dir('*_clean_*'); 
 load(d.name);
 
-%% Subsample the fibers
+%% Subsample the fibers and set their colors
+
 nGroups = length(fg);
 subSample = 8;
 for ii=1:nGroups
@@ -47,17 +49,19 @@ for ii=1:nGroups
     fg(ii).colorRgb = colorSamples(ii);
 end
 
-%% Change the fiber colors
+%% Show a single tract
 
 name = strrep(fg(1).name,' ','_');
 name = fullfile(stRootPath,'local',[name,'.mni.obj']);
 fg2MNIObj(fg(1),'fname',name,'overwrite',true);
 
-%%
+%% Show a few tracts
+
 name = fullfile(stRootPath,'local','severalGroups.mni.obj');
 fg2MNIObj(fg(1:3:end),'fname',name,'overwrite',true);
 
-%%
+%% Show all the tracts
+
 name = fullfile(stRootPath,'local','allGroups.mni.obj');
 fg2MNIObj(fg,'fname',name,'overwrite',true);
 
