@@ -54,10 +54,15 @@ We use the code
 
 (time values, including dates, are stored in SI units, seconds).
 
+    jsonwrite(srch,struct('indent','  ','replacementstyle','hex')) 
+
+Parses the hex.
+
 Another issue is the use of _ at the front of a variable, like _id
 
 In this case, we cannot set a structure variable with a leading underscore, such as srch._id.  But we can set
 
      srch.projects.match.x0x5F_id = projectID;
 
-The savejson('',srch) returns the variable as simply _id, without all the x0x5F nonsense.
+Again jsonwrite(srch,struct('indent','  ','replacementstyle','hex')) parses the string and the variable becomes simply _id, in the json data, without all the x0x5F nonsense.
+
