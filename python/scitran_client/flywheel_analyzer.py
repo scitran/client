@@ -24,6 +24,15 @@ FlywheelAnalysisOperation = namedtuple('FlywheelAnalysisOperation', [
 
 
 def define_analysis(gear_name, create_inputs, label=None):
+    '''
+    An analysis operation has a gear name, label (which defaults to
+    the gear name), and a function that is used to create the inputs
+    to job creation. This function will be supplied a list of analyses
+    and a list of acquisitions as keyword arguments. This function will
+    be expected to return either a dictionary of the job inputs or a tuple
+    with a dictionary of the job inputs and a dictionary of the config
+    inputs (to override the default config).
+    '''
     label = label or gear_name
     return FlywheelAnalysisOperation(gear_name, create_inputs, label)
 
@@ -74,13 +83,13 @@ def _defaults_for_gear(gear):
     }
 
 
-def _submit_analysis(session_id, gear, job_inputs, label):
+def _submit_analysis(session_id, gear_name, job_inputs, job_config, label):
     body = dict(
         job=dict(
-            gear=gear['name'],
+            gear=gear_name,
             tags=['ad-hoc'],
             inputs=job_inputs,
-            config=_defaults_for_gear(gear)
+            config=job_config,
         ),
         analysis=dict(label=label),
     )
@@ -137,7 +146,10 @@ def _analyze_session(operations, gears_by_name, session):
             if not acquisitions:
                 acquisitions = request('sessions/{}/acquisitions'.format(session_id))
             job_inputs = create_inputs(analyses=analyses, acquisitions=acquisitions)
-            _submit_analysis(session_id, gears_by_name[gear_name], job_inputs, label)
+            job_config = _defaults_for_gear(gears_by_name[gear_name])
+            if isinstance(job_inputs, tuple):
+                job_inputs, job_config = job_inputs[0], dict(job_config, **job_inputs[1])
+            _submit_analysis(session_id, gear_name, job_inputs, job_config, label)
 
         analyses = _wait_for_analysis(session_id, label)
     print(session_id, 'all analysis complete')
