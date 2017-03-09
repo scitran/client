@@ -16,4 +16,4 @@ def anatomical_warp_inputs(acquisitions, **kwargs):
 if __name__ == '__main__':
     fa.run([
         fa.define_analysis('afni-brain-warp', anatomical_warp_inputs, label='anatomical warp'),
-    ], project=fa.find_project(label='showdes'), max_workers=3)
+    ], project=fa.find_project(label='showdes'), max_workers=2)
