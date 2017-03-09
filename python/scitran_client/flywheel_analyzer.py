@@ -5,7 +5,7 @@ import json
 from concurrent.futures import ThreadPoolExecutor, CancelledError
 import traceback
 from fnmatch import fnmatch
-from collections import namedtuple
+from collections import namedtuple, Counter
 import math
 
 
@@ -245,11 +245,15 @@ def run(operations, project=None, max_workers=10, session_limit=None):
                 operation.gear_name, operation.label)
 
     sessions = request('projects/{}/sessions'.format(project['_id']))
+    # We sort sessions because it adds some predictability to this script.
+    # - the script will resume work monitoring/dispatching for previous items
+    #   because it iterates over sessions in the same way.
+    # - the `session_limit` keyword arg works better for this reason too.
+    sessions.sort(key=lambda s: s['timestamp'])
     if session_limit is not None:
         # To ensure the limit on sessions consistently produces the same
         # set of sessions, we will sort the sessions before truncating
         # them.
-        sessions.sort(key=lambda s: s['timestamp'])
         sessions = sessions[:session_limit]
 
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
@@ -258,3 +262,38 @@ def run(operations, project=None, max_workers=10, session_limit=None):
             for session in sessions
         ]
         _wait_for_futures(futures)
+
+
+def _session_status(expected_ops, session):
+    analyses = _get_analyses(session['_id'])
+
+    started_ops = {
+        a['label'] for a in analyses}
+    if not started_ops:
+        return 'not started'
+
+    completed_ops = {
+        a['label'] for a in analyses
+        if a['job']['state'] == 'complete'}
+    if completed_ops == expected_ops:
+        return 'complete'
+    else:
+        return 'in progress'
+
+
+def status(operations, project=None, detail=False):
+    '''Prints status of operations on this project.
+
+    detail - When true, some session IDs for each status are logged.
+    '''
+    sessions = request('projects/{}/sessions'.format(project['_id']))
+    expected_ops = {op.label for op in operations}
+    statuses = [(s, _session_status(expected_ops, s)) for s in sessions]
+    if detail:
+        result = {}
+        for sess, stat in statuses:
+            result.setdefault(stat, []).append(sess['_id'])
+        for stat, session_ids in result.iteritems():
+            print(stat, len(session_ids), 'some IDs:', session_ids[:4])
+    else:
+        print(Counter(stat for _, stat in statuses))
