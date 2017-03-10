@@ -49,7 +49,3 @@ Now you're ready to issue docker commands through Matlab or Python. See [matlab/
 
 * JSONlab
 The MATLAB SciTran client uses JSONlab to load, save, and parse json objects. Hence, [JSONlab](https://github.com/fangq/jsonlab) must  be on your MATLAB path. Version XXX is included in this distribution.
-
-
-## Python Client
-[Check out the docs!](python/README.md)
