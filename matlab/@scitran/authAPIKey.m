@@ -84,7 +84,9 @@ tokenFile = fullfile(stDir, 'st_tokens');
 obj.token = '';
 
 if ~exist(tokenFile, 'file'),     st = {};
-else                              st = loadjson(tokenFile);
+else                              %
+    % st = loadjson(tokenFile);
+    st = jsonread(tokenFile);
 end
 
 %% Load instance and client information (used in python command)
@@ -93,7 +95,8 @@ end
 % Prompt to add it if not found, then save it for next time.
 if strcmp(action, 'remove')
     st = rmfield(st, instance);
-    savejson('', st, tokenFile);
+    % savejson('', st, tokenFile);
+    jsonwrite(tokenFile,st);
 elseif ~isfield(st, instance) || strcmp(action, 'refresh')
     prompt = sprintf('Would you like to %s token for instance %s in your local config? (y/n): ', action, instance);
     response = input(prompt,'s');
@@ -117,7 +120,7 @@ elseif ~isfield(st, instance) || strcmp(action, 'refresh')
         else
             st.(instance).token = obj.token;
             st.(instance).client_url = obj.url;
-            savejson('', st, tokenFile);
+            jsonwrite(tokenFile,st);
             disp('Instance URL and token saved.');
         end
     else

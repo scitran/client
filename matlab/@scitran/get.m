@@ -62,7 +62,7 @@ end
 %% Download the data
 
 % First call gets us the ticket
-curl_cmd = sprintf('/usr/bin/curl -v -X GET "%s" -H "Authorization":"%s" -o %s\n', pLink, obj.token, destination);
+curl_cmd = sprintf('/usr/bin/curl -v -k -X GET "%s" -H "Authorization":"%s" -o %s\n', pLink, obj.token, destination);
 [status, result] = stCurlRun(curl_cmd);
 
 if status > 0

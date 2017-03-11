@@ -146,10 +146,13 @@ function id = createPrivate(obj, containerType, label, parentType, parentID, add
     end
     payload = savejson('',payload);
     cmd = obj.createCmd(containerType, payload);
-    [status, result] = system(cmd);
+    [status, result] = stCurlRun(cmd);
     if status
         error(result);
     end
     result = loadjson(result);
+    %result = jsonread(result);
     id = result.x0x5F_id;
+    %id = result.x_id;
+    
 end

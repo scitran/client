@@ -76,7 +76,7 @@ elseif ~isempty(stdata)
             % we should do something else.  But not ready for that yet
             %
             % Not thoroughly debugged.
-            url = sprintf('%s/#/dashboard/collection/%s',obj.url,stdata.source.container.x0x5F_id);
+            url = sprintf('%s/#/dashboard/collection/%s',obj.url,stdata.source.container.id);
         otherwise
             % This is the case for a projects, sessions, collections in a project
             url = sprintf('%s/#/dashboard/%s/%s',obj.url,stdata.type(1:(end-1)),stdata.id);

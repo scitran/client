@@ -35,7 +35,9 @@ all_data = p.Results.all_data;
 % notation for the srch.
 if isstruct(srch)
     % It is a Matlab struct, so convert it to json notation.
-    srch = savejson('',srch);
+    % Appears to work for _id, fixed *G Flandin*
+    srch = jsonwrite(srch,struct('indent','  ','replacementstyle','hex'));  
+    % srch = savejson('',srch);
 end
 srch = regexprep(srch, '\n|\t', ' ');
 srch = regexprep(srch, ' *', ' ');
@@ -48,8 +50,9 @@ esCMD = obj.searchCmd(srch,'all_data',all_data);
 
 % result is a string with a bunch of stuff RF put in it, including timing
 % information and the json output file.  We get the filename below.
-tic
+
 disp('Remote elastic search');
+tic
 [~, result] = system(esCMD);
 toc
 
@@ -63,11 +66,12 @@ end
 
 % This is now a Matlab struct with a lot of ugly terms.  We clean them up
 % below.
-disp('Running loadjson on returned file');
 if ~exist(srchFile,'file'), error('Results does not contain a valid search file');
 else
+    disp('Running jsonread on returned file');
     tic
-    srchResult = loadjson(srchFile);
+    % srchResult = loadjson(srchFile);
+    srchResult = jsonread(srchFile);
     toc
 end
 
