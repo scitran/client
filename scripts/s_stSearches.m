@@ -210,7 +210,8 @@ srch.collections.match.label = 'GearTest';
 sessions = st.search(srch);
 
 % Bring up the browser to that collection and session
-url = st.browser('stdata',sessions{1},'collection',collections{1});
+% NOT WORKING
+% url = st.browser('stdata',sessions{1},'collection',collections{1});
 
 %% Count the number of sessions created in a recent time period
 
@@ -232,7 +233,7 @@ fprintf('Found %d collections in previous four weeks \n',length(collections))
 clear srch
 srch.path = 'sessions';
 subjectCode = 'ex4842';
-srch.sessions.match.subject_0x2E_code = subjectCode;
+srch.sessions.match.subjectx0x2E_code = subjectCode;
 % srch.sessions.match.subject_code = subjectCode;
 sessions = st.search(srch);
 fprintf('Found %d sessions with subject code %s\n',length(sessions),subjectCode)
@@ -244,8 +245,8 @@ fprintf('Found %d sessions with subject code %s\n',length(sessions),subjectCode)
 
 clear srch
 srch.path = 'sessions';
-srch.sessions.bool.must{1}.range.subject_0x2E_age.gt = year2sec(10);
-srch.sessions.bool.must{1}.range.subject_0x2E_age.lt = year2sec(15);
+srch.sessions.bool.must{1}.range.subjectx0x2E_age.gt = year2sec(10);
+srch.sessions.bool.must{1}.range.subjectx0x2E_age.lt = year2sec(15);
 % srch.sessions.bool.must{1}.range.subject_age.gt = year2sec(10);
 % srch.sessions.bool.must{1}.range.subject_age.lt = year2sec(15);
 sessions = st.search(srch);
@@ -277,7 +278,7 @@ srch.sessions.match.label = '20120522_1043';
 srch.acquisitions.match.label = '11_1_spiral_high_res_fieldmap';
 srch.files.match.type = 'nifti';
 files = st.search(srch);
-fprintf('Found %d matches to this files label\n',length(files));
+fprintf('Found %d matches to this file label\n',length(files));
 
 % This is how to download the nifti file
 %  fname = files{1}.source.name;
@@ -324,18 +325,18 @@ fprintf('Found %d matching files\n',length(files))
 %% get files from a collection
 
 % Broken -
-clear srch
-srch.path = 'files'; 
-srch.collections.match.label = 'Anatomy Male 45-55';   
-% srch.acquisitions.match.label = 'Localizer';   
-% srch.files.match.type = 'nifti';
-
-files = st.search(srch);
-fprintf('Found %d matching files\n',length(files))
-
-for ii=1:length(files)
-    files{ii}.source
-end
+% clear srch
+% srch.path = 'files'; 
+% srch.collections.match.label = 'Anatomy Male 45-55';   
+% % srch.acquisitions.match.label = 'Localizer';   
+% % srch.files.match.type = 'nifti';
+% 
+% files = st.search(srch);
+% fprintf('Found %d matching files\n',length(files))
+% 
+% for ii=1:length(files)
+%     files{ii}.source
+% end
 
 %% Find sessions in this project that contain an analysis
 
@@ -344,10 +345,8 @@ end
 clear srch
 srch.path = 'sessions';   
 srch.projects.match.exact_label = 'UMN';
-srch.sessions.bool.must(1).match.analyses_0x2E_label = 'AFQ';  % DOT
-srch.sessions.bool.must(2).match.subject_0x2E_code = '4279';
-% srch.sessions.bool.must(1).match.analyses_label = 'AFQ';  % DOT
-% srch.sessions.bool.must(2).match.subject_code = '4279';
+srch.sessions.bool.must(1).match.analysesx0x2E_label = 'AFQ';  % DOT
+srch.sessions.bool.must(2).match.subjectx0x2E_code = '4279';
 sessions = st.search(srch,'all_data',true);
 
 fprintf('Found %d matching sessions\n',length(sessions))
@@ -362,14 +361,11 @@ fprintf('Found %d matching sessions\n',length(sessions))
 % projects = st.search(srch);
 
 
-
-
-
 %% Matlab structs and JSON format
 %
 %  Matlab uses '.' in structs, and json allows '.' as part of the
 %  variable name. So, we insert a dot on the Matlab side by inserting a
-%  string, _0x2E_.  For example, to create a json object like this:
+%  string, x0x2E_.  For example, to create a json object like this:
 %
 %   s = {
 %   	"range": {
@@ -381,7 +377,7 @@ fprintf('Found %d matching sessions\n',length(sessions))
 %
 % We use the code
 %     clear srch; 
-%     srch.range.subject_0x2E_age.lte = years2sec(10);
+%     srch.range.subjectx0x2E_age.lte = years2sec(10);
 %
 % Another issue is the use of _ at the front of a variable, like _id
 %
