@@ -95,6 +95,8 @@ end
 % Prompt to add it if not found, then save it for next time.
 if strcmp(action, 'remove')
     st = rmfield(st, instance);
+    st.url   = '';
+    st.token = '';
     % savejson('', st, tokenFile);
     jsonwrite(tokenFile,st);
 elseif ~isfield(st, instance) || strcmp(action, 'refresh')

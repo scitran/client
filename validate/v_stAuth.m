@@ -23,4 +23,16 @@ st = scitran('action','refresh','instance','scitran');
 disp(st)
 
 
+%% Remove the token
+
+st = scitran('action','remove','instance','scitran');
+
+% If result returns 0, then we are good
+disp(st)
+
+%% Recreate
+
+st = scitran('action','create','instance','scitran');
+
+disp(st)
 %%

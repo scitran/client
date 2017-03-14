@@ -1,9 +1,10 @@
 classdef scitran < handle
     % Scitran object to interact with a scitran database
     %
-    % st = scitran('action','create','instance','scitran');
-    % st = scitran('action','refresh');
-    % 
+    %  st = scitran('action', 'create', 'instance', 'local')
+    %  st = scitran('action', 'refresh', 'instance', 'local')
+    %  st = scitran('action', 'remove', 'instance', 'local')
+    %
     % Methods include:
     %   auth    - Authorize interaction with database
     %   search  - Search
@@ -16,7 +17,7 @@ classdef scitran < handle
     
     properties (SetAccess = private, GetAccess = public)  
 
-    url = 'https://flywheel.scitran.stanford.edu';
+    url = '';
     token = '';
     instance = 'scitran';
     
@@ -39,7 +40,7 @@ classdef scitran < handle
             % Example:
             %   st = scitran('action','create','instance','scitran');
             %
-            %   'actions' - 'create', 'refresh', 'revoke'
+            %   'actions' - 'create', 'refresh', 'remove'
             %  'instance' -  String denoting the st instance to authorize
             %
             
