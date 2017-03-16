@@ -51,7 +51,6 @@ clear srch
 srch.path = 'files';
 
 % For testing use
-%   scriptName = 'fw_Apricot6.m'
 srch.files.match.name = scriptName;
 
 % Put in the session and project ids here, when we are ready
