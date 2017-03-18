@@ -1,20 +1,26 @@
 function fw_Apricot6(st,varargin)
-% Flywheel analyzes EJ data from Apricot 6
+% Flywheel function to illustrate how to analyze some EJ data
 %
 % Example:
 %  st = scitran('action', 'create', 'instance', 'scitran');
 %
-%  clear dataSrch
-%  dataSrch{1}.path = 'files';
-%  dataSrch{1}.files.match.name = 'spikes-1';
+%  % Set up the spike data file
+%  clear dataSrch; dataSrch{1}.path = 'files'; dataSrch{1}.files.match.name = 'spikes-1';
 %
+%  % Set up the movie file (not used, yet)
 %  dataSrch{2}.path = 'files';
 %  dataSrch{2}.acquisitions.match.timestamp = '2013-08-19T22:31:00';
 %  dataSrch{2}.files.match.name = 'stimulusMovie';
 %  
+%  % Go get the data and specify the cell to plot
+%  clear params
 %  params.dataSrch = dataSrch;
-%  params.cellNumber = 10;
-%  fw_Apricot6(st,params)
+%  params.cellNumber = 11;
+%
+%  st.runScript('fw_Apricot6','params',params);
+%
+% TODO:  
+%   Add gitInfo fields and use stGitCheck
 %
 % JRG/BW/RF ISETBIO Team, 2017
 
@@ -29,6 +35,7 @@ p.parse(st,varargin{:});
 
 dataSrch   = p.Results.dataSrch;
 cellNumber = p.Results.cellNumber;
+
 
 %% Get the data files
 
@@ -110,13 +117,12 @@ xlabel('Time (sec)'); ylabel('Spikes/second');
 set(gca,'fontsize',14); grid on;
 
 %%
-
-load(fnameMovie);
-try
-    figure;
+if ~isempty(which('ieMovie'))
+    vcNewGraphWin;
+    load(fnameMovie);
     ieMovie(stimulusMovie);
-catch
-    disp('No ieMovie found')
+else
+    fprintf('No ieMovie on the path\n');
 end
 
 %%
