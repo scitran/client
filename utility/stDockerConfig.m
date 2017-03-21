@@ -32,13 +32,38 @@ args = p.Results;
 
 % MAC OSX
 if ismac
-    % By default, docker-machine is installed in /usr/local/bin:
+    
+    % By default, docker-machine and docker for mac are installed in
+    % /usr/local/bin:
     initPath = getenv('PATH');
     if isempty(strfind(initPath, '/usr/local/bin'))
         if args.debug
             disp('Adding ''/usr/local/bin'' to PATH.');
         end
         setenv('PATH', ['/usr/local/bin:', initPath]);
+    end
+    
+    % Check for "docker for mac"
+    [status, ~] = system('docker ps -a');
+    if status == 0
+        if args.debug
+            disp('Docker configured successfully!');
+            system('which docker', '-echo');
+        end
+        return
+    elseif exist('/Applications/Docker.app/Contents/MacOS/Docker', 'file')
+        if args.debug
+            disp('Starting Docker for Mac...')
+        end
+        [s, ~] = system('open /Applications/Docker.app');
+        [status, ~] = system('which docker', '-echo');
+        if s==0 && status==0     
+            if args.debug
+                disp('Docker configured successfully!');
+                system('docker -v', '-echo');
+            end
+        end
+        return        
     end
     
     % Check that docker machine is installed
@@ -74,7 +99,9 @@ if ismac
                     fprintf('The machine ''%s'' is up and running!\n', args.machine);
                 end
             else
-                error(result);
+                warning(result);
+                status = 1;
+                return
             end
         end
     end
