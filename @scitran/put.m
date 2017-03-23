@@ -101,18 +101,27 @@ switch  lower(upType)
    case {'files','file'}
 
         % Not checked.  Do with LMP.
+
+        if ~isfield(stData, 'id') || ~isfield(stData, 'file') || ~isfield(stData, 'containerType')
+            error('field missing on stData');
+        end
         containerType = stData.containerType;
         id = stData.id;
         file = stData.file;
         [~, fname, ext] = fileparts(file);
         fname = [fname, ext];
-        if isempty(stData.id) || isempty(stData.file) || isempty(containerType)
-            error('field missing on stData');
+        if isfield(stData, 'metadata')
+            metadata = jsonwrite(stData.metadata);
+            % Escape the " or the cmd will fail.
+            metadata = strrep(metadata, '"', '\"');
+            metadata = sprintf('-F "metadata=%s"', metadata);
+        else
+            metadata = '';
         end
         %% Build and execute the curl command
 
-        curl_cmd = sprintf('curl -s -F "file=@%s;filename=%s" "%s/api/%s/%s/files" -H "Authorization":"%s" -k',...
-            file, fname, obj.url, containerType, id, obj.token);
+        curl_cmd = sprintf('curl -s -F "file=@%s;filename=%s" %s "%s/api/%s/%s/files" -H "Authorization":"%s" -k',...
+            file, fname, metadata, obj.url, containerType, id, obj.token);
 
         % Execute the command
         fprintf('Sending... ');
