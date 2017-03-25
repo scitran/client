@@ -50,6 +50,9 @@ end
 payload = jsonwrite(payload,struct('indent','  ','replacementstyle','hex'));
 payload = regexprep(payload, '\n|\t', ' ');
 payload = regexprep(payload, ' *', ' ');
+% hack to make this work on linux
+% TODO ask for a fix on jsonIO
+payload = regexprep(payload, '__', '_');
 curlCMD = sprintf('curl -s -XPUT "%s/api/collections/%s" -H "Authorization":"%s" -k -d ''%s''', ...
                     obj.url, collectionId, obj.token, payload);
 [status, result] = stCurlRun(curlCMD);
