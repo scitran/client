@@ -10,5 +10,4 @@
 * [Gears](https://github.com/scitran/client/wiki/Gears)
 * [Building Gears](https://github.com/scitran/client/wiki/Building-Gears)
 
-##Python
 
