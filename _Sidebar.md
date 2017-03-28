@@ -1,10 +1,10 @@
-* [Introduction](https://github.com/scitran/client/wiki/Home)
-* [Database](https://github.com/scitran/client/wiki/Database-principles)
-* [Authorization](https://github.com/scitran/client/wiki/Authorization)
-* [Search](https://github.com/scitran/client/wiki/Search)
-    * [Examples](https://github.com/scitran/client/wiki/Search-examples)
+* [Introduction](Home)
+* [Database](Database-principles)
+* [Authorization](Authorization)
+* [Search](Search)
+    * [Examples]Search-examples)
     * [Syntax](Search-syntax)
-* [Gears](https://github.com/scitran/client/wiki/Gears)
+* [Gears](Gears)
 * [Building Gears](https://github.com/scitran/client/wiki/Building-Gears)
 
 
