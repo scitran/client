@@ -144,15 +144,13 @@ function id = createPrivate(obj, containerType, label, parentType, parentID, add
     for i = 1:length(additionalFields)
         payload.(additionalFields{i}) = additionalContent.(additionalFields{i});
     end
-    payload = savejson('',payload);
+    payload = jsonwrite(payload,struct('indent','  ','replacementstyle','hex'));
     cmd = obj.createCmd(containerType, payload);
     [status, result] = stCurlRun(cmd);
     if status
         error(result);
     end
-    result = loadjson(result);
-    %result = jsonread(result);
-    id = result.x0x5F_id;
-    %id = result.x_id;
+    result = jsonread(result);
+    id = result.x_id;
     
 end
