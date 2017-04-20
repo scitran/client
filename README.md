@@ -2,6 +2,8 @@
 
 This repository includes Matlab utilities to interact with the SciTran API from the client side for search, get, and put.  See the [project wiki page](https://github.com/scitran/client/wiki) for a general introduction and links to specific manual pages.
 
+You will need an authorization token.  On first access, you will be prompted for the client ID and secret. This secret can only be given by an administrator of the instance you wish to connect to.  So, speak to your administrator about the client ID and secret.
+
 ## Matlab Client Setup
 
 * Even when using the Matlab version, you must have python on your path to enable authorization. The key Python module is oauth2client.  If you use, say, anaconda to manage your python method than pip is included and you can do the install this way from your terminal
@@ -50,9 +52,5 @@ To get the machine started, issue the `start` command followed by the machine na
   ```
 Now you're ready to issue docker commands through Matlab or Python. See [matlab/stDockerConfig.m](https://github.com/scitran/client/blob/master/matlab/stDockerConfig.m) for Matlab implementation details.
 
-## Scitran client dependencies
 
-* The purpose of the software is to access a Flywheel instance.  You will need an authorization token.  On first access, you will be prompted for the client ID and secret. This secret can only be given by an administrator of the instance you wish to connect to.  So, speak to your administrator about the client ID and secret.
 
-* JSONlab
-The MATLAB SciTran client uses JSONlab to load, save, and parse json objects. Hence, [JSONlab](https://github.com/fangq/jsonlab) must  be on your MATLAB path. Version XXX is included in this distribution.
