@@ -24,6 +24,13 @@ You might verify that you succeeded by trying from within your Matlab command wi
    ```
 * If your terminal environment is set up properly, the best way to initiate scitran client is to start matlab from a terminal.  In that case, the Matlab program inherits your shell ENV. Many people start Matlab from an icon, however. This sets up Matlab's own idiosyncratic environment. In that case, you may have to set your ENV (PATH) to include paths to python & required libs manually from within Matlab.  See XXX for instructions on how to do this.
 
+## JSONio
+
+We rely upon Guillaume Flandin's code to read and write JSON files.  The version we use is forked and a particular commit, which you can get here 
+   ```
+   git clone https://github.com/vistalab/JSONio.git
+   ```
+   
 ## Docker requirements
 
 For certain applications, you will want to run docker containers. This will require that you have Docker installed on your local machine. To do that visit the docker website for [OSX](https://docs.docker.com/engine/installation/mac/) and [Linux](https://docs.docker.com/linux/step_one/) instructions. If you have Homebrew on OSX, you can install the toolbox from the command line with `brew cask install dockertoolbox`.
