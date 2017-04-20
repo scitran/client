@@ -4,7 +4,7 @@ This repository includes Matlab utilities to interact with the SciTran API from 
 
 You will need an authorization token.  On first access, you will be prompted for the client ID and secret. This secret can only be given by an administrator of the instance you wish to connect to.  So, speak to your administrator about the client ID and secret.
 
-## Matlab Client Setup
+## Python setup
 
 * Even when using the Matlab version, you must have python on your path to enable authorization. The key Python module is oauth2client.  If you use, say, anaconda to manage your python method than pip is included and you can do the install this way from your terminal
    ```
