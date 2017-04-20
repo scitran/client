@@ -21,7 +21,7 @@
 % visualization, (c) quality assurance, (d) tissue measurement, (e)
 % spectroscopy, and ...
 %
-% Operating Gears will be possible from within the web browser via an
+% Operating Gears is possible from within the web browser via an
 % easy-to-use graphic interface (pulldown menus and forms to set the
 % parameters).
 %
@@ -55,7 +55,9 @@ chdir(fullfile(stRootPath,'local'));
 
 % Docker containers can run either locally, on your machine, or on a remote
 % computer in the Cloud.  In this example, we will run the brain extraction
-% tool from FSL, which we have installed in a docker container.
+% tool from FSL, which we have installed in a docker container.  The first
+% time you run this code it can take a little while to install the docker
+% system.
 stDockerConfig('machine', 'default');
 
 % Make an empty directory for the input to the docker container
@@ -77,8 +79,9 @@ srch.path = 'files';                         % Looking for files
 
 % These files match the following properties
 srch.collections.match.label  = 'GearTest';   % In this collection
-srch.acquisitions.match.label = 'T1w';            % Acquisition T1w
-srch.files.match.type         = 'nifti';                    % A nifti type
+srch.acquisitions.match.label = 'T1w';        % Acquisition T1w
+srch.files.bool.must(1).match.type         = 'nifti';      % A nifti type
+srch.files.bool.must(2).match.name         = '11348_3_1.nii.gz';  % The file
 
 % Run the search and get information about files
 files = st.search(srch);
@@ -116,6 +119,8 @@ docker.container = 'vistalab/bet';
 % needed for reproducibility
 st.docker(docker);
 
+betFile = fullfile(docker.oDir,[docker.oFile,'.nii.gz']);
+% niftiView(betFile);
 
 %% Build analysis struct with the information needed to upload the results
 
@@ -156,3 +161,4 @@ st.put('session analysis', analysis, 'id', session_id);
 
 % Go to the browser and have a look at the collection
 st.browser(session{1});
+%%
