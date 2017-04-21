@@ -1,4 +1,4 @@
-The **scitran client** repository allows users to use Matlab to interact with the a scitran database. The main use at this point in time is to interact with the [Flywheel](https://flywheel.io) data and computational management system.
+The **scitran matlab client** provides tools so that Matlab users can interact with the a scitran database. The main use at this point in time is to interact with the [Flywheel](https://flywheel.io) data and computational management system.
 
 This wiki page describes the general software and provides many examples, such as how to
 
@@ -9,14 +9,9 @@ This wiki page describes the general software and provides many examples, such a
 * upload method descriptions (e.g., analyses, Gears)
 * write and store programs on the Flywheel database so that others can check your work 
 
-The **scitran client** can be run securely from any computer on the Internet to process data stored in a scitran database either using their local computer or from a larger computational resource such as a compute engine on the cloud.
+The **scitran matlab client** can be run securely from any computer on the Internet to process data stored in a scitran database either using their local computer or from a larger computational resource such as a compute engine on the cloud.
 
-The key elements that supports **reproducible research** are these
-  * The original files are securely stored in a database
-  * The analysis methods are implemented reproducibly (using [Gears](https://github.com/scitran/client/wiki/Gears)), and 
-  * The results and analysis specification are stored back in the database. 
-
-The **scitran client** has a related implementation in Python.
+This **scitran matlab client** has a related [**scitran python client** implementation](https://github.com/scitran/python-client).
 
 See the [scitran core wiki page](https://github.com/scitran/core/wiki) for an introduction to scientific transparency data management software and the Stanford [Project on Scientific Transparency (PoST)](http://post.stanford.edu). 
 
