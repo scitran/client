@@ -11,7 +11,7 @@ This wiki page describes the general software and provides many examples, such a
 
 The **scitran matlab client** can be run securely from any computer on the Internet to process data stored in a scitran database either using their local computer or from a larger computational resource such as a compute engine on the cloud.
 
-This **scitran matlab client** has a related [**scitran python client** implementation](https://github.com/scitran/python-client).
+There is also a [**scitran python client** implementation](https://github.com/scitran/python-client).
 
 See the [scitran core wiki page](https://github.com/scitran/core/wiki) for an introduction to scientific transparency data management software and the Stanford [Project on Scientific Transparency (PoST)](http://post.stanford.edu). 
 
