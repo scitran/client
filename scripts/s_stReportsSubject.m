@@ -16,7 +16,7 @@ st = scitran('action', 'create', 'instance', 'scitran');
 clear srch
 srch.path = 'projects';
 projects = st.search(srch);
-for ii=1:length(Name)
+for ii=1:length(projects)
     if isequal(projects{ii}.source.label,'SVIP Released Data (SIEMENS)')
         pp = ii;
         break;
@@ -28,18 +28,13 @@ end
 % Find the sessions in the project
 clear srch
 srch.path = 'sessions';
-srch.projects.match.exact_label = Name{pp};
+srch.projects.match.exact_label = projects{pp}.source.label;
 sessions = st.search(srch);
 length(sessions)
 
 % Get the subject information
 subjects = stSubjectInfo(sessions);
 ages     = stSubjectGet(subjects,'age');
-
-% Summarize ages in a graph
-stNewGraphWin; hist(ages,20); xlabel('Age in years'); ylabel('N subjects');
-set(gca,'xlim',[0 100]);
-title(sprintf('Project: %s',Name{pp}));
 
 %% Print out the sex distribution
 
@@ -59,6 +54,11 @@ nMale    = sum(sex=='m');
 nFemale  = sum(sex =='f');
 nUnknown = sum(sex == 'u');
 fprintf('%d Males\n%d Females\n%d   Unknown\n',nMale,nFemale,nUnknown);
+
+%% Summarize ages in a graph
+stNewGraphWin; hist(ages,20); xlabel('Age in years'); ylabel('N subjects');
+set(gca,'xlim',[0 100]);
+title(sprintf('Project: %s',projects{pp}.source.label));
 
 %%
 
