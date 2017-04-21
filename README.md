@@ -1,8 +1,8 @@
 # Scitran client software
 
-This repository includes Matlab utilities to interact with the SciTran API from the client side for search, get, and put.  See the [project wiki page](https://github.com/scitran/client/wiki) for a general introduction and links to specific manual pages.
+This repository includes Matlab utilities to work with the SciTran API, which is implemented in Flywheel and openFMRI, from the client side.  The Matlab side implements many functions, including search, get, and put. See the [scitran project wiki page](https://github.com/scitran/client/wiki) for a manual and examples of how to use this code.
 
-You will need an authorization token.  On first access, you will be prompted for the client ID and secret. This secret can only be given by an administrator of the instance you wish to connect to.  So, speak to your administrator about the client ID and secret.
+Recall that most MRI databases require authorization. Speak to your administrator about the client ID and secret.
 
 ## Python setup
 
