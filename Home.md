@@ -7,7 +7,7 @@ This wiki page describes the general software and provides many examples, such a
 * download database objects (e.g., files, sessions, projects, analyses)
 * upload results (e.g., files, graphs, other attachments)
 * upload method descriptions (e.g., analyses, Gears)
-* Write and store programs on the Flywheel database so that others can check your work 
+* write and store programs on the Flywheel database so that others can check your work 
 
 The **scitran client** can be run securely from any computer on the Internet to process data stored in a scitran database either using their local computer or from a larger computational resource such as a compute engine on the cloud.
 
