@@ -50,7 +50,7 @@ To get the machine started, issue the `start` command followed by the machine na
   ```
   docker-machine start default
   ```
-Now you're ready to issue docker commands through Matlab or Python. See [matlab/stDockerConfig.m](https://github.com/scitran/client/blob/master/matlab/stDockerConfig.m) for Matlab implementation details.
+Now you're ready to issue docker commands through Matlab or Python. See [matlab/stDockerConfig.m](https://github.com/scitran/client/blob/master/utility/stDockerConfig.m) for Matlab implementation details.
 
 
 
