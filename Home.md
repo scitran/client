@@ -20,4 +20,4 @@ The **scitran client** has a related implementation in Python.
 
 See the [scitran core wiki page](https://github.com/scitran/core/wiki) for an introduction to scientific transparency data management software and the Stanford [Project on Scientific Transparency (PoST)](http://post.stanford.edu). 
 
-The Wandell lab gratefully acknowledge the [Simons Foundation](https://www.simonsfoundation.org/) and particularly the [Simons Foundation Autism Research Initiative](https://sfari.org/) for their support of the [Project on Scientific Transparency] (http://post.stanford.edu).  The code in this repository and the api functionality are being developed by Michael Perry, Renzo Frigato, and Brian Wandell.
+The Wandell lab gratefully acknowledge the [Simons Foundation](https://www.simonsfoundation.org/) and particularly the [Simons Foundation Autism Research Initiative](https://sfari.org/) for their support of the [Project on Scientific Transparency](http://post.stanford.edu).  The code in this repository and the api functionality are being developed by Michael Perry, Renzo Frigato, and Brian Wandell.
