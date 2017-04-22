@@ -1,10 +1,10 @@
 function [destination, curl_cmd] = get(obj,pLink,varargin)
-% Retrieve a file from an scitran instance
+% Retrieve a file from a scitran instance
 %
 %   [fName, curl_cmd] = get(obj,pLink,'destination',filename,'size',size)
 %
 % Required Inputs
-%  pLink:  Either a permalink or a files{} struct with a plink slot
+%  pLink:  Either a permalink or a files{} struct containing a permalink
 %  token:  Authorization token for download
 %
 % Optional Inputs
