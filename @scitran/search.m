@@ -51,10 +51,10 @@ esCMD = obj.searchCmd(srch,'all_data',all_data);
 % result is a string with a bunch of stuff RF put in it, including timing
 % information and the json output file.  We get the filename below.
 
-disp('Remote elastic search');
-tic
+% disp('Remote elastic search');
+% tic
 [~, result] = system(esCMD);
-toc
+% toc
 
 % Load the result json file. NOTE the use of strtrim to get rid of the
 % final blank character
@@ -68,11 +68,11 @@ end
 % below.
 if ~exist(srchFile,'file'), error('Results does not contain a valid search file');
 else
-    disp('Running jsonread on returned file');
-    tic
+    % disp('Running jsonread on returned file');
+    %    tic
     % srchResult = loadjson(srchFile);
     srchResult = jsonread(srchFile);
-    toc
+    %   toc
 end
 
 if isfield(srchResult,'message')

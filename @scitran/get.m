@@ -39,15 +39,16 @@ pLink = p.Results.pLink;
 destination = p.Results.destination;
 size = p.Results.size;
 
+%% Should use stPlink2Destination() here
+
 % If we sent in a files{} struct, then get the plink slot out now.
 if isstruct(pLink), pLink = pLink.plink; end
     
-%% Combine permalink and username to generate the download link
+% Combine permalink and username to generate the download link
 
 % Handle permalinks which may have '?user=' elements
 pLink = strsplit(pLink, '?');
 pLink = pLink{1};
-
 
 %% Parse fName from the permalink if 'fName' was not provided.
 if ~exist('destination', 'var') || isempty (destination) 
