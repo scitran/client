@@ -30,17 +30,11 @@ p.KeepUnmatched = true;
 % search case.
 p.addRequired('srch');  
 
-% If you want the json file returned by the search, then this should be a
-% legitimate file name for writing it.  It should have a .json extension.
-% I think we should get rid of this.
-p.addParameter('oFile','',@ischar);
-
 % Not sure what this means yet
 p.addParameter('all_data',false,@islogical);
 
 p.parse(srch,varargin{:});
 srch  = p.Results.srch;
-oFile = p.Results.oFile;
 all_data = p.Results.all_data;
 
 %% Simple search case.  So we build a Matlab srch structure
@@ -74,21 +68,40 @@ if ischar(srch)
         sformatted = strrep(lower(varargin{ii}),' ','');
         
         switch stParamFormat(sformatted)
-            case 'sessionlabel'
+            case {'sessionlabelcontains'}
                 srch.sessions.match.label = val;
+            case {'sessionlabelexact','sessionlabel'}
+                srch.sessions.match.exact_label = val;
             case 'sessionid'
                 srch.sessions.match.x0x5F_id = val;
-            case {'projectlabel','project'}
+                
+            case {'projectlabelcontains'}
                 srch.projects.match.label = val;
+            case {'projectlabelexact','projectlabel'}
+                srch.projects.match.exact_label = val;
+
             case {'acquisitionlabelcontains'}
                 srch.acquisitions.match.label = val;
             case {'acquisitionlabelexact','acquisitionlabel'}
                 srch.acquisitions.match.exact_label = val;
-            case {'filename'}
+                
+            case {'filenamecontains'}
                 srch.files.match.name = val;
+            case {'filenameexact','filename'}
+                srch.files.match.exact_name = val;
+
             case {'subjectcode'}
                 srch.sessions.match.subjectx0x2E_code = val;
+                
+            case {'analysisfilenameexact','analysisfilename'}
+                srch.path = 'analyses/files';
+                srch.files.match.exact_name = val;
+            case {'analysisfilenamecontains'}
+                srch.path = 'analyses/files';
+                srch.files.match.name = val;
+                
             otherwise
+                error('Unknown search variable %s\n',sformatted);
         end
         
     end
