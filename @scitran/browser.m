@@ -1,12 +1,13 @@
-function url = browser(obj, varargin)
+function url = browser(obj, stdata, varargin)
 % Open up the scitran URL to the object id
 %
-%    url = st.browser(obj, varargin)
+%    url = st.browser(obj, stdata, varargin)
 %
-% Optional parameter/value pairs:
+% Required parameter
 %  stdata:    A struct returned by an st.search command.  We display
 %             projects, sessions, acquisitions, and analyses.
 %
+% Optional parameters
 %  browse:      Bring up the browser (default is true). If set to false,
 %               the url is returned, which may be useful.
 %  collection:  Set to true to show a session from a collection
@@ -23,12 +24,11 @@ function url = browser(obj, varargin)
 %    url = st.browser(stdata{1},'browse',false);
 %
 %  Open the session as part of a collection that contains it
-%    clear srch; 
-%    srch.path = 'sessions'; srch.collections.match.label='GearTest';
-%    stdata = st.search(srch);
-%    srch.path = 'collections'; srch.collections.match.label='GearTest';
-%    collection = st.search(srch);
-%    url = st.browser(stdata{1},'collection',collection{1});
+%    stdata = st.search('sessions','project label','VWFA');
+%    st.browser(stdata{1});
+%
+%    stdata = st.search('collections','collection label','Visualization');
+%    url = st.browser('','collection',stdata{1});
 %
 % BW  Scitran Team, 2016
 
@@ -38,8 +38,9 @@ p = inputParser;
 % stdata is a returned search object from the st.search The browser can
 % open up an object that is a project, session, acquisition, or analysis
 % If none is passed in, then we just open up the url of the instance ('').
-vFunc = @(x) (isstruct(x) && ismember(x.type, {'projects','sessions','acquisitions','collections','analyses',''}));
-p.addParameter('stdata','',vFunc);
+vFunc = @(x) (isempty(x) || ...
+    isstruct(x) && ismember(x.type, {'projects','sessions','acquisitions','collections','analyses',''}));
+p.addRequired('stdata',vFunc);
 
 % Bring up the browser window
 p.addParameter('browse',true,@islogical);
@@ -48,7 +49,7 @@ p.addParameter('browse',true,@islogical);
 c.c = false;
 p.addParameter('collection',c,@isstruct);
 
-p.parse(varargin{:});
+p.parse(stdata,varargin{:});
 stdata      = p.Results.stdata;
 browse      = p.Results.browse;
 collection  = p.Results.collection;
@@ -62,7 +63,7 @@ end
 
 if isfield(collection,'id')
     % Show a session in the context of a collection.
-    url = sprintf('%s/#/dashboard/collection/%s/session/%s?tab=data',obj.url,collection.id,stdata.id);
+    url = sprintf('%s/#/dashboard/collection/%s',obj.url,collection.id);
 elseif ~isempty(stdata)
     % We show a session, acquisition in the context of the project, not 
     switch stdata.type

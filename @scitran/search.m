@@ -45,7 +45,7 @@ if ischar(srch)
     
     % Determine the search type
     searchType = srch;
-    vFunc = @(x)(ismember(x,{'files','sessions','acquisitions','projects'}));
+    vFunc = @(x)(ismember(x,{'files','sessions','acquisitions','projects','collections'}));
     if ~vFunc(searchType)
         error('Unknown search return type %s\n',srch);
     end
@@ -79,6 +79,11 @@ if ischar(srch)
                 srch.projects.match.label = val;
             case {'projectlabelexact','projectlabel'}
                 srch.projects.match.exact_label = val;
+
+            case {'collectionlabelcontains'}
+                srch.collections.match.label = val;
+            case {'collectionlabelexact','collectionlabel'}
+                srch.collections.match.exact_label = val;
 
             case {'acquisitionlabelcontains'}
                 srch.acquisitions.match.label = val;
