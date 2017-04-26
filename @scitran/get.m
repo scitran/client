@@ -25,7 +25,8 @@ function [destination, curl_cmd] = get(obj,pLink,varargin)
 %% Parse inputs
 p = inputParser;
 
-% plink can either be a files Matlab struct or a plink to a file
+% plink can either be a cell array of Matlab structs, a struct, or a plink
+% string linking to a database file.
 vFunc = @(x) (ischar(x) || isstruct(x));
 p.addRequired('pLink',vFunc);
 

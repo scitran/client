@@ -25,13 +25,15 @@ srch.files.match.type = 'nifti';
 files = st.search(srch);
 
 [data, destination] = st.read(files{1},'fileType','nifti');
+
+%%
 niftiView(data);
 delete(destination);
-if ismac
-   % There is an mriCro app for Mac and we could use that for some
-   % glamorous visualization of the NIFTI data.
-   % https://itunes.apple.com/us/app/mricro/id942363246?ls=1&mt=12
-end
+% if ismac
+%    % There is an mriCro app for Mac and we could use that for some
+%    % glamorous visualization of the NIFTI data.
+%    % https://itunes.apple.com/us/app/mricro/id942363246?ls=1&mt=12
+% end
 
 
 %% Matlab data

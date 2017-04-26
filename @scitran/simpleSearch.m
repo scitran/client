@@ -1,4 +1,4 @@
-function [results, nResults] = simpleSearch(stClient,searchReturn,varargin)
+function [results, srch] = simpleSearch(stClient,searchReturn,varargin)
 % SIMPLESEARCH - Simple search interface for common requests
 %
 % What should we do about exact matches or partial matches?
@@ -37,7 +37,7 @@ p.KeepUnmatched = true;
 vFunc = @(x)(ismember(x,{'files','sessions','acquisitions','projects'}));
 p.addRequired('searchType',vFunc);
 
-p.parse(searchReturn,varargin{:});
+p.parse(searchReturn);
 
 % Make sure length of varargin is even
 if mod(length(varargin),2)
@@ -51,16 +51,24 @@ srch.path = searchReturn;
 n = length(varargin);
 for ii=1:2:n
     val = varargin{ii+1};
-    switch stParamFormat(varargin{ii})
+    
+    % Force lower and remove blanks
+    sformatted = strrep(lower(varargin{ii}),' ','');
+
+    switch stParamFormat(sformatted)
         case 'sessionlabel'
             srch.sessions.match.label = val;
+        case 'sessionid'
+            srch.sessions.match.x0x5F_id = val;
         case {'projectlabel','project'}
             srch.projects.match.label = val;
         case {'acquisitionlabelcontains'}
             srch.acquisitions.match.label = val;
-        case {'acquisitionlabelexact'}
+        case {'acquisitionlabelexact','acquisitionlabel'}
             srch.acquisitions.match.exact_label = val;
-        case {'subject'}
+        case {'filename'}
+            srch.files.match.name = val;
+        case {'subjectcode'}
             srch.sessions.match.subjectx0x2E_code = val;
         otherwise
     end
@@ -69,11 +77,9 @@ end
 %% Do the search
 
 % For debugging, here is the json string
-%
 % jsonSearch = jsonwrite(srch,struct('indent','  ','replacementstyle','hex')) 
 
 results = stClient.search(srch);
-nResults = length(results);
 
 end
 %%
