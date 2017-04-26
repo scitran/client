@@ -1,4 +1,5 @@
 function [results, srch] = simpleSearch(stClient,searchReturn,varargin)
+% DEPRECATED
 % SIMPLESEARCH - Simple search interface for common requests
 %
 % What should we do about exact matches or partial matches?
