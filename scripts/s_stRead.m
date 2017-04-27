@@ -2,27 +2,21 @@
 %
 % Test the data reading methods
 %
+% BW
 
 %% Open the scitran client
 
-% The auth returns a token and the url of the flywheel instance.  These are
-% fixed as part of 's' throughout the examples, below.
 st = scitran('action', 'create', 'instance', 'scitran');
 
 %%  Get an example nifti file
 
 % From the VWFA project
-clear srch
-srch.path = 'sessions';
-srch.projects.match.label = 'VWFA'; 
-sessions = st.search(srch);
-sessionID = sessions{1}.id;
+sessions = st.search('sessions', ...
+    'project label','VWFA');
 
-clear srch
-srch.path = 'files';
-srch.sessions.match.x0x5F_id = sessionID;
-srch.files.match.type = 'nifti';
-files = st.search(srch);
+files = st.search('files', ...
+    'session id',sessions{1}.id, ...
+    'file type','nifti');
 
 [data, destination] = st.read(files{1},'fileType','nifti');
 
@@ -39,11 +33,9 @@ delete(destination);
 %% Matlab data
 
 % From the showdes (logothetis) project
-clear srch
-srch.path = 'files';
-srch.projects.match.label = 'showdes'; 
-srch.files.match.name = 'e11au1_roidef.mat';
-files = st.search(srch);
+files = st.search('files',...
+    'project label contains','showdes', ...
+    'file name','e11au1_roidef.mat');
 
 [data, destination] = st.read(files{1},'fileType','mat');
 delete(destination);

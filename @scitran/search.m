@@ -94,6 +94,8 @@ if ischar(srch)
                 srch.files.match.name = val;
             case {'filenameexact','filename'}
                 srch.files.match.exact_name = val;
+            case {'filetype'}
+                srch.files.match.type = val;
 
             case {'subjectcode'}
                 srch.sessions.match.subjectx0x2E_code = val;

@@ -130,8 +130,7 @@ elseif ~isfield(st, instance) || strcmp(action, 'refresh')
         return
     end
 else
-    prompt = sprintf('\nAPI key found for instance %s', instance);
-    disp(prompt)
+    fprintf('Key found for instance %s\n', instance);
     obj.token = st.(instance).token;
     obj.url = st.(instance).client_url;
 end
