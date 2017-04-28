@@ -106,6 +106,10 @@ if ischar(srch)
             case {'analysisfilenamecontains'}
                 srch.path = 'analyses/files';
                 srch.files.match.name = val;
+            case {'analysislabelexact','analysislabel'}
+                srch.analysis.match.exact_label = val;
+            case {'analysislabelcontains'}
+                srch.analysis.match.label = val;
                 
             otherwise
                 error('Unknown search variable %s\n',sformatted);
