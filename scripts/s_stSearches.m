@@ -95,6 +95,10 @@ srch.path = 'projects';
 projects = st.search(srch);
 fprintf('Found %d projects\n',length(projects))
 
+%% Short form
+projects = st.search('projects');
+fprintf('Found %d projects\n',length(projects))
+
 %% List projects in the group 'wandell' with label 'vwfa'
 
 clear srch
@@ -107,8 +111,8 @@ projects = st.search(srch);
 fprintf('Found %d projects for the group wandell, with label vwfa.\n',length(projects))
 
 % Save this project information
-projectID    = projects{1}.id;
-projectLabel = projects{1}.source.label;
+projectID    = projects{end}.id;
+projectLabel = projects{end}.source.label;
 
 % You can browse to the project this way
 %   st.browser('stdata',projects{1});
@@ -124,6 +128,11 @@ srch.collections.match.label = 'Anatomy Male 45-55';
 [sessions, srchCmd] = st.search(srch);
 
 fprintf('Found %d sessions in the collection %s\n',length(sessions),srch.collections.match.label);
+
+%% Short form
+[sessions, srchCmd] = st.search('collections/sessions',...
+    'collection label contains','Anatomy Male 45-55');
+fprintf('Found %d sessions\n',length(sessions));
 
 %% Get the sessions within the first project
 
@@ -141,6 +150,11 @@ sessionLabel = sessions{1}.source.label;
 % Bring the session up this way
 %   st.browser(sessions{1});
 
+%%
+sessions = st.search('sessions',...
+    'project id',projectID);
+fprintf('Found %d sessions in the project %s\n',length(sessions),projectLabel);
+
 %% Get the acquisitions inside a session
 
 clear srch
@@ -151,6 +165,11 @@ fprintf('Found %d acquisitions in the session %s\n',length(acquisitions),session
 
 % This brings up the session containing this acquisition
 %   st.browser(acquisitions{1});
+
+%% Short
+acquisitions = st.search('acquisitions',...
+    'session id',sessionID);
+fprintf('Found %d acquisitions in session %s\n',length(acquisitions),sessionLabel);
 
 %% Find nifti files in the session
 
@@ -170,6 +189,16 @@ end
 %
 %  dl = stGet(files{1}.plink,s.token)
 %  d = niftiRead(dl);
+
+%%
+files = st.search('files',...
+    'session id',sessionID,...
+    'file type','nifti');
+nFiles = length(files);
+fprintf('Found %d nifti files in the session %s\n',nFiles,sessionLabel);
+for ii=1:nFiles
+    fprintf('%d:  %s\n',ii,files{ii}.source.name);
+end
 
 %% Look for analyses in the GearTest collection
 
@@ -228,6 +257,10 @@ fprintf('Found %d collections in previous four weeks \n',length(collections))
 % To see the session in the web page, use this command
 %   st.browser(sessions{1});
 
+%% Short form
+collections = st.search('collections',...
+    'session after time','now-4w');
+fprintf('Found %d collections in previous four weeks \n',length(collections))
 
 %% Get sessions with this subject code
 clear srch

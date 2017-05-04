@@ -44,10 +44,11 @@ all_data = p.Results.all_data;
 if ischar(srch)
     
     % Determine the search type
+    vFunc = @(x)(ismember(x,{'files','sessions','collections/sessions',...
+        'acquisitions','projects','collections','analyses/files'}));
     searchType = srch;
-    vFunc = @(x)(ismember(x,{'files','sessions','acquisitions','projects','collections'}));
-    if ~vFunc(searchType)
-        error('Unknown search return type %s\n',srch);
+    if ~vFunc(strrep(lower(searchType),' ',''))
+        error('Unknown search return type %s\n',searchType);
     end
     
     % Make sure length of varargin is even
@@ -74,16 +75,22 @@ if ischar(srch)
                 srch.sessions.match.exact_label = val;
             case 'sessionid'
                 srch.sessions.match.x0x5F_id = val;
-                
+             case {'sessionaftertime'}
+                srch.sessions.range.created.gte = val;
+               
             case {'projectlabelcontains'}
                 srch.projects.match.label = val;
             case {'projectlabelexact','projectlabel'}
                 srch.projects.match.exact_label = val;
-
+            case {'projectid'}
+                % Note the ugly x0x5F, needed for jsonio
+                srch.projects.match.x0x5F_id = val;   
+                
             case {'collectionlabelcontains'}
                 srch.collections.match.label = val;
             case {'collectionlabelexact','collectionlabel'}
                 srch.collections.match.exact_label = val;
+
 
             case {'acquisitionlabelcontains'}
                 srch.acquisitions.match.label = val;
