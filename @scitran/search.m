@@ -44,8 +44,12 @@ all_data = p.Results.all_data;
 if ischar(srch)
     
     % Determine the search type
-    vFunc = @(x)(ismember(x,{'files','sessions','collections/sessions',...
-        'acquisitions','projects','collections','analyses/files'}));
+    vFunc = @(x)(ismember(x,{...
+        'files','sessions','acquisitions','projects','collections','analyses', ...
+        'filesinanalysis',...
+        'filesincollection','acquisitionsincollection','sessionsincollection',...
+        'analysesincollection','analysesinsession',...
+        }));
     searchType = srch;
     if ~vFunc(strrep(lower(searchType),' ',''))
         error('Unknown search return type %s\n',searchType);
@@ -59,6 +63,22 @@ if ischar(srch)
     % Start building the Matlab srch struct
     clear srch
     srch.path = searchType;
+    switch strrep(lower(searchType),' ','');
+        case 'filesinanalysis'
+            srch.path = 'analyses/files';
+        case 'filesincollection'
+            srch.path = 'collections/files';
+        case 'acquisitionsincollection'
+            srch.path = 'collections/acquisitions';
+        case 'sessionsincollection'
+            srch.path = 'collections/sessions';
+        case 'analysesincollection'
+            srch.path = 'collections/analyses';
+        case 'analysesinsession'
+            srch.path = 'sessions/analyses';
+        otherwise
+    end
+    
     
     % Build the search structure from the param/val pairs
     n = length(varargin);
@@ -70,9 +90,20 @@ if ischar(srch)
         
         switch stParamFormat(sformatted)
             case {'sessionlabelcontains'}
-                srch.sessions.match.label = val;
+                % srch.sessions.match.label = val;
+                if ~isfield(srch,'sessions')
+                    srch.sessions.bool.must{1}.match.label = val;
+                else
+                    srch.sessions.bool.must{end + 1}.match.label = val;
+                end
             case {'sessionlabelexact','sessionlabel'}
-                srch.sessions.match.exact_label = val;
+                %srch.sessions.match.exact_label = val;
+                if ~isfield(srch,'sessions')
+                    srch.sessions.bool.must{1}.match.exact_label = val;
+                else
+                    srch.sessions.bool.must{end + 1}.match.exact_label = val;
+                end
+                
             case 'sessionid'
                 srch.sessions.match.x0x5F_id = val;
              case {'sessionaftertime'}
@@ -107,17 +138,11 @@ if ischar(srch)
             case {'subjectcode'}
                 srch.sessions.match.subjectx0x2E_code = val;
                 
-            case {'analysisfilenameexact','analysisfilename'}
-                srch.path = 'analyses/files';
-                srch.files.match.exact_name = val;
-            case {'analysisfilenamecontains'}
-                srch.path = 'analyses/files';
-                srch.files.match.name = val;
             case {'analysislabelexact','analysislabel'}
                 srch.analysis.match.exact_label = val;
             case {'analysislabelcontains'}
                 srch.analysis.match.label = val;
-                
+                                
             otherwise
                 error('Unknown search variable %s\n',sformatted);
         end
@@ -125,14 +150,12 @@ if ischar(srch)
     end
 end
 
-    
 %% Convert the Matlab struct is converted to json here.  
 
 srch = jsonwrite(srch,struct('indent','  ','replacementstyle','hex'));
 srch = regexprep(srch, '\n|\t', ' ');
 srch = regexprep(srch, ' *', ' ');
 esCMD = obj.searchCmd(srch,'all_data',all_data);
-
 
 %% Run the elastic search curl command
 

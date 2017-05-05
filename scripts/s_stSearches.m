@@ -144,8 +144,8 @@ sessions = st.search(srch);
 fprintf('Found %d sessions in the project %s\n',length(sessions),projectLabel);
 
 % Save this session information
-sessionID = sessions{1}.id;
-sessionLabel = sessions{1}.source.label;
+sessionID = sessions{end}.id;
+sessionLabel = sessions{end}.source.label;
 
 % Bring the session up this way
 %   st.browser(sessions{1});
@@ -211,6 +211,11 @@ srch.collections.match.label = 'GearTest';
 analyses = st.search(srch);
 fprintf('Analyses in collections and sessions %d\n',length(analyses));
 
+%% 
+analyses = st.search('analyses','collection label','GearTest');
+fprintf('Analyses in collections and sessions %d\n',length(analyses));
+
+%%
 % Returns analyses attached only to the collection, but not the sessions
 % and acquisitions in the collection.
 clear srch
@@ -219,28 +224,50 @@ srch.collections.match.label = 'GearTest';
 analyses = st.search(srch);
 fprintf('Analyses in collections only %d\n',length(analyses));
 
+%%
+st.search('analysesincollection','collection label','GearTest');
+analyses = st.search(srch);
+fprintf('Analyses in collections only %d\n',length(analyses));
+
+%%
 % Which collection is the analysis in?
 clear srch; 
 srch.path = 'collections';
 srch.collections.match.label = 'GearTest';
 collections = st.search(srch);
+fprintf('Collections found %d\n',length(collections));
 
+%%
+collections = st.search('collections','collection label','GearTest');
+fprintf('Collections found %d\n',length(collections));
+%%
 % Returns analyses attached only to the sessions in the collection, but not
 % to the collection as a whole.
 clear srch
 srch.path = 'sessions/analyses';
 srch.collections.match.label = 'GearTest';
 analyses = st.search(srch);
+fprintf('Analyses found %d\n',length(analyses));
 
+%%
+analyses = st.search('analyses in session','collection label','GearTest');
+fprintf('Analyses found %d\n',length(analyses));
+
+%%
 % Find a session from that collection
 clear srch; 
 srch.path = 'sessions'; 
 srch.collections.match.label = 'GearTest';
 sessions = st.search(srch);
+sessions{1}.source.label
 
 % Bring up the browser to that collection and session
 % NOT WORKING
 % url = st.browser('stdata',sessions{1},'collection',collections{1});
+
+%%
+sessions = st.search('sessions','session label',sessions{1}.source.label);
+sessions{1}.source.label
 
 %% Count the number of sessions created in a recent time period
 
@@ -271,6 +298,10 @@ srch.sessions.match.subjectx0x2E_code = subjectCode;
 sessions = st.search(srch);
 fprintf('Found %d sessions with subject code %s\n',length(sessions),subjectCode)
 
+%%
+sessions = st.search('sessions','subject code','ex4842');
+fprintf('Found %d sessions with subject code %s\n',length(sessions),subjectCode)
+
 % Click to 'Subject' tab to see the subject code
 %    st.browser(s.url,sessions{1});
 
@@ -279,15 +310,21 @@ fprintf('Found %d sessions with subject code %s\n',length(sessions),subjectCode)
 clear srch
 srch.path = 'sessions';
 srch.sessions.bool.must{1}.range.subjectx0x2E_age.gt = year2sec(10);
-srch.sessions.bool.must{1}.range.subjectx0x2E_age.lt = year2sec(15);
-% srch.sessions.bool.must{1}.range.subject_age.gt = year2sec(10);
-% srch.sessions.bool.must{1}.range.subject_age.lt = year2sec(15);
+srch.sessions.bool.must{2}.range.subjectx0x2E_age.lt = year2sec(11);
 sessions = st.search(srch);
 
 fprintf('Found %d sessions\n',length(sessions))
 
 % View it in the browser and click on the subject tab to see the age
 %   st.browser(sessions{1})
+
+%%
+st.search('sessions',...
+    'subject age gt',year2sec(10), ...
+    'subject age lt',year2sec(11));
+sessions = st.search(srch);
+
+fprintf('Found %d sessions\n',length(sessions))
 
 %% Find a session with a specific label
 
