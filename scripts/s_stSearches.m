@@ -114,14 +114,13 @@ fprintf('Found %d projects for the group wandell, with label vwfa.\n',length(pro
 projectID    = projects{end}.id;
 projectLabel = projects{end}.source.label;
 
+%% Needs short form
+
 % You can browse to the project this way
 %   st.browser('stdata',projects{1});
 
 %% Get all the sessions within a specific collection
 
-
-% I think this is not working.  The return is too large.  It should be 22
-% and it is 4400.  RF to debug.
 clear srch; 
 srch.path = 'collections/sessions';
 srch.collections.match.label = 'Anatomy Male 45-55';
@@ -130,7 +129,7 @@ srch.collections.match.label = 'Anatomy Male 45-55';
 fprintf('Found %d sessions in the collection %s\n',length(sessions),srch.collections.match.label);
 
 %% Short form
-[sessions, srchCmd] = st.search('collections/sessions',...
+[sessions, srchCmd] = st.search('sessionsincollection',...
     'collection label contains','Anatomy Male 45-55');
 fprintf('Found %d sessions\n',length(sessions));
 
@@ -273,7 +272,7 @@ sessions{1}.source.label
 
 clear srch
 srch.path = 'collections';
-srch.sessions.range.created.gte = 'now-4w';  % For weeks ago
+srch.sessions.range.created.gte = 'now-12w';  % For weeks ago
 collections = st.search(srch);
 fprintf('Found %d collections in previous four weeks \n',length(collections))
 
@@ -286,7 +285,7 @@ fprintf('Found %d collections in previous four weeks \n',length(collections))
 
 %% Short form
 collections = st.search('collections',...
-    'session after time','now-4w');
+    'session after time','now-12w');
 fprintf('Found %d collections in previous four weeks \n',length(collections))
 
 %% Get sessions with this subject code
@@ -295,11 +294,11 @@ srch.path = 'sessions';
 subjectCode = 'ex4842';
 srch.sessions.match.subjectx0x2E_code = subjectCode;
 % srch.sessions.match.subject_code = subjectCode;
-sessions = st.search(srch);
+sessions = st.search(srch,'all_data',true);
 fprintf('Found %d sessions with subject code %s\n',length(sessions),subjectCode)
 
 %%
-sessions = st.search('sessions','subject code','ex4842');
+sessions = st.search('sessions','subject code','ex4842','all_data',true);
 fprintf('Found %d sessions with subject code %s\n',length(sessions),subjectCode)
 
 % Click to 'Subject' tab to see the subject code

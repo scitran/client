@@ -7,7 +7,9 @@ function [result, srchFile, esCMD] = search(obj,srch,varargin)
 %  srch:  A struct or a string
 %     If a struct, then the fields needed to create the search command
 %     If a string, then the search return and we build the struct from the
-%     varargin{}
+%  all_data: Searchh through all the data, not just the data you own
+%
+%  varargin{} - pairs of search/value
 %
 % Return:
 %  result:    Cell array of returned data structs
@@ -33,7 +35,13 @@ p.addRequired('srch');
 % Not sure what this means yet
 p.addParameter('all_data',false,@islogical);
 
+% Remove the spaces from the varargin because the parser complains.  Why
+% does it do that?
+for ii=1:2:length(varargin)
+    varargin{ii} = strrep(lower(varargin{ii}),' ','');
+end
 p.parse(srch,varargin{:});
+
 srch  = p.Results.srch;
 all_data = p.Results.all_data;
 
@@ -63,7 +71,7 @@ if ischar(srch)
     % Start building the Matlab srch struct
     clear srch
     srch.path = searchType;
-    switch strrep(lower(searchType),' ','');
+    switch strrep(lower(searchType),' ','')
         case 'filesinanalysis'
             srch.path = 'analyses/files';
         case 'filesincollection'
@@ -83,12 +91,13 @@ if ischar(srch)
     % Build the search structure from the param/val pairs
     n = length(varargin);
     for ii=1:2:n
+        
         val = varargin{ii+1};
         
-        % Force lower and remove blanks
-        sformatted = strrep(lower(varargin{ii}),' ','');
-        
-        switch stParamFormat(sformatted)
+        switch stParamFormat(varargin{ii})
+            case {'all_data'}
+                all_data = val;
+                
             case {'sessionlabelcontains'}
                 % srch.sessions.match.label = val;
                 if ~isfield(srch,'sessions')
@@ -106,7 +115,7 @@ if ischar(srch)
                 
             case 'sessionid'
                 srch.sessions.match.x0x5F_id = val;
-             case {'sessionaftertime'}
+            case {'sessionaftertime'}
                 srch.sessions.range.created.gte = val;
                
             case {'projectlabelcontains'}
@@ -144,17 +153,19 @@ if ischar(srch)
                 srch.analysis.match.label = val;
                                 
             otherwise
-                error('Unknown search variable %s\n',sformatted);
+                error('Unknown search variable %s\n',varargin{ii});
         end
         
     end
 end
 
-%% Convert the Matlab struct is converted to json here.  
+%% Convert the Matlab struct to json text
 
 srch = jsonwrite(srch,struct('indent','  ','replacementstyle','hex'));
 srch = regexprep(srch, '\n|\t', ' ');
 srch = regexprep(srch, ' *', ' ');
+
+% The all_data flag ... what does it do?
 esCMD = obj.searchCmd(srch,'all_data',all_data);
 
 %% Run the elastic search curl command
@@ -195,7 +206,7 @@ end
 % Sometimes the result is empty.  Typically it is a struct.
 result = stParseSearch(obj,srchResult);
 
-% Leave the search file, or if it is not asked for delete it.
+%% If the search file is not returned, delete it
 if nargout == 1,  delete(srchFile); end
 
 end
