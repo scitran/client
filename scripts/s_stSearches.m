@@ -317,7 +317,7 @@ fprintf('Found %d sessions\n',length(sessions))
 % View it in the browser and click on the subject tab to see the age
 %   st.browser(sessions{1})
 
-%%
+%% Short form
 st.search('sessions',...
     'subject age gt',year2sec(10), ...
     'subject age lt',year2sec(11));

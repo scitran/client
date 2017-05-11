@@ -114,11 +114,33 @@ if ischar(srch)
                 end
                 
             case 'sessionid'
-                srch.sessions.match.x0x5F_id = val;
+                if ~isfield(srch,'sessions')
+                    srch.sessions.bool.must{1}.match.x0x5F_id = val;
+                else
+                    srch.sessions.bool.must{end + 1}.match.x0x5F_id = val;
+                end
             case {'sessionaftertime'}
-                srch.sessions.range.created.gte = val;
-               
+                
+                if ~isfield(srch,'sessions')
+                    srch.sessions.bool.must{1}.range.created.gte = val;
+                else
+                    srch.sessions.bool.must{end + 1}.range.created.gte = val;
+                end
+            case {'sessionbeforetime'}
+                
+                if ~isfield(srch,'sessions')
+                    srch.sessions.bool.must{1}.range.created.lte = val;
+                else
+                    srch.sessions.bool.must{end + 1}.range.created.lte = val;
+                end
+                
             case {'projectlabelcontains'}
+                if ~isfield(srch,'project')
+                    srch.projects.bool.must{1}.match.label = val;
+                else
+                    srch.projects.bool.must{end + 1}.match.label = val;
+                end
+                
                 srch.projects.match.label = val;
             case {'projectlabelexact','projectlabel'}
                 srch.projects.match.exact_label = val;
@@ -146,6 +168,21 @@ if ischar(srch)
 
             case {'subjectcode'}
                 srch.sessions.match.subjectx0x2E_code = val;
+            case {'subjectagegt'}
+                % Subject age greater than
+                if ~isfield(srch,'sessions')
+                    srch.sessions.bool.must{1}.range.subjectx0x2E_age.gt= val;
+                else
+                    srch.sessions.bool.must{end + 1}.range.subjectx0x2E_age.gt = val;
+                end
+                
+            case {'subjectagelt'}
+                % Subject age less than
+                if ~isfield(srch,'sessions')
+                    srch.sessions.bool.must{1}.range.subjectx0x2E_age.lt= val;
+                else
+                    srch.sessions.bool.must{end + 1}.range.subjectx0x2E_age.lt = val;
+                end
                 
             case {'analysislabelexact','analysislabel'}
                 srch.analysis.match.exact_label = val;
