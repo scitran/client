@@ -98,6 +98,31 @@ if ischar(srch)
             case {'all_data'}
                 all_data = val;
                 
+                
+                              
+            case {'projectlabelcontains'}
+                if ~isfield(srch,'project')
+                    srch.projects.bool.must{1}.match.label = val;
+                else
+                    srch.projects.bool.must{end + 1}.match.label = val;
+                end
+                
+                srch.projects.match.label = val;
+            case {'projectlabelexact','projectlabel'}
+                if ~isfield(srch,'project')
+                    srch.projects.bool.must{1}.match.exact_label = val;
+                else
+                    srch.projects.bool.must{end + 1}.match.exact_label = val;
+                end
+                
+            case {'projectid'}
+                % Note the ugly x0x5F, needed for jsonio
+                if ~isfield(srch,'project')
+                    srch.projects.bool.must{1}.match.x0x5F_id = val;
+                else
+                    srch.projects.bool.must{end + 1}.match.x0x5F_id = val;
+                end
+                
             case {'sessionlabelcontains'}
                 % srch.sessions.match.label = val;
                 if ~isfield(srch,'sessions')
@@ -134,40 +159,75 @@ if ischar(srch)
                     srch.sessions.bool.must{end + 1}.range.created.lte = val;
                 end
                 
-            case {'projectlabelcontains'}
-                if ~isfield(srch,'project')
-                    srch.projects.bool.must{1}.match.label = val;
+                
+            case {'analysislabelexact','analysislabel'}
+                if ~isfield(srch,'analyses')
+                    srch.analyses.bool.must{1}.match.exact_label= val;
                 else
-                    srch.projects.bool.must{end + 1}.match.label = val;
+                    srch.analyses.bool.must{end + 1}.match.exact_label = val;
+                end
+            case {'analysislabelcontains'}
+                if ~isfield(srch,'analyses')
+                    srch.analyses.bool.must{1}.match.label= val;
+                else
+                    srch.analyses.bool.must{end + 1}.match.label = val;
                 end
                 
-                srch.projects.match.label = val;
-            case {'projectlabelexact','projectlabel'}
-                srch.projects.match.exact_label = val;
-            case {'projectid'}
-                % Note the ugly x0x5F, needed for jsonio
-                srch.projects.match.x0x5F_id = val;   
                 
             case {'collectionlabelcontains'}
-                srch.collections.match.label = val;
+                if ~isfield(srch,'collections')
+                    srch.collections.bool.must{1}.match.label = val;
+                else
+                    srch.collections.bool.must{end + 1}.match.label = val;
+                end
+                
             case {'collectionlabelexact','collectionlabel'}
-                srch.collections.match.exact_label = val;
-
+                if ~isfield(srch,'collections')
+                    srch.collections.bool.must{1}.match.exact_label = val;
+                else
+                    srch.collections.bool.must{end + 1}.match.exact_label = val;
+                end
 
             case {'acquisitionlabelcontains'}
-                srch.acquisitions.match.label = val;
+                if ~isfield(srch,'acquisitions')
+                    srch.acquisitions.bool.must{1}.match.label = val;
+                else
+                    srch.acquisitions.bool.must{end + 1}.match.label = val;
+                end
+                
             case {'acquisitionlabelexact','acquisitionlabel'}
-                srch.acquisitions.match.exact_label = val;
+                if ~isfield(srch,'acquisitions')
+                    srch.acquisitions.bool.must{1}.match.exact_label = val;
+                else
+                    srch.acquisitions.bool.must{end + 1}.match.exact_label = val;
+                end
                 
             case {'filenamecontains'}
-                srch.files.match.name = val;
+                if ~isfield(srch,'files')
+                    srch.files.bool.must{1}.match.name = val;
+                else
+                    srch.files.bool.must{end + 1}.match.name = val;
+                end
             case {'filenameexact','filename'}
-                srch.files.match.exact_name = val;
+                if ~isfield(srch,'files')
+                    srch.files.bool.must{1}.match.exact_name = val;
+                else
+                    srch.files.bool.must{end + 1}.match.exact_name = val;
+                end
             case {'filetype'}
-                srch.files.match.type = val;
+                % Nifti, dicom, ...
+                if ~isfield(srch,'files')
+                    srch.files.bool.must{1}.match.type = val;
+                else
+                    srch.files.bool.must{end + 1}.match.type = val;
+                end
 
             case {'subjectcode'}
-                srch.sessions.match.subjectx0x2E_code = val;
+                if ~isfield(srch,'sessions')
+                    srch.sessions.bool.must{1}.match.subjectx0x2E_code = val;
+                else
+                    srch.sessions.bool.must{end + 1}.match.subjectx0x2E_code = val;
+                end
             case {'subjectagegt'}
                 % Subject age greater than
                 if ~isfield(srch,'sessions')
@@ -184,10 +244,7 @@ if ischar(srch)
                     srch.sessions.bool.must{end + 1}.range.subjectx0x2E_age.lt = val;
                 end
                 
-            case {'analysislabelexact','analysislabel'}
-                srch.analysis.match.exact_label = val;
-            case {'analysislabelcontains'}
-                srch.analysis.match.label = val;
+
                                 
             otherwise
                 error('Unknown search variable %s\n',varargin{ii});
