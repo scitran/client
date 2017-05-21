@@ -1,26 +1,71 @@
-function [result, srchFile, esCMD] = search(obj,srch,varargin)
+function [result, srchStruct, srchFile, esCMD] = search(obj,srch,varargin)
 % Create an elastic search cmd and run it with curl
 %
-%  [srchResult, srchFile, esCMD] = st.search(srch, ...)
+%  [srchResult, srchStruct, srchFile, esCMD] = st.search(srch, ...)
 %
-% Input:
+% Required Input:
 %  srch:  A struct or a string
-%     If a struct, then the fields needed to create the search command
-%     If a string, then the search return and we build the struct from the
-%  all_data: Searchh through all the data, not just the data you own
-%
-%  varargin{} - pairs of search/value
+%     If a struct, then it must contain all the fields needed to create the
+%       search command 
+%     If a string, then the search return type, and we build the struct
+%       from the parameter/value pairs in varargin.  See s_stSearches.m for
+%       many examples.
 %
 % Return:
-%  result:    Cell array of returned data structs
-%  srchFile:  Name of json file returned by the search
-%  esCMD:     The elastic search curl command 
+%  result:     Cell array of returned data structs
+%  srchStruct: The structure defined by the search varargins
+%  srchFile:   Name of json file returned by the search
+%  esCMD:      The elastic search curl command 
 %
 % Examples:
-%   Simple search
+%   Simple search - see s_stSearches
+%   Advanced searches - see s_stSearchesLongForm.m
 %
-%   Advanced searches
+% Programming Notes
 %
+%  Matlab uses '.' in structs, and json allows '.' as part of the
+%  variable name. So, we insert a dot on the Matlab side by inserting a
+%  string, x0x2E_.  See v_stJSONio for test examples.
+%
+% This should go on the wiki page, not here.
+% 
+%   Searching for an object
+%
+%  Searches begin by defining the type of object you are looking for (e.g.,
+%  files).  Then we define the required features of the object.
+%
+%  We set the terms of the search by  creating a Matlab struct.  The first
+%  slot in the struct defines the type of object you are searching for.
+%  Suppose we call the struct 'srch'.  The srch.path slot defines the kind
+%  of object we are searching for.
+%
+%   srch.path = 'projects'
+%   srch.path = 'sessions'    
+%   srch.path = 'acquisitions'
+%   srch.path = 'files'        
+%   srch.path = 'analysis'
+%   srch.path = 'collections'
+%
+% The search operations are specified by adding additional slots to the
+% struct, 'srch'.  These includes specific operators, parameters, and
+% values.  The point of this script is to provide many examples of how to
+% set up these searches
+% 
+% Important operators that we use below are
+%
+%   'match', 'bool', 'must', 'range'
+%
+% Important parameters we use in search are 
+%   'name', 'group', 'label', 'id','plink', subject_0x2E_age',
+%   'container_id', 'type'.  
+%
+% A list of searchable terms can be found in the scitran/core
+%
+%  <https://github.com/scitran/core/wiki/Data-Model Data Model page>.
+%
+% Other operators are possible (e.g. 'filtered','filter','query','not') but
+% here we illustrate the basics. 
+% 
 % BW Scitran Team 2016
 
 %% Could check the srch struct here for the appropriate fields
@@ -96,31 +141,34 @@ if ischar(srch)
         
         switch stParamFormat(varargin{ii})
             case {'all_data'}
+                % Search all of the data.  By default you search only your
+                % own data
                 all_data = val;
-                
-                
                               
             case {'projectlabelcontains'}
-                if ~isfield(srch,'project')
+                if ~isfield(srch,'projects')
                     srch.projects.bool.must{1}.match.label = val;
                 else
                     srch.projects.bool.must{end + 1}.match.label = val;
                 end
-                
-                srch.projects.match.label = val;
             case {'projectlabelexact','projectlabel'}
-                if ~isfield(srch,'project')
+                if ~isfield(srch,'projects')
                     srch.projects.bool.must{1}.match.exact_label = val;
                 else
                     srch.projects.bool.must{end + 1}.match.exact_label = val;
                 end
-                
             case {'projectid'}
                 % Note the ugly x0x5F, needed for jsonio
-                if ~isfield(srch,'project')
+                if ~isfield(srch,'projects')
                     srch.projects.bool.must{1}.match.x0x5F_id = val;
                 else
                     srch.projects.bool.must{end + 1}.match.x0x5F_id = val;
+                end
+            case{'projectgroup'}
+                if ~isfield(srch,'projects')
+                    srch.projects.bool.must{1}.match.group = val;
+                else
+                    srch.projects.bool.must{end + 1}.match.group = val;
                 end
                 
             case {'sessionlabelcontains'}
@@ -137,7 +185,6 @@ if ischar(srch)
                 else
                     srch.sessions.bool.must{end + 1}.match.exact_label = val;
                 end
-                
             case 'sessionid'
                 if ~isfield(srch,'sessions')
                     srch.sessions.bool.must{1}.match.x0x5F_id = val;
@@ -145,21 +192,30 @@ if ischar(srch)
                     srch.sessions.bool.must{end + 1}.match.x0x5F_id = val;
                 end
             case {'sessionaftertime'}
-                
                 if ~isfield(srch,'sessions')
                     srch.sessions.bool.must{1}.range.created.gte = val;
                 else
                     srch.sessions.bool.must{end + 1}.range.created.gte = val;
                 end
             case {'sessionbeforetime'}
-                
                 if ~isfield(srch,'sessions')
                     srch.sessions.bool.must{1}.range.created.lte = val;
                 else
                     srch.sessions.bool.must{end + 1}.range.created.lte = val;
                 end
-                
-                
+            case {'sessioncontainsanalysis'}
+                if ~isfield(srch,'sessions')
+                    srch.sessions.bool.must{1}.match.analysesx0x2E_label = val;
+                else
+                    srch.sessions.bool.must{end + 1}.match.analysesx0x2E_label = val;
+                end
+            case {'sessioncontainssubject'}
+                if ~isfield(srch,'sessions')
+                    srch.sessions.bool.must{1}.match.subjectx0x2E_code = val;
+                else
+                    srch.sessions.bool.must{end + 1}.match.subjectx0x2E_code = val;
+                end
+                    
             case {'analysislabelexact','analysislabel'}
                 if ~isfield(srch,'analyses')
                     srch.analyses.bool.must{1}.match.exact_label= val;
@@ -180,21 +236,19 @@ if ischar(srch)
                 else
                     srch.collections.bool.must{end + 1}.match.label = val;
                 end
-                
             case {'collectionlabelexact','collectionlabel'}
                 if ~isfield(srch,'collections')
                     srch.collections.bool.must{1}.match.exact_label = val;
                 else
                     srch.collections.bool.must{end + 1}.match.exact_label = val;
                 end
-
+                
             case {'acquisitionlabelcontains'}
                 if ~isfield(srch,'acquisitions')
                     srch.acquisitions.bool.must{1}.match.label = val;
                 else
                     srch.acquisitions.bool.must{end + 1}.match.label = val;
                 end
-                
             case {'acquisitionlabelexact','acquisitionlabel'}
                 if ~isfield(srch,'acquisitions')
                     srch.acquisitions.bool.must{1}.match.exact_label = val;
@@ -235,7 +289,6 @@ if ischar(srch)
                 else
                     srch.sessions.bool.must{end + 1}.range.subjectx0x2E_age.gt = val;
                 end
-                
             case {'subjectagelt'}
                 % Subject age less than
                 if ~isfield(srch,'sessions')
@@ -243,8 +296,6 @@ if ischar(srch)
                 else
                     srch.sessions.bool.must{end + 1}.range.subjectx0x2E_age.lt = val;
                 end
-                
-
                                 
             otherwise
                 error('Unknown search variable %s\n',varargin{ii});
@@ -252,6 +303,9 @@ if ischar(srch)
         
     end
 end
+
+%% Save the search struct for possible return
+srchStruct = srch;
 
 %% Convert the Matlab struct to json text
 
