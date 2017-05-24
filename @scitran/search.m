@@ -160,9 +160,9 @@ if ischar(srch)
             case {'projectid'}
                 % Note the ugly x0x5F, needed for jsonio
                 if ~isfield(srch,'projects')
-                    srch.projects.bool.must{1}.match.x0x5F_id = val;
+                    srch.projects.bool.must{1}.match.x0x5Fid = val;
                 else
-                    srch.projects.bool.must{end + 1}.match.x0x5F_id = val;
+                    srch.projects.bool.must{end + 1}.match.x0x5Fid = val;
                 end
             case{'projectgroup'}
                 if ~isfield(srch,'projects')
@@ -187,9 +187,9 @@ if ischar(srch)
                 end
             case 'sessionid'
                 if ~isfield(srch,'sessions')
-                    srch.sessions.bool.must{1}.match.x0x5F_id = val;
+                    srch.sessions.bool.must{1}.match.x0x5Fid = val;
                 else
-                    srch.sessions.bool.must{end + 1}.match.x0x5F_id = val;
+                    srch.sessions.bool.must{end + 1}.match.x0x5Fid = val;
                 end
             case {'sessionaftertime'}
                 if ~isfield(srch,'sessions')
@@ -205,15 +205,15 @@ if ischar(srch)
                 end
             case {'sessioncontainsanalysis'}
                 if ~isfield(srch,'sessions')
-                    srch.sessions.bool.must{1}.match.analysesx0x2E_label = val;
+                    srch.sessions.bool.must{1}.match.analyses0x2Elabel = val;
                 else
-                    srch.sessions.bool.must{end + 1}.match.analysesx0x2E_label = val;
+                    srch.sessions.bool.must{end + 1}.match.analyses0x2Elabel = val;
                 end
             case {'sessioncontainssubject'}
                 if ~isfield(srch,'sessions')
-                    srch.sessions.bool.must{1}.match.subjectx0x2E_code = val;
+                    srch.sessions.bool.must{1}.match.subject0x2Ecode = val;
                 else
-                    srch.sessions.bool.must{end + 1}.match.subjectx0x2E_code = val;
+                    srch.sessions.bool.must{end + 1}.match.subject0x2Ecode = val;
                 end
                     
             case {'analysislabelexact','analysislabel'}
@@ -278,23 +278,23 @@ if ischar(srch)
 
             case {'subjectcode'}
                 if ~isfield(srch,'sessions')
-                    srch.sessions.bool.must{1}.match.subjectx0x2E_code = val;
+                    srch.sessions.bool.must{1}.match.subject0x2Ecode = val;
                 else
-                    srch.sessions.bool.must{end + 1}.match.subjectx0x2E_code = val;
+                    srch.sessions.bool.must{end + 1}.match.subject0x2Ecode = val;
                 end
             case {'subjectagegt'}
                 % Subject age greater than
                 if ~isfield(srch,'sessions')
-                    srch.sessions.bool.must{1}.range.subjectx0x2E_age.gt= val;
+                    srch.sessions.bool.must{1}.range.subject0x2Eage.gt= val;
                 else
-                    srch.sessions.bool.must{end + 1}.range.subjectx0x2E_age.gt = val;
+                    srch.sessions.bool.must{end + 1}.range.subject0x2Eage.gt = val;
                 end
             case {'subjectagelt'}
                 % Subject age less than
                 if ~isfield(srch,'sessions')
-                    srch.sessions.bool.must{1}.range.subjectx0x2E_age.lt= val;
+                    srch.sessions.bool.must{1}.range.subject0x2Eage.lt= val;
                 else
-                    srch.sessions.bool.must{end + 1}.range.subjectx0x2E_age.lt = val;
+                    srch.sessions.bool.must{end + 1}.range.subject0x2Eage.lt = val;
                 end
                                 
             otherwise
