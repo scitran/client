@@ -1,5 +1,5 @@
 function [status, result] = createCollection(obj, label, acquisitionIds)
-% Create a collection from a list of an acquisitions search
+% Create a collection from a list of acquisitions
 % 
 % example:
 % st = scitran('action', 'create', 'instance', 'scitran');

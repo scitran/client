@@ -1,9 +1,11 @@
 function cmd = updateCmd(obj, containerType, containerId, payload, varargin)
 
-% Build the command to updaate a project/session/acquisition
+% Build the command to update a project/session/acquisition
+% More info in the documentation for scitran.update
 %
-%
-% RF
+% RF 2016
+
+%%
 p = inputParser;
 p.addRequired('containerType',@ischar);
 p.addRequired('containerId',@ischar);
