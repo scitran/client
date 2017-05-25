@@ -1,4 +1,14 @@
 function cmd = deleteFileCmd(obj, containerType, containerID, filename)
+% Create a command that deletes a file from a container
+% 
+% example:
+% 
+%   st = scitran('action', 'create', 'instance', 'scitran');
+%   cmd = st.deleteFileCmd('sessions', '58d470397c09ef001ceaa005', 'foo.pdf');
+%   [status, result] = stCurlRun(cmd);
+% 
+%
+% RF 2017
 
 p = inputParser;
 p.addRequired('containerType',@ischar);

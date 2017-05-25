@@ -1,7 +1,19 @@
 function [status, result] = createCollectionFromSearch(obj, label, searchResults)
-% Create a collection from a list of an acquisitions search
-% 
+% Create a collection from a list of acquisition searchResults
+%
+% example:
+% st = scitran('action', 'create', 'instance', 'scitran');
+% clear srch;
+% srch.path = 'acquisitions';
+% srch.projects.match.label = 'HCP';
+% srch.acquisitions.match.label = 'T1w';
+% searchResults = st.search(srch);
+% [status, result] = st.createCollectionFromSearch('HCP T1s', searchResults);
+%
+% RF 2017
+%
 
+%%
 p = inputParser;
 p.addRequired('label', @ischar);
 p.addRequired('searchResults');
