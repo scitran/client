@@ -311,19 +311,16 @@ fprintf('Found %d matching files\n',length(files))
 
 %% get files from a collection
 
-% Broken -
-% clear srch
-% srch.path = 'files'; 
-% srch.collections.match.label = 'Anatomy Male 45-55';   
-% % srch.acquisitions.match.label = 'Localizer';   
-% % srch.files.match.type = 'nifti';
-% 
-% files = st.search(srch);
-% fprintf('Found %d matching files\n',length(files))
-% 
-% for ii=1:length(files)
-%     files{ii}.source
-% end
+clear srch
+srch.path = 'files'; 
+srch.collections.match.label = 'Anatomy Male 45-55';   
+srch.acquisitions.match.exact_label = 'Localizer';   
+srch.files.match.type = 'nifti';
+files = st.search(srch);
+fprintf('Found %d matching files\n',length(files))
+for ii=1:length(files)
+    files{ii}.source.acquisition.label
+end
 
 %% Find sessions in this project that contain an analysis
 

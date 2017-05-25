@@ -91,8 +91,7 @@ fprintf('Analyses in collections and sessions: %d\n',length(analyses));
 % Returns analyses attached only to the collection, but not the sessions
 % and acquisitions in the collection.
 
-st.search('analysesincollection','collection label','GearTest');
-analyses = st.search(srch);
+analyses = st.search('analysesincollection','collection label','GearTest');
 fprintf('Analyses in collections only %d\n',length(analyses));
 
 %% Which collection is the analysis in?
@@ -123,11 +122,9 @@ fprintf('Found %d sessions with subject code %s\n',length(sessions),subjectCode)
 
 %% Get sessions in which the subject age is within a range
 
-st.search('sessions',...
+sessions = st.search('sessions',...
     'subject age gt',year2sec(10), ...
     'subject age lt',year2sec(11));
-sessions = st.search(srch);
-
 fprintf('Found %d sessions\n',length(sessions))
 
 %% Find a session with a specific label
@@ -175,21 +172,12 @@ fprintf('---------\n');
     'acquisition label contains','T1w 1mm');
 fprintf('Found %d matching files\n',length(files))
 
-%% get files from a collection
-
-% Broken -
-% clear srch
-% srch.path = 'files'; 
-% srch.collections.match.label = 'Anatomy Male 45-55';   
-% srch.acquisitions.match.label = 'Localizer';   
-% srch.files.match.type = 'nifti';
-% % 
-% files = st.search(srch);
-% fprintf('Found %d matching files\n',length(files))
-% 
-% for ii=1:length(files)
-%     files{ii}.source
-% end
+%%
+files = st.search('files',...
+    'collection label','Anatomy Male 45-55',...
+    'acquisition label','Localizer',...
+    'file type','nifti');
+fprintf('Found %d matching files\n',length(files))
 
 %% Find sessions in this project that contain an analysis
 
