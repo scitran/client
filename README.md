@@ -28,11 +28,13 @@ You might verify that you succeeded by trying from within your Matlab command wi
 
 ## JSONio
 
-We rely upon Guillaume Flandin's code to read and write JSON files.  The version we use is forked and a particular commit, which you can get here 
+We rely upon Guillaume Flandin's code to read and write JSON files.  For a period of time, Tthe version we use is forked and a particular commit, which you can get here 
    ```
    git clone https://github.com/vistalab/JSONio.git
    ```
 Install that repository and add it to your path.
+
+We are about to shift to use the master branch from Guillaume's work.  This has not been fully tested yet.
 
 ## Docker
 
