@@ -116,8 +116,7 @@ fprintf('Found %d sessions in the collection %s\n',length(sessions),srch.collect
 
 clear srch
 srch.path = 'sessions';
-srch.projects.match.x0x5F_id = projectID;   % Note the ugly x0x5F.  See notes.
-% srch.projects.match.x_id = projectID;
+srch.projects.match.x0x5Fid = projectID;   % Note the ugly x0x5F.  See notes.
 sessions = st.search(srch);
 fprintf('Found %d sessions in the project %s\n',length(sessions),projectLabel);
 
@@ -132,7 +131,7 @@ sessionLabel = sessions{end}.source.label;
 
 clear srch
 srch.path = 'acquisitions';
-srch.sessions.match.x0x5F_id = sessionID;
+srch.sessions.match.x0x5Fid = sessionID;
 acquisitions = st.search(srch);
 fprintf('Found %d acquisitions in the session %s\n',length(acquisitions),sessionLabel);
 
@@ -143,7 +142,7 @@ fprintf('Found %d acquisitions in the session %s\n',length(acquisitions),session
 
 clear srch
 srch.path = 'files';
-srch.sessions.match.x0x5F_id = sessionID;
+srch.sessions.match.x0x5Fid = sessionID;
 srch.files.match.type = 'nifti';
 files = st.search(srch);
 
@@ -209,7 +208,7 @@ sessions{1}.source.label
 
 clear srch
 srch.path = 'collections';
-srch.sessions.range.created.gte = 'now-12w';  % For weeks ago
+srch.sessions.range.created.gte = 'now-16w';  % For weeks ago
 collections = st.search(srch);
 fprintf('Found %d collections in previous four weeks \n',length(collections))
 
@@ -224,9 +223,9 @@ fprintf('Found %d collections in previous four weeks \n',length(collections))
 clear srch
 srch.path = 'sessions';
 subjectCode = 'ex4842';
-srch.sessions.match.subjectx0x2E_code = subjectCode;
+srch.sessions.match.subject0x2Ecode = subjectCode;
 % srch.sessions.match.subject_code = subjectCode;
-sessions = st.search(srch,'all_data',true);
+[sessions,srchS] = st.search(srch,'all_data',true);
 fprintf('Found %d sessions with subject code %s\n',length(sessions),subjectCode)
 
 % Click to 'Subject' tab to see the subject code
@@ -236,8 +235,8 @@ fprintf('Found %d sessions with subject code %s\n',length(sessions),subjectCode)
 
 clear srch
 srch.path = 'sessions';
-srch.sessions.bool.must{1}.range.subjectx0x2E_age.gt = year2sec(10);
-srch.sessions.bool.must{2}.range.subjectx0x2E_age.lt = year2sec(11);
+srch.sessions.bool.must{1}.range.subject0x2Eage.gt = year2sec(10);
+srch.sessions.bool.must{2}.range.subject0x2Eage.lt = year2sec(11);
 sessions = st.search(srch);
 
 fprintf('Found %d sessions\n',length(sessions))
@@ -329,8 +328,8 @@ end
 clear srch
 srch.path = 'sessions';   
 srch.projects.match.exact_label = 'UMN';
-srch.sessions.bool.must(1).match.analysesx0x2E_label = 'AFQ';  % DOT
-srch.sessions.bool.must(2).match.subjectx0x2E_code = '4279';
+srch.sessions.bool.must(1).match.analyses0x2Elabel = 'AFQ';  % DOT
+srch.sessions.bool.must(2).match.subject0x2Ecode = '4279';
 sessions = st.search(srch,'all_data',true);
 
 fprintf('Found %d matching sessions\n',length(sessions))
