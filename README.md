@@ -42,7 +42,7 @@ This branch should shift to use the master branch from Guillaume's work.  When w
 
 You may want to run docker containers, which requires that you have Docker installed on your local machine. To do that visit the docker website for [OSX](https://docs.docker.com/engine/installation/mac/) and [Linux](https://docs.docker.com/linux/step_one/) instructions. If you have Homebrew on OSX, you can install the toolbox from the command line with `brew cask install dockertoolbox`.
 
-Once Docker os installed you can invoke any docker machine and container you set up on your computer. You can use the command [matlab/stDockerConfig.m](https://github.com/scitran/client/blob/master/utility/stDockerConfig.m).
+Once Docker is installed you can invoke any docker machine and container you set up on your computer. To set up the configuration for your computer, use the command [matlab/stDockerConfig.m](https://github.com/scitran/client/blob/master/utility/stDockerConfig.m).
 
 
 
