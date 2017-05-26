@@ -3,16 +3,14 @@ To perform a search, you must first obtain [authorization](https://github.com/sc
 
     st = scitran('action','create','instance','scitran');
 
-Then, create a Matlab structure to set the search parameters. Perhaps the simplest and most important example is to identify files for downloading. 
+The st.search() command specifies your search through a series of parameters.  The first parameter is a required string that indicates what type of object you would like to have returned.  For example, siuppose you are searching for a file.  Then you would specify
 
-    srch.path = 'files';                         % Return information about files
+    st.search('files');
 
-Then we identify the file properties.  
+The next set of parameters are all in parameter/val format, and they are optional.  Suppose you would like to return the files in a collection name 'GearTest'.
 
     % These files match the following properties
-    srch.collections.match.label  = 'GearTest';   % In the collection named GearTest
-    srch.acquisitions.match.label = 'T1w';        % Part of an acquisition named T1w
-    srch.files.match.type         = 'nifti';      % The file type is nifti
+    files = st.search('files','collection label','VWFA','file type','nifti','file measurement','Anatomy_t1w');
 
 To run the search
 
