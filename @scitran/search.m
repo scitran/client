@@ -205,7 +205,7 @@ if ischar(srch)
                 else
                     srch.sessions.bool.must{end + 1}.range.created.lte = val;
                 end
-            case {'sessioncontainsanalysis'}
+            case {'sessioncontainsanalysis','sessioncontainsanalysislabel'}
                 if ~isfield(srch,'sessions')
                     srch.sessions.bool.must{1}.match.analyses0x2Elabel = val;
                 else
