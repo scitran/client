@@ -61,9 +61,6 @@ fslBetSessions = st.search('sessions',...
 fprintf('Found %d sessions with fsl-bet\n',...
     length(fslBetSessions));
 
-%%
-
-
 %% Find session in ENGAGE that have an Anatomy_t1w acquisition
 
 sessions = st.search('sessions',...
