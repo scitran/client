@@ -80,7 +80,9 @@ if status ~= 0
     fprintf('docker error: %s\n', result);
 end
 
-%% Visualize
+%% Visualize - you are on your own.  But we have checked
+%  1.  Freeview
+%  2.  niftiView
 
 
 %% UPLOAD: the processed/result file to the collection
