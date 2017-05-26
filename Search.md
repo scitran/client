@@ -10,7 +10,9 @@ The st.search() command specifies your search through a series of parameters.  T
 The next set of parameters are all in parameter/val format, and they are optional.  Suppose you would like to return the files in a collection name 'GearTest'.
 
     % These files match the following properties
-    files = st.search('files','collection label','VWFA','file type','nifti','file measurement','Anatomy_t1w');
+    files = st.search('files','collection label','VWFA',...
+            'file type','nifti',...
+            'file measurement','Anatomy_t1w');
 
 To run the search
 
