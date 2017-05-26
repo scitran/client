@@ -1,14 +1,20 @@
-Using Matlab, the basic syntax for the search is to create a Matlab structure with specific fields that define the search parameters.
+The syntax for the Matlab search is to create a scitran object and then use the scitran.search() method.
 
-The first field defines the type of object you would like returned.  This is specified by the 'path' slot, as in
+    st = scitran('acgtion','create','instance','scitran')
 
-    % The value can be 
+The first field defines the type of object you would like returned. The remaining arguments define the search parameters as parameter-value pairs. The returned object is a cell array of one of these types of objects
+
     %   'projects','sessions','acquisitions','files','collections', 'analyses', or 'subjects'
-    srch.path = 'files';  
+    projects = st.search('projects');       % All the projects you have access to see
 
-Additional fields define the conditions of the search.  Suppose that you want files that are within a collection whose label matches 'GearTest'.  Then you add this term to the Matlab srch structure.
+There are many additional search parameters defined in the header of scitran.search(). For example, to find all the projects with a particular label you can invoke
 
-    srch.collection.match.label = 'GearTest';
+    project = st.search('projects','project label','VWFA');
+    project = st.search('projects','project label contains','VWFA');
+
+## Long form searches
+
+This section will be written up later
 
 In general, search looks for any string matches.  So, if there is another collection called 'GearTest2', the search will return both 'GearTest' and 'GearTest2'.  If you want an exact match, then use
 
