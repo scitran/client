@@ -82,7 +82,7 @@ for ii=1:length(collections)
     fprintf('\t%s\n',collections{ii}.source.label);
 end
 
-%%
+%% 
 [analyses,srchS] = st.search('analyses in collection',...
     'collection label','ENGAGE');
 

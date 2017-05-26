@@ -50,11 +50,6 @@ stDirCreate(oDir);
 %% RUN BET: #2 Download the file from the scitran database
 st.get(file{1},'destination',fullfile(workingDir,'input',FILENAME));
 
-% destFile = fullfile(iDir, RESULT.name);
-% [dl_file, inputPlink] = stFileDownload(client_url, token, RESULT, 'destination', destFile);
-% fprintf('Downloaded: %s\n', dl_file);
-
-
 %% RUN BET: #3 Set up parameters for the docker container and run it
 
 % Build the docker structure to run the container
