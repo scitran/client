@@ -23,11 +23,13 @@ function [result, srchStruct, srchFile, esCMD] = search(obj,srch,varargin)
 %
 % Programming Notes
 %
-%  Matlab uses '.' in structs, and json allows '.' as part of the
-%  variable name. So, we insert a dot on the Matlab side by inserting a
-%  string, x0x2E_.  See v_stJSONio for test examples.
+%  Matlab uses '.' in structs, and json allows '.' as part of the variable
+%  name. So, we insert a dot on the Matlab side by inserting a string,
+%  x0x2E in the Matlab variable. We lead with an underscore by using x0x5F
+%  at the beginning of the variable. See v_stJSONio for examples or to
+%  test.
 %
-% This should go on the wiki page, not here.
+% This information should go on the wiki page, as well.
 % 
 %   Searching for an object
 %
@@ -269,13 +271,21 @@ if ischar(srch)
                     srch.files.bool.must{end + 1}.match.exact_name = val;
                 end
             case {'filetype'}
-                % Nifti, dicom, ...
+                % Nifti, dicom, bvec, bval,montage ...
                 if ~isfield(srch,'files')
                     srch.files.bool.must{1}.match.type = val;
                 else
                     srch.files.bool.must{end + 1}.match.type = val;
                 end
-
+            case {'filemeasurement'}
+                % Localizer, Anatomy_t1w, Calibration, High_order_shim,
+                % Functional, Anatomy_inplane, Diffusion
+                if ~isfield(srch,'files')
+                    srch.files.bool.must{1}.match.measurements = val;
+                else
+                    srch.files.bool.must{end + 1}.match.measurements = val;
+                end
+                
             case {'subjectcode'}
                 if ~isfield(srch,'sessions')
                     srch.sessions.bool.must{1}.match.subject0x2Ecode = val;
@@ -296,7 +306,8 @@ if ischar(srch)
                 else
                     srch.sessions.bool.must{end + 1}.range.subject0x2Eage.lt = val;
                 end
-                                
+                       
+             
             otherwise
                 error('Unknown search variable %s\n',varargin{ii});
         end

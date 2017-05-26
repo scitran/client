@@ -110,7 +110,8 @@ end
 
 idx = 2;
 
-plink = sprintf('%s/api/acquisitions/%s/files/%s', furl, scitranData{idx}.acquisition.x0x5F_id, scitranData{idx}.name);
+% This worries me ... not sure we have the x0x5Fid part right.
+plink = sprintf('%s/api/acquisitions/%s/files/%s', furl, scitranData{idx}.acquisition.x0x5Fid, scitranData{idx}.name);
 
 % Download the file
 % dl_file = stGet(plink, token);
@@ -128,7 +129,7 @@ print -dpng 'bvecs.png';
 %% Upload an analysis
 
 % Get the collection ID 
-COL_ID = scitranData{idx}.collection.x0x5F_id;
+COL_ID = scitranData{idx}.collection.x0x5Fid;
 
 % Construct the json payload
 % .label and .files are required.
@@ -157,7 +158,7 @@ curlCmd = sprintf('curl -F "file=@%s" -F "metadata=%s" %s/api/collections/%s/ana
 disp(result);
 
 % Load the json result
-R = loadjson(result); % Has x0x5F_id field
+R = loadjson(result);
 
 % Display the analysis id
 fprintf('Analysis id: %s \n', R.x0x5F_id);

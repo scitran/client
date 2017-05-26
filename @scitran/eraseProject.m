@@ -15,12 +15,12 @@ function  eraseProject(obj, projectID)
 %  scitran.projectHierarchy dependency or in the search results retrieved 
 %  by this method.
 %  More subtle bugs could be related to the JSON library we are using.
-%  If, for example the 'x0x5F_id', is not converted to '_id' in the JSON 
+%  If, for example the 'x0x5Fid', is not converted to '_id' in the JSON 
 %  sent to the API
 %
 %  RF
 %%
-[project, sess, acqs] = obj.projectHierarchy('x0x5F_id', projectID);
+[project, sess, acqs] = obj.projectHierarchy('x0x5Fid', projectID);
 length_acqs = 0;
 %% compute the total length of the acquisitions collected
 for ii = 1:length(acqs)

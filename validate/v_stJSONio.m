@@ -1,23 +1,30 @@
 % s_stJSONIO tests
 %
-% G. Flandin kindly wrote a condition so that when there is x0xVVV_ in the
-% string it is replaced by the hex value of VVV
+% G. Flandin modified his Matlab JSONio repository to enable us to replace
+% certain hex strings with protected characters in Matlab.
 %
+% We can place a 'dot' in a string and we can start a variable with an
+% underscore. To do so requires placing the hex string in the Matlab
+% variable, and then calling jsonwrite() with the 'replacementstyle','hex'
+% arguments. See below.
 %
+% BW Scitran Team, 2017
 
 %% Preserve the first underscore in a string (_id)
-% Put x0x5F_ in the string
+%
+% Put x0x5F in the Matlab variable to lead with an underscore
+
 clear srch
-srch.projects.match.x0x5F_id = 111;
+srch.projects.match.x0x5Fid = 111;
 jsonwrite(srch,struct('indent','  ','replacementstyle','hex'))
 
 %% Preserve the '.' in a string
 %
-% Put x0x2E_ in the string
-%
+% Put 0x2E in the Matlab variable to create a '.' (dot) in the JSON
+% variable.
 
 clear srch
-srch.sessions.range.subjectx0x2E_age.gt = 1;
+srch.sessions.range.subject0x2Eage.gt = 1;
 jsonwrite(srch,struct('indent','  ','replacementstyle','hex'))
 
 %%

@@ -52,7 +52,7 @@ for ii = 1:length(searchResults)
     if ~isempty(regexp(searchResults{ii}.type, 'projects|sessions|acquisitions', 'once'))
         clear node;
         node.level = searchResults{ii}.type(1:end-1);
-        node.x0x5F_id = searchResults{ii}.id;
+        node.x0x5Fid = searchResults{ii}.id;
         payload.contents.nodes{jj} = node;
         jj = jj + 1;
     end

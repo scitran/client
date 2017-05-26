@@ -36,7 +36,7 @@ parentID          = p.Results.parentID;
 srch.path = containerType;
 %% for groups search by _id 
 if strcmp(containerType, 'groups')
-    srch.(containerType).match.x0x5F_id = label;
+    srch.(containerType).match.x0x5Fid = label;
 else
     srch.(containerType).match.exact_label = label;
 end
@@ -52,7 +52,7 @@ if ~isempty(parentID)
        otherwise
            error('unknown parent container type for %s', containerType);
    end 
-   srch.(parentType).match.x0x5F_id = parentID;
+   srch.(parentType).match.x0x5Fid = parentID;
 end
 %% exec the search and create a list of ids matching the search
 results = obj.search(srch, 'all_data', true);

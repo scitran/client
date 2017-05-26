@@ -1,5 +1,8 @@
 %% Utility searches
 %
+% TO BE CHECKED.  May not be updated for JSONio properly.  Definitely not
+% updated for the simpler search syntas.
+%
 % Search for all the sessions in project Simons for which an AFQ has NOT
 % been run 
 %
@@ -22,7 +25,7 @@ allSessions = st.search(srch);
 
 % Which ones ran fsl-bet and which did not?
 analysisName = 'fsl-bet';
-srch.sessions.match.analyses_0x2E_label = analysisName;
+srch.sessions.match.analyses0x2Elabel = analysisName;
 
 analyzedSessions = st.search(srch);
 fprintf('Found %d sessions out of %d with analysis: %s (project: %s)\n',...
@@ -42,7 +45,7 @@ end
 clear srch
 srch.path = 'sessions';
 analysisName = 'fsl-bet';
-srch.sessions.match.analyses_0x2E_label = analysisName;
+srch.sessions.match.analyses0x2Elabel = analysisName;
 analyzedSessions = st.search(srch,'all_data',true);
 
 fprintf('Found %d sessions  analysis: %s (all data)\n',...
@@ -65,9 +68,7 @@ projectName = 'ENGAGE';
 clear srch
 srch.path = 'sessions';
 srch.projects.match.label = projectName;
-% Which ones ran fsl-bet and which did not?
-% analysisName = 'fsl-bet';
-% srch.sessions.match.analyses_0x2E_label = analysisName;
+
 measurement = 'Anatomy';
 srch.acquisitions.match.measurement = measurement;
 

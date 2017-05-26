@@ -34,14 +34,14 @@ projectID = project.id;
 %% search the sessions
 clear srch;
 srch.path = 'sessions';
-srch.projects.match.x0x5F_id = projectID;
+srch.projects.match.x0x5Fid = projectID;
 sessions = obj.search(srch);
 %% for each session search its acquisitions
-acquisitions = {};
+acquisitions = cell(1,length(sessions));
 for ii = 1:length(sessions)
     clear srch;
     srch.path = 'acquisitions';
-    srch.sessions.match.x0x5F_id = sessions{ii}.id;
+    srch.sessions.match.x0x5Fid = sessions{ii}.id;
     acquisitions{ii} = obj.search(srch);
 end
 

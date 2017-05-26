@@ -44,7 +44,7 @@ payload.contents.operation = 'add';
 payload.contents.nodes = {};
 for ii = 1:length(acquisitionIds)
     node.level = 'acquisition';
-    node.x0x5F_id = acquisitionIds{ii};
+    node.x0x5Fid = acquisitionIds{ii};
     payload.contents.nodes{ii} = node;
 end
 

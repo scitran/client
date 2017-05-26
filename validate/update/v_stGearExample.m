@@ -119,7 +119,7 @@ A.token     = token;
 A.url       = client_url;
 A.fName     = fullfile(pwd, 'output',[d.oFile,'.nii.gz']);
 A.target    = 'collections';
-A.id        = srchResult{idx}.collection.x0x5F_id;
+A.id        = srchResult{idx}.collection.x0x5Fid;
 % A.container = 'vistalab/bet';
 
 [status, result, resultPlink] = stFileUpload(A);

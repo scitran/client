@@ -21,7 +21,7 @@ web('https://github.com/scitran/client/wiki/Search-syntax','-browser')
 % srchType = mrvParamFormat(srchType);
 % 
 % fprintf('Remember that certain fields need to be hex (https://github.com/scitran/client/wiki/Search-examples)\n')
-% fprintf('There are some DOT fields that should be     _0x2E_ \n')
+% fprintf('There are some DOT fields that should be     0x2E \n')
 % fprintf('Underscore at the start of a field should be x0x5F  \n\n')
 % 
 % fprintf('Possible returned objects:\n\t Files, Sessions, Acquisitions, Analyses,Subjects\n\n');
