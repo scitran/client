@@ -86,6 +86,19 @@ set(b,'FaceLighting','gouraud','EdgeColor',[1 1 1])
 set(gca,'YTickLabel',label);
 view([-64,23]);
 
+%%  I stuck the script up there by hand
+
+% You can find it this way
+%
+%   project = 'Diffusion Noise Analysis';
+%   files = st.search('files',...
+%     'project label contains',project,...
+%     'file name','s_stALDIT.m',...
+%     'summary',true);
+
+% It should be possible to put the script on Flywheel with st.put() in some
+% reasonable way.
+
 %% For older CNI data, I had to do something different.
 
 % This code was instructive for me, and I picked up some minor problems.  I
