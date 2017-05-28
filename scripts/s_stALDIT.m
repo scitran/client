@@ -30,6 +30,8 @@ if ~exist(workingDir,'dir')
 end
 chdir(workingDir);
 
+%% We should test for required repositories here
+
 %% Find a session to work on.
 
 % I would like to see the session in the browser and get a session id that
