@@ -118,15 +118,16 @@ fprintf('Found %d collections in previous four weeks \n',length(collections))
 
 %% Get sessions with this subject code
 subjectCode = 'ex4842';
-sessions = st.search('sessions','subject code','ex4842','all_data',true);
+sessions = st.search('sessions','subject code','ex4842',...
+    'all_data',true);
 fprintf('Found %d sessions with subject code %s\n',length(sessions),subjectCode)
 
 %% Get sessions in which the subject age is within a range
 
 sessions = st.search('sessions',...
     'subject age gt',year2sec(10), ...
-    'subject age lt',year2sec(11));
-fprintf('Found %d sessions\n',length(sessions))
+    'subject age lt',year2sec(11),...
+    'summary',true);
 
 %% Find a session with a specific label
 
@@ -139,8 +140,8 @@ fprintf('Found %d files from the session label %s\n',length(files),sessionLabel)
 files = st.search('files', ...
     'project label','VWFA FOV', ...
     'acquisition label','11_1_spiral_high_res_fieldmap',...
-    'file type','nifti');
-fprintf('Found %d matches to this file label\n',length(files));
+    'file type','nifti',...
+    'summary',true);
 % This is how to download the nifti file
 %  fname = files{1}.source.name;
 %  dl_file = stGet(files{1}, s.token, 'destination', fullfile(pwd,fname));
