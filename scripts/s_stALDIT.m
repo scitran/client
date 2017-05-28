@@ -1,82 +1,61 @@
 %% ALDIT data set error analysis (phantom data)
 %
-% This is an example. We find an acquisition, download the DWI data, and do
-% something reasonable with it.  This graph can be compared with graphs
-% from other phantom measurements on other scanenrs.
+%  We find and download an acquisition containing DWI data. Then we do
+%  something reasonable with it to assess the noise. The resulting graph can
+%  be compared with data from phantom measurements on other scanners.
 %
 % TODO
-%  @LMP - We could add info to the plots about the data, project label and
-%  subject, but perhaps other things.  Also, we could standardize a bit
-%  more on the look of the graphs.
-%
-%  This code assumes vistasoft and scitranClient are installed.  We should
-%  write a wrapper at the front to make sure this is true.  Good use of
-%  stbuse, but that is too damn complicated right now.
-%
-%  Deal with the github ISSUE about the acquisition labels and number of
-%  bvec files.
+%  Upload the results
+%  Manage the json files for the toolboxes call
+%  Add info to the plots about the data, project label and subject, but
+%  perhaps other things.  Standardize a bit more on the look of the graphs.
 %
 % BW Scitran Team, 2017
 
-%% Open the Flywheel object
+%% Initialize
 
+% Open the Flywheel object
 st = scitran('action', 'create', 'instance', 'scitran');
 
-%% Local working directory
+% Local working directory
+workingDir = workDirectory(fullfile(stRootPath,'local','aldit'));
 
-workingDir = fullfile(stRootPath,'local','aldit');
-if ~exist(workingDir,'dir')
-    fprintf('Creating working directory %s\n',workingDir);
-    mkdir(workingDir);
-else
-    fprintf('Changing to working directory %s\n',workingDir);
-    chdir(workingDir);
-end
-
-%% We specify the required repositories (in addition to scitranClient) here 
-tbx = toolboxes({'vistasoft','jsonio'});
+% Specify the required repositories (in addition to scitranClient)
+% Not sure we need vistasoft, really.
+tbx = toolboxes({'vistasoft','jsonio','dtiError'});
 tbx.install;
 
-%% Find a session to work on.
+%% Search for the session and acquisition
 
-% I would like to see the session in the browser and get a session id that
-% I could use in this search.
-% Typically these have several acquisitions
-
+% I identified the project and session in the browser
 project = 'Diffusion Noise Analysis';
 sessions = st.search('sessions',...
     'project label contains',project);
 
-%  List the acquisitions in the first session
+% List the acquisitions in the first session
 acquisitions = st.search('acquisitions', ...
     'session label',sessions{1}.source.label,...
     'acquisition label contains','Diffusion',...
     'summary',true);
 
 %% Pull down the nii.gz, bvec and bval from the first acquisition
+
 nAcquisitions = length(acquisitions);
 nRMSE = zeros(1,nAcquisitions);
 label = cell(1,nAcquisitions);
 
 for ii=1:nAcquisitions
     
+    % We group the diffusion data, bvec and bval into a dwi structure as
+    % per vistasoft
     dwi = st.dwiLoad(acquisitions{ii}.id);
     
-    % Check this way
+    % Check the download this way
     %  niftiView(dwi.nifti);
     %  mrvNewGraphWin; hist(double(dwi.nifti.data(:)),100);
     
     %% Write out a white matter mask
-    
-    % Pick the brightest pixels as the white matter.  The percentile number was
-    % picked visually for these data.
-    v = prctile(dwi.nifti.data(:),95);
-    wmProb = dwi.nifti;
-    
-    % This is a hack based on the fact that we use 180 somewhere in the
-    % dtiError calculation.  We need to have a wmProb function that is more
-    % general.
-    wmProb.data = mean(single(dwi.nifti.data > v)*200,4);
+    wmProb = wmCreate(dwi.nifti,95);
     niftiWrite(wmProb,'wmProb.nii.gz');
     % niftiView(wmProb);
     
@@ -98,20 +77,21 @@ for ii=1:nAcquisitions
     
 end
 
-%% Could sort by diffusion b value
+%% Could have sorted by b value.  Just lazy, I guess.
 
+% A reasonable bar graph summary of the normalized RMSE
 mrvNewGraphWin;
 b = bar3(nRMSE,0.3); zlabel('Normalized RMSE');
 set(b,'FaceLighting','gouraud','EdgeColor',[1 1 1])
 set(gca,'YTickLabel',label);
 view([-64,23]);
 
-%% Scratch below here
+%% For older CNI data, I had to do something different.
 
-%% For these older CNI data, I did something different.
+% This code was instructive for me, and I picked up some minor problems.  I
+% have commented this out by the if 0.  I think it runs, though.  I am
+% leaving it here as a little memory aid.
 
-% It was instructive for me.  And I picked up some minor problems.  I have
-% commented this out by the if 0.  I think it runs, though.
 if 0
     project = 'ALDIT: Stanford CNI';
     subjectCode = '11671';

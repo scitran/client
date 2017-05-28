@@ -81,6 +81,8 @@ classdef toolboxes < handle
             for ii=1:nTbx
                 thisTestCmd = which(tbx.testcmd{ii});
                 if isempty(thisTestCmd)
+                    % This should be updated to a window that selects the
+                    % directory, starting with the current directory.
                     fprintf('Installing in directory %s\n',pwd);
                     fprintf('<Return> to continue: ');     pause
                     fprintf('\n');
@@ -96,6 +98,8 @@ classdef toolboxes < handle
             end
         end
         
+        % Used to write out the json files in the right format.  See
+        % s_tbxSave.m
         function saveinfo(~,name,testcmd,getcmd,tbxdirectory)
             % Save the json file for a toolbox
             savedir = fullfile(stRootPath,'data');
