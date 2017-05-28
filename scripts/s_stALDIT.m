@@ -4,9 +4,17 @@
 % something reasonable with it.  This graph can be compared with graphs
 % from other phantom measurements on other scanenrs.
 %
-% @LMP - We could add info to the plots about the data, project label and
-% subject, but perhaps other things.  Also, we could standardize a bit more
-% on the look of the graphs.
+% TODO
+%  @LMP - We could add info to the plots about the data, project label and
+%  subject, but perhaps other things.  Also, we could standardize a bit
+%  more on the look of the graphs.
+%
+%  This code assumes vistasoft and scitranClient are installed.  We should
+%  write a wrapper at the front to make sure this is true.  Good use of
+%  stbuse, but that is too damn complicated right now.
+%
+%  Deal with the github ISSUE about the acquisition labels and number of
+%  bvec files.
 %
 % BW Scitran Team, 2017
 
