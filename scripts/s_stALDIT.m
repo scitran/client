@@ -66,8 +66,9 @@ for ii=1:nAcquisitions
     v = prctile(dwi.nifti.data(:),95);
     wmProb = dwi.nifti;
     
-    % This is a hack based on the fact that we use 180 somewhere else.  We need
-    % to have a wmProb function that is more general.
+    % This is a hack based on the fact that we use 180 somewhere in the
+    % dtiError calculation.  We need to have a wmProb function that is more
+    % general.
     wmProb.data = mean(single(dwi.nifti.data > v)*200,4);
     niftiWrite(wmProb,'wmProb.nii.gz');
     % niftiView(wmProb);
