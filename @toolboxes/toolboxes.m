@@ -1,33 +1,39 @@
 classdef toolboxes < handle
     % Class to manage toolboxes and the Matlab path.
     %
-    % When we download a Matlab function from Flywheel, the function may
-    % rely on toolboxes.  The toolbox object can be placed in the Matlab
-    % script to automate the download of the necessary repositories.  We are
-    % working with a general model, but for now all of the instances are
-    % github downloads.
+    % When we download a Matlab function from Flywheel, the always relies
+    % on toolboxes, at a minimum it relies on the scitranClient toolbx.  A
+    % *toolboxes* object can be used in the Matlab script to automate the
+    % download of the necessary repositories for the user.
     %
-    % Information about critical downloads should be stored in json files
-    % on the user's path.  Maybe these should be stored on the Flywheel
-    % site in parallel to the script, as part of the project?  TBD.
+    % At this moment, all of the downloads are github downloads. But this
+    % might be more general in the future.
+    %
+    % Information about the downloads are stored in json files.  For the
+    % moment, these are kept inside of scitran/data. But this makes no
+    % sense in the long run. These should be stored on the Flywheel site in
+    % parallel to the script, as part of the project.  
     %
     % Examples:
-    %  tbx = toolboxes;
+    %  tbx = toolboxes;   % Always have the scitran toolbox
+    %
     %  tbx.saveinfo('vistasoft','vistaRootPath','git clone https://github.com/vistalab/vistasoft','/user/wandell/github');
     %  tbx = toolboxes({'vistasoft'});
     %  tbx.install();
     %
-    %  tbx = toolboxes({'vistasoft','scitran','jsonio'});
+    %  tbx = toolboxes({'vistasoft','jsonio'});
     %  tbx.install;
     %
     % BW Scitran Team, 2017
     
     properties (SetAccess = private, GetAccess = public)
         
-        names   = {''};      % Names of toolboxes
-        testcmd = {''};      % Matlab command to test for presence on path
-        getcmd  = {''};      % System command to pull the toolbox
-        tbxdirectory = {''}; % Destination directory for the toolbox
+        names   = {'scitranClient'};         % Names of toolboxes
+        testcmd = {'stRootPath'};      % Matlab command to test for presence on path
+        
+        % System command to pull the toolbox
+        getcmd  = {'git clone https://github.com/scitran/client'};      
+        tbxdirectory = {pwd}; % Destination directory for the toolbox
         
     end
 
@@ -48,13 +54,18 @@ classdef toolboxes < handle
             else,                 names = varargin{1};
             end
             
-            % Fill in the best we can.
-            obj.names = names;
-            nTbx = length(names);
-            obj.testcmd = cell(1,nTbx);
-            obj.getcmd  = cell(1,nTbx);
+            % Add the additional names
+            newNames = cell(1,length(names)+1);
+            newNames{1} = obj.names{1};
+            for ii=1:length(names)
+                newNames{ii+1} = names{ii};
+            end
+            obj.names = newNames;
+            
+            % Deal with the whole list.
+            nTbx = length(obj.names);
             for ii=1:nTbx
-                fname = [names{ii},'.json'];
+                fname = fullfile(stRootPath,'data',[obj.names{ii},'.json']);
                 info = jsonread(fname);
                 
                 obj.testcmd{ii}      = info.testcmd;

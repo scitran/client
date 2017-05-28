@@ -26,11 +26,16 @@ st = scitran('action', 'create', 'instance', 'scitran');
 
 workingDir = fullfile(stRootPath,'local','aldit');
 if ~exist(workingDir,'dir')
+    fprintf('Creating working directory %s\n',workingDir);
     mkdir(workingDir);
+else
+    fprintf('Changing to working directory %s\n',workingDir);
+    chdir(workingDir);
 end
-chdir(workingDir);
 
-%% We should test for required repositories here
+%% We specify the required repositories (in addition to scitranClient) here 
+tbx = toolboxes({'vistasoft','jsonio'});
+tbx.install;
 
 %% Find a session to work on.
 
