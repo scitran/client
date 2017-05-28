@@ -87,7 +87,8 @@ end
 analyses = st.search('analyses','collection label','GearTest');
 fprintf('Analyses in collections and sessions: %d\n',length(analyses));
 
-%%
+%% Analyses that are within a collection
+
 % Returns analyses attached only to the collection, but not the sessions
 % and acquisitions in the collection.
 
@@ -167,12 +168,12 @@ end
 fprintf('---------\n');
 
 %% get files in project/session/acquisition/collection
-[files,srchS] = st.search('files',...
+files = st.search('files',...
     'collection label contains','ENGAGE',...
-    'acquisition label contains','T1w 1mm');
-fprintf('Found %d matching files\n',length(files))
+    'acquisition label contains','T1w 1mm', ...
+    'summary',true); %#ok<NASGU>
 
-%%
+%% get files in project/session/acquisition/collection
 files = st.search('files',...
     'collection label','Anatomy Male 45-55',...
     'acquisition label','Localizer',...
@@ -188,7 +189,6 @@ fprintf('Found %d matching files\n',length(files))
     'project label','UMN', ...
     'session contains analysis', 'AFQ', ...
     'session contains subject','4279',...
-    'all_data',true);
-fprintf('Found %d matching sessions\n',length(sessions))
+    'all_data',true,'summary',true);
 
 %%  

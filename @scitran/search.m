@@ -17,9 +17,19 @@ function [result, srchStruct, srchFile, esCMD] = search(obj,srch,varargin)
 %  srchFile:   Name of json file returned by the search
 %  esCMD:      The elastic search curl command 
 %
-% Examples:
-%   Simple search - see s_stSearches
-%   Advanced searches - see s_stSearchesLongForm.m
+% Parameters
+%   Many parameter/value pairs are possible to define the search.  
+%     * For the common simple search arguments, see the examples in
+%       s_stSearches. 
+%     * For the general method of constructing advanced searches - see
+%       s_stSearchesLongForm.m.
+%   In addition to the search parameters, there are two special parameters
+%
+%     'all_data'   - sets whether to search the entire database, including
+%                    projects that you do not have access to (boolean,
+%                    default false} 
+%     'summary'    - print out a summary of the number of search items
+%                    returned (boolean, default false}
 %
 % Programming Notes
 %
@@ -81,6 +91,7 @@ p.addRequired('srch');
 
 % Not sure what this means yet
 p.addParameter('all_data',false,@islogical);
+p.addParameter('summary',false,@islogical);
 
 % Remove the spaces from the varargin because the parser complains.  Why
 % does it do that?
@@ -91,6 +102,7 @@ p.parse(srch,varargin{:});
 
 srch  = p.Results.srch;
 all_data = p.Results.all_data;
+summary = p.Results.summary;
 
 %% Simple search case.  So we build a Matlab srch structure
 
@@ -142,11 +154,17 @@ if ischar(srch)
         val = varargin{ii+1};
         
         switch stParamFormat(varargin{ii})
+            
+            % OVERALL SWITCHES
             case {'all_data'}
                 % Search all of the data.  By default you search only your
                 % own data
                 all_data = val;
-                              
+            case {'summary'}
+                % Printout a summary description of the return cell array
+                summary = val;
+            
+            % PROJECTS
             case {'projectlabelcontains'}
                 if ~isfield(srch,'projects')
                     srch.projects.bool.must{1}.match.label = val;
@@ -173,6 +191,7 @@ if ischar(srch)
                     srch.projects.bool.must{end + 1}.match.group = val;
                 end
                 
+            % SESSIOS
             case {'sessionlabelcontains'}
                 % srch.sessions.match.label = val;
                 if ~isfield(srch,'sessions')
@@ -217,7 +236,8 @@ if ischar(srch)
                 else
                     srch.sessions.bool.must{end + 1}.match.subject0x2Ecode = val;
                 end
-                    
+                
+            % ANALYSES
             case {'analysislabelexact','analysislabel'}
                 if ~isfield(srch,'analyses')
                     srch.analyses.bool.must{1}.match.exact_label= val;
@@ -231,20 +251,13 @@ if ischar(srch)
                     srch.analyses.bool.must{end + 1}.match.label = val;
                 end
                 
-                
-            case {'collectionlabelcontains'}
-                if ~isfield(srch,'collections')
-                    srch.collections.bool.must{1}.match.label = val;
+            % ACQUISITIONS
+            case {'acquisitionid'}
+                if ~isfield(srch,'acquisitions')
+                    srch.acquisitions.bool.must{1}.match.x0x5Fid = val;
                 else
-                    srch.collections.bool.must{end + 1}.match.label = val;
+                    srch.acquisitions.bool.must{end + 1}.match.x0x5Fid = val;
                 end
-            case {'collectionlabelexact','collectionlabel'}
-                if ~isfield(srch,'collections')
-                    srch.collections.bool.must{1}.match.exact_label = val;
-                else
-                    srch.collections.bool.must{end + 1}.match.exact_label = val;
-                end
-                
             case {'acquisitionlabelcontains'}
                 if ~isfield(srch,'acquisitions')
                     srch.acquisitions.bool.must{1}.match.label = val;
@@ -258,6 +271,21 @@ if ischar(srch)
                     srch.acquisitions.bool.must{end + 1}.match.exact_label = val;
                 end
                 
+            % COLLECTIONS                    
+            case {'collectionlabelcontains'}
+                if ~isfield(srch,'collections')
+                    srch.collections.bool.must{1}.match.label = val;
+                else
+                    srch.collections.bool.must{end + 1}.match.label = val;
+                end
+            case {'collectionlabelexact','collectionlabel'}
+                if ~isfield(srch,'collections')
+                    srch.collections.bool.must{1}.match.exact_label = val;
+                else
+                    srch.collections.bool.must{end + 1}.match.exact_label = val;
+                end
+                
+            % FILES
             case {'filenamecontains'}
                 if ~isfield(srch,'files')
                     srch.files.bool.must{1}.match.name = val;
@@ -286,6 +314,7 @@ if ischar(srch)
                     srch.files.bool.must{end + 1}.match.measurements = val;
                 end
                 
+            % SUBJECTS    
             case {'subjectcode'}
                 if ~isfield(srch,'sessions')
                     srch.sessions.bool.must{1}.match.subject0x2Ecode = val;
@@ -307,9 +336,8 @@ if ischar(srch)
                     srch.sessions.bool.must{end + 1}.range.subject0x2Eage.lt = val;
                 end
                        
-             
             otherwise
-                error('Unknown search variable %s\n',varargin{ii});
+                error('Unknown search parameter: %s\n',varargin{ii});
         end
         
     end
@@ -367,5 +395,12 @@ result = stParseSearch(obj,srchResult);
 
 %% If the search file is not returned, delete it
 if nargout == 1,  delete(srchFile); end
+
+%% If summary flag is set, do this
+
+if summary
+    % This summary will get bigger and better and more helpful.
+    fprintf('Number of %s found:  %d\n',searchType, length(result));
+end
 
 end
