@@ -5,14 +5,24 @@
 %  be compared with data from phantom measurements on other scanners.
 %
 % TODO
-%  Upload the results
-%  Manage the json files for the toolboxes call
+%  Upload the m-file and potentially the results
+%  Manage the json file for the toolboxes call
 %  Add info to the plots about the data, project label and subject, but
 %  perhaps other things.  Standardize a bit more on the look of the graphs.
 %
 % BW Scitran Team, 2017
 
-%% Initialize
+%% Make sure scitranClient is installed
+
+% If not, give some advice about how to install it
+if isempty(which('scitran'))
+    fprintf('\nscitran() not found.\nThe Matlab scitranClient repository must be on your path.\n');
+    fprintf('\n *** Install using *** \n  chdir(installDir);\n');
+    fprintf('  system(''git clone https://github.com/scitran/client'')\n');
+    fprintf('  addpath(genpath(pwd)); gitRemovePath\n\n');
+end
+
+%% Start with initialization
 
 % Open the Flywheel object
 st = scitran('action', 'create', 'instance', 'scitran');
@@ -20,8 +30,15 @@ st = scitran('action', 'create', 'instance', 'scitran');
 % Local working directory
 workingDir = workDirectory(fullfile(stRootPath,'local','aldit'));
 
-% Specify the required repositories (in addition to scitranClient)
-% Not sure we need vistasoft, really.
+% We should have a function stToolboxex() that creates a single json file to
+% specify a download method for a collection of toolboxes.  Then uploads
+% the json file to the Flywheel instance.
+%
+%   tbx = toolboxes('Flywheel attachment file specifier for toolboxes');
+%   tbx.install;
+%
+
+% Temporary format
 tbx = toolboxes({'vistasoft','jsonio','dtiError'});
 tbx.install;
 
