@@ -50,7 +50,7 @@ projectID    = projects{end}.id;
 projectLabel = projects{end}.source.label;
 
 %% Get all the sessions within a specific collection
-[sessions, srchCmd] = st.search('sessionsincollection',...
+[sessions, srchCmd] = st.search('sessions in collection',...
     'collection label contains','Anatomy Male 45-55');
 fprintf('Found %d sessions\n',length(sessions));
 
