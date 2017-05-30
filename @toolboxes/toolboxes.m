@@ -26,6 +26,9 @@ classdef toolboxes < handle
     % See also:  s_tbxSave
     %
     % BW Scitran Team, 2017
+    %
+    % PROGRAMMING TODO
+    %   Change the install method a bit, see below
     
     properties (SetAccess = public, GetAccess = public)
         
@@ -86,6 +89,10 @@ classdef toolboxes < handle
                     if status
                         error('Get command for %s failed\n',tbx.name{ii});
                     end
+                    
+                    % We should move the directory to its tbxdirectory name
+                    % HERE, then change into it and add
+                    % chdir(fullfile(pwd,tbxdirectory{ii}))
                     addpath(genpath(tbx.tbxdirectory{ii}));
                     gitRemovePath;
                 else
