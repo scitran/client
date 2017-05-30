@@ -126,21 +126,26 @@ if strcmp(srchType,'files')
     for ii=1:n
         cname = result{ii}.source.container_name;  % File's container
         
-        % Files can be in an acquisition or session or analysis.
-        % What about project?
+        % Files can be in a project, session, acquisition or analysis.
         switch cname
-            case 'acquisitions'
-                % acquisitionid = result{ii}.source.acquisition.x0x5F_id;
-                acquisitionid = result{ii}.source.acquisition.x_id;
+            case 'projects'
+                % TO DEBUG ...
+                projectid = result{ii}.source.project.x_id;
                 fname = result{ii}.source.name;
-                result{ii}.plink = sprintf('%s/api/%s/%s/files/%s',stClient.url, cname, acquisitionid, fname);
-                
+                result{ii}.plink = sprintf('%s/api/%s/%s/files/%s',stClient.url, cname, projectid, fname);
+
             case 'sessions'
                 % TO DEBUG ...
                 sessionid = result{ii}.source.session.x_id;
                 fname = result{ii}.source.name;
                 result{ii}.plink = sprintf('%s/api/%s/%s/files/%s',stClient.url, cname, sessionid, fname);
                   
+            case 'acquisitions'
+                % acquisitionid = result{ii}.source.acquisition.x0x5F_id;
+                acquisitionid = result{ii}.source.acquisition.x_id;
+                fname = result{ii}.source.name;
+                result{ii}.plink = sprintf('%s/api/%s/%s/files/%s',stClient.url, cname, acquisitionid, fname);
+                
             case 'analyses'
                 % The analysis files are stored within the session.  So we need
                 % that id in addition to the analyseid.
