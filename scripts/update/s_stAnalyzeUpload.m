@@ -1,5 +1,7 @@
 %% Bring down the diffusion, bvec and bval
 %
+% NEEDS TO BE FULLY UPDATED AND REWRITTEN FOR MODERN METHODS
+%
 % LMP/BW Scitran Team, 2016
 
 %% Authorization
