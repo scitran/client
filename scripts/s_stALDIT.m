@@ -17,9 +17,10 @@
 % If not, give some advice about how to install it
 if isempty(which('scitran'))
     fprintf('\nscitran() not found.\nThe Matlab scitranClient repository must be on your path.\n');
-    fprintf('\n *** Install using *** \n  chdir(installDir);\n');
+    fprintf('\n *** Install using *** \n');
+    fprintf('  chdir(installDir);\n');
     fprintf('  system(''git clone https://github.com/scitran/client'')\n');
-    fprintf('  addpath(genpath(pwd)); gitRemovePath\n\n');
+    fprintf('  chdir(client); addpath(genpath(pwd)); gitRemovePath\n\n');
 end
 
 %% Start with initialization
