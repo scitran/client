@@ -18,12 +18,13 @@ tbxFile = st.search('files',...
     'project label contains','Diffusion Noise',...
     'file name','toolboxes.json');
 
-% Get the tbx, but don't install
+%% Get the tbx, but don't install
 tbx = st.toolbox(tbxFile{1},'install',false);
 
+%% Then install
 tbx.install;
 
-% Default is install=true
+%% Or simply run this way where install is true by default.s
 tbx = st.toolbox(tbxFile{1});
 
 %%

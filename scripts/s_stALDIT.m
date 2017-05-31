@@ -23,18 +23,15 @@ end
 % Open the Flywheel object
 st = scitran('action', 'create', 'instance', 'scitran');
 
+% Make sure the toolboxes are installed and on the path
+tbxFile = st.search('files',...
+    'project label contains','Diffusion Noise', ...
+    'file name','toolboxes.json',...
+    'summary',true);
+tbx = st.toolbox(tbxFile{1});
+
 % Local working directory
 workingDir = workDirectory(fullfile(stRootPath,'local','aldit'));
-
-% Make sure the toolboxes are installed and on the path
-
-% This is the toolbox file definition on the project.
-toolboxFile = st.search('files',...
-    'project label contains','Diffusion Noise', ...
-    'file name contains','toolboxes',...
-    'summary',true);
-tbx = toolboxes('scitran',st,'file',toolboxFile);
-tbx.install;
 
 %% Search for the session and acquisition
 
