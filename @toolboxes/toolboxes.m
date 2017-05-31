@@ -16,8 +16,7 @@ classdef toolboxes < handle
     %  tbx = toolboxes;   % An empty class.
     %  
     % Constructs from multiple toolboxes
-    %  tbx = toolboxes({'vistasoft','jsonio','dtiError'});
-    %  tbx.saveinfo;
+    %  tbx = toolboxes('scitran',st,'file',fileStruct);
     %
     % One file containing the multiple toolboxes
     %  tbx = toolboxes({'vistasoft_jsonio_dtiError'});
@@ -46,16 +45,17 @@ classdef toolboxes < handle
         
         %% Constructor
         function obj = toolboxes(varargin)
-            % toolbox({'names', ...})
+            % toolbox({'scitran',st,'fileStruct',fileS})
             %
-            % Read the JSON files specifying the toolbox test and get
-            % commands, loads them into the toolbox object.
+            % Constructor
+            %   Reads the JSON file specifying the toolbox either stored on
+            %   the scitran set or locally. 
             %
             % Example:
             %   tbx = toolboxes('file',fullfile(stRootPath,'data','vistasoft.json'));
             %   tbx = toolboxes('file',fullfile(stRootPath,'data','vistasoft_jsonio_dtiError.json'));
-            %   files = st.search('files','project label contains','Diffusion Noise', 'file name contains','toolboxes.json');
-            %   tbx = toolboxes('scitran',st,'file',files);
+            %   tbxFile = st.search('files','project label contains','Diffusion Noise', 'file name contains','toolboxes.json');
+            %   tbx = toolboxes('scitran',st,'file',tbxFile{1});
             %
             %   tbx.install;
             %
@@ -67,7 +67,7 @@ classdef toolboxes < handle
             vFunc = @(x)(isequal(class(x),'scitran'));
             p.addParameter('scitran',[],vFunc);
             
-            vFunc = @(x)(iscell(x) || ischar(x));
+            vFunc = @(x)(isstruct(x) || ischar(x));
             p.addParameter('file',[],vFunc);
             
             p.parse(varargin{:});
@@ -83,7 +83,7 @@ classdef toolboxes < handle
                 obj.read(file);
             elseif ~isempty(scitran)
                 % file is a cell or a plink, get it and read it
-                destination = scitran.get(file{1});
+                destination = scitran.get(file);
                 obj.read(destination);
                 delete(destination);
             end
