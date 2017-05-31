@@ -15,6 +15,10 @@ script = st.search('files',...
     'file name','s_stALDIT.m',...
     'summary',true);
 
+% Maybe we should pull the toolboxes() call out of the script and put it
+% here
+%
+
 % Run it
 st.runScript(script{1});
 
