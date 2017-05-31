@@ -4,12 +4,7 @@
 %  something reasonable with it to assess the noise. The resulting graph can
 %  be compared with data from phantom measurements on other scanners.
 %
-% TODO
-%  Upload the m-file and potentially the results
-%  Manage the json file for the toolboxes call
-%  Add info to the plots about the data, project label and subject, but
-%  perhaps other things.  Standardize a bit more on the look of the graphs.
-%
+%  st.runScript
 % BW Scitran Team, 2017
 
 %% Make sure scitranClient is installed
@@ -31,16 +26,14 @@ st = scitran('action', 'create', 'instance', 'scitran');
 % Local working directory
 workingDir = workDirectory(fullfile(stRootPath,'local','aldit'));
 
-% We should have a function stToolboxex() that creates a single json file to
-% specify a download method for a collection of toolboxes.  Then uploads
-% the json file to the Flywheel instance.
-%
-%   tbx = toolboxes('Flywheel attachment file specifier for toolboxes');
-%   tbx.install;
-%
+% Make sure the toolboxes are installed and on the path
 
-% Temporary format
-tbx = toolboxes({'vistasoft','jsonio','dtiError'});
+% This is the toolbox file definition on the project.
+toolboxFile = st.search('files',...
+    'project label contains','Diffusion Noise', ...
+    'file name contains','toolboxes',...
+    'summary',true);
+tbx = toolboxes('scitran',st,'file',toolboxFile);
 tbx.install;
 
 %% Search for the session and acquisition

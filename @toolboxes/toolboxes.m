@@ -52,25 +52,59 @@ classdef toolboxes < handle
             % commands, loads them into the toolbox object.
             %
             % Example:
-            %   tbx = toolbox({'scitranClient','jsonio','vistasoft'});
+            %   tbx = toolboxes('file',fullfile(stRootPath,'data','vistasoft.json'));
+            %   tbx = toolboxes('file',fullfile(stRootPath,'data','vistasoft_jsonio_dtiError.json'));
+            %   files = st.search('files','project label contains','Diffusion Noise', 'file name contains','toolboxes.json');
+            %   tbx = toolboxes('scitran',st,'file',files);
+            %
             %   tbx.install;
             %
-            if isempty(varargin), return;
-            else,                 names = varargin{1};
-            end
+            % BW, Scitran Team, 2017
             
-            % Deal with the whole list.
-            nTbx = length(names);
-            for ii=1:nTbx
-                fname = fullfile(stRootPath,'data',[names{ii},'.json']);
-                info = jsonread(fname);
-                for jj=1:length(info)
-                    obj.names{end+1}        = info(jj).names;
-                    obj.testcmd{end+1}      = info(jj).testcmd;
-                    obj.getcmd{end+1}       = info(jj).getcmd;
-                    obj.tbxdirectory{end+1} = info(jj).tbxdirectory;
-                end
+            %% A local JSON file, a scitran JSON file, or empty
+            
+            p = inputParser;
+            vFunc = @(x)(isequal(class(x),'scitran'));
+            p.addParameter('scitran',[],vFunc);
+            
+            vFunc = @(x)(iscell(x) || ischar(x));
+            p.addParameter('file',[],vFunc);
+            
+            p.parse(varargin{:});
+            file    = p.Results.file;
+            scitran = p.Results.scitran;
+            
+            %% Fill the object with the file information
+            if isempty(file)
+                % No file, so return an empty structure
+                return;
+            elseif isempty(scitran) && ischar(file)
+                % Read a local file
+                obj.read(file);
+            elseif ~isempty(scitran)
+                % file is a cell or a plink, get it and read it
+                destination = scitran.get(file{1});
+                obj.read(destination);
+                delete(destination);
             end
+                        
+        end
+        
+        %% Read JSON files
+        function obj = read(obj,file)
+        % Append JSON file data to the object
+        
+        % Read the file information
+        info = jsonread(file);
+        
+        % Append the information to the object
+        for jj=1:length(info)
+            obj.names{end+1}        = info(jj).names;
+            obj.testcmd{end+1}      = info(jj).testcmd;
+            obj.getcmd{end+1}       = info(jj).getcmd;
+            obj.tbxdirectory{end+1} = info(jj).tbxdirectory;
+        end
+        
         end
         
         %% Perform the installation
