@@ -1,10 +1,13 @@
-%% Script to save json files for toolboxes
-% 
-% s_tbxSave
+%% Script to save JSON toolbox files
 %
-% To make one json file describing multiple toolboxes do this
-%   tbx = toolboxes({'dtiError','jsonio','vistasoft'});
-%   tbx.saveinfo;
+% The examples below make individual toolbox JSON files.
+% 
+% To make a JSON file defining multiple toolboxes do this:
+%
+%   tbx = toolboxes();             % Empty object
+%   tbx.read('isetbio.json');      % Load the individual toolboxes
+%   tbx.read('jsonio.json');
+%   tbx.saveinfo('filename','toolboxes');  % Save with desired filename
 %
 % BW Scitran team, 2017
 
@@ -41,3 +44,13 @@ tbx.tbxdirectory{1} = 'scitranClient';
 tbx.saveinfo;
 
 %%
+tbx.names{1}        = 'isetbio';
+tbx.testcmd{1}      = 'isetbioRootPath';
+tbx.getcmd{1}       = 'git clone https://github.com/isetbio/isetbio';
+tbx.tbxdirectory{1} = 'isetbio';
+tbx.saveinfo;
+
+%%
+
+
+

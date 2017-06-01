@@ -1,27 +1,41 @@
 classdef toolboxes < handle
     % Class to manage toolboxes and the Matlab path.
     %
-    % Most Matlab functions or scripts on Flywheel rely on toolboxes. A
-    % *toolboxes* object can be used in the Matlab script to automate the
-    % download of the necessary repositories for the user.
-    %
-    % At this moment, all of the downloads are github downloads. But this
-    % might become more general in the future.
+    % Most Matlab functions or scripts rely on a set of toolboxes. A
+    % *toolboxes* object automates the process of downloading and
+    % installing the toolboxes on the user's path.
     %
     % Information about the downloads of individual or groups of toolboxes
-    % is stored in json files.  We expect that the json file will also be
-    % stored on the Flywheel project as an attachment.
+    % is stored in JSON files.  The JSON file can be stored on the Flywheel
+    % (scitran) project as an attachment. At this moment, all of the
+    % scitran downloads are github downloads.
     %
-    % Examples:
+    % Normally, we read the toolbox file from a scitran site by first
+    % searching for the file
+    %
+    %   tbxFile = st.search('files',...
+    %     'project label','EJ Apricot',...
+    %     'file name','toolboxes.json');
+    %
+    % Then download and installs if necessary.
+    %
+    %    st.toolbox(tbxFile{1});
+    %
+    % These examples show how to use the toolboxes object directly.
+    %
     %  tbx = toolboxes;   % An empty class.
     %  
-    % Constructs from multiple toolboxes
-    %  tbx = toolboxes('scitran',st,'file',fileStruct);
+    % Get the toolboxes file stored on the scitran site
     %
-    % One file containing the multiple toolboxes
-    %  tbx = toolboxes({'vistasoft_jsonio_dtiError'});
-    %  tbx.install();
+    % Remotely
+    %   tbxFile = st.search(...toolboxes.json...)
+    %   tbx = toolboxes('scitran',st,'file',tbxFile{1});
+    %   tbx.install();
+    % 
+    % Or a local file
     %
+    %   tbx = toolboxes('file','vistasoft.json');
+    %    
     % See also:  s_tbxSave
     %
     % BW Scitran Team, 2017
@@ -53,7 +67,6 @@ classdef toolboxes < handle
             %
             % Example:
             %   tbx = toolboxes('file',fullfile(stRootPath,'data','vistasoft.json'));
-            %   tbx = toolboxes('file',fullfile(stRootPath,'data','vistasoft_jsonio_dtiError.json'));
             %   tbxFile = st.search('files','project label contains','Diffusion Noise', 'file name contains','toolboxes.json');
             %   tbx = toolboxes('scitran',st,'file',tbxFile{1});
             %
@@ -92,19 +105,19 @@ classdef toolboxes < handle
         
         %% Read JSON files
         function obj = read(obj,file)
-        % Append JSON file data to the object
-        
-        % Read the file information
-        info = jsonread(file);
-        
-        % Append the information to the object
-        for jj=1:length(info)
-            obj.names{end+1}        = info(jj).names;
-            obj.testcmd{end+1}      = info(jj).testcmd;
-            obj.getcmd{end+1}       = info(jj).getcmd;
-            obj.tbxdirectory{end+1} = info(jj).tbxdirectory;
-        end
-        
+            % Append JSON file data to the object
+            
+            % Read the file information
+            info = jsonread(file);
+            
+            % Append the information to the object
+            for jj=1:length(info)
+                obj.names{end+1}        = info(jj).names;
+                obj.testcmd{end+1}      = info(jj).testcmd;
+                obj.getcmd{end+1}       = info(jj).getcmd;
+                obj.tbxdirectory{end+1} = info(jj).tbxdirectory;
+            end
+            
         end
         
         %% Perform the installation
@@ -129,20 +142,30 @@ classdef toolboxes < handle
                     % chdir(fullfile(pwd,tbxdirectory{ii}))
                     addpath(genpath(tbx.tbxdirectory{ii}));
                     gitRemovePath;
+                    thisTestCmd = which(tbx.testcmd{ii});
+                    if ~isempty(thisTestCmd)
+                        fprintf('%s installed and added to path.\n',tbx.names{ii}); 
+                    end
                 else
+                    fprintf('***\n');
                     fprintf('Toolbox %s - found on path\n',tbx.names{ii});
+                    fprintf('***\n');
                 end
             end
         end
         
         %% Write out the json with instructions to load all the toolboxes
         function saveinfo(obj,varargin)
+            % savedir  - Default is scitran/data
+            % filename - Such as toolboxes
             
             p = inputParser;
             vFunc = @(x)(exist(x,'dir'));
             p.addParameter('savedir',fullfile(stRootPath,'data'),vFunc);
+            p.addParameter('filename',[],@ischar);
             p.parse(varargin{:});
-            savedir = p.Results.savedir;
+            savedir  = p.Results.savedir;
+            filename = p.Results.filename;
             
             % Create the struct for all the toolboxes
             info = struct('names',obj.names,...
@@ -150,16 +173,18 @@ classdef toolboxes < handle
                 'getcmd',obj.getcmd,...
                 'tbxdirectory',obj.tbxdirectory);
             
-            % Build the name
-            name = obj.names{1};
-            if length(obj.names) > 1
-                for ii=2:length(obj.names)
-                    name = [name,'_',obj.names{ii}]; %#ok<AGROW>
+            % Build the output filename
+            if isempty(filename)
+                filename = obj.names{1};
+                if length(obj.names) > 1
+                    for ii=2:length(obj.names)
+                        filename = [filename,'_',obj.names{ii}]; %#ok<AGROW>
+                    end
                 end
             end
             
             % Write the struct as a JSON file
-            jsonwrite(fullfile(savedir,[name,'.json']),info);
+            jsonwrite(fullfile(savedir,[filename,'.json']),info);
         end
     end
     

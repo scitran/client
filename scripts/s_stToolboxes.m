@@ -13,7 +13,7 @@
 %
 % BW Scitran Team, 2017
 
-%% Illustrates use of scitran toolbox method
+%% Illustrates use of the @scitran toolbox method
 
 % Open a scitran object
 st = scitran('action', 'create', 'instance', 'scitran');
@@ -23,7 +23,7 @@ tbxFile = st.search('files',...
     'project label','Diffusion Noise Analysis',...
     'file name','toolboxes.json');
 
-% This will check for the toolboxes and install if necessary.
+% Checks for the toolboxes and installs if necessary.
 st.toolbox(tbxFile{1});
 
 %% Alternatively, get the tbx and install separately
@@ -33,5 +33,16 @@ tbx = st.toolbox(tbxFile{1},'install',false);
 
 % Install the toolboxes when ready.
 tbx.install;
+
+%% This is for a different project
+
+
+% Find the toolboxes file for a
+tbxFile = st.search('files',...
+    'project label','EJ Apricot',...
+    'file name','toolboxes.json');
+
+% Checks for the toolboxes and installs if necessary.
+st.toolbox(tbxFile{1});
 
 %%
