@@ -1,12 +1,13 @@
-function destination = runFunction(obj,func,varargin)
+function destination = runFunction(st,func,varargin)
 % Search, download, and run a function stored at Flywheel
 %
 %    st.runFunction(func,'destination',destination,'params',params);
 %
 % Required inputs: 
-%   func - Either a plink or struct to the function on the scitran site
+%   func - Either a scitran struct of the function or a filename (string)
 %
 % Optional inputs
+%   project     - Project label (string)
 %   destination - Full path to the local script
 %   params      - Struct of parameters for the function
 %
@@ -19,20 +20,39 @@ function destination = runFunction(obj,func,varargin)
 
 %%
 p = inputParser;
-p.addRequired('func');
+vFunc = @(x)(isstruct(x) || ischar(x));
+p.addRequired('func',vFunc);
 
 % Specify a local directory for the script.
+p.addParameter('project',[],@ischar);
 p.addParameter('destination',pwd,@ischar);
 p.addParameter('params',[],@isstruct);
 
 p.parse(func,varargin{:});
-
+project     = p.Results.project;
 destination = p.Results.destination;
 params      = p.Results.params; %#ok<NASGU>
 
-%% Download the script.  What if it is a function?  
+%% Download the function 
 
-destination = obj.get(func,'destination',fullfile(destination,'localFunction.m'));
+if ischar(func)
+    if isempty(project)
+        error('Project label required when func is a string');
+    else
+        funcS = st.search('files',...
+            'project label',project,...
+            'filename',func,...
+            'summary',true);
+    end
+else
+    funcS = func;
+end
+
+%% Download to localFunction and evaluate with params
+
+destination = st.get(funcS{1},...
+    'destination',fullfile(destination,'localFunction.m'));
+
 eval('localFunction(params);');
 
 end

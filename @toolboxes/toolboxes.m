@@ -147,9 +147,7 @@ classdef toolboxes < handle
                         fprintf('%s installed and added to path.\n',tbx.names{ii}); 
                     end
                 else
-                    fprintf('***\n');
-                    fprintf('Toolbox %s - found on path\n',tbx.names{ii});
-                    fprintf('***\n');
+                    fprintf('*** Found toolbox %s\n',tbx.names{ii});
                 end
             end
         end

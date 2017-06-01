@@ -1,13 +1,12 @@
-function tbx = toolbox(st,fileStruct,varargin)
+function tbx = toolbox(st,varargin)
 % Install toolboxes for a script or function in a scitran instance
 %
 %    tbx = st.toolbox(fileStruct,'install',logical)
 %
-% Required input
-%   fileStruct:  This is either a plink or a struct defining the toolbox JSON
-%                file on the scitran site.
-%
-% Optional input:
+% Input parameters
+%   project:  The project label
+%   file:     This is either a struct defining the toolbox JSON or the name
+%             of the JSON toolbox file (default 'toolboxes.json').
 %   install:  Boolean on whether to execute toolboxes.install (default: true)
 %
 % Output
@@ -15,26 +14,52 @@ function tbx = toolbox(st,fileStruct,varargin)
 %
 % Example:
 %   st = scitran('action', 'create', 'instance', 'scitran');
-%   tbxFile = st.search('files','project label contains','Diffusion Noise','file name','toolboxes.json');
-%   tbx = st.toolbox(tbxFile{1},'install',false);
 %
+%  Retrieves toolboxes.json from this project
+%   tbxFile = st.toolbox('project','Diffusion Noise Analysis');
+%   tbxFile = st.toolbox('project','Diffusion Noise Analysis','file','yourName.json');
+%
+%  Returns a toolboxes struct without installing
+%   tbxFile = st.search('files','project label','Diffusion Noise Analysis','filename','toolboxes.json')
+%   tbx = st.toolbox('file',tbxFile{1},'install',false);
+%
+%  
 % BW, Scitran Team, 2017
 
 %%
 p = inputParser;
 
 vFunc = @(x)(isstruct(x) || ischar(x));
-p.addRequired('fileStruct',vFunc);
-
+p.addParameter('file','toolboxes.json',vFunc);
+p.addParameter('project','', @ischar);    % Project label
 p.addParameter('install',true, @islogical);
 
-p.parse(fileStruct,varargin{:});
+p.parse(varargin{:});
+
+project = p.Results.project;
+file    = p.Results.file;
 install = p.Results.install;
 
-%%
-tbx = toolboxes('scitran',st,'file',fileStruct);
+%% Set up the toolboxes object
 
-% Could become optional
+if ischar(file)
+    if isempty(project)
+        error('Project label required when file is a string');
+    else
+        %  Get the file structure
+        fileS = st.search('files',...
+            'project label',project,...
+            'filename',file,...
+            'summary',true);
+    end
+else
+    fileS = file;
+end
+
+tbx = toolboxes('scitran',st,'file',fileS{1});
+
+%% Do or don't install
+
 if install, tbx.install; end
 
 end

@@ -12,61 +12,50 @@
 % BW, Scitran Team, 2017
 
 %% Open scitran
+
 st = scitran('action', 'create', 'instance', 'scitran');
 
-%% Run a script on the ALDIT data - Data Set 1
+%% Set up the toolboxes
 
-% Default parameters
 project = 'Diffusion Noise Analysis';
+st.toolbox('project',project,'file','toolboxes.json');
 
-% Find the function
-func = st.search('files',...
-    'project label',project,...
-    'filename','dtiErrorALDIT.m',...
-    'summary',true);
+%% Run the function on Data Set 1
 
 clear params
 params.project = 'Diffusion Noise Analysis';
 params.session = 'Set 1';
 
-st.runFunction(func{1},'params',params);
+st.runFunction('dtiErrorALDIT.m','project',project,'params',params);
 
 %% Data set 2
 
 % Set additional parameters
-params.project = 'Diffusion Noise Analysis';
 params.session = 'Set 2';
 params.wmPercentile = 80; params.nSamples = 500;
 params.scatter = false; params.histogram = true;
 
-st.runFunction(func{1},'params',params);
+st.runFunction('dtiErrorALDIT.m','project',project,'params',params);
 
 %% A single unit physiology example
-
-% Find the function
-func = st.search('files',...
-    'project label','EJ Apricot',...
-    'filename','fw_Apricot6.m',...
-    'summary',true);
-
-%% Set the function parameters
-
-% Find the spikes file as a cell array
-fileSpikes = st.search('files',...
-    'project label','EJ Apricot',...
-    'file name contains','spikes-1',...
-    'summary',true);
-
-% Set parameters and run
-clear params;
-params.fileSpikes = fileSpikes{1};
-params.cellNumber = 14;
-
-st.runFunction(func{1},'params',params);
-
-%% Change parameters to another cell
-
-params.cellNumber = 7;
-st.runFunction(func{1},'params',params);
+%
+% st = scitran('action', 'create', 'instance', 'scitran');
+% 
+% project = 'EJ Apricot';
+% st.toolbox('project',project);  % toolboxes.json is the default file
+% 
+% %% Set the function parameters
+% 
+% % Set parameters and run
+% clear params;
+% params.fileSpikes = fileSpikes{1};
+% params.cellNumber = 14;
+% 
+% st.runFunction('fw_Apricot6.m','project','EJ Apricot','params',params);
+% 
+% %% Change parameters to another cell
+% 
+% params.cellNumber = 7;
+% st.runFunction('fw_Apricot6.m','project','EJ Apricot','params',params);
 
 %%

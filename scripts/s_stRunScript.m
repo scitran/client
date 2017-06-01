@@ -1,5 +1,7 @@
 %% s_stRunScript
 %
+% Deprecated - we only run functions, I think
+%
 % The script we run is stored in the project as an attachment. The script
 % checks that you have the toolboxes and then runs a simple noise analysis
 % on the Diffusion Noise project.
