@@ -1,4 +1,4 @@
-function dwi = dwiLoad(st,acquisitionID,varargin)
+function [dwi,destination] = dwiLoad(st,acquisitionID,varargin)
 % Load nifti, bvec, and bval from a flywheel acquisition
 %
 %      dwi = st.dwiLoad(acquisitionID,varargin);
