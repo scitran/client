@@ -2,12 +2,14 @@
 %
 % Two examples are included.
 %
-% First, we perform a dtiErrorALDIT analysis on the diffusion data.
-% Second, we plot some retinal spiking PSTH from EJ (Apricot).
+% We perform a dtiErrorALDIT analysis on the diffusion data.
 %
-% Both examples shopw how to set the parameters to a function.
+% A second example is shown, but commented out.  That one is for EJ
+% Apricate retinal data and requires the ISETBIO toolbox.  It runs, but is
+% not a good demo because ISETBIO is large.
 %
-% The functions themselves are in the scitran/examples directory.
+% The functions are in the scitran/examples directory and stored up on the
+% Wandell lab Flywheel site.
 %
 % BW, Scitran Team, 2017
 
@@ -25,7 +27,7 @@ clear params
 params.project = 'Diffusion Noise Analysis';
 params.session = 'Set 1';
 
-st.runFunction('dtiErrorALDIT.m','project',project,'params',params);
+[~,RMSE1] = st.runFunction('dtiErrorALDIT.m','project',project,'params',params);
 
 %% Data set 2
 
@@ -34,9 +36,12 @@ params.session = 'Set 2';
 params.wmPercentile = 80; params.nSamples = 500;
 params.scatter = false; params.histogram = true;
 
-st.runFunction('dtiErrorALDIT.m','project',project,'params',params);
+[~,RMSE2] = st.runFunction('dtiErrorALDIT.m','project',project,'params',params);
 
-%% A single unit physiology example
+%% END
+
+
+%% Another potential example - A single unit physiology example
 % %
 % % st = scitran('action', 'create', 'instance', 'scitran');
 % % 

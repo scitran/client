@@ -1,7 +1,7 @@
-function destination = runFunction(st,func,varargin)
+function [destination,val] = runFunction(st,func,varargin)
 % Search, download, and run a function stored at Flywheel
 %
-%    st.runFunction(func,'destination',destination,'params',params);
+%  [destination,val] = st.runFunction(func,'project',...,'destination',...,'params',...);
 %
 % Required inputs: 
 %   func - Either a scitran struct of the function or a filename (string)
@@ -53,7 +53,7 @@ end
 destination = st.get(funcS{1},...
     'destination',fullfile(destination,'localFunction.m'));
 
-eval('localFunction(params);');
+eval('val = localFunction(params);');
 
 end
 
