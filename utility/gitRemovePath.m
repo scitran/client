@@ -1,6 +1,10 @@
 function newPathList = gitRemovePath(pathList,dName)
 % Removes .git directories from the pathList.
 %
+% TODO:
+% Different from paths/gitRemovePath by {1}{N} below.  Not sure what is up
+% with that.  
+%
 %   newPathList = gitRemovePath(pathList)
 %
 % This is typically run during startup or when adding a git repository to
@@ -32,12 +36,12 @@ if ~exist('dName','var')    || isempty('dName'), dName = '.git'; end
 % Break the path list into individual path elements.
 pathElements = textscan(pathList, '%s', 'delimiter', pathsep);
 
-% Look at each element from the path.  If it doesn't contain a .svn folder
+% Look at each element from the path.  If it doesn't contain a .git folder
 % then we add it to the end of our new path list.
 newPathList = [];
-for ii = 1:length(pathElements)
-    if isempty(strfind(pathElements{ii}, [filesep dName]))
-        newPathList = [newPathList, pathElements{ii}, pathsep]; %#ok<AGROW>
+for ii = 1:length(pathElements{1})
+    if isempty(strfind(pathElements{1}{ii}, [filesep dName]))
+        newPathList = [newPathList, pathElements{1}{ii}, pathsep]; %#ok<AGROW>
     % else fprintf('Removing %s\n',pathElements{ii});
     end
 end

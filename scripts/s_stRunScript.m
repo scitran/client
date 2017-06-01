@@ -6,10 +6,10 @@
 %
 % BW, Scitran Team, 2017
 
-% Open the client
+%% Open the client
 st = scitran('action', 'create', 'instance', 'scitran');
 
-% Find the script
+%% Find the script
 script = st.search('files',...
     'project label contains','Diffusion Noise',...
     'file name','s_stALDIT.m',...
@@ -19,7 +19,7 @@ script = st.search('files',...
 % here
 %
 
-% Run it
+%% Run it
 st.runScript(script{1});
 
 %%
