@@ -33,9 +33,7 @@ params      = p.Results.params; %#ok<NASGU>
 %% Download the script.  What if it is a function?  
 
 destination = obj.get(func,'destination',fullfile(destination,'localFunction.m'));
-[~,n] = fileparts(destination);
-cmd = sprintf('%s(obj,params);',n);
-eval(cmd);
+eval('localFunction(params);');
 
 end
 

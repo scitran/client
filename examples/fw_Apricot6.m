@@ -1,34 +1,32 @@
-function fw_Apricot6(st,varargin)
-% Flywheel function to illustrate how to analyze some EJ data
+function fw_Apricot6(varargin)
+% Analyze some EJ retinal spiking data
 %
-% Example:
-%  st = scitran('action', 'create', 'instance', 'scitran');
+% Parameters:
+%   fileSpikes - Flywheel file structure
+%   fileMovie  - FLywheel file structure
+%   cellNumber - Integer
 %
-% % Set up the parameters
-%   params.fileSpikes = st.search('files','project label','EJ Apricot','file name contains','spikes-1','summary',true);
-%   params.fileMovie  = st.search('files','project label','EJ Apricot','file name contains','stimulusMovie','summary',true);
-%   params.cellNumber = 14;
-%
-%   st.runFunction('fw_Apricot6','params',params);
+% See also:  s_stRunFunction.m (bottom)
 %
 % JRG/BW/RF ISETBIO Team, 2017
 
 %%
 p = inputParser;
 
-p.addRequired('st');
 vFunc = @(x)(isstruct(x) || ischar(x));
 p.addParameter('fileSpikes',[],vFunc);
 p.addParameter('fileMovie',[],vFunc);
 p.addParameter('cellNumber',10,@isscalar);
 
-p.parse(st,varargin{:});
+p.parse(varargin{:});
 
 cellNumber = p.Results.cellNumber;
 fileSpikes = p.Results.fileSpikes;
 fileMovie  = p.Results.fileMovie;
 
 %% Get the data files
+
+st = scitran('action', 'create', 'instance', 'scitran');
 
 if ~isempty(fileSpikes)
 
