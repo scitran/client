@@ -1,5 +1,6 @@
 function destination = runScript(obj,script,varargin)
-% DEPRECATED
+% NEEDS UPDATING FOR MODERN FORMAT
+%
 % Search, download, and run a script stored at Flywheel
 %
 %    st.runScript(script,'destination',destination);
@@ -19,26 +20,26 @@ function destination = runScript(obj,script,varargin)
 %
 % BW/RF
 
-disp('Deprecated');
-return;
 
 %%
-% p = inputParser;
-% p.addRequired('script');
-% 
-% % Specify a local directory for the script.
-% p.addParameter('destination',pwd,@ischar);
-% p.addParameter('params',[],@isstruct);
-% 
-% p.parse(script,varargin{:});
-% 
-% destination = p.Results.destination;
-% params      = p.Results.params; %#ok<NASGU>
-% 
-% %% Download the script.  What if it is a function?  
-% 
-% destination = obj.get(script,'destination',fullfile(destination,'localScript.m'));
-% run(destination);
+disp('runScript needs updating for modern format')
+
+p = inputParser;
+p.addRequired('script');
+
+% Specify a local directory for the script.
+p.addParameter('destination',pwd,@ischar);
+p.addParameter('params',[],@isstruct);
+
+p.parse(script,varargin{:});
+
+destination = p.Results.destination;
+params      = p.Results.params; %#ok<NASGU>
+
+%% Download the script.  What if it is a function?  
+
+destination = obj.get(script,'destination',fullfile(destination,'localScript.m'));
+run(destination);
 
 end
 
