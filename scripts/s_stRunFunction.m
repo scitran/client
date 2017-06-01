@@ -12,7 +12,6 @@
 % BW, Scitran Team, 2017
 
 %% Open scitran
-
 st = scitran('action', 'create', 'instance', 'scitran');
 
 %% Set up the toolboxes
@@ -38,15 +37,15 @@ params.scatter = false; params.histogram = true;
 st.runFunction('dtiErrorALDIT.m','project',project,'params',params);
 
 %% A single unit physiology example
-%
-% st = scitran('action', 'create', 'instance', 'scitran');
-% 
-% project = 'EJ Apricot';
-% st.toolbox('project',project);  % toolboxes.json is the default file
-% 
-% %% Set the function parameters
-% 
-% % Set parameters and run
+% %
+% % st = scitran('action', 'create', 'instance', 'scitran');
+% % 
+% % project = 'EJ Apricot';
+% % st.toolbox('project',project);  % toolboxes.json is the default file
+% % 
+% % %% Set the function parameters
+% % 
+% % % Set parameters and run
 % clear params;
 % params.fileSpikes = fileSpikes{1};
 % params.cellNumber = 14;
