@@ -1,40 +1,29 @@
-RF and BW to fill in more detail on the possible searches.
+## Returned by a search
 
-### What can be searched on and returned
+The search returns a structure that defines one of several types of scitran objects.
 
-objects = {'files','acquisitions','sessions','projects','collections','analyses','subjects','notes'};
+    objects = {'files','acquisitions','sessions','projects','collections','analyses','subjects','notes'};
 
-### Special characters
+The structure contains many different fields, with most of the information in the 'source' field.
 
-Remember that certain fields need to be hex (https://github.com/scitran/client/wiki/Search-examples)
-There are some DOT fields that should be     _0x2E_ 
-Underscore at the start of a field should be x0x5F
+## Running a search
 
-    case {'file','files'}
-        fprintf('Search type:  Files\n');
+To perform a search, create a scitran object that is authorized to interact with your database.  Typically, this will be a command like
 
-    case {'acquisition','acquisitions'}
-        fprintf('Search type:  Acquisitions\n');
+    st = scitran('action','create','instance','scitran');
 
-    case {'session','sessions'}
-        fprintf('Search type:  Sessions\n');
-        fprintf('\tlabel \n');
-        fprintf('\texact_label \n');
-        fprintf('\tcreated_time \n');
-        fprintf('\tmodified_time\n');
-        fprintf('\tTimeStamp\n');
-        fprintf('\tTag\n');
-        fprintf('\tNote\n');
+You can do many different types of searches, such as the ones illustrated in [s_stSearches.m](https://github.com/scitran/client/blob/master/scripts/s_stSearches.m)
+```
+projects = st.search('projects');
+VWFAsessions = st.search('sessions','project label','VWFA');
+    
+files = st.search('files',...
+    'collection label','Anatomy Male 45-55',...
+    'acquisition label','Localizer',...
+    'file type','nifti');
+```
 
-    case {'project','projects'}
-        fprintf('Search type:  Projects\n');
-        
-    case {'collection','collections'}
-        fprintf('Search type:  Collections\n');
-        
-    case {'analysis','analyses'}
-        fprintf('Search type:  Analyses\n');
-        
-    case {'subject','subjects'}
-        
-    case {'notes','note'}
+The search syntax is relatively extensive.
+
+
+
