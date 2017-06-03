@@ -1,4 +1,4 @@
-The **scitran matlab client** provides tools so that Matlab users can interact with the a scitran database. The main use is to read and analyze data from a [Flywheel](https://flywheel.io) data and computational management system.
+The **scitran matlab client** provides tools so that Matlab users can interact with the a scitran database. The main use is to read and analyze data from a [Flywheel](https://flywheel.io) implementation of the scitran data and computational management system.
 
 This wiki page describes the general software and provides many examples, such as how to
 
