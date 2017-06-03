@@ -6,7 +6,7 @@ This wiki page describes the general software and provides many examples, such a
 * search the database
 * download database objects (e.g., files, sessions, projects, analyses)
 * upload results (e.g., files, graphs, other attachments)
-* upload method descriptions (e.g., analyses, Gears) and programs (e.g., Matlab or Python files) that others can run
+* upload method descriptions (e.g., analyses, Gears) and programs (e.g., Matlab files) that others can run
 
 The **scitran matlab client** can be run securely from any computer on the Internet to process data stored in a scitran database either using their local computer or from a larger computational resource such as a compute engine on the cloud.
 
