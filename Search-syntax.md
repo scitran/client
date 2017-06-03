@@ -2,7 +2,8 @@
 
 The search returns a structure that defines one of several types of scitran objects.
 
-    objects = {'files','acquisitions','sessions','projects','collections','analyses','subjects','notes'};
+    objects = {'files','acquisitions','sessions','projects','collections',...
+               'analyses','subjects','notes','analyses in collection','files in collection'};
 
 The structure contains many different fields, with most of the information in the 'source' field.
 
