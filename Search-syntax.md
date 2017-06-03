@@ -23,7 +23,11 @@ files = st.search('files',...
     'file type','nifti');
 ```
 
-The search syntax is relatively extensive.
+The search options are relatively extensive, but they all conform to this syntax
+
+    st.search('<objectTypeToReturn>','Parameter',value, ...);
+
+
 
 
 
