@@ -5,6 +5,7 @@
     * [Examples](Search-examples)
     * [Syntax](Search-syntax)
 * [Gears](Gears)
+* [Uploading](Uploading)
 * [Building Gears](https://github.com/scitran/client/wiki/Building-Gears)
 
 
