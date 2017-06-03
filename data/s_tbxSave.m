@@ -50,6 +50,20 @@ tbx.getcmd{1}       = 'git clone https://github.com/isetbio/isetbio';
 tbx.tbxdirectory{1} = 'isetbio';
 tbx.saveinfo;
 
+%%
+tbx.names{1}        = 'Rorie2010';
+tbx.testcmd{1}      = 'Rorie2010RootPath';
+tbx.getcmd{1}       = 'git clone https://github.com/vistalab/Newsome--Rorie-2010-PLoSone';
+tbx.tbxdirectory{1} = 'Rorie2010';
+tbx.saveinfo;
+
+%%
+tbx.names{1}        = 'Kiani2014';
+tbx.testcmd{1}      = 'Kiani2014RootPath';
+tbx.getcmd{1}       = 'git clone https://github.com/vistalab/Newsome--Kiani-2014-CurrentBiology';
+tbx.tbxdirectory{1} = 'Kiani2014';
+tbx.saveinfo;
+
 %%  ALDIT
 
 tbx = toolboxes();             % Empty object
@@ -57,5 +71,5 @@ tbx.read('vistasoft.json');      % Load the individual toolboxes
 tbx.read('dtiError.json');
 tbx.saveinfo('filename','aldit-toolboxes');  % Save with desired filename
 
-%%
+
 

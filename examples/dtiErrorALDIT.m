@@ -25,7 +25,7 @@ function nRMSE = dtiErrorALDIT(varargin)
 %% Start with initialization
 p = inputParser;
 
-p.addParameter('project','Diffusion Noise Analysis',@ischar);
+p.addParameter('project','ALDIT',@ischar);
 p.addParameter('session','Test Site 1',@ischar);
 p.addParameter('wmPercentile',95,@isnumeric);
 p.addParameter('nSamples',250,@isnumeric);
