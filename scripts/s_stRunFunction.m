@@ -18,27 +18,27 @@ st = scitran('action', 'create', 'instance', 'scitran');
 
 %% Set up the toolboxes
 
-project = 'Diffusion Noise Analysis';
-st.toolbox('project',project,'file','toolboxes.json');
+project = 'ALDIT';
+st.toolbox('project',project,'file','aldit-toolboxes.json');
 
 %% Run the function on Data Set 1
 
 clear params
-params.project = 'Diffusion Noise Analysis';
-params.session = 'Set 1';
+params.project = 'ALDIT';
+params.session = 'Test Site 1';
 
 [~,RMSE1] = st.runFunction('dtiErrorALDIT.m','project',project,'params',params);
 
 %% Data set 2
 
 % Set additional parameters
-params.session = 'Set 2';
+params.session = 'Test Site 2';
 params.wmPercentile = 80; params.nSamples = 500;
 params.scatter = false; params.histogram = true;
 
 [~,RMSE2] = st.runFunction('dtiErrorALDIT.m','project',project,'params',params);
 
-%% END
+%%
 
 
 %% Another potential example - A single unit physiology example

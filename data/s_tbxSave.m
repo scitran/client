@@ -50,7 +50,12 @@ tbx.getcmd{1}       = 'git clone https://github.com/isetbio/isetbio';
 tbx.tbxdirectory{1} = 'isetbio';
 tbx.saveinfo;
 
+%%  ALDIT
+
+tbx = toolboxes();             % Empty object
+tbx.read('vistasoft.json');      % Load the individual toolboxes
+tbx.read('dtiError.json');
+tbx.saveinfo('filename','aldit-toolboxes');  % Save with desired filename
+
 %%
-
-
 

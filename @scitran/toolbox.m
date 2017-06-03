@@ -46,17 +46,21 @@ if ischar(file)
     if isempty(project)
         error('Project label required when file is a string');
     else
-        %  Get the file structure
-        fileS = st.search('files',...
+        %  Get the file information, which is a cell array
+        fileC = st.search('files',...
             'project label',project,...
-            'filename',file,...
-            'summary',true);
+            'filename',file);
+        if length(fileC) ~= 1
+            error('Problem identifying toolbox.  Search returned %d items\n',length(fileC));
+        else
+            fileS = fileC{1};   % Pull out the struct
+        end
     end
 else
     fileS = file;
 end
 
-tbx = toolboxes('scitran',st,'file',fileS{1});
+tbx = toolboxes('scitran',st,'file',fileS);
 
 %% Do or don't install
 

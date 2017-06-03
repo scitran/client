@@ -8,12 +8,12 @@ function nRMSE = dtiErrorALDIT(varargin)
 % be compared with data from phantom measurements on other scanners.
 %
 % Example:
-%    project = 'Diffusion Noise Analysis';
-%    session = 'Set 2';
+%    project = 'ALDIT';
+%    session = 'Test Site 2';
 %    dtiErrorALDIT('project',project,'session',session);
 %
-%    params.project = 'Diffusion Noise Analysis';
-%    params.session = 'Set 2';
+%    clear params; params.project = 'ALDIT';
+%    params.session = 'Test Site 2';
 %    params.wmPercentile = 80; params.nSamples = 500;
 %    params.scatter = false; params.histogram = false;
 %    dtiErrorALDIT(params);
@@ -26,7 +26,7 @@ function nRMSE = dtiErrorALDIT(varargin)
 p = inputParser;
 
 p.addParameter('project','Diffusion Noise Analysis',@ischar);
-p.addParameter('session','Set 1',@ischar);
+p.addParameter('session','Test Site 1',@ischar);
 p.addParameter('wmPercentile',95,@isnumeric);
 p.addParameter('nSamples',250,@isnumeric);
 p.addParameter('scatter',false,@islogical);
