@@ -1,10 +1,15 @@
 %% ALDIT data set error analysis (phantom data)
+% 
+% This script is just for teaching.  The implementation we expect people to
+% use is described in st_runFunction().
 %
-%  We find and download an acquisition containing DWI data. Then we do
-%  something reasonable with it to assess the noise. The resulting graph can
-%  be compared with data from phantom measurements on other scanners.
+% The script finds and downloads an acquisition containing DWI data. The
+% measurement noise is analyzed, and the resulting graph can be compared
+% with data from phantom measurements on other scanners.
 %
-%  st.runScript
+% See also: 
+%   s_stRunFunction - implements this with the st.runFunction method.  
+%
 % BW Scitran Team, 2017
 
 %% Make sure scitranClient is installed

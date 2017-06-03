@@ -1,15 +1,18 @@
 %% Illustrate st.runFunction
 %
-% Two examples are included.
+% This script illustrates how to use the scitran.runFunction() with data in
+% a Flywheel site.  To use this script, the toolbox.json file and the
+% script should be uploaded to the project (Annotation).
 %
-% We perform a dtiErrorALDIT analysis on the diffusion data.
+% The active part of this script performs a dtiErrorALDIT analysis on the
+% remote diffusion data.
 %
-% A second example is shown, but commented out.  That one is for EJ
-% Apricate retinal data and requires the ISETBIO toolbox.  It runs, but is
-% not a good demo because ISETBIO is large.
+% A second example is included in the comments at the end. That example is
+% for EJ Apricot retinal data and requires the ISETBIO toolbox.  It runs,
+% but is not a good demo because ISETBIO is large.
 %
-% The functions are in the scitran/examples directory and stored up on the
-% Wandell lab Flywheel site.
+% The functions (dtiErrorALDIT and fw_Apricot6) are in the scitran/examples
+% directory and stored up on the Wandell lab Flywheel site.
 %
 % BW, Scitran Team, 2017
 
