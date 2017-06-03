@@ -5,7 +5,11 @@ The search returns a structure that defines one of several types of scitran obje
     objects = {'files','acquisitions','sessions','projects','collections',...
                'analyses','subjects','notes','analyses in collection','files in collection'};
 
-The structure contains many different fields, with most of the information in the 'source' field.
+The search syntax is simple
+
+    objects = st.search('<objectTypeToReturn>','Parameter',value, ...);
+
+The object structure contains many different contains many different fields, with most of the information in the 'source' field.
 
 ## Running a search
 
@@ -23,10 +27,6 @@ files = st.search('files',...
     'acquisition label','Localizer',...
     'file type','nifti');
 ```
-
-The search options are relatively extensive, but they all conform to this syntax
-
-    st.search('<objectTypeToReturn>','Parameter',value, ...);
 
 
 
