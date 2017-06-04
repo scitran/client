@@ -1,3 +1,10 @@
+# Data uploading
+
+# Analysis uploading
+
+
+## Notes
+
 Create a data structure and put it (upload) to the site.
 
 https://github.com/vistalab/Newsome--Kiani-2014-CurrentBiology/blob/master/upload_data.m
