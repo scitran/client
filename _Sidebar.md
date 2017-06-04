@@ -5,8 +5,8 @@
     * [Examples](Search-examples)
     * [Syntax](Search-syntax)
 * [Gears](Gears)
-* [Analyses objects](Analyses objects)
+* [Analyses](Analyses objects)
 * [Uploading](Uploading)
 * [Building Gears](https://github.com/scitran/client/wiki/Building-Gears)
-* [Reproducible Research](Reproducible Research)
+* [Reproducible](Reproducible Research)
 
