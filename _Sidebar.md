@@ -8,5 +8,5 @@
 * [Analyses objects](Analyses objects)
 * [Uploading](Uploading)
 * [Building Gears](https://github.com/scitran/client/wiki/Building-Gears)
-* [Reproducible Research Papers](Reproducible Research Papers)
+* [Reproducible Research](Reproducible Research)
 
