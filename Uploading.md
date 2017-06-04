@@ -1,9 +1,15 @@
-# Data uploading
+# Data
 
-# Analysis uploading
+## Projects
+## Sessions
 
+# Analysis
 
-## Notes
+# Notes and Annotations
+
+#
+
+### Scraps to integrate above
 
 Create a data structure and put it (upload) to the site.
 
