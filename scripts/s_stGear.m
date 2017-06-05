@@ -69,23 +69,14 @@ oDir = fullfile(pwd,'output');
 stDirCreate(oDir);
 
 
-%% Execute a simple search
+%% Execute a simple search to find a T1 file
 
-% This search could also be done from the browser interface
-
-% We are searching for T1 weighted files in the GearTest collection.
-clear srch
-srch.path = 'files';                         % Looking for files
-
-% These files match the following properties
-srch.collections.match.label  = 'GearTest';   % In this collection
-srch.acquisitions.match.label = 'T1w';        % Acquisition T1w
-srch.files.bool.must(1).match.type         = 'nifti';      % A nifti type
-srch.files.bool.must(2).match.name         = '11348_3_1.nii.gz';  % The file
-
-% Run the search and get information about files
-files = st.search(srch);
-
+files = st.search('files',...
+    'collection label','GearTest',...
+    'acquisition label contains','T1w',...
+    'file type','nifti',...
+    'file name','11348_3_1.nii.gz',...
+    'summary',true);
 
 %% Get the file from the scitran database
 
@@ -124,27 +115,27 @@ betFile = fullfile(docker.oDir,[docker.oFile,'.nii.gz']);
 
 %% Build analysis struct with the information needed to upload the results
 
+% Make a stanalysis object
+analysis = stanalysis;
+
 % NOTE: Full paths are required for the outputs and inputs.
-clear upload
-analysis.label           = 's_stGear.m: FSL bet2 analysis';                % Analysis label
+analysis.label           = 'FSL bet2 analysis';                 % Analysis label
 analysis.outputs{1}.name = fullfile(docker.oDir, [docker.oFile,'.nii.gz']); % Full path to the OUTPUT file
 analysis.inputs{1}.name  = fullfile(docker.iDir, docker.iFile);             % Full path to the INPUT file
+analysis.method.docker   = docker;
+analysis.method.mfile    = 's_stGear.m';
 
 
 %% UPLOAD ANALYSIS TO COLLECTION
 %  NOTE: This will make this analysis viewable from any of the sessions within that collection!
 
 % Find the database ID for the Collection so we can upload to it
-clear srch
-srch.path                     = 'collections';
-srch.collections.match.label  = 'GearTest';
-collections                   = st.search(srch);
-collection_id                 = collections{1}.id;
-
-st.put('collection analysis', analysis,'id', collection_id);
+collection = st.search('collections',...
+    'collection label','GearTest');
+st.put('collection analysis', analysis,'id', collection{1}.id);
 
 % Go to the browser and have a look at the collection
-st.browser(collections{1});
+% st.browser(collections{1});
 
 
 %% UPLOAD ANALYSIS TO THE SESSION

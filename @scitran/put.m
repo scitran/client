@@ -35,11 +35,18 @@ upType = p.Results.upType;
 stData = p.Results.stData;
 id     = p.Results.id;
 
-% Format upType
-upType(lower(upType) == ' ') = [];
+vFunc = @(x)(ismember(x,{...
+    'analysis', 'sessionanalysis', 'collectionanalysis',...
+    'files','file','filesincollection',...
+    }));
+upType = strrep(lower(upType),' ','');
+if ~vFunc()
+    error('Unknown search return type %s\n',upType);
+end
+
 
 %% Do relevant upload
-switch  lower(upType)
+switch  upType
     case {'analysis', 'sessionanalysis', 'collectionanalysis'}
 
         % Analysis upload to a collection or session.
@@ -84,9 +91,9 @@ switch  lower(upType)
         end
 
         % Set the target for the analysis upload (collection or session)
-        if strfind(upType, 'collection')
+        if contains(upType, 'collection')
             target = 'collections';
-        elseif strfind(upType, 'session')
+        elseif contains(upType, 'session')
             target = 'sessions';
         else
             error('No analysis target was specified. Options are: (1) Session Analysis (2) Collection Analysis')
