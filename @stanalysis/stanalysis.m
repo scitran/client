@@ -69,7 +69,19 @@ classdef stanalysis < handle
 
         end
         
-        %% Read analysis file into this object
+        % Convert the cell array of input files to a sting
+        function inputString(obj)s
+        end
+        
+        % Convert the cell array of input files to a sting
+        function outputString(obj)
+        end
+        
+        %% Get rid of path, leaving only file.ext
+        function removePath(obj)
+        end
+        
+        %% Read analysis file into an @stanalysis object
         function obj = read(obj,file)
             
             

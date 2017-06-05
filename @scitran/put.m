@@ -1,7 +1,7 @@
 function [status, result] = put(obj,upType,stData,varargin)
-% Attach a file to the permalink location
+% Put a file or an analysis to the scitran site
 %
-%      st.put(upType,stdata,'id',id)
+%   st.put(upType,stdata,'id',id)
 %
 % Inputs:
 %  upType: Type of upload.  Analysis, File, ...
@@ -15,88 +15,94 @@ function [status, result] = put(obj,upType,stData,varargin)
 % here.
 %
 % Example:
-%    st.put('analysis',stData,'id',collection{1}.id);
-%    st.put('file',stData);
+%    st.put('analysis',stAnalysis,'id',collection{1}.id);
+%    st.put('file',filename);
 %
 % LMP/BW Vistasoft Team, 2015-16
 
 
 %% Parse inputs
 p = inputParser;
-p.addRequired('upType',@ischar);
+
+% Maybe we can set upType here, before the check?
+vFunc = @(x)(ismember(strrep(lower(x),' ',''),{...
+    'projectanalysis', 'sessionanalysis', 'collectionanalysis',...
+    'files','file',...
+    }));
+p.addRequired('upType',vFunc);
 
 % Should have a vFunc here with more detail
-p.addRequired('stData',@isstruct);
+p.addParameter('stAnalysis',[],@(x)(isequal(class(x),'stanalysis'))); 
+p.addParameter('stFile',[],@isstruct);
 p.addParameter('id','',@ischar);
 
 p.parse(upType,stData,varargin{:});
 
-upType = p.Results.upType;
-stData = p.Results.stData;
-id     = p.Results.id;
-
-vFunc = @(x)(ismember(x,{...
-    'analysis', 'sessionanalysis', 'collectionanalysis',...
-    'files','file','filesincollection',...
-    }));
-upType = strrep(lower(upType),' ','');
-if ~vFunc()
-    error('Unknown search return type %s\n',upType);
-end
+upType     = strrep(lower(p.Results.upType),' ','');
+stData     = p.Results.stFile;
+stAnalysis = p.Results.stAnalysis;
+id         = p.Results.id;
 
 
 %% Do relevant upload
 switch  upType
-    case {'analysis', 'sessionanalysis', 'collectionanalysis'}
-
-        % Analysis upload to a collection or session.
-        % In this case, the id needed to be set
-
+    case {'projectanalysis', 'sessionanalysis', 'collectionanalysis'}
+        % Analysis upload.  Could be to a project, session, or collection
+        % Perhaps we should just figure this out from the id.  Do we really
+        % need to name it?  Maybe that is OK for clarity of the code?
+        
         % Construct the command to upload input and output files of any
         % length % TODO: These should exist.
+        % This should become a method, say 
+        %   inAnalysis = analysis.inString;
+        % and similarly below.
         inAnalysis = '';
-        for ii = 1:numel(stData.inputs)
-            inAnalysis = strcat(inAnalysis, sprintf(' -F "file%s=@%s" ', num2str(ii), stData.inputs{ii}.name));
+        for ii = 1:numel(stAnalysis.inputs)
+            inAnalysis = strcat(inAnalysis, sprintf(' -F "file%s=@%s" ', num2str(ii), stAnalysis.inputs{ii}.name));
         end
-
-        outAnalysis = '';
-        for ii = 1:numel(stData.outputs)
-            outAnalysis = strcat(outAnalysis, sprintf(' -F "file%s=@%s" ', num2str(ii + numel(stData.inputs)), stData.outputs{ii}.name));
-        end
-
+        
         % We have to pad the json struct or jsonwrite?? will not give us a list
-        if length(stData.inputs) == 1
+        if length(stAnalysis.inputs) == 1
             stData.inputs{end+1}.name = '';
         end
-        if length(stData.outputs) == 1
+        
+        outAnalysis = '';
+        for ii = 1:numel(stAnalysis.outputs)
+            outAnalysis = strcat(outAnalysis, sprintf(' -F "file%s=@%s" ', num2str(ii + numel(stAnalysis.inputs)), stAnalysis.outputs{ii}.name));
+        end
+        % Again, pad
+        if length(stAnalysis.outputs) == 1
             stData.outputs{end+1}.name = '';
         end
 
         % Remove full the full path, leaving only the file name, from input
-        % and output name fields.
-        for ii = 1:numel(stData.inputs)
-            [~, f, e] = fileparts(stData.inputs{ii}.name);
-            stData.inputs{ii}.name = [f, e];
+        % and output name fields.  I guess that makes sense for the data up
+        % on the scitran site.
+        % analysis.stripPath;
+        for ii = 1:numel(stAnalysis.inputs)
+            [~, f, e] = fileparts(stAnalysis.inputs{ii}.name);
+            stAnalysis.inputs{ii}.name = [f, e];
         end
-        for ii = 1:numel(stData.outputs)
-            [~, f, e] = fileparts(stData.outputs{ii}.name);
-            stData.outputs{ii}.name = [f, e];
+        for ii = 1:numel(stAnalysis.outputs)
+            [~, f, e] = fileparts(stAnalysis.outputs{ii}.name);
+            stAnalysis.outputs{ii}.name = [f, e];
         end
 
-        % Jsonify the payload (assuming it is necessary)
-        if isstruct(stData)
-            stData = jsonwrite(stData);
-            % Escape the " or the cmd will fail.
-            stData = strrep(stData, '"', '\"');
-        end
+        % Create the JSON data for the upload
+        stData = stAnalysis.json;
+        
+        %         % Jsonify the payload (assuming it is necessary)
+        %         if isstruct(stData)
+        %             stData = jsonwrite(stData);
+        %             % Escape the " or the cmd will fail.
+        %             stData = strrep(stData, '"', '\"');
+        %         end
 
         % Set the target for the analysis upload (collection or session)
-        if contains(upType, 'collection')
-            target = 'collections';
-        elseif contains(upType, 'session')
-            target = 'sessions';
+        if contains(upType, 'collection'),  target = 'collections';
+        elseif contains(upType, 'session'), target = 'sessions';
         else
-            error('No analysis target was specified. Options are: (1) Session Analysis (2) Collection Analysis')
+            error('No analysis target. Options are: (1) Project Analysis, (2) Session Analysis (3) Collection Analysis')
         end
 
         curlCmd = sprintf('curl %s %s -F "metadata=%s" %s/api/%s/%s/analyses -H "Authorization":"%s"', inAnalysis, outAnalysis, stData, obj.url, target, id, obj.token );
