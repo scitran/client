@@ -70,7 +70,7 @@ classdef stanalysis < handle
         end
         
         % Convert the cell array of input files to a sting
-        function inputString(obj)s
+        function inputString(obj)
         end
         
         % Convert the cell array of input files to a sting
