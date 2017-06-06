@@ -53,15 +53,15 @@ tbx.saveinfo;
 %%
 tbx.names{1}        = 'Rorie2010';
 tbx.testcmd{1}      = 'Rorie2010RootPath';
-tbx.getcmd{1}       = 'git clone https://github.com/vistalab/Newsome--Rorie-2010-PLoSone';
-tbx.tbxdirectory{1} = 'Rorie2010';
+tbx.getcmd{1}       = 'git clone https://github.com/vistalab/pof_Rorie2010.git';
+tbx.tbxdirectory{1} = 'pof_Rorie2010';
 tbx.saveinfo;
 
 %%
 tbx.names{1}        = 'Kiani2014';
 tbx.testcmd{1}      = 'Kiani2014RootPath';
-tbx.getcmd{1}       = 'git clone https://github.com/vistalab/Newsome--Kiani-2014-CurrentBiology';
-tbx.tbxdirectory{1} = 'Kiani2014';
+tbx.getcmd{1}       = 'git clone https://github.com/vistalab/pof_Kiani2014.git';
+tbx.tbxdirectory{1} = 'pof_Kiani2014';
 tbx.saveinfo;
 
 %%  ALDIT

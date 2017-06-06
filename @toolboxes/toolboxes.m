@@ -129,18 +129,18 @@ classdef toolboxes < handle
                 if isempty(thisTestCmd)
                     % This should be updated to a window that selects the
                     % directory, starting with the current directory.
-                    fprintf('Installing in directory %s\n',pwd);
+                    fprintf('Installing in directory *** %s ***\n',pwd);
                     fprintf('<Return> to continue: ');     pause
                     fprintf('\n');
+                    
                     status = system(tbx.getcmd{ii});
                     if status
-                        error('Get command for %s failed\n',tbx.name{ii});
+                        error('Git clone command for %s failed. Status %d (128- dir exists).\n',tbx.name{ii},status);
                     end
                     
                     % We should move the directory to its tbxdirectory name
-                    % HERE, then change into it and add
-                    % chdir(fullfile(pwd,tbxdirectory{ii}))
-                    addpath(genpath(tbx.tbxdirectory{ii}));
+                    % 
+                    chdir(tbx.tbxdirectory{ii}); addpath(genpath(pwd));
                     gitRemovePath;
                     thisTestCmd = which(tbx.testcmd{ii});
                     if ~isempty(thisTestCmd)

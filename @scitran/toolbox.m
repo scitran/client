@@ -51,9 +51,9 @@ if ischar(file)
             'project label',project,...
             'filename',file);
         if length(fileC) ~= 1
-            error('Problem identifying toolbox.  Search returned %d items\n',length(fileC));
+            error('Problem identifying JSON toolbox file.  Search returned %d items\n',length(fileC));
         else
-            fileS = fileC{1};   % Pull out the struct
+            fileS = fileC{1};   % Copy the struct
         end
     end
 else

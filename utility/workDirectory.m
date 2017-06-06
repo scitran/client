@@ -13,7 +13,7 @@ function workingDir = workDirectory(workingDir)
 %
 % BW Scitran Team, 2017
 
-if notDefined('workingDir'), workingDir = pwd; end
+if ~exist('workingDir','var'), workingDir = pwd; end
 
 if ~exist(workingDir,'dir')
     fprintf('Creating working directory %s\n',workingDir);
