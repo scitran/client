@@ -24,7 +24,7 @@ You might verify that you succeeded by trying from within your Matlab command wi
    ```
    system('which python')
    ```
-## Installing from within Matlab
+## Installing 
 
 You can install this scitranClient and another essential toolbox, Guillaume Flandin's code to read and write JSON files (JSONio) by 
 
@@ -33,7 +33,7 @@ You can install this scitranClient and another essential toolbox, Guillaume Flan
     
 and adding both directories to your path.  We suggest renaming the 'client' directory 'scitranClient'.
 
-This is implemented in the following few lines of Matlab code.
+## Installing from Matlab
 
 ```
 fprintf('\n\n');
