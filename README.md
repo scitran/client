@@ -4,25 +4,7 @@ This repository includes Matlab utilities to work with the SciTran API, which is
 
 Most MRI databases require some authorization before you can download, upload, or search. Speak to your administrator about the appropriate method for your database.
 
-## Python
 
-Even when using the Matlab client, you must have python on your path to enable authorization. The essential Python module is oauth2client.  If you use, say, anaconda to manage your python method than pip is included and you can do the install this way from your terminal
-   ```
-   pip install oauth2client
-   ```
-There are many ways to do the install for other systems, and we will add other examples here later.
-
-The python executable must be in the path environment variable in Matlab.  You can find your path by typing
-   ```
-   getenv('PATH')
-   ```
-If the path to python is not in this list, then you set add it, say be
-   ```
-   setenv('PATH',['/Users/wandell/anaconda/bin/:',getenv('PATH')]);
-   ```
-You might verify that you succeeded by trying from within your Matlab command window
-   ```
-   system('which python')
    ```
 ## Installing 
 
@@ -71,6 +53,25 @@ Once Docker is installed you can invoke any docker machine and container you set
 
 I think there is now a configure routine, right?  So this text no longer applies?
 
+## Python
+
+Even when using the Matlab client, you must have python on your path to enable authorization. The essential Python module is oauth2client.  If you use, say, anaconda to manage your python method than pip is included and you can do the install this way from your terminal
+   ```
+   pip install oauth2client
+   ```
+There are many ways to do the install for other systems, and we will add other examples here later.
+
+The python executable must be in the path environment variable in Matlab.  You can find your path by typing
+   ```
+   getenv('PATH')
+   ```
+If the path to python is not in this list, then you set add it, say be
+   ```
+   setenv('PATH',['/Users/wandell/anaconda/bin/:',getenv('PATH')]);
+   ```
+You might verify that you succeeded by trying from within your Matlab command window
+   ```
+   system('which python')
 If your terminal environment is set up properly, the best way to initiate scitran client is to start matlab from a terminal. In that case, the Matlab program inherits your shell ENV. Many people start Matlab from an icon, however. This sets up Matlab's own idiosyncratic environment. In that case, you may have to set your ENV (PATH) to include paths to python & required libs manually from within Matlab. See XXX for instructions on how to do this.
 
 
