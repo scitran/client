@@ -67,5 +67,10 @@ You may want to run docker containers, which requires that you have Docker insta
 
 Once Docker is installed you can invoke any docker machine and container you set up on your computer. To set up the configuration for your computer, use the command [matlab/stDockerConfig.m](https://github.com/scitran/client/blob/master/utility/stDockerConfig.m).
 
+## Deprecated - right?
+
+I think there is now a configure routine, right?  So this text no longer applies?
+
+If your terminal environment is set up properly, the best way to initiate scitran client is to start matlab from a terminal. In that case, the Matlab program inherits your shell ENV. Many people start Matlab from an icon, however. This sets up Matlab's own idiosyncratic environment. In that case, you may have to set your ENV (PATH) to include paths to python & required libs manually from within Matlab. See XXX for instructions on how to do this.
 
 
