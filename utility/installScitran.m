@@ -7,16 +7,25 @@ str = input(prompt,'s');
 
 if isequal(lower(str),'y')
     thisDir = pwd;
-    status = system('git clone https://github.com/scitran/client');
-    if status, error('Problem cloning the scitran client repository'); end
-    movefile('client','scitranClient');
+    tst = which('scitran');
+    if ~isempty(tst)
+        warning('You appear to have scitran on your path.  Not downloading');
+    else
+        status = system('git clone https://github.com/scitran/client');
+        if status, error('Problem cloning the scitran client repository'); end
+        movefile('client','scitranClient');
+    end
     
-    status = system('git clone https://github.com/gllmflndn/JSONio');
-    if status, error('Problem cloning the JSONio repository'); end
-    
-    chdir('scitranClient'); addpath(genpath(pwd));
-    chdir(thisDir); chdir('JSONio'); addpath(genpath(pwd));
-    
+    tst = which('test_jsonread');
+    if ~isempty(tst)
+        warning('You appear to have jsonread on your path.  Not downloading.');
+    else
+        status = system('git clone https://github.com/gllmflndn/JSONio');
+        if status, error('Problem cloning the JSONio repository'); end
+        
+        chdir('scitranClient'); addpath(genpath(pwd));
+        chdir(thisDir); chdir('JSONio'); addpath(genpath(pwd));
+    end
     chdir(thisDir);
     
     % Tell user where they are
