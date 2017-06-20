@@ -1,4 +1,5 @@
 * [Introduction](Home)
+* [Installation](Installation (scitran and JSONio))
 * [Database](Database-principles)
 * [Authorization](Authorization)
 * [Search](Search)
