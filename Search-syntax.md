@@ -2,12 +2,12 @@ This page contains more detailed descriptions of the search parameters. To perfo
 
     st = scitran('vistalab');
 
-The search returns a structure that defines one of several types of scitran objects.
+You can search for a variety of different database objects.  The search returns a cell array of the database objects that match your query. Here is a list of objects you can search for.
 
     objects = {'files','acquisitions','sessions','projects','collections',...
                'analyses','subjects','notes','analyses in collection','files in collection'};
 
-The search syntax is
+The general search syntax is
 
     objects = st.search('<objectTypeToReturn>','Parameter',value, ...);
 
