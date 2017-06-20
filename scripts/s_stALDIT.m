@@ -1,5 +1,7 @@
 %% ALDIT data set error analysis (phantom data)
 % 
+% DEPRECATED.  Use dtiErrorALDIT.m
+%
 % This script is just for teaching.  The implementation we expect people to
 % use is described in st_runFunction().
 %
@@ -17,10 +19,7 @@
 % If not, give some advice about how to install it
 if isempty(which('scitran'))
     fprintf('\nscitran() not found.\nThe Matlab scitranClient repository must be on your path.\n');
-    fprintf('\n *** Install using *** \n');
-    fprintf('  chdir(installDir);\n');
-    fprintf('  system(''git clone https://github.com/scitran/client'')\n');
-    fprintf('  chdir(client); addpath(genpath(pwd)); gitRemovePath\n\n');
+    fprintf('\n *** Install using installScitran *** \n');
 end
 
 %% Start with initialization
@@ -41,13 +40,10 @@ workingDir = workDirectory(fullfile(stRootPath,'local','aldit'));
 %% Search for the session and acquisition
 
 % I identified the project and session in the browser
-project = 'Diffusion Noise Analysis';
-sessions = st.search('sessions',...
-    'project label contains',project);
-
 % List the acquisitions in the first session
-acquisitions = st.search('acquisitions', ...
-    'session label',sessions{1}.source.label,...
+acquisitions = st.search('acquisitions',...
+    'project label contains','ALDIT',...
+    'session label contains','Test Site',...
     'acquisition label contains','Diffusion',...
     'summary',true);
 

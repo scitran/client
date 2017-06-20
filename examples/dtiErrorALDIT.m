@@ -18,6 +18,13 @@ function nRMSE = dtiErrorALDIT(varargin)
 %    params.scatter = false; params.histogram = false;
 %    dtiErrorALDIT(params);
 %
+%    project = 'ALDIT'; 
+%    clear params; params.session = 'Test Site 1';
+%    params.wmPercentile = 80; params.nSamples = 500;
+%    params.scatter = false; params.histogram = false;
+%    st = scitran('scitran');
+%    st.runFunction('dtiErrorALDIT.m','project',project,'params',params);
+%
 % TODO:  Set destination for downloads.
 %
 % BW Scitran Team, 2017

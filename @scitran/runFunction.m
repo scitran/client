@@ -53,7 +53,7 @@ end
 destination = st.get(funcS{1},...
     'destination',fullfile(destination,'localFunction.m'));
 
-eval('localFunction(params);');
+val = eval('localFunction(params);');
 
 end
 
