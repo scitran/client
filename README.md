@@ -4,7 +4,7 @@ This repository includes Matlab utilities to work with the SciTran API, which is
 
 Most MRI databases require some authorization before you can download, upload, or search. Speak to your administrator about the appropriate method for your database.
 
-## Installing 
+## Installing from the terminal
 
 You can install this scitranClient and another essential toolbox, Guillaume Flandin's code to read and write JSON files (JSONio) by 
 
