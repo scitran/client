@@ -9,7 +9,7 @@
 %% Authorization
 
 % Open the scitran object
-st = scitran('action', 'create', 'instance', 'scitran');
+st = scitran('scitran', 'action', 'create');
 
 %% Search for the subject information
 

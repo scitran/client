@@ -10,29 +10,18 @@
 %% Check that the database is up
 
 % It is possible to create, refresh, or revoke
-st = scitran('action','create','instance','scitran');
+st = scitran('scitran', 'action', 'create');
 
-% The token is a long, obscure string
+% The API key is a long, obscure string
 disp(st)
 
-%% If you have lost the token by a matlab clear you might run
- 
-st = scitran('action','refresh','instance','scitran');
+%%  Build, refresh, and delete an instance
 
-% If result returns 0, then we are good
-disp(st)
+st = scitran('deleteme','action','create');
+
+st = scitran('deleteme','action','refresh');
+
+st = scitran('deleteme','action','remove');
 
 
-%% Remove the token
-
-st = scitran('action','remove','instance','scitran');
-
-% If result returns 0, then we are good
-disp(st)
-
-%% Recreate
-
-st = scitran('action','create','instance','scitran');
-
-disp(st)
 %%

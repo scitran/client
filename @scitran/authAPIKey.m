@@ -1,60 +1,51 @@
-function [] = authAPIKey(obj, varargin)
-% Set the token and url
+function authAPIKey(obj, instance,varargin)
+% Set the API key and url of an @scitran object
 %
-%    status = auth(varargin)
+%    st.authAPIKey(instance, varargin)
 %
-% The authorization token is generated for the user on the website under
-% the the 'user' name.
+% For Flywheel sites, the API key is generated for the user on under the
+% the 'user' name.
 %
-% In addition, there are several configuration steps that may be needed the
-% first time you use scitran client in a session.  These initializations
-% for the PATH configuration are managed here by the 'init' flag.
+% REQUIRED INPUTS:
+%  'instance' - String denoting the name of the @scitran instance.
+%               Information about the instance (URL and API Key) is saved
+%               in a json file in $HOME/.stclient/st_tokens.
 %
-% INPUTS:
+% OPTIONAL INPUTS
 %
-%  'action' - Token action to perform.
-%             'create'  - [default] generate a new token. This will
-%                         refresh the token if one exists.
-%             'refresh' - refresh an existing token.
-%             'remove'  - remove an existing token.
+%  'action' - 'create'  - [default] load an existing @scitran object.
+%             'refresh' - refresh an existing @scitran object
+%             'remove'  - remove an existing @scitran object from the
+%                         tokens file.
 %
-%  'instance' - String denoting the st instance to authorize
-%               against. Information about the instance is saved
-%               within a mat file (e.g. stAuth.mat) and loaded when
-%               chosen. Default='sni_st' (sni-st.stanford.edu). New
-%               instances will have to be added to this repo in the
-%               correct format, with the client_id and client_secret
-%               stored as vars in the mat file (for new connections
-%               users are prompted for the client_secret.
+%  'verify'   - Print out messages verifying the site is found.s
+%
 %
 % OUTPUTS:
-%   obj.token   - string containing the token
-%   obj.url     - the base url for the instance
-%   status      - boolean where 0=success and >0 denotes failure.
+%   @scitran object with url, token and instance name
 %
 % EXAMPLES:
-%  st = scitran('action', 'create', 'instance', 'local')
-%  st = scitran('action', 'refresh', 'instance', 'local')
-%  st = scitran('action', 'remove', 'instance', 'local')
+%  st = scitran('scitran','action', 'create')
+%  st = scitran('local',  'action', 'refresh', )
+%  st = scitran('myflywheel', 'action', 'remove')
 %
 % (C) Stanford VISTA Lab, 2016 - LMP
 
 %%
 p = inputParser;
 
+p.addRequired('instance', @ischar);
+
 actions = {'create', 'refresh', 'remove'};
 p.addParameter('action', 'create', @(x) any(strcmp(x,actions)));
+p.addParameter('verify',false,@islogical);
 
-p.addParameter('instance', 'scitran', @ischar);
+p.parse(instance,varargin{:})
 
-p.parse(varargin{:})
-
-action = p.Results.action;
+verify   = p.Results.verify;
+action   = p.Results.action;
 instance = p.Results.instance;
-if isempty(instance)
-    disp('instance empty. Aborting...');
-    return
-end
+
 obj.instance = instance;
 
 %% Configure MATLAB warning messages
@@ -74,67 +65,104 @@ end
 %% Load or create local token file
 
 % Base directory to store user-specific files
+% If the directory doesn't exist, make it.
 stDir = fullfile(getenv('HOME'), '.stclient');
 if ~exist(stDir,'dir')
     mkdir(stDir);
 end
 
-% If the file does not exist, then copy it from the path
+% If the token file does not exist, then copy it from the path
 tokenFile = fullfile(stDir, 'st_tokens');
 obj.token = '';
 
 if ~exist(tokenFile, 'file'),     st = {};
-else                              %
-    % st = loadjson(tokenFile);
-    st = jsonread(tokenFile);
+else,                             st = jsonread(tokenFile);
 end
 
-%% Load instance and client information (used in python command)
+%% Adjust instance and client information
 
-% Check for client/instance info in the localAuthFile
-% Prompt to add it if not found, then save it for next time.
-if strcmp(action, 'remove')
-    st = rmfield(st, instance);
-    st.url   = '';
-    st.token = '';
-    % savejson('', st, tokenFile);
-    jsonwrite(tokenFile,st);
-elseif ~isfield(st, instance) || strcmp(action, 'refresh')
-    prompt = sprintf('Would you like to %s token for instance %s in your local config? (y/n): ', action, instance);
-    response = input(prompt,'s');
-    if lower(response) == 'y'
-        if strcmp(action, 'refresh')
+switch lower(action)
+    case  'remove'
+        % Remove the fields for this instance and save st_tokens file.
+        st = rmfield(st, instance);
+        st.url   = '';
+        st.token = '';
+        jsonwrite(tokenFile,st);
+        
+        % Never verify on a remove.
+        verify = false;
+        
+    case 'refresh'
+        if ~isfield(st,instance)
+            fprintf('No instance %s found. Cannot refresh.\n',instance);
+        else
+            % Found it.  So carry on.
+            obj.url = st.(instance).client_url;
+            prompt = sprintf('Would you like to refresh the API key for %s? (y/n): ', instance);
+            response = input(prompt,'s');
+            if lower(response) == 'y'
+                obj.token   = ['scitran-user ', input('Please enter the API key: ', 's')];
+                if isempty(obj.token)
+                    disp('User canceled.');
+                    return;
+                else
+                    st.(instance).token = obj.token;
+                    st.(instance).client_url = obj.url;
+                    jsonwrite(tokenFile,st);
+                    fprintf('API key saved for %s.\n',instance);
+                end
+            else
+                disp('User canceled.');
+                return;
+            end
+        end
+    case 'create'
+        if isfield(st,instance)
+            % Loading from st_tokens
+            if verify,fprintf('API Key found for %s\n', instance); end
+            obj.token = st.(instance).token;
             obj.url = st.(instance).client_url;
         else
-            obj.url = input('Please enter the url (https://...): ', 's');
-            if strcmp(obj.url(1:5),'http:')
-                disp('*** Replacing http: with https: ***');
-                obj.url = ['https:',obj.url(6:end)];
-                disp(obj.url);
-            end
-                
+            % Create a new instance and save data in st_tokens file.
+            obj = stNew(obj,st,instance,tokenFile);
         end
-        obj.token   = ['scitran-user ', input('Please enter the token: ', 's')];
-        % Check that fields are not blank
-        if isempty(obj.token) || isempty(obj.url);
-            disp('One more more keys is empty, aborting');
-            return;
-        else
-            st.(instance).token = obj.token;
-            st.(instance).client_url = obj.url;
-            jsonwrite(tokenFile,st);
-            disp('Instance URL and token saved.');
-        end
-    else
-        disp('Aborting');
-        return
+        
+end
+
+%% Verify by running a search on projects
+
+% This is fast enough for a little test.s
+if verify
+    try
+        fprintf('%d projects found\n',length(obj.search('projects')));
+    catch ME
+        rethrow(ME)
     end
+end
+
+end
+
+%%
+function obj = stNew(obj,st,instance,tokenFile)
+% Get the URL and the API key
+
+obj.url = input('Please enter the url (https://...): ', 's');
+if strcmp(obj.url(1:5),'http:')
+    disp('*** Replacing http: with https: ***');
+    obj.url = ['https:',obj.url(6:end)];
+    disp(obj.url);
+end
+
+obj.token   = ['scitran-user ', input('Please enter the API key: ', 's')];
+if isempty(obj.token) || isempty(obj.url)
+    disp('User canceled.');
+    return;
 else
-    fprintf('Key found for instance %s\n', instance);
-    obj.token = st.(instance).token;
-    obj.url = st.(instance).client_url;
+    st.(instance).token = obj.token;
+    st.(instance).client_url = obj.url;
+    jsonwrite(tokenFile,st);
+    fprintf('API key saved for %s.\n',instance);
 end
 
-%% Check that the url begins with https:, not http:
-
 end
+

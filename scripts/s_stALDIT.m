@@ -26,7 +26,7 @@ end
 %% Start with initialization
 
 % Open the Flywheel object
-st = scitran('action', 'create', 'instance', 'scitran');
+st = scitran('scitran', 'action', 'create');
 
 % Make sure the toolboxes are installed and on the path
 tbxFile = st.search('files',...

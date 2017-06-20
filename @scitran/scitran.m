@@ -1,9 +1,7 @@
 classdef scitran < handle
     % Scitran object to interact with a scitran database
     %
-    %  st = scitran('action', 'create', 'instance', 'local')
-    %  st = scitran('action', 'refresh', 'instance', 'local')
-    %  st = scitran('action', 'remove', 'instance', 'local')
+    %   st = scitran('scitran','action',...,'verify',...)
     %
     % Methods include:
     %   auth    - Authorize interaction with database
@@ -27,7 +25,7 @@ classdef scitran < handle
     % Methods (public)
     methods
         
-        function obj = scitran(varargin)
+        function obj = scitran(instance,varargin)
             % Creates the object and authorizes the instance The url and
             % the token are stored in the object. 
             %
@@ -38,17 +36,20 @@ classdef scitran < handle
             %   <https://github.com/scitran/client>
             %
             % Example:
-            %   st = scitran('action','create','instance','scitran');
+            %   st = scitran('scitran','action','create');
             %
-            %   'actions' - 'create', 'refresh', 'remove'
             %  'instance' -  String denoting the st instance to authorize
-            %
+            %  'actions'  - {'create', 'refresh', 'remove'}
+            %  'verify'   - performs a search to verify validity.
             
-            authAPIKey(obj,varargin{:});
+            p = inputParser;
+            p.KeepUnmatched = true;
+            p.addRequired('instance', @ischar);
+            p.parse(instance,varargin{:});
+            
+            authAPIKey(obj,instance,varargin{:});
         end
         
     end
-    
-    
 
 end

@@ -42,7 +42,7 @@ scatter      = p.Results.scatter;
 histogram    = p.Results.histogram;
 
 %% Open the Flywheel object
-st = scitran('action', 'create', 'instance', 'scitran');
+st = scitran('scitran','action', 'create');
 
 %% Search for the session and acquisition
 

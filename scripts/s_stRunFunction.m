@@ -17,7 +17,7 @@
 % BW, Scitran Team, 2017
 
 %% Open scitran
-st = scitran('action', 'create', 'instance', 'scitran');
+st = scitran('scitran', 'action', 'create');
 
 %% Set up the toolboxes
 
@@ -46,7 +46,7 @@ params.scatter = false; params.histogram = true;
 
 %% Another potential example - A single unit physiology example
 % %
-% % st = scitran('action', 'create', 'instance', 'scitran');
+% % st = scitran('scitran', 'action', 'create');
 % % 
 % % project = 'EJ Apricot';
 % % st.toolbox('project',project);  % toolboxes.json is the default file

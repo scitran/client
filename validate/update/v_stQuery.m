@@ -35,7 +35,7 @@
 
 %% Authorization
 % The auth returns both a token and the url of the flywheel instance
-st = scitran('action', 'create', 'instance', 'scitran');
+st = scitran('scitran', 'action', 'create');
 
 %% Does a search for bvec files.
 

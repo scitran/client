@@ -4,7 +4,7 @@
 %
 
 %%
-st = scitran('action', 'create', 'instance', 'scitran');
+st = scitran('scitran','action', 'create');
 
 % In this example, we use the structure 'srch' to store the search parameters.
 % When we are satisfied with the parameters, we attach srch to the mean search

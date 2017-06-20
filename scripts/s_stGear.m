@@ -41,7 +41,7 @@
 %%  Authorization
 
 % Get authorization to read from the database
-st = scitran('action', 'create', 'instance', 'scitran');
+st = scitran('scitran','action', 'create');
 
 % A place for temporary files.
 chdir(fullfile(stRootPath,'local'));

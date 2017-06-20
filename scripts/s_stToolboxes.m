@@ -16,7 +16,7 @@
 %% Illustrates use of the @scitran toolbox method
 
 % Open a scitran object
-st = scitran('action', 'create', 'instance', 'scitran');
+st = scitran('scitran', 'action', 'create');
 
 % Find the toolboxes file for a
 tbxFile = st.search('files',...

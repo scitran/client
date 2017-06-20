@@ -14,7 +14,7 @@
 
 % This has a permission that is hidden.  The user obtains this permission
 % by logging in to the site and using the UI
-st = scitran('action', 'create', 'instance', 'scitran');
+st = scitran('scitran','action', 'create', 'instance');
 
 %% Initialize tract names
 

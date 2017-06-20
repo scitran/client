@@ -3,7 +3,7 @@ function cmd = deleteFileCmd(obj, containerType, containerID, filename)
 % 
 % example:
 % 
-%   st = scitran('action', 'create', 'instance', 'scitran');
+%   st = scitran('scitran', 'action', 'create');
 %   cmd = st.deleteFileCmd('sessions', '58d470397c09ef001ceaa005', 'foo.pdf');
 %   [status, result] = stCurlRun(cmd);
 % 

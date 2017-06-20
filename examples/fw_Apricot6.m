@@ -26,7 +26,7 @@ fileMovie  = p.Results.fileMovie;
 
 %% Get the data files
 
-st = scitran('action', 'create', 'instance', 'scitran');
+st = scitran('scitran','action', 'create', 'instance');
 
 if ~isempty(fileSpikes)
 

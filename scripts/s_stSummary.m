@@ -11,7 +11,7 @@
 %% Authorization
 
 % The auth returns a token and the url of the flywheel instance
-st = scitran('action', 'create', 'instance', 'scitran');
+st = scitran('scitran', 'action', 'create');
 
 %%  Start building up string
 
