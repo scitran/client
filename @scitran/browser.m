@@ -11,6 +11,7 @@ function url = browser(obj, stdata, varargin)
 %  browse:      Bring up the browser (default is true). If set to false,
 %               the url is returned, which may be useful.
 %  collection:  Set to true to show a session from a collection
+%  tab:         Choose the display tab
 %
 % Output:
 %  url:    The url to a project or session or collection
@@ -35,7 +36,7 @@ function url = browser(obj, stdata, varargin)
 %% Parse the inputs
 p = inputParser;
 
-if ~exist('stData','var'), stdata = []; end
+if ~exist('stdata','var'), stdata = []; end
 
 % stdata is a returned search object from the st.search The browser can
 % open up an object that is a project, session, acquisition, or analysis
@@ -47,6 +48,9 @@ p.addRequired('stdata',vFunc);
 % Bring up the browser window
 p.addParameter('browse',true,@islogical);
 
+vFunc = @(x) (isempty(x) || ismember(x, {'analysis','data','jobs','project','annotation','subject'}));
+p.addParameter('tab','',vFunc);
+
 % If this exists, then it must be a struct.
 c.c = false;
 p.addParameter('collection',c,@isstruct);
@@ -55,6 +59,7 @@ p.parse(stdata,varargin{:});
 stdata      = p.Results.stdata;
 browse      = p.Results.browse;
 collection  = p.Results.collection;
+tab         = p.Results.tab;
 
 %% Build the web URL
 
@@ -66,6 +71,8 @@ end
 if isfield(collection,'id')
     % Show a session in the context of a collection.
     url = sprintf('%s/#/dashboard/collection/%s',obj.url,collection.id);
+    % https://flywheel.scitran.stanford.edu/#/dashboard/collection/57117f9e981f740020aa8932/session/588bd1ac449f9800159305c2?tab=analysis
+    
 elseif ~isempty(stdata)
     % We show a session, acquisition in the context of the project, not 
     switch stdata.type
@@ -84,6 +91,12 @@ elseif ~isempty(stdata)
             % This is the case for a projects, sessions, collections in a project
             url = sprintf('%s/#/dashboard/%s/%s',obj.url,stdata.type(1:(end-1)),stdata.id);
     end
+end
+
+%% If there is a tab, attach it to the end
+
+if ~isempty(tab)
+    url = sprintf('%s?tab=%s',url,tab); 
 end
 
 %% Show, if requested
