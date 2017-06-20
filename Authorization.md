@@ -1,8 +1,10 @@
-We create a scitran object to interact with the database
+We create a Matlab scitran object to interact with the database
 
     st = scitran(name, varargin)
 
-The first time you run scitran for a site name, you will be queried for the site URL and the API Key.  An example of the URL is https://flywheel.scitran.stanford.edu.  The API Key is generated for your account.  You can find it on the user profile tab on the left of a Flywheel site.  For other scitran implements, consult the administrator.
+The first time you run scitran for a site name, you will be queried for the site URL and the API Key.  This information will be stored.
+
+The URL for the vistalab site is https://flywheel.scitran.stanford.edu.  Your can find an API Key for your account on the user profile tab on the left of a Flywheel site.  For other scitran implementations (e.g., openNeuro.org), consult the site administrator.
 
 ### An example
 ```
