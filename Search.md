@@ -24,8 +24,7 @@ You can direct the output to a particular destination using
 
     st.get(files{1},'destination',localFileName)
 
-There are many types of searches, and you can see examples of the search syntax in the script
-[s_stSearches.m](https://github.com/scitran/client/blob/master/scripts/s_stSearches.m)
+There are many types of searches, and you can see [search examples on this page](search-examples) and an [m-file with many examples](https://github.com/scitran/client/blob/master/scripts/s_stSearches.m)
 
 #### Technical notes
 Scitran stores files using complex names designed for efficiency. Specifically, the file names reflect a complex computation based on their content.  Thus, when the same file is uploaded to the database, it has the same filename (content addressable data). This offers some striking efficiencies (no need to duplicate files).
