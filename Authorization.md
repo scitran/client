@@ -1,21 +1,32 @@
-To access a scitran database, we create a scitran object
+We create a scitran object to interact with the database
 
-    st = scitran(varargin)
+    st = scitran(name, varargin)
 
-Normally, when the object is created authorization is obtained. 
+The first time you run scitran for a site name, you will be queried for the site URL and the API Key.  An example of the URL is https://flywheel.scitran.stanford.edu.  The API Key is generated for your account.  You can find it on the user profile tab on the left of a Flywheel site.  For other scitran implements, consult the administrator.
 
-    st = scitran('action', 'create', 'instance', 'scitran');
+### An example
+```
+st = scitran('vistalab','action','create')
+Please enter the url (https://...): https://flywheel.scitran.stanford.edu
+Please enter the API key: <long API Key obtained on the flywheel site>
+API key saved for vistalab.
+```
 
-There are several configuration steps needed the very first time you use scitran client in a session on your computer.  These initializations for the PATH configuration are managed here by the 'init' flag. 
+### scitran class 
 
-    st = scitran('action', 'create', 'instance', 'scitran', 'init',true);
+If you already have the client configured, you can simply type
 
-To see other options and the methods, type
+    st = scitran('vistalab');
 
-    doc scitran
+To remove the site 
 
-To configure your computer with the necessary Python libraries, follow the instructions on the scitran/client [Readme](https://github.com/scitran/client).
+    st = scitran('vistalab','action','remove');
 
-### Plans
+To refresh the API Key, obtain the new key on the site and then run
 
-In the next release, it will be possible to ask for your own secure code (API key) from the flywheel web-page.  We will then enable you to store it through this command line code.
+    st = scitran('vistalab','action','refresh');
+
+To verify that the scitran object is correctly connecting to the site type
+
+    st = scitran('vistalab','verify',true); st.browser;
+
