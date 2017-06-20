@@ -5,7 +5,7 @@ To perform a search, you must first obtain [authorization](https://github.com/sc
 
 The st.search() command specifies your search through a series of parameters.  The first parameter is a required string that indicates what type of object you would like to have returned.  For example, suppose you are searching for a project.  Then you would specify
 
-    st.search('projects');
+    projectList = st.search('projects');
 
 The first argument is always plural (projects, sessions, acquisitions, files).
 
