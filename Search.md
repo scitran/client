@@ -1,7 +1,7 @@
 
 To perform a search, you must first obtain [authorization](https://github.com/scitran/client/wiki/Authorization).  
 
-    st = scitran('action','create','instance','scitran');
+    st = scitran('vistalab');
 
 The st.search() command specifies your search through a series of parameters.  The first parameter is a required string that indicates what type of object you would like to have returned.  For example, siuppose you are searching for a file.  Then you would specify
 
