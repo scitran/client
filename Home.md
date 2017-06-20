@@ -8,7 +8,7 @@ This wiki page describes the general software and provides many examples, such a
 * upload results (e.g., files, graphs, other attachments)
 * upload method descriptions (e.g., analyses, Gears) and programs (e.g., Matlab files) that others can run
 
-The **scitran matlab client** can be run securely from any computer on the Internet to process data stored in a scitran database either using their local computer or from a larger computational resource such as a compute engine on the cloud.
+The **scitran matlab client** can be run securely from any computer on the Internet to interact with a scitran database.  We have used the client extensively on Mac and somewhat on Linux systems.  We have not tested on Windows systems yet, but we plan to do so.
 
 There is also a [**scitran python client** implementation](https://github.com/scitran/python-client).
 
