@@ -35,6 +35,8 @@ function url = browser(obj, stdata, varargin)
 %% Parse the inputs
 p = inputParser;
 
+if ~exist('stData','var'), stdata = []; end
+
 % stdata is a returned search object from the st.search The browser can
 % open up an object that is a project, session, acquisition, or analysis
 % If none is passed in, then we just open up the url of the instance ('').
@@ -57,8 +59,8 @@ collection  = p.Results.collection;
 %% Build the web URL
 
 if isempty(stdata)
-    % No st data sent in, so upon up the root
-    url = sprintf('%s',obj.url);
+    % No st data sent in, so upon up the root project page
+    url = sprintf('%s/#/projects',obj.url);
 end
 
 if isfield(collection,'id')
