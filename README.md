@@ -1,6 +1,6 @@
 # Scitran client software
 
-This repository includes Matlab utilities to work with the SciTran API, which is implemented in Flywheel and openFMRI, from the client side.  The Matlab side implements many functions, including search, get, and put. See the [scitran project wiki page](https://github.com/scitran/client/wiki) for a manual and examples of how to use this code.
+This repository includes Matlab utilities to work with the SciTran API, which is implemented in Flywheel and openNeuro.org. The Matlab client implements many functions, including search, get, and put. See the [scitran client wiki page](https://github.com/scitran/client/wiki) for a manual with examples of how to use this code.
 
 Most MRI databases require some authorization before you can download, upload, or search. Speak to your administrator about the appropriate method for your database.
 
