@@ -1,4 +1,6 @@
-This page contains more detailed descriptions of the search parameters.
+This page contains more detailed descriptions of the search parameters. To perform a search, first create a scitran Matlab object that is authorized to interact with your database (see [Authorization](Authorization)).  Then run
+
+    st = scitran('vistalab');
 
 The search returns a structure that defines one of several types of scitran objects.
 
@@ -11,13 +13,11 @@ The search syntax is
 
 ## What is returned
 
-The **objects** structure contains many different contains many different fields, with most of the information in the 'source' field.
+The **objects** structure contains many different fields.  Most of the important information is in the 'source' field, say objects{1}.source.
 
 ## Running a search
 
-To perform a search, create a scitran object that is authorized to interact with your database.  Typically, this will be a command like
 
-    st = scitran('vistalab');
 
 You can do many different types of searches, such as the ones illustrated in [s_stSearches.m](https://github.com/scitran/client/blob/master/scripts/s_stSearches.m)
 ```
