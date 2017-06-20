@@ -11,15 +11,14 @@ The general search syntax is
 
     objects = st.search('<objectTypeToReturn>','Parameter',value, ...);
 
-## What is returned
+**objects** is a cell array of structures, each containing many different fields.  Most of the important information is in the 'source' field, say objects{1}.source.
 
-The **objects** structure contains many different fields.  Most of the important information is in the 'source' field, say objects{1}.source.
+## Search examples
 
-## Running a search
+See the searches illustrated in [s_stSearches.m](https://github.com/scitran/client/blob/master/scripts/s_stSearches.m)
 
+Here are some additional examples.
 
-
-You can do many different types of searches, such as the ones illustrated in [s_stSearches.m](https://github.com/scitran/client/blob/master/scripts/s_stSearches.m)
 ```
 projects = st.search('projects');
 VWFAsessions = st.search('sessions','project label','VWFA');
