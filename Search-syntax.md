@@ -15,7 +15,34 @@ The general search syntax is
 
 ## Labels and names
 
+Most objects can be described by a **label**.  There is one exception, however.  When we search for files we search on the **name**, not the **label**.
+
 ## Contains and matches exactly
+
+When searching for some parameters, including label or name, you can ask that the object match the label exactly or that that label contains a string.   For example, on the vistalab site we have a project with the label 'VWFA' and several other projects that include 'VWFA' in the label.  
+
+When we search for a project label 'VWFA', we assume an exact match.
+
+```
+>> projects = st.search('projects','project label','VWFA');
+>> length(projects)
+ans =
+     1
+>> projects{1}.source.label
+ans =
+    'VWFA'
+```
+
+It is possible to find all the projects that contain the string 'VWFA' as well.
+
+```
+>> projects = st.search('projects','project label contains','VWFA');
+>> for ii=1:length(projects), disp(projects{ii}.source.label); end
+VWFA
+VWFA FOV
+VWFA FOV Hebrew
+```
+The exact vs. contains options are also used for labels describing session, analysis, acquisition, collection, and the file **name**.
 
 ## Search examples
 
