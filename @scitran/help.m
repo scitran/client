@@ -4,7 +4,7 @@ function help(~)
 % This is designed to help us write correct searches.  Needs a lot more
 % work.
 %
-%    st = scitran('action', 'create', 'instance', 'scitran');
+%    st = scitran('scitran','action', 'create');
 %    st.help('sesions');
 %
 % RF/BW Vistasoft Team 2016

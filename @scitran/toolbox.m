@@ -13,7 +13,7 @@ function tbx = toolbox(st,varargin)
 %   tbx - the toolboxes object
 %
 % Example:
-%   st = scitran('action', 'create', 'instance', 'scitran');
+%   st = scitran('scitran','action', 'create');
 %
 %  Retrieves toolboxes.json from this project
 %   tbxFile = st.toolbox('project','Diffusion Noise Analysis');

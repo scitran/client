@@ -13,7 +13,7 @@
 
 %% Get an AFQ output with all the stuff in it
 
-st = scitran('action','create','instance','scitran');
+st = scitran('scitran','action','create');
 
 % This searches for the file named cortex in the project, subject, session
 clear srch

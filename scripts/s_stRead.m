@@ -6,7 +6,7 @@
 
 %% Open the scitran client
 
-st = scitran('action', 'create', 'instance', 'scitran');
+st = scitran('scitran', 'action', 'create');
 
 %%  Get an example nifti file
 

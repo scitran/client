@@ -16,7 +16,7 @@
 %%  Authorization 
 
 % Get the authorized token
-st = scitran('action', 'create', 'instance', 'scitran');
+st = scitran('scitran', 'action', 'create');
 
 %% Search for a NIFTI T1 anatomical in the ENGAGE project 
 

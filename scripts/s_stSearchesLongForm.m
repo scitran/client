@@ -75,7 +75,7 @@
 
 % The auth returns a token and the url of the flywheel instance.  These are
 % fixed as part of 's' throughout the examples, below.
-st = scitran('action', 'create', 'instance', 'scitran');
+st = scitran('scitran', 'action', 'create');
 
 %% List all projects
 

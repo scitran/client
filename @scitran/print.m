@@ -1,7 +1,7 @@
 function lst = print(~,d,pField,varargin)
 % Print a parameter field to the command window
 %
-%    st = scitran('instance','scitranio');
+%    st = scitran('scitran');
 %   lst = st.print(projects,'label');
 %   lst = sd.print(d,'file name');
 %   sd.print(d,'group name');

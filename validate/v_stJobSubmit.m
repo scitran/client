@@ -13,7 +13,7 @@
 
 %% Authorization & endpoint
 
-st = scitran('instance', 'scitran');
+st = scitran('scitran');
 endpoint = 'api/jobs/add';
 
 

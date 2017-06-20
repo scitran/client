@@ -11,7 +11,7 @@
 
 %% Open Flywheel and set project information
 
-st = scitran('action','create','instance','scitran');
+st = scitran('scitran','action','create');
 project = 'Rorie PLoS One 2010';
 
 baseDir = fullfile(stRootPath,'local');

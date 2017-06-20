@@ -34,7 +34,7 @@
 
 % The auth returns a token and the url of the flywheel instance.  These are
 % fixed as part of 's' throughout the examples, below.
-st = scitran('action', 'create', 'instance', 'scitran');
+st = scitran('scitran', 'action', 'create');
 
 %% List all projects
 
@@ -154,19 +154,26 @@ files = st.search('files',...
 fprintf('Found %d files\n',length(files));
 
 %% Find the session name for these files
-sessionNames = cell(1,length(files));
-for ii=1:length(files)
-    % srch.sessions.match.label = files{ii}.source.session.label;
-    thisSession = st.search('sessions','session label',files{ii}.source.session.label);
-    sessionNames{ii} = thisSession{1}.source.label;
-end
-
-sessionNames = unique(sessionNames);
-fprintf('\n---------\n');
-for ii=1:length(sessionNames)
-    fprintf('%3d:  Session name %s\n',ii,sessionNames{ii});
-end
-fprintf('---------\n');
+% Make this work.  Something wrong!
+%
+% for ii=1:length(files)
+%     % srch.sessions.match.label = files{ii}.source.session.label;
+%     files{ii}.source.session.label
+%     thisSession = st.search('sessions','session label',files{ii}.source.session.label);
+%     
+%     if ~isempty(thisSession)
+%         % This should not happen.  But it does.  So fix it. (BW).
+%         ii
+%         sessionNames{ii} = thisSession{1}.source.label;
+%     end
+% end
+% %
+% sessionNames = unique(sessionNames);
+% fprintf('\n---------\n');
+% for ii=1:length(sessionNames)
+%     fprintf('%3d:  Session name %s\n',ii,sessionNames{ii});
+% end
+% fprintf('---------\n');
 
 %% get files in project/session/acquisition/collection
 files = st.search('files',...

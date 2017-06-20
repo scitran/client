@@ -2,7 +2,7 @@ function [status, result] = createCollection(obj, label, acquisitionIds)
 % Create a collection from a list of acquisitions
 % 
 % example:
-% st = scitran('action', 'create', 'instance', 'scitran');
+% st = scitran('scitran','action', 'create' );
 % acquisitions = {'58d470397c09ef001ceaa005', '58d46ff87c09ef001cea9fe3'};
 % st.createCollections('myCollections', acquisitions);
 % 

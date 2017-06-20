@@ -1,4 +1,7 @@
 function thisDir = stInstall
+% Deprecated
+% See installScitran
+%
 % Clones the scitran/jsonio directories and adds them to your path
 % 
 %   stInstall;
@@ -26,4 +29,4 @@ end
 
 %% First time
 
-% st = scitran('action', 'create', 'instance', 'dev')
+% st = scitran('newInstance','action', 'create')
