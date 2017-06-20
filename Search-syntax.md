@@ -11,7 +11,7 @@ The search syntax is
 
 ## What is returned
 
-The objects structure contains many different contains many different fields, with most of the information in the 'source' field.
+The **objects** structure contains many different contains many different fields, with most of the information in the 'source' field.
 
 ## Running a search
 
