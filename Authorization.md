@@ -14,7 +14,7 @@ Please enter the API key: <long API Key obtained on the flywheel site>
 API key saved for vistalab.
 ```
 
-### scitran class 
+### Usage examples 
 
 If you already have the client configured, you can simply type
 
