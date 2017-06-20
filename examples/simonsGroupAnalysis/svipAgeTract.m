@@ -1,5 +1,7 @@
 %%  Compare the FA on an individual tract of different SVIP groups
 %
+% NEEDS TO BE UPDATED FOR SEARCH.
+%
 %    1.  Search to find all the CSV files of AFQ for male subjects
 %    2.  Pull out the FA tract profile of a particular tract
 %    3.  Do the same for all female subjects in the SVIP data set

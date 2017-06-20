@@ -1,5 +1,7 @@
 %% Compare the tissue properties (FA) on 20 tracts
 %
+% NEEDS TO BE UPDATED FOR SEARCH
+%
 % We executed the AFQ Docker container on the Simons VIP data.  Here, we
 % perform the following analysis.
 %
@@ -14,7 +16,7 @@
 
 % This has a permission that is hidden.  The user obtains this permission
 % by logging in to the site and using the UI
-st = scitran('scitran','action', 'create', 'instance');
+st = scitran('scitran','action', 'create');
 
 %% Initialize tract names
 

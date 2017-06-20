@@ -6,7 +6,7 @@
 
 %% Open up the scitran client
 
-st = scitran('scitran','action', 'create', 'instance');
+st = scitran('scitran','action', 'create');
 
 %%  Find the sessions in the SVIP Released project
 
