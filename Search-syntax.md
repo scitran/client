@@ -13,6 +13,10 @@ The general search syntax is
 
 **objects** is a cell array of structures, each containing many different fields.  Most of the important information is in the 'source' field, say objects{1}.source.
 
+## Labels and names
+
+## Contains and matches exactly
+
 ## Search examples
 
 See the searches illustrated in [s_stSearches.m](https://github.com/scitran/client/blob/master/scripts/s_stSearches.m)
