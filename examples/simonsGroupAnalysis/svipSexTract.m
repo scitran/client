@@ -16,7 +16,7 @@
 
 % This has a permission that is hidden.  The user obtains this permission
 % by logging in to the site and using the UI
-st = scitran('scitran','action', 'create');
+st = scitran('scitran');
 
 %% Initialize tract names
 
@@ -36,10 +36,28 @@ nTracts = length(tractNames);
 %   * File:  string ends in csv
 %   * Project: part of the Simons VIP project
 
+[maleFiles,srchSS] = st.search('sessions',...
+    'project label','SVIP Released Data (Siemens)',...
+    'subject sex','male');
+
+
+[maleFiles,srchSS] = st.search('files in analysis',...
+    'project label','SVIP Released Data (Siemens)',...
+    'filename contains','fa.csv',...
+    'subject sex','male');
+
+[maleFiles,srchSS] = st.search('sessions',...
+    'subject sex','male');
+srch = jsonwrite(srchSS,struct('indent','  ','replacementstyle','hex'));
+srch = regexprep(srch, '\n|\t', ' ');
+srch = regexprep(srch, ' *', ' ');
+
 clear srch
 srch.path = 'analyses/files';                  % Files within an analysis
+srch.projects.match.label = 'SVIP Released Data (Siemens)';            % Any of the Simons VIP data
 srch.files.match.name = 'fa.csv';              % Result file
-srch.projects.match.label = 'SVIP';            % Any of the Simons VIP data
+srch.sessions.match.subject0x2Esex = 'male'; % Males
+[maleFiles,srchS] = st.search(srch);
 
 % Male subjects
 srch.sessions.match.subject_0x2E_sex = 'male'; % Males

@@ -9,7 +9,7 @@
 %% Authorization
 
 % Open the scitran object
-st = scitran('scitran', 'action', 'create');
+st = scitran('scitran');
 
 %% Search for the subject information
 
@@ -42,7 +42,8 @@ nUnknown = sum(sex == 'u');
 fprintf('%d Males\n%d Females\n%d   Unknown\n',nMale,nFemale,nUnknown);
 
 %% Summarize ages in a graph
-stNewGraphWin; hist(ages,20); xlabel('Age in years'); ylabel('N subjects');
+figure; hist(ages,20); 
+xlabel('Age in years'); ylabel('N subjects');
 set(gca,'xlim',[0 100]);
 title(sprintf('Project: %s','SVIP'));
 

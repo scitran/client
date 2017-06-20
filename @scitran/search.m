@@ -337,6 +337,14 @@ if ischar(srch)
                 else
                     srch.sessions.bool.must{end + 1}.range.subject0x2Eage.lt = val;
                 end
+            case {'subjectsex'}
+                % val must be 'male' or 'female'
+                % Not working properly yet - BW!!!
+                if ~isfield(srch,'sessions')
+                    srch.sessions.bool.must{1}.match.subject0x2Esex= val;
+                else
+                    srch.sessions.bool.must{end + 1}.match.subject0x2Esex = val;
+                end
                        
             otherwise
                 error('Unknown search parameter: %s\n',varargin{ii});
