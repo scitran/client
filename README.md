@@ -6,20 +6,28 @@ Most MRI databases require some authorization before you can download, upload, o
 
 ## Installing from the terminal
 
-You can install this scitranClient and another essential toolbox, Guillaume Flandin's code to read and write JSON files (JSONio) by 
+You can install this scitranClient and another essential toolbox - Guillaume Flandin's code to read and write JSON files (JSONio) - by: 
 
     git clone https://github.com/scitran/client
     git clone https://github.com/gllmflndn/JSONio
     
-This will create two directories, client and JSONio.  We suggest renaming the 'client' directory 'scitranClient'.  Please add both directories to your path, say by using
+This will create two directories, client and JSONio.  We suggest renaming the 'client' directory 'scitranClient'.  
 
+Add both directories to your Matlab path, with:
+
+```matlab
     chdir(<scitran client directory>); addpath(genpath(pwd));
     chdir(<JSONio directory>); addpath(genpath(pwd));
+```
 
-## Installing from Matlab (alternative)
+## Installing from Matlab
 
-Here is a script if you prefer to install from the Matlab command line.
+We provide a script [(installScitran.m)](https://github.com/scitran/client/blob/master/utility/installScitran.m) to enable installation from the Matlab command line<sup>*</sup>
 
-https://github.com/scitran/client/blob/master/utility/installScitran.m
+That script can be run interactively from within Matlab (>=R2014b):
 
+```matlab
+eval(webread('https://raw.githubusercontent.com/scitran/client/master/utility/installScitran.m'));
+```
 
+<sup>*</sup> Requires `git` command-line tool to be available via Matlab.
