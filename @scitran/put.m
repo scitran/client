@@ -1,21 +1,46 @@
 function [status, result] = put(obj,upType,stData,varargin)
-% Attach a file to the permalink location
+% Put a local file or analysis structure to a scitran site
 %
 %      st.put(upType,stdata,'id',id)
 %
+% We use this method to put files or analyses onto a scitran site 
+% Currently, we either attach a file to a location in the site, or we place
+% an analysis onto the site.
+%
+% The analysis can be attached to a collection or session.
+%   {'session analysis','collection analysis'}
+%
+% The file can be attached to several different container types.  That part
+% of the code is not thoroughly tested yet, but we do put files up there
+% anyway.
+%
 % Inputs:
-%  upType: Type of upload.  Analysis, File, ...
-%  stData: Matlab struct containing the fields for the upload
+%  upType: Type of upload.  Either an 'analysis' or a 'file'.  
+%        An analysis is a collection of files defined in stData. We are
+%        currently defining an analysis class.
+%        If a file, then the stData contains slightly different parameters
+%        in stData.  That is the reason for the distinction.
+%
+%  stData: Matlab struct containing the fields needed to define the upload
+%          If the upType is a file, then this struct must contain the
+%          following fields 
+%             id
+%             containerType
+%             file
+%          If the upType is an analysis, then this struct must contain the
+%          fields
+%             inputs
+%               name
+%             outputs
+%              
+%              
 %
 % Outputs:
 %  status:  Boolean indicating success (0) or failure (~=0)
 %  result:  The output of the verbose curl command
 %
-% We need to make sure the struct for the stData are described properly
-% here.
-%
 % Example:
-%    st.put('analysis',stData,'id',collection{1}.id);
+%    st.put('session analysis',stData,'id',collection{1}.id);
 %    st.put('file',stData);
 %
 % LMP/BW Vistasoft Team, 2015-16
@@ -40,11 +65,15 @@ upType(lower(upType) == ' ') = [];
 
 %% Do relevant upload
 switch  lower(upType)
-    case {'analysis', 'sessionanalysis', 'collectionanalysis'}
+    case {'sessionanalysis', 'collectionanalysis'}
 
         % Analysis upload to a collection or session.
         % In this case, the id needed to be set
-
+        if isempty(id), error('The container id must be set'); end
+        
+        % We need a legitimate analysis object that we can check.  The
+        % definition here is implicit and should become explicit!  BW
+        
         % Construct the command to upload input and output files of any
         % length % TODO: These should exist.
         inAnalysis = '';
@@ -102,11 +131,13 @@ switch  lower(upType)
 
         % Not checked.  Do with LMP.
 
+        % Find the container where the file will be attached
         if ~isfield(stData, 'id') || ~isfield(stData, 'file') || ~isfield(stData, 'containerType')
             error('field missing on stData');
         end
         containerType = stData.containerType;
         id = stData.id;
+        
         file = stData.file;
         [~, fname, ext] = fileparts(file);
         fname = [fname, ext];
