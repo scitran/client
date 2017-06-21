@@ -1,22 +1,22 @@
 %% Compare the tissue properties (FA) on 20 tracts
 %
-% NEEDS TO BE UPDATED FOR SEARCH
+% We executed the AFQ Docker container on the Simons VIP data.  This
+% produced a set of fractional anisotropy files on multiple tracts. Here,
+% we analyze the resulting data.
 %
-% We executed the AFQ Docker container on the Simons VIP data.  Here, we
-% perform the following analysis.
-%
-%  1.  Search to find all the CSV files of AFQ
-%  2.  Download these file and build a matrix of position x tract x subject 
-%  3.  Do this for male and female subjects separately
-%  4.  Plot and compare the male and female distributions on a single graph
+%  1. Search to find all the factional anisotropy files for males and females 
+%  2. Download the files and build a matrix of position x tract x subject 
+%  3. Plot and compare the male and female distributions on a single graph
 %
 % RF/BW PoST Team 2016
 
 %% Open up the scitran client
 
-% This has a permission that is hidden.  The user obtains this permission
-% by logging in to the site and using the UI
-st = scitran('scitran');
+% Where the data live
+st = scitran('vistalab');
+
+% Change to a convenient place to store local data
+chdir(fullfile(vistaRootPath,'local'));
 
 %% Initialize tract names
 
@@ -29,52 +29,33 @@ tractNames = ...
 
 nTracts = length(tractNames);
 
-%% Run the Flywheel searches
+%% Find the fa.csv files for the male subjects
 
-% We are looking to return files that are part of the AFQ analysis output
-% Conditions:
-%   * File:  string ends in csv
-%   * Project: part of the Simons VIP project
-
-[maleFiles,srchSS] = st.search('sessions',...
-    'project label','SVIP Released Data (Siemens)',...
+% These are files in an analysis 
+% They are in the project SVIP Released data.  
+% They have 'fa.csv' in their name.  
+% First, we find the males.
+maleFiles = st.search('files in analysis',...
+    'project label contains','SVIP Released Data',...
+    'file name contains','fa.csv',...
     'subject sex','male');
-
-
-[maleFiles,srchSS] = st.search('files in analysis',...
-    'project label','SVIP Released Data (Siemens)',...
-    'filename contains','fa.csv',...
-    'subject sex','male');
-
-[maleFiles,srchSS] = st.search('sessions',...
-    'subject sex','male');
-srch = jsonwrite(srchSS,struct('indent','  ','replacementstyle','hex'));
-srch = regexprep(srch, '\n|\t', ' ');
-srch = regexprep(srch, ' *', ' ');
-
-clear srch
-srch.path = 'analyses/files';                  % Files within an analysis
-srch.projects.match.label = 'SVIP Released Data (Siemens)';            % Any of the Simons VIP data
-srch.files.match.name = 'fa.csv';              % Result file
-srch.sessions.match.subject0x2Esex = 'male'; % Males
-[maleFiles,srchS] = st.search(srch);
-
-% Male subjects
-srch.sessions.match.subject_0x2E_sex = 'male'; % Males
-maleFiles = st.search(srch);
 nMales = length(maleFiles);
-fprintf('Found %d files\n',nMales);
+fprintf('Found %d male fa.csv analysis files\n',nMales);
 
-%% Female subjects
-srch.sessions.match.subject_0x2E_sex = 'female'; % Females
-femaleFiles = st.search(srch);
+%% Now the females
+
+femaleFiles = st.search('files in analysis',...
+    'project label contains','SVIP Released Data',...
+    'file name contains','fa.csv',...
+    'subject sex','female');
 nFemales = length(femaleFiles);
-fprintf('Found %d files\n',nFemales);
+fprintf('Found %d female fa.csv analysis files\n',nFemales);
 
-%% Accumulate the tract profiles in a single, position x tract x subject
+%% Read the FA tract profiles 
 
-% Males
-maleTracts = zeros(100,nTracts,nMales);
+% We place them into a single 3D matrix: position x tract x subject
+nPositions = 100;
+maleTracts = zeros(nPositions,nTracts,nMales);
 str = sprintf('Downloading %d tracts',nTracts*nMales);
 wbar = waitbar(0,str);
 for ii=1:nMales
@@ -84,10 +65,11 @@ for ii=1:nMales
     maleTracts(:,:,ii) = d;
 end
 delete(wbar);
-save maleTracts
 
-% Females
-femaleTracts = zeros(100,nTracts,nFemales);
+
+%% Females
+
+femaleTracts = zeros(nPositions,nTracts,nFemales);
 str = sprintf('Downloading %d tracts',nTracts*nFemales);
 wbar = waitbar(0,str);
 for ii=1:nFemales
@@ -97,9 +79,14 @@ for ii=1:nFemales
     femaleTracts(:,:,ii) = d;
 end
 delete(wbar);
-save femaleTracts
 
-%%  Compare plots of tract profiles 
+%% We don't really need to save
+
+% But in case we want to do a different analysis, I wrote them out
+save('maleTracts.mat','maleTracts');
+save('femaleTracts.mat','femaleTracts');
+
+%%  Plot the male and female tract profiles 
 
 stNewGraphWin('format','upper left big');
 for tt=1:nTracts
@@ -112,8 +99,8 @@ for tt=1:nTracts
     flag = 0; E = nanstd(femaleTracts,flag,3);
     hold on
     errorbar(X,Y(:,tt)',E(:,tt)'/sqrt(nFemales));
-    set(gca,'xlim',[0 100],'ylim',[0.2 0.8],'fontsize',12);
-    title(sprintf('%s\n',tractNames{tt}),'fontsize',9);
+    set(gca,'xlim',[0 100],'ylim',[0.2 0.8],'fontsize',8);
+    title(sprintf('%s\n',tractNames{tt}),'fontsize',7);
     
     if ~mod(tt-1,5), ylabel('FA'); end
 end

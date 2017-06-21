@@ -63,7 +63,7 @@ switch(format)
         position = [0.007 0.62  0.60  0.3];
     case 'upperleftbig'
         % Like upperleft but bigger
-        position = [0.007 0.40  0.40 0.50];
+        position = [0.007 0.40  0.60 0.70];
     otherwise % Default or user supplied
 end
 
