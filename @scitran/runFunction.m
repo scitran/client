@@ -50,10 +50,16 @@ end
 
 %% Download to localFunction and evaluate with params
 
+[~,n,e] = fileparts(func);
+localFile = sprintf('local_%s%s\n',n,e);
 destination = st.get(funcS{1},...
-    'destination',fullfile(destination,'localFunction.m'));
+    'destination',fullfile(destination,localFile));
 
-val = eval('localFunction(params);');
+execFile = sprintf('local_%s%s\n',n);
+cmd = sprintf('val = %s(params);',execFile);
+eval(cmd);
+
+% val = eval('localFunction(params);');
 
 end
 
