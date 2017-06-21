@@ -1,56 +1,54 @@
-%%  Compare the FA on an individual tract of different SVIP groups
+%%  Compare the FA on an individual tract of different age groups
 %
-% NEEDS TO BE UPDATED FOR SEARCH.
-%
-%    1.  Search to find all the CSV files of AFQ for male subjects
-%    2.  Pull out the FA tract profile of a particular tract
-%    3.  Do the same for all female subjects in the SVIP data set
-%    4.  Plot and compare the two distributions
+% Search for the AFQ fractional anisotropy files in male and female subjects
+% Download the files and build a m atrix of position x tract x subject
+% Plot and compare the male and female tract curves
 %
 % RF/BW PoST Team 2016
 
 %% Open up the scitran client
 
-% This has a permission that is hidden.  The user obtains this permission
-% by logging in to the site and using the UI
-st = scitran('scitran','action', 'create');
-
+st = scitran('vistalab');
+chdir(fullfile(vistaRootPath,'local'));
 
 %% Initialize tract names
 
-tractNames = ...
-    {'Left Thalamic Radiation','Right Thalamic Radiation','Left Corticospinal',...
-    'Right Corticospinal','Left Cingulum Cingulate','Right Cingulum Cingulate',...
-    'Left Cingulum Hippocampus','Right Cingulum Hippocampus','Callosum Forceps Major',...
-    'Callosum Forceps Minor','Left IFOF','Right IFOF','Left ILF','Right ILF',...
-    'Left SLF','Right SLF','Left Uncinate','Right Uncinate','Left Arcuate','Right Arcuate'};
+% Longer versions.  Don't plot well.
+% tractNames = ...
+%     {'Left Thalamic Radiation','Right Thalamic Radiation','Left Corticospinal',...
+%     'Right Corticospinal','Left Cingulum Cingulate','Right Cingulum Cingulate',...
+%     'Left Cingulum Hippocampus','Right Cingulum Hippocampus','Callosum Forceps Major',...
+%     'Callosum Forceps Minor','Left IFOF','Right IFOF','Left ILF','Right ILF',...
+%     'Left SLF','Right SLF','Left Uncinate','Right Uncinate','Left Arcuate','Right Arcuate'};
 
-nTracts = length(tractNames);
+tractNames = ...
+    {'Left ThalRad','Right ThalRad','Left CST',...
+    'Right CST','Left CC','Right CC',...
+    'Left Cing Hipp','Right Cing Hipp','Forceps Major',...
+    'Forceps Minor','Left IFOF','Right IFOF','Left ILF','Right ILF',...
+    'Left SLF','Right SLF','Left Unc','Right Unc','Left Arc','Right Arc'};
 
 %% Set up the search by age
 
-clear srch
-srch.path = 'analyses/files';                  % Files within an analysis
-srch.files.match.name = 'fa.csv';              % Result file
-srch.projects.match.label = 'SVIP';            % Any of the Simons VIP data
-
-% Young males
-srch.sessions.bool.must{1}.match.subject_0x2E_sex = 'male'; % Males
-srch.sessions.bool.must{2}.range.subject_0x2E_age.gt = year2sec(5);
-srch.sessions.bool.must{2}.range.subject_0x2E_age.lt = year2sec(15);
-youngMaleFiles = st.search(srch);
+youngMaleFiles = st.search('files in analysis',...
+    'project label contains','SVIP Released Data',...
+    'file name contains','fa.csv',...
+    'subject sex','male', ...
+    'subject age gt',year2sec(5),...
+    'subject age lt',year2sec(15));
 fprintf('Younger males %d\n',length(youngMaleFiles));
 
-% Older males
-srch.sessions.bool.must{2}.range.subject_0x2E_age.gt = year2sec(35);
-srch.sessions.bool.must{2}.range.subject_0x2E_age.lt = year2sec(70);
-oldMaleFiles = st.search(srch);
+oldMaleFiles = st.search('files in analysis',...
+    'project label contains','SVIP Released Data',...
+    'file name contains','fa.csv',...
+    'subject sex','male', ...
+    'subject age gt',year2sec(35),...
+    'subject age lt',year2sec(70));
 fprintf('Older males %d\n',length(oldMaleFiles));
 
-%% Older and Younger males
+%% Download Older and Younger male data
 
 oldMaleTracts = zeros(100,nTracts,length(oldMaleFiles));
-
 wbar = waitbar(0,'Downloading');
 for ii=1:length(oldMaleFiles)
     wbar = waitbar(ii/length(oldMaleFiles),wbar,'Downloading');
@@ -60,15 +58,8 @@ for ii=1:length(oldMaleFiles)
 end
 delete(wbar)
 
-save oldMaleTracts
-%%
-% stNewGraphWin;
-% imagesc(nanmean(oldMaleTracts,3));
-%%
 youngMaleTracts = zeros(100,nTracts,length(youngMaleFiles));
-
 wbar = waitbar(0,'Downloading');
-
 for ii=1:length(youngMaleFiles)
     wbar = waitbar(ii/length(youngMaleFiles),wbar,'Downloading');
     st.get(youngMaleFiles{ii},'destination','male.csv');
@@ -77,14 +68,14 @@ for ii=1:length(youngMaleFiles)
 end
 delete(wbar)
 
-save youngMaleTracts
+%% Optional save
 
-%%
-% stNewGraphWin;
-% imagesc(nanmean(youngMaleTracts,3));
+save('oldMaleTracts',oldMaleTracts);
+save('youngMaleTracts',youngMaleTracts);
 
-%%
-stNewGraphWin('format','upperleftbig');
+%% Compare young and old in a plot
+
+figure;
 for tt=1:nTracts
     subplot(4,5,tt)
     X = [1:100]'; Y = nanmean(youngMaleTracts,3);
