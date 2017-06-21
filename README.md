@@ -1,4 +1,4 @@
-# Scitran client software
+# Scitran client software for Matlab
 
 This repository includes Matlab utilities to work with the SciTran API, which is implemented in Flywheel and openNeuro.org. The Matlab client implements many functions, including search, get, and put. See the [scitran client wiki page](https://github.com/scitran/client/wiki) for a manual with examples of how to use this code.
 
