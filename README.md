@@ -18,35 +18,8 @@ This will create two directories, client and JSONio.  We suggest renaming the 'c
 
 ## Installing from Matlab (alternative)
 
-```
-fprintf('\n\n');
-prompt = sprintf('Do you want to install into %s [Y/N]\n',pwd);
-str = input(prompt,'s');
+Here is a script if you prefer to install from the Matlab command line.
 
-if isequal(lower(str),'y')
-    thisDir = pwd;
-    status = system('git clone https://github.com/scitran/client');
-    if status, error('Problem cloning the scitran client repository'); end
-    movefile('client','scitranClient');
-    
-    status = system('git clone https://github.com/gllmflndn/JSONio');
-    if status, error('Problem cloning the JSONio repository'); end
-    
-    chdir('scitranClient'); addpath(genpath(pwd));
-    chdir(thisDir); chdir('JSONio'); addpath(genpath(pwd));
-    
-    chdir(thisDir);
-    
-    % Tell user where they are
-    fprintf('\nscitranClient and JSONio toolboxes are installed in \n---\n \t %s\n---\n',thisDir);
-else
-    fprintf('User canceled installation.\n');
-end
-```
+https://github.com/scitran/client/blob/master/utility/installScitran.m
 
-## Docker
-
-You may want to run docker containers, which requires that you have Docker installed on your local machine. To do that visit the docker website for [OSX](https://docs.docker.com/engine/installation/mac/) and [Linux](https://docs.docker.com/linux/step_one/) instructions.
-
-To set up the Docker configuration to run from Matlab on your computer, use the command [matlab/stDockerConfig.m](https://github.com/scitran/client/blob/master/utility/stDockerConfig.m).
 
