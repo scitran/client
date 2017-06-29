@@ -71,5 +71,12 @@ tbx.read('vistasoft.json');      % Load the individual toolboxes
 tbx.read('dtiError.json');
 tbx.saveinfo('filename','aldit-toolboxes');  % Save with desired filename
 
+%% ECoG From DH
+tbx.names{1}        = 'ecogHermes';
+tbx.testcmd{1}      = 'ecogRootPath';
+tbx.getcmd{1}       = 'git clone https://github.com/dorahermes/ecogBasicCode.git';
+tbx.tbxdirectory{1} = 'ecogBasicCode';
+tbx.saveinfo;
+
 
 

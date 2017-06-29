@@ -121,6 +121,9 @@ classdef toolboxes < handle
         end
         
         %% Perform the installation
+        
+        % We are going to change the toolbox object to have only a name,
+        % and not a directory.
         function install(tbx)
             % Install all of the toolboxes
             nTbx = length(tbx.names);
@@ -139,8 +142,7 @@ classdef toolboxes < handle
                     end
                     
                     % We should move the directory to its tbxdirectory name
-                    % 
-                    chdir(tbx.tbxdirectory{ii}); addpath(genpath(pwd));
+                    chdir(tbx.names{ii}); addpath(genpath(pwd));
                     gitRemovePath;
                     thisTestCmd = which(tbx.testcmd{ii});
                     if ~isempty(thisTestCmd)
