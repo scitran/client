@@ -1,11 +1,8 @@
 function install(tbx)
-% Install all of the toolboxes by downloading the repositories
-% as zip files.
+% Install all the toolboxes by downloading the repositories as zip files.
 %
-% Clone the toolboxes locally
-%
-% The install command brings them down as zip files.
-% The clone command brings the history and everything down
+% The install command brings them down as zip files. The clone command
+% brings the history and everything down
 %
 % TODO:
 %  Specify the install directory
@@ -21,42 +18,39 @@ if ~exist(installDirectory,'dir'), mkdir(installDirectory); end
 % Empty the install directory?
 
 fprintf('Installing in directory *** %s ***\n',installDirectory);
-fprintf('<Return> to continue: ');     pause
+fprintf('<Return> to continue: ');     pause;
 fprintf('\n');
 
-%%
+%% Loop over the toolboxes
+
 nTbx = length(tbx.names);
 for ii=1:nTbx
-    thisTestCmd = which(tbx.testcmd{ii});
-    if isempty(thisTestCmd)
+    if isempty(which(tbx.testcmd{ii}))
         % This could be updated to a window that selects the
         % directory, starting with the current directory.
         chdir(installDirectory);
-        %
+        
         % The getcmd should probably be something like this
-        %  getcmd.user
-        %  getcmd.project
-        %  getcmd.sha
+        %  zipinfo.user
+        %  zipinfo.project
+        %  zipinfo.sha
         % And we then build the urul
         % https://github.com/getcmd.user/getcmd.project/archive/{sha or master}.zip
         %
         % url = 'https://github.com/isetbio/WLVernierAcuity/archive/master.zip';
         % Whatever you name the download file, when unzip'd the directory becomes
-        % WLVernierAcuity-{sha or master}
+        % WLVernierAcuity-{sha or master}.zip
         %
-        filename = 'WlVernierAcuity-master.zip';
+        zipinfo = tbx.zipinfo;
+        filename = sprintf('%s.zip',zipinfo.name);
+        url = sprintf('https://github.com/%s/%s/archive/%s.zip',...
+            zipinfo.user,zipinfo.project,zipinfo.name);
         outfilename = websave(filename,url);
         if exist(outfilename,'file')
             unzip(outfilename);
         end
         
-        status = system(tbx.getcmd{ii});
-        if status
-            error('Download of zip file %s failed. Status %d (128- dir exists).\n',tbx.name{ii},status);
-        end
-        
-        thisTestCmd = which(tbx.testcmd{ii});
-        if ~isempty(thisTestCmd)
+        if ~isempty(which(tbx.testcmd{ii}))
             fprintf('%s installed and added to path.\n',tbx.names{ii});
         end
     else

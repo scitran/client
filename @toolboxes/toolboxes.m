@@ -43,9 +43,13 @@ classdef toolboxes < handle
         names   = {};         % Names of toolboxes
         testcmd = {};      % Matlab command to test for presence on path
         
-        % System command to pull the toolbox
+        % System command to clone the toolbox
         getcmd  = {};
         tbxdirectory = {}; % Destination directory for the toolbox
+        
+        % user, project, name
+        % e.g., 'isetbio', 'WLVernierAcuity', 'master'
+        zipinfo;           % Structure with info about the zip file
         
     end
     
