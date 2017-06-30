@@ -10,38 +10,33 @@ classdef toolboxes < handle
     % (scitran) project as an attachment. At this moment, all of the
     % scitran downloads are github downloads.
     %
-    % Normally, we read the toolbox file from a scitran site by first
-    % searching for the file
+    % Examples:
+    %
+    %  tbx = toolboxes;   % An empty toolboxes class.
+    %  
+    % Set up the toolboxes object from a file on a scitran site
+    %   st = scitran('vistalab');
+    %   tbxFile = st.search('files','project label','SOC ECoG (Hermes)','filename','toolboxes.json');
+    %   tbx = toolboxes('scitran',st,'file',tbxFile{1});
+    % 
+    % Read a local file
+    %   tbx = toolboxes('file','vistasoft.json');
+    %
+    % A simple method using only the scitran client object.
     %
     %   tbxFile = st.search('files',...
     %     'project label','EJ Apricot',...
     %     'file name','toolboxes.json');
     %
-    % Then download and installs if necessary.
+    % This method downloads and installs if the repository is not already on
+    % the path. The default method is download, but you can clone by
+    % setting this flag
     %
-    %    st.toolbox(tbxFile{1});
+    %    st.toolbox(tbxFile{1},'clone',true);
     %
-    % These examples show how to use the toolboxes object directly.
-    %
-    %  tbx = toolboxes;   % An empty class.
-    %  
-    % Get the toolboxes file stored on the scitran site
-    %
-    % Remotely
-    %   tbxFile = st.search(...toolboxes.json...)
-    %   tbx = toolboxes('scitran',st,'file',tbxFile{1});
-    %   tbx.install();
-    % 
-    % Or a local file
-    %
-    %   tbx = toolboxes('file','vistasoft.json');
-    %    
     % See also:  s_tbxSave
     %
     % BW Scitran Team, 2017
-    %
-    % PROGRAMMING TODO
-    %   Change the install method a bit, see below
     
     properties (SetAccess = public, GetAccess = public)
         
@@ -122,37 +117,9 @@ classdef toolboxes < handle
         
         %% Perform the installation
         
-        % We are going to change the toolbox object to have only a name,
-        % and not a directory.
-        function install(tbx)
-            % Install all of the toolboxes
-            nTbx = length(tbx.names);
-            for ii=1:nTbx
-                thisTestCmd = which(tbx.testcmd{ii});
-                if isempty(thisTestCmd)
-                    % This should be updated to a window that selects the
-                    % directory, starting with the current directory.
-                    fprintf('Installing in directory *** %s ***\n',pwd);
-                    fprintf('<Return> to continue: ');     pause
-                    fprintf('\n');
-                    
-                    status = system(tbx.getcmd{ii});
-                    if status
-                        error('Git clone command for %s failed. Status %d (128- dir exists).\n',tbx.name{ii},status);
-                    end
-                    
-                    % We should move the directory to its tbxdirectory name
-                    chdir(tbx.names{ii}); addpath(genpath(pwd));
-                    gitRemovePath;
-                    thisTestCmd = which(tbx.testcmd{ii});
-                    if ~isempty(thisTestCmd)
-                        fprintf('%s installed and added to path.\n',tbx.names{ii}); 
-                    end
-                else
-                    fprintf('*** Found toolbox %s\n',tbx.names{ii});
-                end
-            end
-        end
+
+       
+        
         
         %% Write out the json with instructions to load all the toolboxes
         function saveinfo(obj,varargin)
