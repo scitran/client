@@ -1,85 +1,91 @@
-function install(tbx)
-% Install all the github toolbox repositories, downloading  as zip files.
+function install(tbx,varargin)
+% Install a  github toolbox repository as a zip file.
 %
 % The tbx.install command brings the github repository as a zip file. 
 % The tbx.clone command clones the whole repository (history, everything)
 %
 % Example:
 %   tbx = toolboxes;
-%   tbx.testcmd = {'wlvRootPath'};
-%   tbx.zipinfo{1}.user = 'isetbio';
-%   tbx.zipinfo{1}.project = 'WLVernierAcuity';
-%   tbx.zipinfo{1}.name = 'master';
+%   tbx.testcmd         = 'wlvRootPath';
+%   tbx.gitrepo.user    = 'isetbio';
+%   tbx.gitrepo.project = 'WLVernierAcuity';
 %
 % Or use a commit sha for a particular commit
-%   tbx.zipinfo{1}.name = 'fa1f7b0b4349d8be4620c29ca002bcf8620952dd';
+%   tbx.gitrepo.commit = 'fa1f7b0b4349d8be4620c29ca002bcf8620952dd';
 %
 % TODO:
 %  Specify the install directory
 %
 % BW, Scitran Team, 2017
 
-%% Make the directory for the download
-startDirectory = pwd;
+%% Read installation directory, if passed.
 
-% This will be a parameter some day.
-installDirectory = fullfile(pwd,'scitranTBX');
-if ~exist(installDirectory,'dir'), mkdir(installDirectory); end
+p = inputParser;
+destination = userpath;
+p.addParameter('destination',destination,@(x)(exist(x,'dir')));
+p.parse(varargin{:});
+installDirectory = p.Results.destination;
 
-% Empty the install directory?
-
-%% Ask the user if things are OK
-fprintf('Installing in directory *** %s ***\n',installDirectory);
-fprintf('<Return> to continue: ');     pause;
-fprintf('\n');
-
-%% Loop over the toolboxes
-
-nTbx = length(tbx.testcmd);
-for ii=1:nTbx
-    fprintf('%d - Looking for %s\n',tbx.testcmd{ii});
-    if isempty(which(tbx.testcmd{ii}))
-        % This could be updated to a window that selects the
-        % directory, starting with the current directory.
-        chdir(installDirectory);
-        
-
-        % To build the url
-        %  https://github.com/getcmd.user/getcmd.project/archive/{sha or master}.zip
-        %
-        % Whatever you name the download file, when unzip'd the directory becomes
-        % WLVernierAcuity-{sha or master}.zip
-        
-        zipinfo = tbx.zipinfo{ii};
-        % Either a sha of a commit or 'master'
-        filename = sprintf('%s.zip',zipinfo.name);
-        url = sprintf('https://github.com/%s/%s/archive/%s.zip',...
-            zipinfo.user,zipinfo.project,zipinfo.name);
-        fprintf('Downloading zip file ...');
-        outfilename = websave(filename,url);
-        if exist(outfilename,'file')
-            fprintf('Unzipping ...');
-            unzip(outfilename);
-            delete(outfilename); % Removes the zip file.
-        end
-        fprintf('Done\n');
-    else
-        fprintf('*** Found the function %s\n',tbx.testcmd{ii});
-    end
+if ~exist(installDirectory,'dir')
+    fprintf('Creating directory %s\n',installDirectory);
+    mkdir(installDirectory); 
 end
 
-%% Add everything in scitranTBX to path
+%% Download toolbox as zip and add to path
 
-chdir(installDirectory); addpath(genpath(pwd));
+startDirectory = pwd;
+
+if isempty(which(tbx.testcmd))
+    
+    % This could be updated to a window that selects the
+    % directory, starting with the current directory.
+    chdir(installDirectory);
+    
+    gitrepo = tbx.gitrepo;
+    repoDirectory = sprintf('%s-%s',gitrepo.project,gitrepo.commit(1:5));
+    repoDirectory = fullfile(installDirectory,repoDirectory);
+
+    % Ask the user if destination is OK
+    %     fprintf('Installing in directory <%s>\n',repoDirectory);
+    %     fprintf('<Return> to continue: ');     pause;
+    %     fprintf('\n');
+    
+    % To build the url
+    %  https://github.com/getcmd.user/getcmd.project/archive/{sha or master}.zip
+    %
+    % Whatever you name the download file, when unzip'd the directory becomes
+    % WLVernierAcuity-{sha or master}.zip
+    
+    % commit is either a sha of a commit or the string 'master'
+    filename = sprintf('%s.zip',gitrepo.commit);
+    url = sprintf('https://github.com/%s/%s/archive/%s.zip',...
+        gitrepo.user,gitrepo.project,gitrepo.commit);
+    fprintf('Downloading zip file ...');
+
+    outfilename = websave(filename,url);
+    if exist(outfilename,'file')
+        fprintf('Unzipping to %s ...',repoDirectory);
+        unzip(outfilename);
+        tmp = sprintf('%s-%s',gitrepo.project,gitrepo.commit);
+        movefile(tmp,repoDirectory);
+        delete(outfilename); % Removes the zip file.
+    end
+    fprintf('Done\n');
+else
+    fprintf('Found <%s> in <%s>\n',tbx.testcmd,which(tbx.testcmd));
+    return;
+end
+
+
+%% Add everything in scitranTBX to path
+addpath(genpath(pwd));
 chdir(startDirectory);
 
-% Test that we have each of the testcmd functions
-for ii=1:nTbx    
-    if isempty(which(tbx.testcmd{ii}))
-        fprintf('%s not found.\n',tbx.testcmd{ii})
-    else
-        fprintf('Repository containing ** %s ** installed and added to path.\n',tbx.testcmd{ii});
-    end
+% Test that we find the test command
+if isempty(which(tbx.testcmd))
+    fprintf('%s not found.\n',tbx.testcmd)
+else
+    fprintf('Repository <%s> installed and added to path.\n',repoDirectory);
 end
 
 end

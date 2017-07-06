@@ -1,7 +1,7 @@
 classdef toolboxes < handle
     % Class to manage toolboxes and the Matlab path.
     %
-    % Most Matlab functions or scripts rely on a set of toolboxes. A
+    % Most Matlab functions or scripts rely on toolboxes. A
     % *toolboxes* object automates the process of downloading and
     % installing the toolboxes on the user's path.
     %
@@ -15,12 +15,19 @@ classdef toolboxes < handle
     %  tbx = toolboxes;   % An empty toolboxes class.
     %  
     % Set up the toolboxes object from a file on a scitran site
+    %
     %   st = scitran('vistalab');
     %   tbxFile = st.search('files','project label','SOC ECoG (Hermes)','filename','toolboxes.json');
     %   tbx = toolboxes('scitran',st,'file',tbxFile{1});
     % 
-    % Read a local file
-    %   tbx = toolboxes('file','vistasoft.json');
+    % Read a local file and download a shallow clone
+    %
+    %   tbx = toolboxes('file','WLVernierAcuity.json');
+    %   tbx.clone('cloneDepth',1);
+    %
+    %  Or a particular commit as a zip file
+    %   tbx.gitrepo.commit = '5a84c98e969633de853a470c9fa631ef8468b21d';
+    %   tbx.install;
     %
     % A simple method using only the scitran client object.
     %
@@ -40,11 +47,7 @@ classdef toolboxes < handle
     
     properties (SetAccess = public, GetAccess = public)
         
-        name    = '';      % Name of the toolbox
-        testcmd = '';      % Matlab command to test for presence on path
-        
-        % The type of download.  Clone or zip.
-        getcmd  = 'zip';      
+        testcmd = '';      % Matlab command to test for presence on path 
         
         % The information we need to build the clone or zip download command
         % The fields should be
@@ -62,14 +65,20 @@ classdef toolboxes < handle
             %
             % Constructor
             %   Reads the JSON file specifying the toolbox either stored on
-            %   the scitran set or locally. 
+            %   the scitran site or locally. 
             %
             % Example:
             %   tbx = toolboxes('file',fullfile(stRootPath,'data','vistasoft.json'));
-            %   tbxFile = st.search('files','project label contains','Diffusion Noise', 'file name contains','toolboxes.json');
+            %
+            %   tbxFile = st.search('files',...
+            %       'project label contains','Diffusion Noise', ...
+            %       'file name contains','toolboxes.json');
             %   tbx = toolboxes('scitran',st,'file',tbxFile{1});
             %
+            % Then either
             %   tbx.install;
+            % or
+            %   tbx.clone( ... )
             %
             % BW, Scitran Team, 2017
             
@@ -104,18 +113,14 @@ classdef toolboxes < handle
         
         %% Read JSON files
         function obj = read(obj,file)
-            % Append JSON file data to the object
+            % Place JSON description into the object
             
             % Read the file information
             info = jsonread(file);
             
             % Append the information to the object
-            for jj=1:length(info)
-                obj.name      = info.name;
-                obj.testcmd   = info.testcmd;
-                obj.getcmd    = info.getcmd;
-                obj.gitrepo   = info.gitrepo;  % User and archive
-            end
+            obj.testcmd   = info.testcmd;
+            obj.gitrepo   = info.gitrepo;  % User, project, commit
             
         end
         
@@ -133,14 +138,12 @@ classdef toolboxes < handle
             filename = p.Results.filename;
             
             % Create the struct for all the toolboxes
-            info = struct('name',obj.name,...
-                'testcmd',obj.testcmd,...
-                'getcmd',obj.getcmd,...
+            info = struct('testcmd',obj.testcmd,...
                 'gitrepo',obj.gitrepo);
             
             % Build the output filename
             if isempty(filename)
-                filename = obj.name;
+                filename = obj.gitrepo.project;
             end
             
             % Write the struct as a JSON file
