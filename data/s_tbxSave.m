@@ -16,17 +16,19 @@ tbx = toolboxes;
 chdir(fullfile(stRootPath,'data'));
 
 %%
-tbx.names{1}        = 'dtiError';
-tbx.testcmd{1}      = 'dtiError';
-tbx.getcmd{1}       = 'git clone https://github.com/scitran-apps/dtiError.git';
-tbx.tbxdirectory{1} = 'dtiError';
+tbx.name        = 'dtiError';
+tbx.testcmd      = 'dtiError';
+tbx.getcmd       = 'git clone https://github.com/scitran-apps/dtiError.git';
+tbx.tbxdirectory = 'dtiError';
 tbx.saveinfo;
 
 %%
-tbx.names{1}        = 'vistasoft';
-tbx.testcmd{1}      = 'vistaRootPath';
-tbx.getcmd{1}       = 'git clone https://github.com/vistalab/vistasoft';
-tbx.tbxdirectory{1} = 'vistasoft';
+tbx.name        = 'vistasoft';
+tbx.testcmd     = 'vistaRootPath';
+tbx.getcmd      = 'clone';
+tbx.gitrepo.user    = 'vistalab'; % https://github.com/vistalab/vistasoft
+tbx.gitrepo.project = 'vistasoft'; % https://github.com/vistalab/vistasoft
+
 tbx.saveinfo;
 
 %%

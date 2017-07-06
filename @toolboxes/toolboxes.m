@@ -40,17 +40,17 @@ classdef toolboxes < handle
     
     properties (SetAccess = public, GetAccess = public)
         
-        names   = {};         % Names of toolboxes
-        testcmd = {};      % Matlab command to test for presence on path
+        name    = '';      % Name of the toolbox
+        testcmd = '';      % Matlab command to test for presence on path
         
-        % System command to clone the toolbox
-        getcmd  = {};
-        tbxdirectory = {}; % Destination directory for the toolbox
+        % The type of download.  Clone or zip.
+        getcmd  = 'zip';      
         
-        % user, project, name
-        % e.g., 'isetbio', 'WLVernierAcuity', 'master'
-        zipinfo;           % Structure with info about the zip file
-        
+        % The information we need to build the clone or zip download command
+        % The fields should be
+        %  user, project, commit {sha, or 'master'}
+        gitrepo    = struct('user','','project','','commit','master');
+
     end
     
     % Methods (public)
@@ -91,7 +91,7 @@ classdef toolboxes < handle
                 % No file, so return an empty structure
                 return;
             elseif isempty(scitran) && ischar(file)
-                % Read a local file
+                % Read a local file and fill the entries
                 obj.read(file);
             elseif ~isempty(scitran)
                 % file is a cell or a plink, get it and read it
@@ -111,22 +111,16 @@ classdef toolboxes < handle
             
             % Append the information to the object
             for jj=1:length(info)
-                obj.names{end+1}        = info(jj).names;
-                obj.testcmd{end+1}      = info(jj).testcmd;
-                obj.getcmd{end+1}       = info(jj).getcmd;
-                obj.tbxdirectory{end+1} = info(jj).tbxdirectory;
+                obj.name      = info.name;
+                obj.testcmd   = info.testcmd;
+                obj.getcmd    = info.getcmd;
+                obj.gitrepo   = info.gitrepo;  % User and archive
             end
             
         end
         
-        %% Perform the installation
-        
-
-       
-        
-        
         %% Write out the json with instructions to load all the toolboxes
-        function saveinfo(obj,varargin)
+        function outfile = saveinfo(obj,varargin)
             % savedir  - Default is scitran/data
             % filename - Such as toolboxes
             
@@ -139,23 +133,19 @@ classdef toolboxes < handle
             filename = p.Results.filename;
             
             % Create the struct for all the toolboxes
-            info = struct('names',obj.names,...
+            info = struct('name',obj.name,...
                 'testcmd',obj.testcmd,...
                 'getcmd',obj.getcmd,...
-                'tbxdirectory',obj.tbxdirectory);
+                'gitrepo',obj.gitrepo);
             
             % Build the output filename
             if isempty(filename)
-                filename = obj.names{1};
-                if length(obj.names) > 1
-                    for ii=2:length(obj.names)
-                        filename = [filename,'_',obj.names{ii}]; %#ok<AGROW>
-                    end
-                end
+                filename = obj.name;
             end
             
             % Write the struct as a JSON file
-            jsonwrite(fullfile(savedir,[filename,'.json']),info);
+            outfile = fullfile(savedir,[filename,'.json']);
+            jsonwrite(outfile,info);
         end
     end
     
