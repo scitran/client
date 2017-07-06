@@ -34,15 +34,15 @@
 
 % The auth returns a token and the url of the flywheel instance.  These are
 % fixed as part of 's' throughout the examples, below.
-st = scitran('scitran', 'action', 'create');
+fw = scitran('vistalab', 'action', 'create');
 
 %% List all projects
 
-projects = st.search('projects');
+projects = fw.search('projects');
 fprintf('Found %d projects\n',length(projects))
 
 %% Needs short form
-projects = st.search('projects','project label contains','vwfa');
+projects = fw.search('projects','project label contains','vwfa');
 fprintf('Found %d projects for the group wandell, with label vwfa.\n',length(projects));
 
 % Save this project information
@@ -50,12 +50,12 @@ projectID    = projects{end}.id;
 projectLabel = projects{end}.source.label;
 
 %% Get all the sessions within a specific collection
-[sessions, srchCmd] = st.search('sessions in collection',...
+[sessions, srchCmd] = fw.search('sessions in collection',...
     'collection label contains','Anatomy Male 45-55');
 fprintf('Found %d sessions\n',length(sessions));
 
 %% Get the sessions within the first project
-sessions = st.search('sessions','project id',projectID);
+sessions = fw.search('sessions','project id',projectID);
 fprintf('Found %d sessions in the project %s\n',length(sessions),projectLabel);
 % Save this session information
 sessionID = sessions{end}.id;
@@ -63,12 +63,12 @@ sessionLabel = sessions{end}.source.label;
 
 %% Get the acquisitions inside a session
 
-acquisitions = st.search('acquisitions',...
+acquisitions = fw.search('acquisitions',...
     'session id',sessionID);
 fprintf('Found %d acquisitions in session %s\n',length(acquisitions),sessionLabel);
 
 %% Find nifti files in the session
-files = st.search('files',...
+files = fw.search('files',...
     'session id',sessionID,...
     'file type','nifti');
 nFiles = length(files);
@@ -84,7 +84,7 @@ end
 
 %% Look for analyses in the GearTest collection
 
-analyses = st.search('analyses','collection label','GearTest');
+analyses = fw.search('analyses','collection label','GearTest');
 fprintf('Analyses in collections and sessions: %d\n',length(analyses));
 
 %% Analyses that are within a collection
@@ -92,39 +92,39 @@ fprintf('Analyses in collections and sessions: %d\n',length(analyses));
 % Returns analyses attached only to the collection, but not the sessions
 % and acquisitions in the collection.
 
-analyses = st.search('analysesincollection','collection label','GearTest');
+analyses = fw.search('analysesincollection','collection label','GearTest');
 fprintf('Analyses in collections only %d\n',length(analyses));
 
 %% Which collection is the analysis in?
-collections = st.search('collections','collection label','GearTest');
+collections = fw.search('collections','collection label','GearTest');
 fprintf('Collections found %d\n',length(collections));
 
 %% Returns analyses attached only to the sessions in the collection, 
 % but not to the collection as a whole.
 
-analyses = st.search('analyses in session','collection label','GearTest');
+analyses = fw.search('analyses in session','collection label','GearTest');
 fprintf('Analyses found %d\n',length(analyses));
 
 %% Find a session from that collection
 
-sessions = st.search('sessions','session label',sessions{1}.source.label);
+sessions = fw.search('sessions','session label',sessions{1}.source.label);
 sessions{1}.source.label
 
 %% Count the number of sessions created in a recent time period
 
-collections = st.search('collections',...
+collections = fw.search('collections',...
     'session after time','now-16w');
 fprintf('Found %d collections in previous four weeks \n',length(collections))
 
 %% Get sessions with this subject code
 subjectCode = 'ex4842';
-sessions = st.search('sessions','subject code','ex4842',...
+sessions = fw.search('sessions','subject code','ex4842',...
     'all_data',true);
 fprintf('Found %d sessions with subject code %s\n',length(sessions),subjectCode)
 
 %% Get sessions in which the subject age is within a range
 
-sessions = st.search('sessions',...
+sessions = fw.search('sessions',...
     'subject age gt',year2sec(10), ...
     'subject age lt',year2sec(11),...
     'summary',true);
@@ -132,12 +132,12 @@ sessions = st.search('sessions',...
 %% Find a session with a specific label
 
 sessionLabel = '20151128_1621';
-files = st.search('files','session label contains',sessionLabel);
+files = fw.search('files','session label contains',sessionLabel);
 fprintf('Found %d files from the session label %s\n',length(files),sessionLabel)
 
 %% get files from a particular project and acquisition
 
-files = st.search('files', ...
+files = fw.search('files', ...
     'project label','VWFA FOV', ...
     'acquisition label','11_1_spiral_high_res_fieldmap',...
     'file type','nifti',...
@@ -148,7 +148,7 @@ files = st.search('files', ...
 %  d = niftiRead(dl_file);
 
 %% Search for files in collection; find session names
-files = st.search('files',...
+files = fw.search('files',...
     'collection label','DWI',...
     'acquisition label','00 Coil Survey');
 fprintf('Found %d files\n',length(files));
@@ -176,13 +176,13 @@ fprintf('Found %d files\n',length(files));
 % fprintf('---------\n');
 
 %% get files in project/session/acquisition/collection
-files = st.search('files',...
+files = fw.search('files',...
     'collection label contains','ENGAGE',...
     'acquisition label contains','T1w 1mm', ...
     'summary',true); %#ok<NASGU>
 
 %% get files in project/session/acquisition/collection
-files = st.search('files',...
+files = fw.search('files',...
     'collection label','Anatomy Male 45-55',...
     'acquisition label','Localizer',...
     'file type','nifti');
@@ -193,7 +193,7 @@ fprintf('Found %d matching files\n',length(files))
 % In this case, we are searching through all the data, not just the data
 % that we have ownership on.
 
-[sessions,srchS] = st.search('sessions',...
+[sessions,srchS] = fw.search('sessions',...
     'project label','UMN', ...
     'session contains analysis', 'AFQ', ...
     'session contains subject','4279',...
