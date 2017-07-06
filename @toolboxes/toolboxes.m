@@ -155,7 +155,7 @@ classdef toolboxes < handle
         end
         
         %% Write out the json with instructions to load all the toolboxes
-        function saveinfo(obj,varargin)
+        function filename = saveinfo(obj,varargin)
             % savedir  - Default is scitran/data
             % filename - Such as toolboxes
             
@@ -184,7 +184,8 @@ classdef toolboxes < handle
             end
             
             % Write the struct as a JSON file
-            jsonwrite(fullfile(savedir,[filename,'.json']),info);
+            filename = [filename,'.json'];
+            jsonwrite(fullfile(savedir,filename),info);
         end
     end
     
