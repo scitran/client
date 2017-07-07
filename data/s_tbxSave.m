@@ -7,7 +7,8 @@
 %   tbx = toolboxes();             % Empty object
 %   tbx.read('isetbio.json');      % Load the individual toolboxes
 %   tbx.read('jsonio.json');
-%   tbx.saveinfo('filename','toolboxes');  % Save with desired filename
+%
+%   tbx = toolboxes('file','jsonio.json');
 %
 % BW Scitran team, 2017
 
@@ -16,67 +17,58 @@ tbx = toolboxes;
 chdir(fullfile(stRootPath,'data'));
 
 %%
-tbx.names{1}        = 'dtiError';
-tbx.testcmd{1}      = 'dtiError';
-tbx.getcmd{1}       = 'git clone https://github.com/scitran-apps/dtiError.git';
-tbx.tbxdirectory{1} = 'dtiError';
+tbx.testcmd      = 'dtiError';
+tbx.gitrepo.user    = 'scitran-apps'; 
+tbx.gitrepo.project = 'dtiError'; 
 tbx.saveinfo;
 
 %%
-tbx.names{1}        = 'vistasoft';
-tbx.testcmd{1}      = 'vistaRootPath';
-tbx.getcmd{1}       = 'git clone https://github.com/vistalab/vistasoft';
-tbx.tbxdirectory{1} = 'vistasoft';
+tbx.testcmd     = 'vistaRootPath';
+tbx.gitrepo.user    = 'vistalab'; % https://github.com/vistalab/vistasoft
+tbx.gitrepo.project = 'vistasoft'; % https://github.com/vistalab/vistasoft
 tbx.saveinfo;
 
 %%
-tbx.names{1}        = 'jsonio';
-tbx.testcmd{1}      = 'jsonread';
-tbx.getcmd{1}       = 'git clone https://github.com/gllmflndn/JSONio';
-tbx.tbxdirectory{1} = 'jsonio';
+tbx.testcmd      = 'jsonread';
+tbx.gitrepo.user    = 'gllmflndn'; 
+tbx.gitrepo.project = 'JSONio'; 
 tbx.saveinfo;
 
 %%
-tbx.names{1}        = 'scitranClient';
-tbx.testcmd{1}      = 'stRootPath';
-tbx.getcmd{1}       = 'git clone https://github.com/scitran/client';
-tbx.tbxdirectory{1} = 'scitranClient';
+tbx.testcmd      = 'stRootPath';
+tbx.gitrepo.user    = 'scitran'; 
+tbx.gitrepo.project = 'client';
 tbx.saveinfo;
 
 %%
-tbx.names{1}        = 'isetbio';
-tbx.testcmd{1}      = 'isetbioRootPath';
-tbx.getcmd{1}       = 'git clone https://github.com/isetbio/isetbio';
-tbx.tbxdirectory{1} = 'isetbio';
+tbx.testcmd      = 'isetbioRootPath';
+tbx.gitrepo.user    = 'isetbio'; 
+tbx.gitrepo.project = 'isetbio';
 tbx.saveinfo;
 
 %%
-tbx.names{1}        = 'Rorie2010';
-tbx.testcmd{1}      = 'Rorie2010RootPath';
-tbx.getcmd{1}       = 'git clone https://github.com/vistalab/pof_Rorie2010.git';
-tbx.tbxdirectory{1} = 'pof_Rorie2010';
+tbx.testcmd         = 'wlvRootPath';
+tbx.gitrepo.user    = 'isetbio';
+tbx.gitrepo.project = 'WLVernierAcuity';
 tbx.saveinfo;
 
 %%
-tbx.names{1}        = 'Kiani2014';
-tbx.testcmd{1}      = 'Kiani2014RootPath';
-tbx.getcmd{1}       = 'git clone https://github.com/vistalab/pof_Kiani2014.git';
-tbx.tbxdirectory{1} = 'pof_Kiani2014';
+tbx.testcmd      = 'Rorie2010RootPath';
+tbx.gitrepo.user    = 'vistalab'; 
+tbx.gitrepo.project = 'pof_Rorie2010';
 tbx.saveinfo;
 
-%%  ALDIT
-
-tbx = toolboxes();             % Empty object
-tbx.read('vistasoft.json');      % Load the individual toolboxes
-tbx.read('dtiError.json');
-tbx.saveinfo('filename','aldit-toolboxes');  % Save with desired filename
+%%
+tbx.testcmd      = 'Kiani2014RootPath';
+tbx.gitrepo.user    = 'vistalab'; 
+tbx.gitrepo.project = 'pof_Kiani2014';
+tbx.saveinfo;
 
 %% ECoG From DH
-tbx.names{1}        = 'ecogHermes';
-tbx.testcmd{1}      = 'ecogRootPath';
-tbx.getcmd{1}       = 'git clone https://github.com/dorahermes/ecogBasicCode.git';
-tbx.tbxdirectory{1} = 'ecogBasicCode';
+tbx.testcmd      = 'ecogRootPath';
+tbx.gitrepo.user    = 'dorahermes'; 
+tbx.gitrepo.project = 'ecogBasicCode';
 tbx.saveinfo;
 
-
+%%
 

@@ -18,12 +18,19 @@ classdef toolboxes < handle
     %  tbx = toolboxes;   % An empty toolboxes class.
     %  
     % Set up the toolboxes object from a file on a scitran site
+    %
     %   st = scitran('vistalab');
     %   tbxFile = st.search('files','project label','SOC ECoG (Hermes)','filename','toolboxes.json');
     %   tbx = toolboxes('scitran',st,'file',tbxFile{1});
     % 
-    % Read a local file
-    %   tbx = toolboxes('file','vistasoft.json');
+    % Read a local file and download a shallow clone
+    %
+    %   tbx = toolboxes('file','WLVernierAcuity.json');
+    %   tbx.clone('cloneDepth',1);
+    %
+    %  Or a particular commit as a zip file
+    %   tbx.gitrepo.commit = '5a84c98e969633de853a470c9fa631ef8468b21d';
+    %   tbx.install;
     %
     % A simple method using only the scitran client object.
     %
@@ -48,17 +55,14 @@ classdef toolboxes < handle
     
     properties (SetAccess = public, GetAccess = public)
         
-        names   = {};      % Names of toolboxes
-        testcmd = {};      % Matlab command to test for presence on path
+
+        testcmd = '';      % Matlab command to test for presence on path 
         
-        % System command to clone the toolbox
-        getcmd  = {};
-        tbxdirectory = {}; % Destination directory for the toolbox
-        
-        % user, project, name
-        % e.g., 'isetbio', 'WLVernierAcuity', 'master'
-        zipinfo;           % Structure with info about the zip file
-        
+        % The information we need to build the clone or zip download command
+        % The fields should be
+        %  user, project, commit {sha, or 'master'}
+        gitrepo    = struct('user','','project','','commit','master');
+
     end
     
     % Methods (public)
@@ -70,14 +74,20 @@ classdef toolboxes < handle
             %
             % Constructor
             %   Reads the JSON file specifying the toolbox either stored on
-            %   the scitran set or locally. 
+            %   the scitran site or locally. 
             %
             % Example:
             %   tbx = toolboxes('file',fullfile(stRootPath,'data','vistasoft.json'));
-            %   tbxFile = st.search('files','project label contains','Diffusion Noise', 'file name contains','toolboxes.json');
+            %
+            %   tbxFile = st.search('files',...
+            %       'project label contains','Diffusion Noise', ...
+            %       'file name contains','toolboxes.json');
             %   tbx = toolboxes('scitran',st,'file',tbxFile{1});
             %
+            % Then either
             %   tbx.install;
+            % or
+            %   tbx.clone( ... )
             %
             % BW, Scitran Team, 2017
             
@@ -99,7 +109,7 @@ classdef toolboxes < handle
                 % No file, so return an empty structure
                 return;
             elseif isempty(scitran) && ischar(file)
-                % Read a local file
+                % Read a local file and fill the entries
                 obj.read(file);
             elseif ~isempty(scitran)
                 % file is a cell or a plink, get it and read it
@@ -112,29 +122,19 @@ classdef toolboxes < handle
         
         %% Read JSON files
         function obj = read(obj,file)
-            % Append JSON file data to the object
+            % Place JSON description into the object
             
             % Read the file information
             info = jsonread(file);
             
             % Append the information to the object
-            for jj=1:length(info)
-                obj.names{end+1}        = info(jj).names;
-                obj.testcmd{end+1}      = info(jj).testcmd;
-                obj.getcmd{end+1}       = info(jj).getcmd;
-                obj.tbxdirectory{end+1} = info(jj).tbxdirectory;
-            end
+            obj.testcmd   = info.testcmd;
+            obj.gitrepo   = info.gitrepo;  % User, project, commit
             
         end
         
-        %% Perform the installation
-        
-
-       
-        
-        
         %% Write out the json with instructions to load all the toolboxes
-        function saveinfo(obj,varargin)
+        function outfile = saveinfo(obj,varargin)
             % savedir  - Default is scitran/data
             % filename - Such as toolboxes
             
@@ -147,23 +147,17 @@ classdef toolboxes < handle
             filename = p.Results.filename;
             
             % Create the struct for all the toolboxes
-            info = struct('names',obj.names,...
-                'testcmd',obj.testcmd,...
-                'getcmd',obj.getcmd,...
-                'tbxdirectory',obj.tbxdirectory);
+            info = struct('testcmd',obj.testcmd,...
+                'gitrepo',obj.gitrepo);
             
             % Build the output filename
             if isempty(filename)
-                filename = obj.names{1};
-                if length(obj.names) > 1
-                    for ii=2:length(obj.names)
-                        filename = [filename,'_',obj.names{ii}]; %#ok<AGROW>
-                    end
-                end
+                filename = obj.gitrepo.project;
             end
             
             % Write the struct as a JSON file
-            jsonwrite(fullfile(savedir,[filename,'.json']),info);
+            outfile = fullfile(savedir,[filename,'.json']);
+            jsonwrite(outfile,info);
         end
     end
     
