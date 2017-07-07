@@ -1,14 +1,17 @@
 classdef toolboxes < handle
-    % Class to manage toolboxes and the Matlab path.
+    % Class to manage Matlab toolbox dependencies
     %
-    % Most Matlab functions or scripts rely on toolboxes. A
-    % *toolboxes* object automates the process of downloading and
-    % installing the toolboxes on the user's path.
+    % Matlab functions and scripts typically rely on a set of toolboxes.
+    % Most of these are provided by Matlab, but a typical project will also
+    % build a toolbox of its own.
     %
-    % Information about the downloads of individual or groups of toolboxes
-    % is stored in JSON files.  The JSON file can be stored on the Flywheel
-    % (scitran) project as an attachment. At this moment, all of the
-    % scitran downloads are github downloads.
+    % This *toolboxes* object automates the process of downloading and
+    % installing the user-specific toolboxes. 
+    %
+    % Information about the toolboxes is stored in JSON files.  The JSON
+    % file can be stored on the Flywheel (scitran) project as an
+    % attachment. At this moment, all of the scitran downloads are github
+    % downloads.
     %
     % Examples:
     %
@@ -43,10 +46,16 @@ classdef toolboxes < handle
     %
     % See also:  s_tbxSave
     %
+    % References:
+    %   We might try to stay compatible with this
+    %
+    %   https://github.com/heroku/node-js-sample/blob/master/package.json
+    %
     % BW Scitran Team, 2017
     
     properties (SetAccess = public, GetAccess = public)
         
+
         testcmd = '';      % Matlab command to test for presence on path 
         
         % The information we need to build the clone or zip download command

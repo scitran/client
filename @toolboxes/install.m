@@ -40,44 +40,56 @@ if isempty(which(tbx.testcmd))
     % This could be updated to a window that selects the
     % directory, starting with the current directory.
     chdir(installDirectory);
-    
+
     gitrepo = tbx.gitrepo;
-    repoDirectory = sprintf('%s-%s',gitrepo.project,gitrepo.commit(1:5));
+    repoDirectory = sprintf('%s-%s',gitrepo.project,gitrepo.commit(1:6));
     repoDirectory = fullfile(installDirectory,repoDirectory);
-
-    % Ask the user if destination is OK
-    %     fprintf('Installing in directory <%s>\n',repoDirectory);
-    %     fprintf('<Return> to continue: ');     pause;
-    %     fprintf('\n');
     
-    % To build the url
-    %  https://github.com/getcmd.user/getcmd.project/archive/{sha or master}.zip
-    %
-    % Whatever you name the download file, when unzip'd the directory becomes
-    % WLVernierAcuity-{sha or master}.zip
-    
-    % commit is either a sha of a commit or the string 'master'
-    filename = sprintf('%s.zip',gitrepo.commit);
-    url = sprintf('https://github.com/%s/%s/archive/%s.zip',...
-        gitrepo.user,gitrepo.project,gitrepo.commit);
-    fprintf('Downloading zip file ...');
-
-    outfilename = websave(filename,url);
-    if exist(outfilename,'file')
-        fprintf('Unzipping to %s ...',repoDirectory);
-        unzip(outfilename);
-        tmp = sprintf('%s-%s',gitrepo.project,gitrepo.commit);
-        movefile(tmp,repoDirectory);
-        delete(outfilename); % Removes the zip file.
+    if exist(repoDirectory,'dir')
+        % Directory is there but not on the path
+        fprintf('Repository exists, but is not on your path. Adding.\n')
+    else
+        % Can't find the command or the directory.  So, onward.
+        %
+        % Ask the user if destination is OK
+        %     fprintf('Installing in directory <%s>\n',repoDirectory);
+        %     fprintf('<Return> to continue: ');     pause;
+        %     fprintf('\n');
+        
+        % To build the url
+        %  https://github.com/getcmd.user/getcmd.project/archive/{sha or master}.zip
+        %
+        % Whatever you name the download file, when unzip'd the directory becomes
+        % WLVernierAcuity-{sha or master}.zip
+        
+        % commit is either a sha of a commit or the string 'master'
+        filename = sprintf('%s.zip',gitrepo.commit);
+        url = sprintf('https://github.com/%s/%s/archive/%s.zip',...
+            gitrepo.user,gitrepo.project,gitrepo.commit);
+        fprintf('Downloading zip file ...\n');
+        
+        outfilename = websave(filename,url);
+        if exist(outfilename,'file')
+            fprintf('Unzipping to %s ...\n',repoDirectory);
+            unzip(outfilename);
+            if ~isequal(gitrepo.commit,'master')
+                % Download name after unzipping
+                tmp = sprintf('%s-%s',gitrepo.project,gitrepo.commit);
+                % Desired name
+                movefile(tmp,repoDirectory);
+            end
+            delete(outfilename); % Removes the zip file.
+        end
+        fprintf('Done\n');
     end
-    fprintf('Done\n');
 else
     fprintf('Found <%s> in <%s>\n',tbx.testcmd,which(tbx.testcmd));
     return;
 end
 
 
-%% Add everything in scitranTBX to path
+%% Add repository to the path
+chdir(repoDirectory);
 addpath(genpath(pwd));
 chdir(startDirectory);
 
