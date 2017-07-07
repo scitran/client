@@ -60,8 +60,14 @@ end
 %% Run the curl command
 
 [status, result] = system(args.curl_command);
-if status ~= 0 || ~isempty(strfind(lower(result), 'status_code'))
-    warning('stCulrRun: %s\n', result);
+resultStruct = jsonread(result);
+if status ~= 0
+    warning('stCulrRun: curl command failed.\n');
+end
+if isfield(resultStruct,'status_code')
+    warning('Server action failed');
+    display(resultStruct.message);
+    status = resultStruct.status_code;
 end
 
 %% Reset the ENV
@@ -75,4 +81,4 @@ else
     error('Unsupported system.\n');
 end
 
-return
+end
