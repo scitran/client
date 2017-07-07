@@ -59,24 +59,30 @@ if isempty(which(tbx.testcmd))
     %         fprintf('Installing in directory *** %s ***\n',pwd);
     %         fprintf('<Return> to continue: ');     pause
     %         fprintf('\n');
-    chdir(installDirectory);
     
-    url = sprintf('https://github.com/%s/%s',gitrepo.user,gitrepo.project);
-    cmd = sprintf('git clone --depth %d %s\n',cloneDepth,url);
-    status = system(cmd);
-    if status
-        error('Git clone command failed. Status %d (128- dir exists).\n',status);
-    end
-    
-    % Set to the commit hash
-    if ~isequal(gitrepo.commit','master')
-        chdir(gitrepo.project)
-        cmd = sprintf('git checkout %s\n',gitrepo.commit);
-        system(cmd);
+    if exist(repoDirectory,'dir')
+        % Directory is there but not on the path
+        fprintf('Repository exists, but is not on your path. Adding.\n')        
+    else
         chdir(installDirectory);
+        % Clone it
+        url = sprintf('https://github.com/%s/%s',gitrepo.user,gitrepo.project);
+        cmd = sprintf('git clone --depth %d %s\n',cloneDepth,url);
+        status = system(cmd);
+        if status
+            error('Git clone command failed. Status %d (128- dir exists).\n',status);
+        end
+        
+        % Set to the commit hash
+        if ~isequal(gitrepo.commit,'master')
+            chdir(gitrepo.project)
+            cmd = sprintf('git checkout %s\n',gitrepo.commit);
+            system(cmd);
+            chdir(installDirectory);
+        end
     end
     
-    chdir(gitrepo.project);
+    chdir(repoDirectory);
     addpath(genpath(pwd));
     gitRemovePath;
     chdir(installDirectory);
