@@ -57,15 +57,20 @@ end
 %% Run the curl command
 
 [status, result] = system(curl_command);
-resultStruct = jsonread(result);
-if status ~= 0
-    warning('stCulrRun: curl command failed.\n');
+
+if isequal(result(1),'{')
+    % JSON returned, so debug a bit
+    resultStruct = jsonread(result);
+    if status ~= 0
+        warning('stCulrRun: curl command failed.\n');
+    end
+    if isfield(resultStruct,'status_code')
+        warning('Server action failed');
+        display(resultStruct.message);
+        status = resultStruct.status_code;
+    end
 end
-if isfield(resultStruct,'status_code')
-    warning('Server action failed');
-    display(resultStruct.message);
-    status = resultStruct.status_code;
-end
+
 
 %% Reset the ENV
 

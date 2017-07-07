@@ -17,7 +17,9 @@ function [destination, curl_cmd] = get(obj,pLink,varargin)
 % Example:
 %   fw = scitran('vistalab');
 %   file = fw.search('files','project label contains','SOC','filename','toolboxes.json');
-%   fName = fw.get(file{1});
+%   fName = fw.get(file{1});  edit(fName)
+%  Or
+%   fName = fw.get(file{1}.plink);  edit(fName)
 %
 % LMP/BW Vistasoft Team, 2015-16
 
@@ -52,12 +54,9 @@ pLink = strsplit(pLink, '?');
 pLink = pLink{1};
 
 %% Parse fName from the permalink if 'fName' was not provided.
+
 if ~exist('destination', 'var') || isempty (destination) 
-    [~, f, e] = fileparts(pLink);
-    t_e = strsplit(e, '?');
-    out_dir = tempname;
-    mkdir(out_dir);
-    destination = fullfile(out_dir, [ f, t_e{1}]);
+    destination = stPlink2Destination(pLink);
 end
 
 
