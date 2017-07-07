@@ -1,21 +1,31 @@
 function [status, result, cmd] = deleteFile(obj, file, varargin )
-% Deletes a file from a container
+% Deletes a file from a container on a scitran site.  
 % 
-%   [status, result, cmd] = deleteFile(obj, file, varargin )
+%   [status, result, cmd] = scitran.deleteFile(obj, file, varargin)
 %
 % Required parameter
-%    file - String, struct, or cell with one element
+%    file - cell with one element, struct, or string (needs optional then)
 %
-% Optional parameters
-%    containerType
-%    containerID
+% Optional parameters for string
+%    containerType - {'projects','sessions','acquisitions','collections'}
+%    containerID   - From the container struct returned by a search
 %    
-% Example:
-%   file = st.search ...
-%   st.deleteFile(file{1});
+% Examples:
+%   fw = scitran('vistalab'); chdir(fullfile(stRootPath,'data'));
+%   project = fw.search('projects','project label contains','SOC');
 %
-%   st = scitran('vistalab');
-% 
+%   fw.put(fullFilename,project);
+%   file = fw.search('files',...
+%    'project label contains','SOC',...
+%    'file name','WLVernierAcuity.json');
+%   fw.deleteFile(file);
+%
+% Or 
+%   fw.deleteFile(file{1});
+%
+% Or
+%   project = fw.search('projects','project label contains','SOC');
+%   fw.deleteFile('WLVernierAcuity.json','containerType','projects','containerID',project{1}.id);   
 %
 % RF 2017
 
@@ -24,10 +34,15 @@ p = inputParser;
 p.addRequired('file',@(x)(iscell(x) || isstruct(x) || ischar(x)));
 
 % Set up default container values based on the struct
-if iscell(file),        fileStruct = file{1}; 
+if iscell(file)
+    fileStruct = file{1};
+    if length(file) > 1
+        warning('Multiple cells sent in.  Using 1st only');
+    end
 elseif isstruct(file),  fileStruct = file;
 elseif ischar(file),    fileStruct = [];
 end
+
 if ~isempty(fileStruct)
     containerType = fileStruct.source.container_name;
     % Annoying that this is project, not projects

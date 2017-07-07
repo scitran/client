@@ -25,6 +25,10 @@ file = fw.search('files',...
 % This should run
 fw.deleteFile(file{1});
 
+%% This should work when there is only one cell
+fw.put(fullFilename,project);
+fw.deleteFile(file);
+
 %% This alternative delete method should run, too.
 
 fw.put(fullFilename,project);

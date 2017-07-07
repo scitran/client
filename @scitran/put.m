@@ -1,7 +1,7 @@
 function [status, result] = put(obj,filename,container,varargin)
 % Put a local file or analysis structure to a scitran site
 %
-%   [status, result] = put(obj,filename,container)
+%   [status, result] = scitran.put(filename,container)
 %
 % We use this method to put files or analyses onto a scitran site
 % Currently, we either attach a file to a location in the site, or we place
@@ -16,13 +16,27 @@ function [status, result] = put(obj,filename,container,varargin)
 %
 % Inputs:
 %      filename   - A full path to a file
-%      container  - Container
+%      container  - Struct defining the container of the file, a project,
+%         session, acquisition, or collection
+%
+% Optional:
+%       metadata - Not yet implemented, but this will be a json struct that
+%                  can be uploaded.  More details to follow.
 %
 % Outputs:
 %  status:  Boolean indicating success (0) or failure (~=0)
 %  result:  The output of the verbose curl command
 %
 % Example:
+%   fw = scitran('vistalab');
+%  % Full file path
+%   fullFilename = fullfile(stRootPath,'data','WLVernierAcuity.json');
+%  % Get the container
+%    project = fw.search('projects','project label contains','SOC');
+%  % Go.
+%    fw.put(fullFilename,project);
+%
+% See also:  stCurlRun
 %
 % LMP/BW Vistasoft Team, 2015-16
 
@@ -30,7 +44,6 @@ function [status, result] = put(obj,filename,container,varargin)
 %% Parse inputs
 p = inputParser;
 
-% Should have a vFunc here with more detail
 p.addRequired('filename',@(x)(exist(x,'file')));
 p.addRequired('container', @iscell);
 p.addParameter('metadata','',@isstruct);
