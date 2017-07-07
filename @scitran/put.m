@@ -15,25 +15,29 @@ function [status, result] = put(obj,upType,stData,varargin)
 % anyway.
 %
 % Inputs:
-%  upType: Type of upload.  Either an 'analysis' or a 'file'.  
-%        An analysis is a collection of files defined in stData. We are
-%        currently defining an analysis class.
-%        If a file, then the stData contains slightly different parameters
-%        in stData.  That is the reason for the distinction.
+%  upType - Specifies the type of upload data
 %
-%  stData: Matlab struct containing the fields needed to define the upload
-%          If the upType is a file, then this struct must contain the
-%          following fields 
-%             id
-%             containerType
-%             file
-%          If the upType is an analysis, then this struct must contain the
-%          fields
-%             inputs
-%               name
-%             outputs
-%              
-%              
+%     'collection analysis' 
+%     'session analysis'   - 
+%          An analysis is a collection of files defined in stData. We are
+%          currently defining an analysis class.  At present stData is a
+%          struct
+%
+%          stData  = struct('inputs','','name','','outputs','');    
+%
+%     When uploading an analysis the id of the container must be set!  This
+%     seems to be a session at this point.  I am not sure if projects or
+%     collections have analyses yet.  They will, some day.
+%
+%     'file' or 'files'    - 
+%          If a file, the stData struct is
+%
+%          stData  = struct('id','','containerType','','file','');
+%
+%      id - the id of the container, which might be a collection or session
+%           or project or acquisition?
+%      containerType - project, session, collection, acquisition
+%      file - A full path to a file
 %
 % Outputs:
 %  status:  Boolean indicating success (0) or failure (~=0)
@@ -113,9 +117,9 @@ switch  lower(upType)
         end
 
         % Set the target for the analysis upload (collection or session)
-        if strfind(upType, 'collection')
+        if contains(upType, 'collection')
             target = 'collections';
-        elseif strfind(upType, 'session')
+        elseif contains(upType, 'session')
             target = 'sessions';
         else
             error('No analysis target was specified. Options are: (1) Session Analysis (2) Collection Analysis')
@@ -131,6 +135,9 @@ switch  lower(upType)
 
         % Not checked.  Do with LMP.
 
+        % Can we add ?tab='project' to the URL and have the file appear in the
+        % project tab? Or 'annotation', or 'jobs', or 
+        
         % Find the container where the file will be attached
         if ~isfield(stData, 'id') || ~isfield(stData, 'file') || ~isfield(stData, 'containerType')
             error('field missing on stData');
@@ -143,6 +150,7 @@ switch  lower(upType)
         fname = [fname, ext];
         if isfield(stData, 'metadata')
             metadata = jsonwrite(stData.metadata);
+            
             % Escape the " or the cmd will fail.
             metadata = strrep(metadata, '"', '\"');
             metadata = sprintf('-F "metadata=%s"', metadata);
