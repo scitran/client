@@ -15,9 +15,9 @@ function [destination, curl_cmd] = get(obj,pLink,varargin)
 %  fName:  Full path to the file saved on disk
 %
 % Example:
-%   token = stAuth('instance', 'snisdm');
-%   fName = stGet('https://sni-sdm.stanford.edu/api/acquisitions/55adf6956c6e/file/9999.31469779911316754284_nifti.bval', ...
-%                  'lmperry@stanford.edu', '/tmp/nifti.nii.gz', token)
+%   fw = scitran('vistalab');
+%   file = fw.search('files','project label contains','SOC','filename','toolboxes.json');
+%   fName = fw.get(file{1});
 %
 % LMP/BW Vistasoft Team, 2015-16
 
@@ -64,7 +64,7 @@ end
 %% Download the data
 
 % First call gets us the ticket
-curl_cmd = sprintf('/usr/bin/curl -v -k -X GET "%s" -H "Authorization":"%s" -o %s\n', pLink, obj.token, destination);
+curl_cmd = sprintf('/usr/bin/curl -v -k "%s" -H "Authorization":"%s" -o %s\n', pLink, obj.token, destination);
 [status, result] = stCurlRun(curl_cmd);
 
 if status > 0

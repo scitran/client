@@ -40,8 +40,8 @@
 
 %%  Authorization 
 
-% Get authorization to read from the database
-st = scitran('scitran','action', 'create');
+% Get authorization to read from the Flywheel database
+fw = scitran('vistalab');
 
 % A place for temporary files.
 chdir(fullfile(stRootPath,'local'));
@@ -79,7 +79,7 @@ srch.acquisitions.match.label = 'T1w';        % Acquisition T1w
 srch.files.match.type         = 'nifti';      % A nifti type
 
 % Run the search and get information about files
-files = st.search(srch);
+files = fw.search(srch);
 
 %% Get the file from the scitran database
 
@@ -88,7 +88,7 @@ fname = files{1}.source.name;
 destFile = fullfile(iDir, fname);
 
 % Get the file from the database
-st.get(files{1},'destination',destFile);
+fw.get(files{1},'destination',destFile);
 
 %% Set up for the brain extraction tool docker container and run it
 
@@ -110,7 +110,7 @@ docker.container = 'vistalab/bet';
 
 % The docker struct and the files cell array contains the information
 % needed for reproducibility
-st.docker(docker);
+fw.docker(docker);
 
 %% Upload the result to the collection in the database
 
@@ -118,7 +118,7 @@ st.docker(docker);
 clear srch
 srch.path = 'collections';                         % Looking for files
 srch.collections.match.label  = 'GearTest'; 
-collections = st.search(srch);
+collections = fw.search(srch);
 
 % Build a struct with the information needed to upload the results
 clear upload
@@ -127,11 +127,14 @@ upload.outputs{1}.name = [docker.oFile,'.nii.gz'];   % Name of the results file 
 upload.inputs{1}.name = docker.iFile;    % Name of the results file
 
 % Store the files in a Collection analysis in the database
-st.put('analysis',upload,'id',collections{1}.id);
+fw.put('analysis',upload,'id',collections{1}.id);
+
+
+fw.putAnalysis(upload,'id',collections{1}.id);
 
 %% Go to the browser and have a look at the collection
 
-st.browser(collections{1});
+fw.browser(collections{1});
 
 %%
 
