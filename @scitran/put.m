@@ -72,11 +72,21 @@ metadata = p.Results.metadata;
 % else
 %     metadata = '';
 % end
-
+q
 %% Build and execute the curl command
 
 [~, fname, ext] = fileparts(filename);
 fname = [fname, ext];
+
+% New method, not including metadata or -s (silent) switch
+% Not sure how to put a file.  So for now, sticking with the old curl
+% method.
+%  options = weboptions;
+%  options.RequestMethod = 'POST';
+%  options.HeaderFields = {'Authorization',obj.token};
+%  fwURL = sprintf('%s/api/%s/%s/files',obj.url,containerType,containerID);
+%  files = sprintf('file=@%s;filename=%s',filename, fname);
+%  response = webwrite(fwURL,'-F',files,options);
 
 curl_cmd = sprintf('curl -s -F "file=@%s;filename=%s" %s "%s/api/%s/%s/files" -H "Authorization":"%s" -k',...
     filename, fname, metadata, obj.url, containerType, containerID, obj.token);
