@@ -14,12 +14,11 @@ fw = scitran('vistalab');
 %%  Get an example nifti file
 
 % From the VWFA project
-files = st.search('files', ...
+files = fw.search('files', ...
     'project label','VWFA',...
-    'session id',sessions{1}.id, ...
     'file type','nifti');
 
-[data, destination] = st.read(files{1},'fileType','nifti');
+[data, destination] = fw.read(files{1},'fileType','nifti');
 
 %%
 niftiView(data);
@@ -34,20 +33,20 @@ delete(destination);
 %% Matlab data
 
 % From the showdes (logothetis) project
-files = st.search('files',...
+files = fw.search('files',...
     'project label contains','showdes', ...
     'file name','e11au1_roidef.mat');
 
-[data, destination] = st.read(files{1},'fileType','mat');
+[data, destination] = fw.read(files{1},'fileType','mat');
 delete(destination);
 
 %% OBJ files for visualization
 
 % This is a small fiber tract obj file
-files = st.search('files',...
+files = fw.search('files',...
     'file name','Left_Thalamic_Radiation.mni.obj');
 
-[data, destination] = st.read(files{1},'fileType','obj');
+[data, destination] = fw.read(files{1},'fileType','obj');
 delete(destination);
 
 %%

@@ -133,30 +133,25 @@ classdef toolboxes < handle
             
         end
         
-        %% Write out the json with instructions to load all the toolboxes
+        %% Write out the json with instructions to load the toolbox
         function outfile = saveinfo(obj,varargin)
             % savedir  - Default is scitran/data
-            % filename - Such as toolboxes
+            % gitrepo has 'user','project','commit' fields.
             
             p = inputParser;
             vFunc = @(x)(exist(x,'dir'));
             p.addParameter('savedir',fullfile(stRootPath,'data'),vFunc);
-            p.addParameter('filename',[],@ischar);
             p.parse(varargin{:});
             savedir  = p.Results.savedir;
-            filename = p.Results.filename;
             
             % Create the struct for all the toolboxes
             info = struct('testcmd',obj.testcmd,...
                 'gitrepo',obj.gitrepo);
             
-            % Build the output filename
-            if isempty(filename)
-                filename = obj.gitrepo.project;
-            end
+            % Build the output filename            
+            outfile = fullfile(savedir,[obj.gitrepo.project,'.json']);
             
             % Write the struct as a JSON file
-            outfile = fullfile(savedir,[filename,'.json']);
             jsonwrite(outfile,info);
         end
     end
