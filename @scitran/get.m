@@ -1,15 +1,16 @@
-function [destination, curl_cmd] = get(obj,pLink,varargin)
+function destination = get(obj,file,varargin)
 % Retrieve a file from a scitran instance
 %
-%   [fName, curl_cmd] = get(obj,pLink,'destination',filename,'size',size)
+%   outfile = get(obj,pLink,'destination',filename,'size',size)
+%   outfile = scitran.get(pLink,'destination',filename,'size',size)
+
 %
 % Required Inputs
-%  pLink:  Either a permalink or a files{} struct containing a permalink
-%  token:  Authorization token for download
+%  file:  Either a permalink or a files{} struct containing a permalink
 %
 % Optional Inputs
 %  destination:  full path to file output location (default is a tempdir)
-%  size:         File size in bytes (if known) used for checking
+%  size:         File size in bytes; used for checking
 %
 % Return
 %  fName:  Full path to the file saved on disk
@@ -20,6 +21,8 @@ function [destination, curl_cmd] = get(obj,pLink,varargin)
 %   fName = fw.get(file{1});  edit(fName)
 %  Or
 %   fName = fw.get(file{1}.plink);  edit(fName)
+%
+% See also: scitran.put, scitran.deleteFile
 %
 % LMP/BW Vistasoft Team, 2015-16
 
@@ -36,40 +39,45 @@ p.addRequired('pLink',vFunc);
 p.addParameter('destination','',@ischar)
 p.addParameter('size',[],@isnumeric);
 
-p.parse(pLink,varargin{:});
+p.parse(file,varargin{:});
 
-pLink = p.Results.pLink;
+file        = p.Results.pLink;
 destination = p.Results.destination;
-size = p.Results.size;
+size        = p.Results.size;
 
 %% Should use stPlink2Destination() here
 
 % If we sent in a files{} struct, then get the plink slot out now.
-if isstruct(pLink), pLink = pLink.plink; end
+if isstruct(file), file = file.plink; end
     
 % Combine permalink and username to generate the download link
 
 % Handle permalinks which may have '?user=' elements
-pLink = strsplit(pLink, '?');
-pLink = pLink{1};
+file = strsplit(file, '?');
+file = file{1};
 
 %% Parse fName from the permalink if 'fName' was not provided.
 
 if ~exist('destination', 'var') || isempty (destination) 
-    destination = stPlink2Destination(pLink);
+    destination = stPlink2Destination(file);
 end
-
 
 %% Download the data
 
 % First call gets us the ticket
-curl_cmd = sprintf('/usr/bin/curl -v -k "%s" -H "Authorization":"%s" -o %s\n', pLink, obj.token, destination);
-[status, result] = stCurlRun(curl_cmd);
+%  curl_cmd = sprintf('/usr/bin/curl -v -k "%s" -H "Authorization":"%s" -o %s\n', pLink, obj.token, destination);
+%  [status, result] = stCurlRun(curl_cmd);
 
-if status > 0
-    destination = '';
-    error(result); 
-end
+% New method
+options = weboptions;
+options.RequestMethod = 'GET';
+options.HeaderFields = {'Authorization',obj.token};
+websave(destination,file,options);
+
+% if status > 0
+%     destination = '';
+%     error(result); 
+% end
 
 % Verify file size
 if ~isempty(size)

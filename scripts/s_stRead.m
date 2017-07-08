@@ -1,20 +1,21 @@
 % s_stRead
 %
-% Test the data reading methods
+% Test the data reading methods.
 %
-% BW
+% This script implicitly tests the scitran.get method because we get the
+% data and then read it in.
+%
+% BW, Scitran Team, 2017
 
 %% Open the scitran client
 
-st = scitran('scitran');
+fw = scitran('vistalab');
 
 %%  Get an example nifti file
 
 % From the VWFA project
-sessions = st.search('sessions', ...
-    'project label','VWFA');
-
 files = st.search('files', ...
+    'project label','VWFA',...
     'session id',sessions{1}.id, ...
     'file type','nifti');
 
@@ -42,4 +43,11 @@ delete(destination);
 
 %% OBJ files for visualization
 
+% This is a small fiber tract obj file
+files = st.search('files',...
+    'file name','Left_Thalamic_Radiation.mni.obj');
 
+[data, destination] = st.read(files{1},'fileType','obj');
+delete(destination);
+
+%%

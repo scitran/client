@@ -3,7 +3,7 @@
 %
 %   put - puts a single file  (maybe this should be putFile).
 %   deleteFile - deletes a single file
-% 
+%
 % We plan to write putFiles and deleteFiles for multiple uploads.
 %
 % LMP/BW Scitran Team, 2017

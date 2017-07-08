@@ -41,7 +41,7 @@ switch fileType
         
     case 'obj'
         % Not sure what to do.  This is a text file, I think.
-        
+        data = importdata(destination);
     case 'csv'
         % Read as text
         
