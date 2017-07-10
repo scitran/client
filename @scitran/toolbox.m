@@ -1,7 +1,7 @@
 function tbx = toolbox(st,varargin)
 % Install toolboxes from github repositories.
 %
-%    tbx = st.toolbox(tbxFileStruct,'install',logical)
+%    tbx = st.toolbox('install',logical)
 %
 % Input parameters
 %   project:  The project label
@@ -9,8 +9,8 @@ function tbx = toolbox(st,varargin)
 %             scitran site (returned by a search), or it is simply the 
 %             name of the JSON toolbox file in the project (default is
 %             'toolboxes.json'). 
-%   install:  Boolean on whether to execute toolboxes.install (default: true)
-%   clone:    Boolean (default is false, which means download zip)
+%   install:  Boolean on whether to install (default: true)
+%   clone:    Boolean (false means zip install, true means git clone)
 %
 % Output
 %   tbx - the toolboxes object
@@ -30,8 +30,16 @@ function tbx = toolbox(st,varargin)
 %   tbx = st.toolbox('file',tbxFile{1},'install',false);
 %
 %  You can install later using
-%   tbx.install;
+%   tbx.install; 
+%  Or
+%   tbx.clone;
 %
+% See also:  s_tbxSave, @toolboxes
+%
+% TODO:  If the repository is on the path as a zip download, we return that
+% the repository is installed even if the person asked for a git clone
+% download.  We should find a test of whether the download is a git clone
+% or a zip download.s
 %  
 % BW, Scitran Team, 2017
 
@@ -53,14 +61,14 @@ clone   = p.Results.clone;
 
 %% Set up the toolboxes object
 
-% Get the struct for the file information.
+% Get the struct for the toolboxes file on the scitran site
 if ischar(file)
     if isempty(project)
         error('Project label required when file is a string');
     else
         %  Get the file information, which is a cell array
         fileC = st.search('files',...
-            'project label',project,...
+            'project label contains',project,...
             'filename',file);
         if length(fileC) ~= 1
             error('Problem identifying JSON toolbox file.  Search returned %d items\n',length(fileC));
@@ -72,9 +80,8 @@ else
     fileS = file;
 end
 
-% Build a toolbox structure that contains the information necessary for an
-% install.  This is returned.
-tbx = toolboxes('scitran',st,'file',fileS);
+tbxFile = st.get(fileS);
+tbx = tbxRead(tbxFile);
 
 %% Do or don't install, using the toolboxes object install method
 
@@ -87,8 +94,22 @@ tbx = toolboxes('scitran',st,'file',fileS);
 % repository, and unzip them all into the tmp directory.  We will then add
 % the tmp directory to the user's path.
 
-if install && clone,     tbx.clone;
-elseif install,          tbx.install; 
+nTbx = length(tbx);
+if ~install
+    % Assume testing only
+    for ii=1:nTbx
+        if isempty(which(tbx(ii).testcmd))
+            fprintf('<%s> not found. (Repository <%s>)\n',tbx(ii).testcmd,tbx(ii).project);
+        else
+            fprintf('<%s> found.\n',tbx(ii).testcmd);
+        end
+    end
+    return;
+else
+    % Either a zip install or a git clone install
+    if clone,     for ii=1:nTbx, tbx(ii).clone;   end
+    else,         for ii=1:nTbx, tbx(ii).install; end
+    end
 end
 
 end

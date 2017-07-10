@@ -121,16 +121,15 @@ classdef toolboxes < handle
         end
         
         %% Read JSON files
-        function obj = read(obj,file)
-            % Place JSON description into the object
+        function read(obj,file)
             
-            % Read the file information
-            info = jsonread(file);
+            % Read the json file and return it to a struct
+            tbxStruct = tbxRead(file);
             
-            % Append the information to the object
-            obj.testcmd   = info.testcmd;
-            obj.gitrepo   = info.gitrepo;  % User, project, commit
-            
+            % Copy the struct information into the toolbox object
+            obj.testcmd = tbxStruct.testcmd;
+            obj.gitrepo = tbxStruct.gitrepo;
+                      
         end
         
         %% Write out the json with instructions to load the toolbox
@@ -147,6 +146,8 @@ classdef toolboxes < handle
             % Create the struct for all the toolboxes
             info = struct('testcmd',obj.testcmd,...
                 'gitrepo',obj.gitrepo);
+            info.testcmd = obj.testcmd;
+            info.gitrepo = obj.gitrepo;
             
             % Build the output filename            
             outfile = fullfile(savedir,[obj.gitrepo.project,'.json']);

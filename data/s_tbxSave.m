@@ -68,7 +68,21 @@ tbx.saveinfo;
 tbx.testcmd      = 'ecogRootPath';
 tbx.gitrepo.user    = 'dorahermes'; 
 tbx.gitrepo.project = 'ecogBasicCode';
+tbx.gitrepo.commit  = 'master';
 tbx.saveinfo;
 
-%%
+%% Now, save and put an example toolbox for a project.
+%  The example saves multiple toolboxes in a single toolboxes.json file and
+%  then puts that file in the projects slot on a Flywheel instance.
+%
+chdir(fullfile(stRootPath,'data'));
+tbx(1) = toolboxes('file','ecogBasicCode.json');
+tbx(2) = toolboxes('file','vistasoft.json');
+tbxWrite('toolboxes.json',tbx);
 
+% Put the toolboxes file into the project as an attachment
+fw = scitran('vistalab');
+project = fw.search('projects','project label contains','SOC ECoG');
+fw.put('toolboxes.json',project);
+
+%%

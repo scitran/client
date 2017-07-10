@@ -72,7 +72,7 @@ metadata = p.Results.metadata;
 % else
 %     metadata = '';
 % end
-q
+
 %% Build and execute the curl command
 
 [~, fname, ext] = fileparts(filename);
