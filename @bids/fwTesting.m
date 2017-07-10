@@ -13,7 +13,7 @@ st = scitran('vistalab');
 %% Sessions in SOC ECoG (Hermes)
 [project, sessions, acquisitions] = st.projectHierarchy('SOC ECoG (Hermes)');
 
-% This gets the subject code for each session
+%% This gets the subject code for each session
 for ii=1:length(sessions)
     sessions{ii}.source.subject.code
 end
