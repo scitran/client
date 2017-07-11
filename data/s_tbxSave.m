@@ -85,4 +85,26 @@ fw = scitran('vistalab');
 project = fw.search('projects','project label contains','SOC ECoG');
 fw.put('toolboxes.json',project);
 
-%%
+%% Now, save and put the paper of the future example (Rorie, 2010)
+%  This saves multiple toolboxes in a single toolboxes.json file and
+%  then puts that file in the projects slot on a Flywheel instance.
+%
+chdir(fullfile(stRootPath,'data'));
+tbx(1) = toolboxes('file','pof_Rorie2010.json');
+tbxWrite('rorie2010Figures.json',tbx);
+
+% Put the toolboxes file into the project as an attachment
+fw = scitran('vistalab');
+project = fw.search('projects','project label contains','Rorie PLoS One 2010');
+fw.put('rorie2010Figures.json',project);
+
+%% fw_Apricot6
+chdir(fullfile(stRootPath,'data'));
+tbx(1) = toolboxes('file','isetbio.json');
+tbxWrite('fw_Apricot6.json',tbx);
+
+% Put the toolboxes file into the project as an attachment
+fw = scitran('vistalab');
+project = fw.search('projects','project label contains','EJ Apricot');
+fw.put('fw_Apricot6.json',project);
+

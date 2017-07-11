@@ -3,7 +3,8 @@
 % Test the data reading methods.
 %
 % This script implicitly tests the scitran.get method because we get the
-% data and then read it in.
+% data and then read it in.  We should have some explicit get tests,
+% though.
 %
 % BW, Scitran Team, 2017
 

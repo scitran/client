@@ -1,10 +1,10 @@
 function tbx = toolbox(st,varargin)
 % Install toolboxes from github repositories.
 %
-%    tbx = st.toolbox('install',logical)
+%    tbx = st.toolbox('project',...,'file',...,'install',logical,'clone',logical,)
 %
 % Input parameters
-%   project:  The project label
+%   project:  The project label (string)
 %   tbxFile:  This is either a struct defining the toolbox JSON file on the
 %             scitran site (returned by a search), or it is simply the 
 %             name of the JSON toolbox file in the project (default is

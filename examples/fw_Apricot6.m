@@ -1,14 +1,21 @@
-function fw_Apricot6(varargin)
+function output = fw_Apricot6(varargin)
 % Analyze some EJ retinal spiking data
 %
 % Parameters:
 %   fileSpikes - Flywheel file structure
-%   fileMovie  - FLywheel file structure
+%   fileMovie  - Flywheel file structure
 %   cellNumber - Integer
 %
-% See also:  s_stRunFunction.m (bottom)
+% Example:
+%   fw_Apricot6('fileSpikes','spikes-1.mat');
+%   fw_Apricot6('fileMovie','stimulusMovie.mat');
+%
+%
+% See also:  s_stRunFunction 
 %
 % JRG/BW/RF ISETBIO Team, 2017
+
+output = [];
 
 %%
 p = inputParser;
@@ -24,9 +31,35 @@ cellNumber = p.Results.cellNumber;
 fileSpikes = p.Results.fileSpikes;
 fileMovie  = p.Results.fileMovie;
 
-%% Get the data files
+project = 'EJ Apricot';
 
-st = scitran('scitran','action', 'create', 'instance');
+%% Get the data files and toolbox.
+
+st = scitran('vistalab');
+
+if ischar(fileSpikes)
+    fileSpikes = st.search('files',...
+        'project label contains',project,...
+        'filename',fileSpikes);
+    fileSpikes = fileSpikes{1};
+end
+
+if ischar(fileMovie)
+    fileMovie = st.search('files',...
+        'project label contains',project,...
+        'filename',fileMovie);
+    fileMovie = fileMovie{1};
+end
+
+% The toolbox file has the base name of this file, which will be downloaded
+% with a local_ (6 characters) prepended. So, we strip the local_ and look
+% for the toolbox file on the project.
+tbxName = [mfilename,'.json']; 
+if isequal(tbxName(1:6),'local_'), tbxName = tbxName(7:end); end
+
+st.toolbox('project',project,'file',tbxName);
+
+%% Process the data
 
 if ~isempty(fileSpikes)
 
