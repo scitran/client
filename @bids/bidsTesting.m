@@ -24,8 +24,8 @@ dsList
 
 chdir(dsList{1});
 if exist('participants.tsv','file')
-    nSubjects = length(participants.participant_id);
     participants = readtable('participants.tsv','filetype','text','delimiter','\t');
+    nSubjects = length(participants.participant_id);
     fprintf('Number of participants %d\n',nSubjects);
 else
     disp('Missing participants.tsv file');
@@ -36,8 +36,10 @@ end
 subjectFolders = dirPlus(dsList{1},'ReturnDirs',true,...
     'DirFilter','sub-*',...
     'PrependPath',false);
-if ~ismember(participants.participant_id,subjectFolders)
+if ~ismember(participants.participant_id,subjectFolders) % problem
     warning('Mis-match between participant list and subject folders.')
+else % this check is ok
+    fprintf('Check ok: participant list matches subject folders. \n')
 end
 
 
