@@ -252,6 +252,12 @@ if ischar(srch)
                 else
                     srch.analyses.bool.must{end + 1}.match.label = val;
                 end
+            case {'analysisid'}
+                if ~isfield(srch,'analyses')
+                    srch.analyses.bool.must{1}.match.x0x5Fid = val;
+                else
+                    srch.analyses.bool.must{end + 1}.match.x0x5Fid = val;
+                end
                 
             % ACQUISITIONS
             case {'acquisitionid'}
