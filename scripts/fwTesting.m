@@ -1,7 +1,7 @@
 %% fwTesting
 %
-% Trying to read similar structures from the hierarchy on flywheel to use
-% for BIDS directory creations.
+% Read a qualified BIDS hierarchy on flywheel and pull it down and create a
+% BIDS directory tree.
 %
 % DH/BW ScitranTeam 2017
 
