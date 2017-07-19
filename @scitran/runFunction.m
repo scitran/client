@@ -56,7 +56,14 @@ destination = st.get(funcS{1},...
     'destination',fullfile(destination,localFile));
 
 execFile = sprintf('local_%s%s\n',n);
+% If params is empty and we send it in, varargin looks it has one entry
+% that is empty.  We don't want that.  So, we do an if/else
+if isempty(params)
+    cmd = sprintf('val = %s();',execFile);
+else
 cmd = sprintf('val = %s(params);',execFile);
+end
+
 eval(cmd);
 
 % val = eval('localFunction(params);');

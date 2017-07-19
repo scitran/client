@@ -99,7 +99,7 @@ if ~install
     % Assume testing only
     for ii=1:nTbx
         if isempty(which(tbx(ii).testcmd))
-            fprintf('<%s> not found. (Repository <%s>)\n',tbx(ii).testcmd,tbx(ii).project);
+            fprintf('<%s> not found. (Repository <%s>)\n',tbx(ii).testcmd,tbx(ii).gitrepo.project);
         else
             fprintf('<%s> found.\n',tbx(ii).testcmd);
         end
