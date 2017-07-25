@@ -20,6 +20,7 @@ classdef bids < handle
         directory = '';        %
         nParticipants = 0;
         subjectFolders = '';
+        subjectData = '';
         url = '';
         
     end
