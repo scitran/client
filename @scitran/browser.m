@@ -42,7 +42,7 @@ if ~exist('stdata','var'), stdata = []; end
 % open up an object that is a project, session, acquisition, or analysis
 % If none is passed in, then we just open up the url of the instance ('').
 vFunc = @(x) (isempty(x) || ...
-    isstruct(x) && ismember(x.type, {'projects','sessions','acquisitions','collections','analyses',''}));
+    isstruct(x) && ismember(x.type, {'projects','sessions','acquisitions','collections','analyses','analysis',''}));
 p.addRequired('stdata',vFunc);
 
 % Bring up the browser window
@@ -79,7 +79,7 @@ elseif ~isempty(stdata)
         case {'acquisitions'}
             % We show the session for an acquisition.
             url = sprintf('%s/#/dashboard/session/%s',obj.url,stdata.source.session);
-        case {'analyses'}
+        case {'analyses', 'analysis'}
             % Analyses are always part of a collection or session. If part
             % of a collection, we show the session within the collection.
             % The user must select the Analyses tab.  If part of a session,
