@@ -16,7 +16,7 @@ You will then be asked to enter your API key.
 
     Please enter the API key: 
 
-You can copy and paste from the API key entry in your user profile
+Copy and paste from API key in your user profile - it is the long string that looks like this:
 
 ![](https://github.com/scitran/client/wiki/images/userAPI.png)
 
