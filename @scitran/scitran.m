@@ -16,11 +16,14 @@ classdef scitran < handle
     properties (SetAccess = private, GetAccess = public)  
 
     url = '';
-    token = '';
     instance = 'scitran';
     
     end    % Data stuff (public)
 
+    properties (SetAccess = private, GetAccess = private)
+        % Don't let people see the API token
+        token = '';
+    end    
 
     % Methods (public)
     methods
@@ -50,6 +53,27 @@ classdef scitran < handle
             authAPIKey(obj,instance,varargin{:});
         end
         
+        function val = showToken(obj)
+            % If you really need to see it, use this.
+            % The get.token syntax doesn't run now because get() is a
+            % command to get a file from the site.  Maybe that should be
+            % changed. 
+            val = obj.token;
+        end
     end
+    
+    methods (Static)
+        
+        function val = listInstances
+            % Show the instances you have saved
+            stDir = fullfile(getenv('HOME'), '.stclient');
+            tokenFile = fullfile(stDir, 'st_tokens');
+            val = jsonread(tokenFile);
+            
+            % TODO Make a nicer print out of this
+            disp(val)
+        end
+            
+    end   
 
 end
