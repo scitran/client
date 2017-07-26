@@ -17,12 +17,10 @@ function authAPIKey(obj, instance,varargin)
 %             'refresh' - refresh an existing @scitran object
 %             'remove'  - remove an existing @scitran object from the
 %                         tokens file.
-%
 %  'verify'   - Print out messages verifying the site is found.s
 %
-%
 % OUTPUTS:
-%   @scitran object with url, token and instance name
+%   @scitran object with url, instance name.  Token is private.
 %
 % EXAMPLES:
 %  st = scitran('scitran','action', 'create')
@@ -146,23 +144,34 @@ end
 function obj = stNew(obj,st,instance,tokenFile)
 % Get the URL and the API key
 
-obj.url = input('Please enter the url (https://...): ', 's');
-if strcmp(obj.url(1:5),'http:')
-    disp('*** Replacing http: with https: ***');
-    obj.url = ['https:',obj.url(6:end)];
-    disp(obj.url);
-end
+% In some cases, the API key copied from the site (e.g., Flywheel) has the
+% url embedded in it.  We check for that.  If it is there, we do not ask
+% for the url.  If it is not there, we do ask.
+apiKey = input('Please enter the API key: ', 's');
 
-obj.token   = ['scitran-user ', input('Please enter the API key: ', 's')];
-if isempty(obj.token) || isempty(obj.url)
+% If there is a url embeded, then we get two cells
+newStr = split(apiKey,':');
+if isempty(newStr{1})
     disp('User canceled.');
     return;
-else
-    st.(instance).token = obj.token;
-    st.(instance).client_url = obj.url;
-    jsonwrite(tokenFile,st);
-    fprintf('API key saved for %s.\n',instance);
+elseif length(newStr) == 2
+    obj.url = newStr{1};
+    obj.token = ['scitran-user ', newStr{2}];
+elseif length(newStr) == 1
+    obj.token = ['scitran-user ', newStr{1}];
+    % Didn't find it in the API string
+    obj.url = input('Please enter the url (https://...): ', 's');
+    if strcmp(obj.url(1:5),'http:')
+        disp('*** Replacing http: with https: ***');
+        obj.url = ['https:',obj.url(6:end)];
+        disp(obj.url);
+    end
 end
+
+st.(instance).token = obj.token;
+st.(instance).client_url = obj.url;
+jsonwrite(tokenFile,st);
+fprintf('API key saved for "%s".\n',instance);
 
 end
 
