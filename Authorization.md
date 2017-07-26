@@ -28,6 +28,8 @@ To refresh the API Key, obtain the new key on the site and then run
 
     st = scitran('vistalab','action','refresh');
 
+### Verifying
+
 You might use this code to verify that the scitran object is correctly connecting to the site
 
     % Should print the number of projects you have access
