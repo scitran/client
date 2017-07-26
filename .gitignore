@@ -65,3 +65,5 @@ target/
 
 local/*
 *.DS_Store*
+
+client.wiki/*
