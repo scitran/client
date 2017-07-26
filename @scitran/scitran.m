@@ -60,7 +60,20 @@ classdef scitran < handle
             % changed. 
             val = obj.token;
         end
-            
     end
+    
+    methods (Static)
+        
+        function val = listInstances
+            % Show the instances you have saved
+            stDir = fullfile(getenv('HOME'), '.stclient');
+            tokenFile = fullfile(stDir, 'st_tokens');
+            val = jsonread(tokenFile);
+            
+            % TODO Make a nicer print out of this
+            disp(val)
+        end
+            
+    end   
 
 end
