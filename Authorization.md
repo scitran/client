@@ -7,6 +7,15 @@ The first time you run scitran for a site name, you will be queried for the site
 The URL for the vistalab site is https://flywheel.scitran.stanford.edu.  You can find an API Key for your account on your site within the user profile tab on the user profile page.  
 
 ### An example
+
+If you want to create a new instance, you can simply type
+
+    st = scitran('newSite');
+
+You will then be asked to enter your API key.  You can copy and paste from the API key entry in your user profile
+
+![userAPI](https://github.com/scitran/client/wiki/images/userAPI.png)
+
 ```
 st = scitran('vistalab','action','create')
 Please enter the url (https://...): https://flywheel.scitran.stanford.edu
