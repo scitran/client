@@ -10,3 +10,5 @@ The database files are grouped logically into a set of basic categories.  The se
 * **Analyses** - We perform analyses on collections.  Reproducible analyses must have defined inputs, a complete specification of the method for processing the data (usually a container), and defined outputs.  The analyses may operate on files within an acquisition, session, or spread across a collection. The analysis information itself is stored in the database so you and others can reproduce the analysis.  Before long, you will be able to search for analyses just as you can search for data.
 
 * **Notes**  - Search for notes that people have added.  These can be searched just like files.
+
+* **<Files> or <Analyses> in**  - You can speed certain searches by looking for files that are contained in, say, collections or analyses.

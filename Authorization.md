@@ -28,7 +28,12 @@ To refresh the API Key, obtain the new key on the site and then run
 
     st = scitran('vistalab','action','refresh');
 
-To verify that the scitran object is correctly connecting to the site type
+### Verifying
 
-    st = scitran('vistalab','verify',true); st.browser;
+You might use this code to verify that the scitran object is correctly connecting to the site
+
+    % Should print the number of projects you have access
+    st = scitran('vistalab','verify',true);   
+    % Open the browser to verify that the URL and your ID are correct
+    st.browser;
 
