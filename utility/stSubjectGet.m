@@ -1,4 +1,4 @@
-function val = stSubjectsGet(subjects,param)
+function val = stSubjectGet(subjects,param)
 % Get a field from a cell array of subjects
 %
 %  v = stSubjectsGet(subjects,'age');
@@ -19,15 +19,28 @@ switch lower(param)
         for ii=1:n
             val(ii)  = subjects{ii}.sex(1);
         end
-        
+
     case 'firstname'
-        subjects{ii}.first= subjects{ii}.firstname;
-        
+        val = cell(n,1);
+        for ii=1:n
+            val{ii} = subjects{ii}.firstname;
+        end
+        return
+
     case 'lastname'
-        subjects{ii}.last = subjects{ii}.lastname;
+        val = cell(n,1);
+        for ii=1:n
+            val{ii} = subjects{ii}.lastname;
+        end
+        return
+
     case 'code'
-        subjects{ii}.code = subjects{ii}.code;
-        
+        val = cell(n,1);
+        for ii=1:n
+            val{ii} = subjects{ii}.code;
+        end
+        return
+
     otherwise
         error('Unknown parameter %s\n',param);
 end
