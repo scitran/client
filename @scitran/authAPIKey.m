@@ -155,7 +155,7 @@ if isempty(newStr{1})
     disp('User canceled.');
     return;
 elseif length(newStr) == 2
-    obj.url = newStr{1};
+    obj.url = ['https://', newStr{1}];
     obj.token = ['scitran-user ', newStr{2}];
 elseif length(newStr) == 1
     obj.token = ['scitran-user ', newStr{1}];
