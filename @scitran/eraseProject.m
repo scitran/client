@@ -1,6 +1,9 @@
 function  eraseProject(obj, projectID)
 % Remove a project completely from a scitran site
 %
+% BW - stopped this from use until we get projectHierarchy rewritten and
+% properly tested.
+%
 %    st.eraseProject('projectId')
 %
 % uses the projectHierarchy method to build the hierarchy of
@@ -21,8 +24,18 @@ function  eraseProject(obj, projectID)
 
 %% We should parse better and use a proper search.
 % This is kind of weird.  BW should fix it up.
-s
+
+% We changed projectHierarchy, so when we put this together we should
+% change the call below, too.
+
+error('Too dangerous.  Do not use yet');
+
+%%
+
 %% Find the project hierarchy 
+
+% This should really be just the project name, not the project id.  If we
+% got the right project returned, then we can use the id below.
 [project, sess, acqs] = obj.projectHierarchy('x0x5Fid', projectID);
 length_acqs = 0;
 

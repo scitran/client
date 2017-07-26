@@ -1,8 +1,11 @@
 function destination = stPlink2Destination(pLink)
 % Form an output file name from the permalink
 %
-% pLink:       Either a permalink or a file{} struct
-% destination: A full path to a file
+% Required input
+%   pLink - Either a permalink or a file{} struct
+%
+% Output
+%   destination: A full path to a file
 %
 % Example:
 %

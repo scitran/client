@@ -25,8 +25,8 @@ function [status, result] = stCurlRun(curl_command)
 % 
 % EXAMPLE:
 % 
-%       curl_cmd = sprintf('/usr/bin/curl -v -X GET "%s" -H "Authorization":"%s" -o %s\n', pLink, token, destination);
-%       [status, result] = stCurlRun(curl_cmd);
+%  curl_cmd = sprintf('/usr/bin/curl -v "%s" -H "Authorization":"%s" -o %s\n', pLink, token, destination);
+%  [status, result] = stCurlRun(curl_cmd);
 % 
 % 
 % SciTran team (LMP/BW) - 2016 
@@ -37,9 +37,6 @@ function [status, result] = stCurlRun(curl_command)
 p = inputParser;
 p.addRequired('curl_command',@(x) ischar(x) && any(strfind(x, 'curl')));
 p.parse(curl_command);
-
-args = p.Results;
-
 
 %% Configure the ENV for curl
 
@@ -59,10 +56,21 @@ end
 
 %% Run the curl command
 
-[status, result] = system(args.curl_command);
-if status ~= 0 || ~isempty(strfind(lower(result), 'status_code'))
-    warning('stCulrRun: %s\n', result);
+[status, result] = system(curl_command);
+
+if isequal(result(1),'{')
+    % JSON returned, so debug a bit
+    resultStruct = jsonread(result);
+    if status ~= 0
+        warning('stCulrRun: curl command failed.\n');
+    end
+    if isfield(resultStruct,'status_code')
+        warning('Server action failed');
+        display(resultStruct.message);
+        status = resultStruct.status_code;
+    end
 end
+
 
 %% Reset the ENV
 
@@ -75,4 +83,4 @@ else
     error('Unsupported system.\n');
 end
 
-return
+end

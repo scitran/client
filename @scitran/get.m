@@ -1,23 +1,30 @@
-function [destination, curl_cmd] = get(obj,pLink,varargin)
+function destination = get(obj,file,varargin)
 % Retrieve a file from a scitran instance
 %
-%   [fName, curl_cmd] = get(obj,pLink,'destination',filename,'size',size)
+%   outfile = get(obj,file,'destination',filename,'size',size)
+%   outfile = scitran.get(file,'destination',filename,'size',size)
+
 %
 % Required Inputs
-%  pLink:  Either a permalink or a files{} struct containing a permalink
-%  token:  Authorization token for download
+%  file:  Either a permalink (pLink) or a files{} struct containing a permalink
 %
 % Optional Inputs
 %  destination:  full path to file output location (default is a tempdir)
-%  size:         File size in bytes (if known) used for checking
+%  size:         File size in bytes; used for checking
 %
 % Return
 %  fName:  Full path to the file saved on disk
 %
 % Example:
-%   token = stAuth('instance', 'snisdm');
-%   fName = stGet('https://sni-sdm.stanford.edu/api/acquisitions/55adf6956c6e/file/9999.31469779911316754284_nifti.bval', ...
-%                  'lmperry@stanford.edu', '/tmp/nifti.nii.gz', token)
+%   fw = scitran('vistalab');
+%   file = fw.search('files','project label contains','SOC','filename','toolboxes.json');
+%   fName = fw.get(file{1});  edit(fName)
+%  Or
+%   fName = fw.get(file{1}.plink);  edit(fName)
+%
+% See also: scitran.put, scitran.deleteFile
+%
+% TODO:  See below about websave/webwrite
 %
 % LMP/BW Vistasoft Team, 2015-16
 
@@ -28,44 +35,54 @@ p = inputParser;
 % plink can either be a cell array of Matlab structs, a struct, or a plink
 % string linking to a database file.
 vFunc = @(x) (ischar(x) || isstruct(x));
-p.addRequired('pLink',vFunc);
+p.addRequired('file',vFunc);
 
 % Param/value pairs
 p.addParameter('destination','',@ischar)
 p.addParameter('size',[],@isnumeric);
 
-p.parse(pLink,varargin{:});
+p.parse(file,varargin{:});
 
-pLink = p.Results.pLink;
+file        = p.Results.file;
 destination = p.Results.destination;
-size = p.Results.size;
+size        = p.Results.size;
 
-%% Should use stPlink2Destination() here
-
-% If we sent in a files{} struct, then get the plink slot out now.
-if isstruct(pLink), pLink = pLink.plink; end
+%% If we sent in a files{} struct, then get the plink slot out now.
+if isstruct(file), plink = file.plink; 
+else, plink = file;
+end
     
 % Combine permalink and username to generate the download link
 
 % Handle permalinks which may have '?user=' elements
-pLink = strsplit(pLink, '?');
-pLink = pLink{1};
+plink = strsplit(plink, '?');
+plink = plink{1};
 
 %% Parse fName from the permalink if 'fName' was not provided.
-if ~exist('destination', 'var') || isempty (destination) 
-    [~, f, e] = fileparts(pLink);
-    t_e = strsplit(e, '?');
-    out_dir = tempname;
-    mkdir(out_dir);
-    destination = fullfile(out_dir, [ f, t_e{1}]);
-end
 
+if ~exist('destination', 'var') || isempty (destination) 
+    destination = stPlink2Destination(plink);
+end
 
 %% Download the data
 
 % First call gets us the ticket
-curl_cmd = sprintf('/usr/bin/curl -v -k -X GET "%s" -H "Authorization":"%s" -o %s\n', pLink, obj.token, destination);
+curl_cmd = sprintf('/usr/bin/curl -v -k "%s" -H "Authorization":"%s" -o %s\n', plink, obj.token, destination);
 [status, result] = stCurlRun(curl_cmd);
+
+% New method
+%
+%  The output file had a '?' at the end.
+%  And webwrite isn't working yet, either.
+%  So, LMP and BW to get them both going in a session at some point.
+%
+% This worked for a while, BW
+%
+%  options = weboptions;
+%  options.RequestMethod = 'GET';
+%  options.HeaderFields = {'Authorization',obj.token};
+%  websave(destination,file,options);
+%
 
 if status > 0
     destination = '';
