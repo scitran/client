@@ -14,7 +14,7 @@ If you want to create a new instance, you can simply type
 
 You will then be asked to enter your API key.  You can copy and paste from the API key entry in your user profile
 
-![](images/userAPI.png)
+![](https://github.com/scitran/client/wiki/images/userAPI.png)
 
 ```
 st = scitran('vistalab','action','create')
