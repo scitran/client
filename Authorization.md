@@ -8,20 +8,28 @@ The URL for the vistalab site is https://flywheel.scitran.stanford.edu.  You can
 
 ### An example
 
-If you want to create a new instance, you can simply type
+If you want to create a new instance, you can the name of the instance, as in
 
     st = scitran('newSite');
 
-You will then be asked to enter your API key.  You can copy and paste from the API key entry in your user profile
+You will then be asked to enter your API key.  
+
+    Please enter the API key: 
+
+You can copy and paste from the API key entry in your user profile
 
 ![](https://github.com/scitran/client/wiki/images/userAPI.png)
 
+You can verify that the new site has been added using the listInstances method
 
 ```
-st = scitran('vistalab','action','create')
-Please enter the url (https://...): https://flywheel.scitran.stanford.edu
-Please enter the API key: <long API Key obtained on the flywheel site>
-API key saved for vistalab.
+st.listInstances
+     scitran: [1×1 struct]
+         url: ''
+       token: ''
+    vistalab: [1×1 struct]
+         cni: [1×1 struct]
+     newSite: [1×1 struct]
 ```
 
 ### Usage examples 
