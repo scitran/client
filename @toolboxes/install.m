@@ -13,9 +13,6 @@ function install(tbx,varargin)
 % Or use a commit sha for a particular commit
 %   tbx.gitrepo.commit = 'fa1f7b0b4349d8be4620c29ca002bcf8620952dd';
 %
-% TODO:
-%  Specify the install directory
-%
 % BW, Scitran Team, 2017
 
 %% Read installation directory, if passed.

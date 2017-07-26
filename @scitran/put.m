@@ -1,18 +1,19 @@
 function [status, result] = put(obj,filename,container,varargin)
-% Put a local file or analysis structure to a scitran site
+% Put a local file or analysis structure in a scitran site
 %
 %   [status, result] = scitran.put(filename,container)
 %
 % We use this method to put files or analyses onto a scitran site
-% Currently, we either attach a file to a location in the site, or we place
-% an analysis onto the site.
+% Currently, we either attach a file to a location in the site, or we
+% upload an analysis. 
 %
-% The analysis can be attached to a collection or session.
-%   {'session analysis','collection analysis'}
-%
-% The file can be attached to several different container types.  That part
+% A file can be attached to several different container types.  That part
 % of the code is not thoroughly tested yet, but we do put files up there
 % anyway.
+%
+% An analysis can be attached to a collection or session. 
+% 
+%   {'session analysis','collection analysis'}
 %
 % Inputs:
 %      filename   - A full path to a file

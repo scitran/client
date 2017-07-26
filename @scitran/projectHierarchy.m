@@ -1,12 +1,12 @@
 function [project, sessions, acquisitions] = projectHierarchy(obj, projectLabel)
-% PROJECTHIERARCH -  Returns the project hierarchy (sessions and
+% PROJECTHIERARCHY -  Returns the project hierarchy (sessions and
 % acquisitions) 
 %
 %   scitran.projectHierarchy(projectLabel)
 %
 % Input:
 %   projectLabel: value of the project label used in the search.  The
-%   search is for 'project label exact'
+%                 search is for 'project label exact'
 %
 % Output:
 %   project:      the project retrieved by the search
@@ -42,9 +42,8 @@ end
 % Good to go
 projectID = project{1}.id;
 
-% search the sessions
-sessions = obj.search('sessions',...
-    'project id',projectID);
+%% search the sessions
+sessions = obj.search('sessions','project id',projectID);
 
 %% for each session search its acquisitions
 acquisitions = cell(1,length(sessions));
