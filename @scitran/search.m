@@ -313,7 +313,7 @@ if ischar(srch)
                 else
                     srch.files.bool.must{end + 1}.match.type = val;
                 end
-            case {'filemeasurement'}
+            case {'filemeasurement', 'measurement'}
                 % Localizer, Anatomy_t1w, Calibration, High_order_shim,
                 % Functional, Anatomy_inplane, Diffusion
                 if ~isfield(srch,'files')
@@ -332,17 +332,24 @@ if ischar(srch)
             case {'subjectagegt'}
                 % Subject age greater than
                 if ~isfield(srch,'sessions')
-                    srch.sessions.bool.must{1}.range.subject0x2Eage.gt= val;
+                    srch.sessions.bool.must{1}.range.subject0x2Eage.gt= year2sec(val);
                 else
-                    srch.sessions.bool.must{end + 1}.range.subject0x2Eage.gt = val;
+                    srch.sessions.bool.must{end + 1}.range.subject0x2Eage.gt = year2sec(val);
                 end
             case {'subjectagelt'}
                 % Subject age less than
                 if ~isfield(srch,'sessions')
-                    srch.sessions.bool.must{1}.range.subject0x2Eage.lt= val;
+                    srch.sessions.bool.must{1}.range.subject0x2Eage.lt= year2sec(val);
                 else
-                    srch.sessions.bool.must{end + 1}.range.subject0x2Eage.lt = val;
+                    srch.sessions.bool.must{end + 1}.range.subject0x2Eage.lt = year2sec(val);
                 end
+%             case {'subjectage', 'age'}
+%                 % Subject age
+%                 if ~isfield(srch,'sessions')
+%                     srch.sessions.bool.must{1}.match.subject0x2Eage = year2sec(val);
+%                 else
+%                     srch.sessions.bool.must{end + 1}.match.subject0x2Eage = year2sec(val);
+%                 end
             case {'subjectsex'}
                 % val must be 'male' or 'female'
                 % Not working properly yet - BW!!!

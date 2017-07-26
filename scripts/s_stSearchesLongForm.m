@@ -10,7 +10,7 @@
 % The search data returned from Flywheel are cell arrays describing files,
 % acquisitions (groups of related files), sessions, or projects. These
 % objects are described a little more below and on the scitran/client
-% wiki page (see below).  
+% wiki page (see below).
 %
 % The principle of the search command is this:
 %
@@ -18,17 +18,17 @@
 %    * Create a Matlab structure (srch) to specify search requirements
 %    * Run this search (results = @scitran.search(srch))
 %    * Results is a cell array of objects that meet the search criterion
-% 
+%
 % For further documentation, see
 %
 %  * <https://github.com/scitran/client/wiki scitran/client wiki page>, and
-%  specifically the pages on 
+%  specifically the pages on
 %
 %  * <https://github.com/scitran/client/wiki/Search Search> and the
 %  * <https://github.com/scitran/client/wiki/Search-examples search examples>
-%  
+%
 % This should go on the wiki page, not here.
-% 
+%
 %   Searching for an object
 %
 %  Searches begin by defining the type of object you are looking for (e.g.,
@@ -40,9 +40,9 @@
 %  of object we are searching for.
 %
 %   srch.path = 'projects'
-%   srch.path = 'sessions'    
+%   srch.path = 'sessions'
 %   srch.path = 'acquisitions'
-%   srch.path = 'files'        
+%   srch.path = 'files'
 %   srch.path = 'analysis'
 %   srch.path = 'collections'
 %
@@ -50,21 +50,21 @@
 % struct, 'srch'.  These includes specific operators, parameters, and
 % values.  The point of this script is to provide many examples of how to
 % set up these searches
-% 
+%
 % Important operators that we use below are
 %
 %   'match', 'bool', 'must', 'range'
 %
-% Important parameters we use in search are 
+% Important parameters we use in search are
 %   'name', 'group', 'label', 'id','plink', subject_0x2E_age',
-%   'container_id', 'type'.  
+%   'container_id', 'type'.
 %
 % A list of searchable terms can be found in the scitran/core
 %
 %  <https://github.com/scitran/core/wiki/Data-Model Data Model page>.
 %
 % Other operators are possible (e.g. 'filtered','filter','query','not') but
-% here we illustrate the basics. 
+% here we illustrate the basics.
 %
 % See also:  st.browser - we use this function to visualize the returned
 %            object in the browser.
@@ -105,7 +105,7 @@ projectLabel = projects{end}.source.label;
 
 %% Get all the sessions within a specific collection
 
-clear srch; 
+clear srch;
 srch.path = 'collections/sessions';
 srch.collections.match.label = 'Anatomy Male 45-55';
 [sessions, srchCmd] = st.search(srch);
@@ -178,7 +178,7 @@ analyses = st.search(srch);
 fprintf('Analyses in collections only %d\n',length(analyses));
 
 %% Which collection is the analysis in?
-clear srch; 
+clear srch;
 srch.path = 'collections';
 srch.collections.match.label = 'GearTest';
 collections = st.search(srch);
@@ -194,8 +194,8 @@ fprintf('Analyses found %d\n',length(analyses));
 
 %%
 % Find a session from that collection
-clear srch; 
-srch.path = 'sessions'; 
+clear srch;
+srch.path = 'sessions';
 srch.collections.match.label = 'GearTest';
 sessions = st.search(srch);
 sessions{1}.source.label
@@ -235,8 +235,8 @@ fprintf('Found %d sessions with subject code %s\n',length(sessions),subjectCode)
 
 clear srch
 srch.path = 'sessions';
-srch.sessions.bool.must{1}.range.subject0x2Eage.gt = year2sec(10);
-srch.sessions.bool.must{2}.range.subject0x2Eage.lt = year2sec(11);
+srch.sessions.bool.must{1}.range.subject0x2Eage.gt = 10;
+srch.sessions.bool.must{2}.range.subject0x2Eage.lt = 11;
 sessions = st.search(srch);
 
 fprintf('Found %d sessions\n',length(sessions))
@@ -274,7 +274,7 @@ fprintf('Found %d files matches to session labeled file label %s\n',length(files
 
 %% Search for files in collection; find session names
 clear srch
-srch.path = 'files';   
+srch.path = 'files';
 srch.collections.match.label = 'DWI';
 srch.acquisitions.match.label = '00 Coil Survey';
 
@@ -311,9 +311,9 @@ fprintf('Found %d matching files\n',length(files))
 %% get files from a collection
 
 clear srch
-srch.path = 'files'; 
-srch.collections.match.label = 'Anatomy Male 45-55';   
-srch.acquisitions.match.exact_label = 'Localizer';   
+srch.path = 'files';
+srch.collections.match.label = 'Anatomy Male 45-55';
+srch.acquisitions.match.exact_label = 'Localizer';
 srch.files.match.type = 'nifti';
 files = st.search(srch);
 fprintf('Found %d matching files\n',length(files))
@@ -326,7 +326,7 @@ end
 % In this case, we are searching through all the data, not just the data
 % that we have ownership on.
 clear srch
-srch.path = 'sessions';   
+srch.path = 'sessions';
 srch.projects.match.exact_label = 'UMN';
 srch.sessions.bool.must(1).match.analyses0x2Elabel = 'AFQ';  % DOT
 srch.sessions.bool.must(2).match.subject0x2Ecode = '4279';

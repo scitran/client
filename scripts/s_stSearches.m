@@ -4,7 +4,7 @@
 % using the Matlab interface.
 %
 % The search data returned from Flywheel are cell arrays descring files,
-% acquisitions (groups of related files), sessions, or projects. 
+% acquisitions (groups of related files), sessions, or projects.
 %
 % The principle of the search command is this:
 %
@@ -12,15 +12,15 @@
 %    * Create a Matlab structure (srch) to specify search requirements
 %    * Run the search (results = @scitran.search(srch))
 %    * Results is a cell array of objects that meet the search criterion
-% 
-% To retrieve the data for local processing use 
+%
+% To retrieve the data for local processing use
 %
 %         @scitran.get(), or @scitran.read()
 %
 % For further documentation, see
 %
 %  * <https://github.com/scitran/client/wiki scitran/client wiki page>, and
-%  specifically the pages on 
+%  specifically the pages on
 %
 %  * <https://github.com/scitran/client/wiki/Search Search> and the
 %  * <https://github.com/scitran/client/wiki/Search-examples search examples>
@@ -28,7 +28,7 @@
 % See also:  st.browser - we use this function to visualize the returned
 %            object in the browser.
 %
-% LMP/BW Scitran Team, 2016
+% LMP/BW Scitran Team, 2017
 
 %% Authorization
 
@@ -99,7 +99,7 @@ fprintf('Analyses in collections only %d\n',length(analyses));
 collections = fw.search('collections','collection label','GearTest');
 fprintf('Collections found %d\n',length(collections));
 
-%% Returns analyses attached only to the sessions in the collection, 
+%% Returns analyses attached only to the sessions in the collection,
 % but not to the collection as a whole.
 
 analyses = fw.search('analyses in session','collection label','GearTest');
@@ -124,9 +124,9 @@ fprintf('Found %d sessions with subject code %s\n',length(sessions),subjectCode)
 
 %% Get sessions in which the subject age is within a range
 
-sessions = fw.search('sessions',...
-    'subject age gt',year2sec(10), ...
-    'subject age lt',year2sec(11),...
+sessions = st.search('sessions',...
+    'subject age gt', 9, ...
+    'subject age lt', 10,...
     'summary',true);
 
 %% Find a session with a specific label
@@ -160,7 +160,7 @@ fprintf('Found %d files\n',length(files));
 %     % srch.sessions.match.label = files{ii}.source.session.label;
 %     files{ii}.source.session.label
 %     thisSession = st.search('sessions','session label',files{ii}.source.session.label);
-%     
+%
 %     if ~isempty(thisSession)
 %         % This should not happen.  But it does.  So fix it. (BW).
 %         ii
@@ -199,4 +199,4 @@ fprintf('Found %d matching files\n',length(files))
     'session contains subject','4279',...
     'all_data',true,'summary',true);
 
-%%  
+%%
