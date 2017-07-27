@@ -174,19 +174,18 @@ newGraphWin; plot(meanTSeries(:,1),meanTSeries(:,2),'o'); grid on; identityLine(
 
 %% Calculate the PPI between these two time series
 
+TR = 2; % TR of the acquisition
 % Fills in the HRF from the parameters
 clear xBF;
 % The hemodynamic response function types
 xBF.name   = 'hrf'; % (with time derivative)';     
-xBF.dt     = 1;         % The TR of the acquisition
+xBF.dt     = TR;         % The TR of the acquisition
 xBF.order  = 1;
 xBF = spm_get_bf(xBF);
 
 newGraphWin; plot(xBF.bf); grid on
 %% Psychological vector
 
-
-TR = 2; % TR of the acquisition
 % onset files are lists of stimulus onsets from beginning of nifti
 goOnsets = csvread(fullfile(workDir, 'Go.csv'), 1, 3);
 noGoOnsets = csvread(fullfile(workDir, 'NoGo.csv'), 1, 3);
@@ -238,11 +237,13 @@ newGraphWin; plot(psychConv); hold on; plot(psych);
 
 reg = [meanTSeries(:,1) , psychConv,  psychConv .* meanTSeries(:,1) ];
 beta = reg\meanTSeries(:,2);
+roi1Beta = beta;
 
 beta(3)/sum(beta)
 newGraphWin;
 prediction = reg*beta;
 plot([meanTSeries(:,2), prediction])
+legend('time series', 'prediction')
 set(gca,'ylim',[-3 3]);
 
 % If you want to see the regression terms, plot tis
@@ -256,12 +257,32 @@ set(gca,'ylim',[-3 3]);
 
 reg = [meanTSeries(:,2) , psychConv,  psychConv .* meanTSeries(:,2) ];
 beta = reg\meanTSeries(:,1);
+roi2Beta = beta;
 beta
 beta(3)/sum(abs(beta))
 
 newGraphWin;
 prediction = reg*beta;
-plot([meanTSeries(:,2), prediction])
+plot([meanTSeries(:,1), prediction])
+legend('time series', 'prediction')
 set(gca,'ylim',[-3 3]);
 
-%%
+%% Correlation of BOLD signal between roi1 and roi2
+
+goIdx = psych == 1;
+noGoIdx = psych == -1;
+
+newGraphWin;
+plot(meanTSeries(goIdx,1), meanTSeries(goIdx,2), 'b.');
+hold on;
+plot(meanTSeries(noGoIdx,1), meanTSeries(noGoIdx,2), 'g.');
+legend('Go', 'NoGo');
+xlabel(['roi ' roiName(1)...
+    ' beta ' roi1Beta(3)...
+    ' norm beta ' roi1Beta(3)/sum(abs(roi1Beta))], 'Interpreter', 'none');
+ylabel(['roi ' roiName(2)...
+    ' beta ' roi2Beta(3)...
+    ' norm beta ' roi2Beta(3)/sum(abs(roi2Beta))], 'Interpreter', 'none');
+plot([0 0], [-50 50], 'k');
+plot([-50 50], [0 0], 'k');
+set(gca,'ylim',[-2 2], 'xlim', [-2 2]);

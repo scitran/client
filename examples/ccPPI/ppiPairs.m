@@ -11,8 +11,11 @@
 
 % roiList = dir(fullfile(workDir,'pl_masks/*.nii'));
 % roiNames = cell(length(roiList),1);
+% roiShortNames = cell(length(roiList),1);
 % for ii =1:length(roiList)
 %     roiNames{ii} = roiList(ii).name;
+%     splitName = regexp(roiNames(ii), '_', 'split');
+%     roiShortNames{ii} = strcat(splitName{1}{1}, '_', splitName{1}{3});
 % end
 % idx = find(ismember(roiNames,roiName{2}));
 %
@@ -111,7 +114,7 @@ chdir(workDir);
 %% Download all the cogcon ROIs 
 
 %  Cognitive controls ROIs are
-cogcon = [2, 8, 11, 19, 28, 30, 39];
+cogcon = [2, 4, 8, 11, 19, 28, 30, 38, 39];
 nROIs = length(cogcon);
 
 for ii=1:nROIs
@@ -127,18 +130,19 @@ end
 % This subject's pre-processed image
 nii = niftiRead(fullfile(workDir,'warpedImage.nii.gz'));
 
+TR = 2; % TR of the acquisition
+
 % Fills in the HRF from the parameters
 clear xBF;
 % The hemodynamic response function types
 xBF.name   = 'hrf'; % (with time derivative)';
-xBF.dt     = 1;         % The TR of the acquisition
+xBF.dt     = TR;         % The TR of the acquisition
 xBF.order  = 1;
 xBF = spm_get_bf(xBF);
 % newGraphWin; plot(xBF.bf); grid on
 
 % Timing of the warped image data
 nTime = size(nii.data,4);
-TR = 2; % TR of the acquisition
 TRTimes = 0:TR:(TR*(nTime-1));
 
 %% Do all pairs of ROIs and make ppiScore
@@ -251,6 +255,7 @@ hist(ppiScores(:),50);
 newGraphWin;
 
 imagesc(ppiScores); 
-
+set(gca, 'YTick', 1:nROIs);
+set(gca, 'YTickLabel', roiShortNames(cogcon));
 
 %%
