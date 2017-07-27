@@ -145,6 +145,31 @@ xBF = spm_get_bf(xBF);
 nTime = size(nii.data,4);
 TRTimes = 0:TR:(TR*(nTime-1));
 
+%% Calculate the PPI between these two time series
+
+% Psychological vector
+
+% onset files are lists of stimulus onsets from beginning of nifti
+goOnsets = csvread(fullfile(workDir, 'Go.csv'), 1, 3);
+noGoOnsets = csvread(fullfile(workDir, 'NoGo.csv'), 1, 3);
+[tvals,idx] = sort([goOnsets; noGoOnsets]);
+val = [ones(size(goOnsets)); -1*ones(size(noGoOnsets))];
+val = val(idx);
+% plot(tvals,val,'-')
+
+% Interpolate to the TR sample spacing
+
+psych = interp1(tvals,val,TRTimes,'linear','extrap');
+psych(psych < 0) = -1; psych(psych > 0) = 1;
+% newGraphWin; plot(TRTimes,psych); grid on;
+
+% Convolution form
+
+psychConv = conv2(xBF.bf(:),psych(:));
+psychConv = psychConv(1:nTime);
+psychConv = psychConv - mean(psychConv(:));
+% newGraphWin; plot(psychConv); hold on; plot(psych);
+
 %% Do all pairs of ROIs and make ppiScore
 
 
@@ -152,99 +177,51 @@ TRTimes = 0:TR:(TR*(nTime-1));
 % nROIs = length(roiNames);
 % cogcon = 1:length(roiNames);
 
+clear roiData
+roiData = cell(nROIs,1);
+
+for rr = 1:nROIs
+    roiName = roiNames{cogcon(rr)};
+
+    % Read the brain responses
+    roiData{rr}=niftiRead(fullfile(workDir, 'pl_masks', roiName));
+
+    [i,j,k] = ind2sub(size(roiData{rr}.data),find(roiData{rr}.data == 1));
+    nPts = length(i);
+    ts = zeros(nTime,nPts);
+    for ii=1:nPts
+        ts(:,ii) = squeeze(nii.data(i(ii),j(ii),k(ii),:));
+    end
+
+    %% Convert time series to percent modulation
+
+    mn = mean(ts,1);
+    tSeries2 = bsxfun(@minus, ts, mn);
+    tSeries2 = tSeries2*diag(1./mn);
+
+    % Multiply by 100 to get percent
+    tSeries2 = 100*tSeries2;
+    roiData{rr}.meanTSeries = mean(tSeries2,2);
+
+    % newGraphWin; plot(tSeries2); ylabel('Percent modulation'); xlabel('TR points')
+end
+
 ppiScores = zeros(nROIs,nROIs);
 
 for r1 = 1:nROIs
     for r2 = 1:nROIs
         [r1,r2]
-        
-        roiName{1} = roiNames{cogcon(r1)}; 
-        roiName{2} = roiNames{cogcon(r2)};
                 
-        % Read the brain responses
-        clear roi
-        roi{1} = niftiRead(fullfile(pwd,'pl_masks',roiName{1}));
-        roi{2} = niftiRead(fullfile(pwd,'pl_masks',roiName{2}));
+        % Load the brain responses
+        roi1=roiData{r1};
+        roi2=roiData{r2};
                 
-        roiTS = cell(1,2);
-        for rr=1:2
-            [i,j,k] = ind2sub(size(roi{rr}.data),find(roi{rr}.data == 1));
-            nPts = length(i);
-            roiTS{rr} = zeros(nTime,nPts);
-            for ii=1:nPts
-                roiTS{rr}(:,ii) = squeeze(nii.data(i(ii),j(ii),k(ii),:));
-            end
-        end
-        
-        %% Convert time series to percent modulation
-        
-        meanTSeries = zeros(nTime,nROIs);
-        for rr = 1:2
-            mn = mean(roiTS{rr},1);
-            tSeries2 = bsxfun(@minus, roiTS{rr}, mn);
-            tSeries2 = tSeries2*diag(1./mn);
-            
-            % Multiply by 100 to get percent
-            tSeries2 = 100*tSeries2;
-            meanTSeries(:,rr) = mean(tSeries2,2);
-            
-            % newGraphWin; plot(tSeries2); ylabel('Percent modulation'); xlabel('TR points')
-        end
-        
-        %% Calculate the PPI between these two time series
-        
-        % Psychological vector
-        
-        
-        % onset files are lists of stimulus onsets from beginning of nifti
-        goOnsets = csvread(fullfile(workDir, 'Go.csv'), 1, 3);
-        noGoOnsets = csvread(fullfile(workDir, 'NoGo.csv'), 1, 3);
-        [tvals,idx] = sort([goOnsets; noGoOnsets]);
-        val = [ones(size(goOnsets)); -1*ones(size(noGoOnsets))];
-        val = val(idx);
-        % plot(tvals,val,'-')
-        
-        % Interpolate to the TR sample spacing
-        
-        psych = interp1(tvals,val,TRTimes,'linear','extrap');
-        psych(psych < 0) = -1; psych(psych > 0) = 1;
-        % newGraphWin; plot(TRTimes,psych); grid on;
-        
-        % Convolution form
-        
-        psychConv = conv2(xBF.bf(:),psych(:));
-        psychConv = psychConv(1:nTime);
-        psychConv = psychConv - mean(psychConv(:));
-        % newGraphWin; plot(psychConv); hold on; plot(psych);
-        
         %% Create the matrix for the regression Beta values for predicting from roi1 to roi2
         
-        
-        reg = [meanTSeries(:,1) , psychConv,  psychConv .* meanTSeries(:,1) ];
-        beta = reg\meanTSeries(:,2);
+        reg = [roi1.meanTSeries , psychConv,  psychConv .* roi1.meanTSeries];
+        beta = reg\roi2.meanTSeries;
         
         ppiScores(r1,r2) = beta(3)/sum(beta);
-        
-        % newGraphWin;
-        % prediction = reg*beta;
-        % plot([meanTSeries(:,2), prediction])
-        % set(gca,'ylim',[-3 3]);
-        
-        % If you want to see the regression terms, plot tis
-        
-        % plot(reg);
-        % legend({'TS','Psych','Product'});
-        % grid on
-        
-        %% Beta values from roi2 to roi1
-        
-        %         reg = [meanTSeries(:,2) , psychConv,  psychConv .* meanTSeries(:,2) ];
-        %         beta = reg\meanTSeries(:,1)
-        %         ppiScores(r1,r2) = beta(3)/sum(abs(beta));
-        %         % newGraphWin;
-        % prediction = reg*beta;
-        % plot([meanTSeries(:,2), prediction])
-        % set(gca,'ylim',[-3 3]);
     end
 end
 
