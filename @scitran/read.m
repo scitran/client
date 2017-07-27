@@ -3,15 +3,28 @@ function [data, destination] = read(st,pLink,varargin)
 %
 %   data = st.read(pLink,'fileType',fileType);
 %
+% Inputs:
+%    pLink:  Permalink to the file in Flywheel, or a cell that contains the
+%            permalink (say, as returned by a flywheel search).
+%    
+% Parameter
+%    'fileType' - {obj, mat, nifti, json, csv}
+%
+% Examples:
+%    st = scitran('vistalab');
+%    file = st.search('files','project label','ADNI: T1','subject code',4256,'filetype','nifti');
+%    data = st.read(file{1},'fileType','nifti');
+%
 % Wandell/SCITRAN Team, 2017
 
-%%
+%% Parse inputs
 p = inputParser;
 
+% This the perma link
 vFunc = @(x) (ischar(x) || isstruct(x));
 p.addRequired('pLink',vFunc);
 
-fileTypes = {'obj','mat','nifti','json','csv'};
+fileTypes = {'obj','mat','matlab','nifti','json','csv'};
 vFunc  = @(x)(ismember(lower(x),fileTypes));
 p.addParameter('fileType','mat',vFunc);
 
@@ -27,7 +40,7 @@ st.get(pLink,'destination',destination);
 
 %% Read it using the appropriate file type
 switch fileType
-    case 'mat'
+    case {'mat','matlab'}
         % Not sure what to do here.  Perhaps if there is only a single
         % variable, we set 
         data = load(destination);
@@ -44,11 +57,13 @@ switch fileType
     case 'obj'
         % Not sure what to do.  This is a text file, I think.
         data = objRead(destination);
+        
     case 'csv'
         % Read as text
         
     case 'json'
         % Use JSONio stuff
+        data = jsonread(destination);
         
     otherwise
         error('Unknown file type %s\n',fileType);
