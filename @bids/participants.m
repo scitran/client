@@ -1,5 +1,13 @@
 function participants(obj)
+% PARTICIPANTS
+%
+%   @bids.participants
+%
 % Check for the participants.tsv file and do other stuff
+%
+% DH Scitran, 2017
+
+curDir = pwd;
 
 chdir(obj.directory);
 
@@ -10,6 +18,8 @@ if exist('participants.tsv','file')
 else
     error('Missing participants.tsv file');
 end
+
+chdir(curDir);
 
 % fw.putBids will need to put the participants file on the
 % project

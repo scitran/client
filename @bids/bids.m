@@ -17,10 +17,11 @@ classdef bids < handle
      
     properties (SetAccess = public, GetAccess = public)
 
-        directory = '';        %
-        nParticipants = 0;
-        subjectFolders = '';
-        subjectData = '';
+        directory = '';        % Home directory
+        nParticipants = 0;     % Number of participants
+        subjectFolders = '';   % Cell array full paths of subject folder names
+        nSessions = [];        % Vector of nSessions for each participant
+        subjectData = '';      % Struct array with dataType.fileNames for each subject/session
         url = '';
         
     end
@@ -47,6 +48,16 @@ classdef bids < handle
         end
         
     end
+    
+    methods (Static)
+        
+        function val = dataTypes
+            % Maintain the list of allowable folder names for different data
+            % types.
+            val = {'anat','func','eeg','meg','dwi','ieeg','derivatives','pet','fmap'};
+        end
+    end
+    
     
 end
 
