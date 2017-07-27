@@ -1,12 +1,12 @@
 function [status, id] = exist(obj,label, containerType, varargin)
+% Not yet implemented
+%
 % Tests whether a project, session, acquisition label exists in FW
 %
 %   [status, id] = st.exist(label,'containerType',[parentContainerID])
 %
 % Searches for a container of particular type with the given label.  If the
 % parent container ID is known, the search is faster.
-%
-% If multiple 
 %
 % Returns:
 %   status - Number of returned matches (0, 1 or N)
@@ -15,7 +15,7 @@ function [status, id] = exist(obj,label, containerType, varargin)
 % N.B. We are thinking about collections
 %
 % Example usage:
-% [status, gid] = st.exist('wandell lab', 'groups')
+% [status, gid] = st.exist('Wandell Lab', 'groups')
 % [status, pid] = st.exist('vwfa', 'projects', 'parentID', gid{1})
 % [status, pid] = st.exist('vwfa_nims', 'projects', 'parentID', gid{1})
 % [status, sid] = st.exist('20151128_1621', 'sessions', 'parentID', pid{1})
@@ -25,9 +25,12 @@ function [status, id] = exist(obj,label, containerType, varargin)
 %%
 p = inputParser;
 p.addRequired('label',@ischar);
-p.addRequired('containerType',@ischar);
+allowableContainers = {'projects','sessions','acquisitions','groups'};
+p.addRequired('containerType',@(x)(ismember(x,allowableContainers)));
 p.addParameter('parentID',[], @ischar);
 p.parse(label, containerType, varargin{:});
+
+status = []; id = [];
 
 label             = p.Results.label;
 containerType     = p.Results.containerType;
@@ -56,11 +59,13 @@ if ~isempty(parentID)
 end
 %% exec the search and create a list of ids matching the search
 results = obj.search(srch, 'all_data', true);
-id = cell(1,length(results));
-for ii = 1:length(results)
-    id{ii} = results{ii}.id;
+if ~isempty(results)
+    id = cell(1,length(results));
+    for ii = 1:length(results)
+        id{ii} = results{ii}.id;
+    end
+    status = length(results);
 end
-status = length(results);
 
 
 end
