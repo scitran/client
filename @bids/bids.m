@@ -17,15 +17,38 @@ classdef bids < handle
      
     properties (SetAccess = public, GetAccess = public)
 
-        directory = '';        % Home directory
+        directory = '';        % Root directory
         nParticipants = 0;     % Number of participants
-        subjectFolders = '';   % Cell array full paths of subject folder names
         nSessions = [];        % Vector of nSessions for each participant
-        subjectData = '';      % Struct array with dataType.fileNames for each subject/session
+
+        % All files and folders are specified relative to the root directory
+        %
+        % These are paths to files.  We store these paths relative to the
+        % root directory.  So to see the fullpath we would use, as an
+        % example
+        %
+        %    fullfile(directory,projectMeta{1});
+        %    fullfile(directory,subjectData(1).session(1).anat);
+        %    fullfile(directory,projectMeta{1});
+        %
+
+        % Cell array of relative paths to each subject folder.  Subject
+        % folders always start with sub-
+        subjectFolders = '';   % Cell array full paths of subject folder names
+        
+        % Struct array with format
+        %
+        %   subjectData(ss).session(nn).<dataType> 
+        %
+        % is a cell array to the dataType files in the nn^th session for
+        % the ss^th subject.  
+        subjectData = '';      
+        
+        % Cell arrays with the relative file paths to these project,
+        % subject or session level metadata.  
         projectMeta = '';      % Cell array with metadata at the project level
         subjectMeta = '';      % Cell array with metadata for each participant
         sessionMeta = '';      % Cell array with metadata for each participant/session
-        url = '';
         
     end
     
@@ -36,18 +59,34 @@ classdef bids < handle
             % The constructor - builds the bids object
             p = inputParser;
             p.addRequired('directory',@(x)(exist(x,'dir')));
-            p.addParameter('url',[],@ischar);
             p.parse(directory,varargin{:});
             
             chdir(directory);
             obj.directory = directory;
-            obj.url = p.Results.url;
             
             % Read the directory through and store the stuff we will need
             % for uploading
             %
-            % obj.validate
+            obj.participants;
+
+            % Add folder for each participant
+            obj.subjFolders;
             
+            obj.checkSessions([]);
+            
+            % Add data directories and files for each subject
+            obj.subjData;
+            
+            % To see the allowable data types
+            % b.dataTypes
+            
+            % Auxiliary files in the root directory
+            % JSON and TSV files
+            obj.metaDataFiles;
+
+            % We need one of these
+            % obj.validate
+
         end
         
     end

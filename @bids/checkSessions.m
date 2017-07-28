@@ -15,9 +15,8 @@ nSessions = zeros(1,obj.nParticipants);
 
 for ii=1:length(participantList)
     
-    chdir(obj.subjectFolders{ii})
-    
-    sessionFolders = dirPlus(obj.subjectFolders{ii},...
+    thisDir = fullfile(obj.directory,obj.subjectFolders{ii});
+    sessionFolders = dirPlus(thisDir,...
         'ReturnDirs',true,...
         'PrependPath',false, ...
         'DirFilter','ses');
@@ -29,7 +28,5 @@ for ii=1:length(participantList)
 end
 
 obj.nSessions = nSessions;
-
-chdir(curDir);
 
 end
