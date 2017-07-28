@@ -38,7 +38,11 @@ If you already have the client configured, you can simply type
 
     st = scitran('vistalab');
 
-To remove the site 
+To list the sites you have stored, you can type
+
+    st.listInstances
+
+To remove a site 
 
     st = scitran('vistalab','action','remove');
 
