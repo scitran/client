@@ -20,17 +20,7 @@ Copy and paste from API key in your user profile - it is the long string that lo
 
 ![](https://github.com/scitran/client/wiki/images/userAPI.png)
 
-You can verify that the new site has been added using the listInstances method
 
-```
-st.listInstances
-     scitran: [1×1 struct]
-         url: ''
-       token: ''
-    vistalab: [1×1 struct]
-         cni: [1×1 struct]
-     newSite: [1×1 struct]
-```
 
 ### Usage examples 
 
@@ -40,8 +30,16 @@ If you already have the client configured, you can simply type
 
 To list the sites you have stored, you can type
 
-    st.listInstances
+    st.listInstances;
 
+```
+     scitran: [1×1 struct]
+         url: ''
+       token: ''
+    vistalab: [1×1 struct]
+         cni: [1×1 struct]
+     newSite: [1×1 struct]
+```
 To remove a site 
 
     st = scitran('vistalab','action','remove');
