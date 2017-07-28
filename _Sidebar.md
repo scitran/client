@@ -9,6 +9,7 @@
 * [Gears and docker containers](Gears)
 * [Analyses](Analysis-objects)
 * [Uploading](Uploading)
+* [Client scripts](Client-scripts)
 * [Building Gears](https://github.com/scitran/client/wiki/Building-Gears)
 * [Reproducible papers](Reproducible-Research)
 
