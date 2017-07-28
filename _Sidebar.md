@@ -1,6 +1,6 @@
 * [Introduction](Home)
 * [Installation](Installation (scitran and JSONio))
-* [Overview](Client methods (Matlab))
+* [Overview](Client-methods-(Matlab))
 * [Authorization](Authorization)
 * [Database](Database-principles)
 * [Search](Search)
