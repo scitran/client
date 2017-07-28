@@ -1,29 +1,29 @@
 There are two principal classes in the client toolbox.  The **scitran** class and the **toolboxes** class.
 
-# SCITRAN class methods
+## SCITRAN class methods
 
 The main @scitran methods are search, get, put, read, runFunction, browser.  There are other methods (e.g., projectHierarchy, create, putAnalysis, toolbox ...).  Here we explain the main methods and point to scripts that use these methods.
 
-## search
+### search
 
-## get
+### get
 
-## put
+### put
 
-## runFunction
+### runFunction
 
-## read
+### read
 
-## browser
+### browser
 
-# TOOLBOXES class methods
+## TOOLBOXES class methods
 The main @toolboxes methods are install and clone.  In addition there are ().
 
-## install
+### install
 
-## clone
+### clone
 
-# BIDS class methods
+## BIDS class methods
 
 Under development
 
