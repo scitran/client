@@ -2,7 +2,7 @@
 * [Installation](Installation)
 * [Client methods](Client-methods-(Matlab))
 * [Authorization](Authorization)
-* [Database](Database-principles)
+* [Database terms](Database-principles)
 * [Search](Search)
     * [Examples](Search-examples)
     * [Syntax](Search-syntax)
