@@ -22,6 +22,9 @@ classdef bids < handle
         subjectFolders = '';   % Cell array full paths of subject folder names
         nSessions = [];        % Vector of nSessions for each participant
         subjectData = '';      % Struct array with dataType.fileNames for each subject/session
+        projectMeta = '';      % Cell array with metadata at the project level
+        subjectMeta = '';      % Cell array with metadata for each participant
+        sessionMeta = '';      % Cell array with metadata for each participant/session
         url = '';
         
     end

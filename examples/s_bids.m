@@ -2,7 +2,7 @@
 %
 % DH/BW Scitran Team, 2017
 
-bidsDir = fullfile(stRootPath,'local','BIDS-Examples','ds001');
+% bidsDir = fullfile(stRootPath,'local','BIDS-Examples','ds001');
 
 bidsDir = fullfile(stRootPath,'local','BIDS-Examples','7t_trt');
 
@@ -26,6 +26,5 @@ b.dataTypes
 % Auxiliary files in the root directory
 % JSON and TSV files
 b.metaDataFiles;
-
 
 b.subjectData(whichSubj).session(1).anat;
