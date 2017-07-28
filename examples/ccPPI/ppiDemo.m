@@ -40,31 +40,31 @@ anFLMGNG2 = fwCNI.search('analyses in session',...
 GoFile = fwCNI.search('files in analysis',...
     'analysis id',anFLMGNG2{1}.id,...
     'file name','Go_Onsets.csv');
-fw.get(GoFile{1},'destination',fullfile(workDir,'Go.csv'));
+fwCNI.get(GoFile{1},'destination',fullfile(workDir,'Go.csv'));
 
 NoGoFile = fwCNI.search('files in analysis', ...
     'analysis id',anFLMGNG2{1}.id,...
     'file name','NoGo_Onsets.csv');
-fw.get(NoGoFile{1},'destination',fullfile(workDir,'NoGo.csv'));
+fwCNI.get(NoGoFile{1},'destination',fullfile(workDir,'NoGo.csv'));
 
 warpedImage = fwCNI.search('files in analysis',...
     'session id',sessions{1}.id,...
     'analysis id',anCPGNG2{1}.id,...
-    'filename','warped_files@@wa01_normalized_func_data.nii.gz');
-fw.get(warpedImage{1},'destination',fullfile(workDir,'warpedImage.nii.gz'));
+    'filename','wa01_normalized_func_data.nii.gz');
+fwCNI.get(warpedImage{1},'destination',fullfile(workDir,'warpedImage.nii.gz'));
 
 %% Read two of the ROIs.  This will become a loop
 
 % This is how we made the list.
 % Ultimately, we will get the list from the fw site.
 
-% roiList = dir(fullfile(workDir,'pl_masks/*.nii'));
-% roiNames = cell(length(roiList),1);
-% for ii =1:length(roiList)
-%     roiNames{ii} = roiList(ii).name;
-% end
-% idx = find(ismember(roiNames,roiName{2}));
-%
+roiList = dir(fullfile(workDir,'pl_masks/*.nii'));
+roiNames = cell(length(roiList),1);
+for ii =1:length(roiList)
+    roiNames{ii} = roiList(ii).name;
+end
+% idx = find(ismember(roiNames,roiNames{2}));
+
 for ii = 1:length(roiNames)
     fprintf('%d  %s\n',ii,roiNames{ii});
 end
@@ -113,16 +113,19 @@ end
 % 38  biLat_10mm_PCC_DMN_FI_0_-50_28_cluster.nii
 % 39  biLat_10mm_dACC_CogCon_FI_0_18_46_cluster.nii
 
-nROIs = 2;
+%%
+nROIs   = 2;
+idxROI1 = 19;
+idxROI2 = 39;
 roiName = cell(1,nROIs);
-roiName{1} = roiNames{2}; % 19 - 'Right_10mm_DLPFC_CogCon_FI_44_34_22_cluster.nii';
-roiName{2} = roiNames{11}; % 39 - 'biLat_10mm_dACC_CogCon_FI_0_18_46_cluster.nii';
+roiName{1} = roiNames{idxROI1}; % 19 - 'Right_10mm_DLPFC_CogCon_FI_44_34_22_cluster.nii';
+roiName{2} = roiNames{idxROI2}; % 39 - 'biLat_10mm_dACC_CogCon_FI_0_18_46_cluster.nii';
 
 for ii=1:2
     file = fwVista.search('files',...
         'project label contains','Templates Adult',...
         'session label','PANLAB',...
-        'filename',roiName{1});
+        'filename',roiName{ii});
     fwVista.get(file{1},'destination',fullfile(workDir,roiName{ii}));
 end
 
@@ -133,8 +136,8 @@ end
 nii = niftiRead(fullfile(workDir,'warpedImage.nii.gz'));
 clear roi
 
-roi{1} = niftiRead(fullfile(pwd,'pl_masks',roiName{1}));
-roi{2} = niftiRead(fullfile(pwd,'pl_masks',roiName{2}));
+roi{1} = niftiRead(fullfile(workDir,roiName{1}));
+roi{2} = niftiRead(fullfile(workDir,roiName{2}));
 
 clear sz
 nTime = size(nii.data,4); 
@@ -163,30 +166,44 @@ for rr = 1:nROIs
     tSeries2 = 100*tSeries2;
     meanTSeries(:,rr) = mean(tSeries2,2);
 
-    newGraphWin; plot(tSeries2); ylabel('Percent modulation'); xlabel('TR points')
+    newGraphWin; 
+    plot(tSeries2); ylabel('Percent modulation'); xlabel('TR points')
 end
 
 %% Mean time series
 
-newGraphWin; plot(meanTSeries);
-newGraphWin; plot(meanTSeries(:,1),meanTSeries(:,2),'o'); grid on; identityLine(gca);
+newGraphWin; 
+goIdx   = find((psych == 1));
+noGoIdx = find((psych == -1));
+plot(goIdx,meanTSeries(goIdx,1),'r-o');
+hold on; plot(noGoIdx, meanTSeries(noGoIdx,1),'g-o');
+
+newGraphWin; 
+hold on; plot(goIdx, meanTSeries(goIdx,2),'b-o');
+hold on; plot(noGoIdx, meanTSeries(noGoIdx,2),'c-o');
+
+
+plot(meanTSeries(:,1),meanTSeries(:,2),'--o'); grid on; identityLine(gca);
+
+newGraphWin; 
+plot(meanTSeries(:,1),meanTSeries(:,2),'--o'); grid on; identityLine(gca);
+xlabel('Mean TS 1'); ylabel('Mean TS 2');
 
 
 %% Calculate the PPI between these two time series
 
+TR = 2; % TR of the acquisition
 % Fills in the HRF from the parameters
 clear xBF;
 % The hemodynamic response function types
 xBF.name   = 'hrf'; % (with time derivative)';     
-xBF.dt     = 1;         % The TR of the acquisition
+xBF.dt     = TR;         % The TR of the acquisition
 xBF.order  = 1;
 xBF = spm_get_bf(xBF);
 
 newGraphWin; plot(xBF.bf); grid on
 %% Psychological vector
 
-
-TR = 2; % TR of the acquisition
 % onset files are lists of stimulus onsets from beginning of nifti
 goOnsets = csvread(fullfile(workDir, 'Go.csv'), 1, 3);
 noGoOnsets = csvread(fullfile(workDir, 'NoGo.csv'), 1, 3);
@@ -196,7 +213,7 @@ val = val(idx);
 plot(tvals,val,'-')
 %% Interpolate to the TR sample spacing
 
-TRTimes = 0:TR:(TR*(nTime-1));
+TRTimes = 0:((nTime-1));
 psych = interp1(tvals,val,TRTimes,'linear','extrap');
 psych(psych < 0) = -1; psych(psych > 0) = 1;
 newGraphWin; plot(TRTimes,psych); grid on;
@@ -238,11 +255,13 @@ newGraphWin; plot(psychConv); hold on; plot(psych);
 
 reg = [meanTSeries(:,1) , psychConv,  psychConv .* meanTSeries(:,1) ];
 beta = reg\meanTSeries(:,2);
+roi1Beta = beta;
 
 beta(3)/sum(beta)
 newGraphWin;
 prediction = reg*beta;
 plot([meanTSeries(:,2), prediction])
+legend('time series', 'prediction')
 set(gca,'ylim',[-3 3]);
 
 % If you want to see the regression terms, plot tis
@@ -256,12 +275,37 @@ set(gca,'ylim',[-3 3]);
 
 reg = [meanTSeries(:,2) , psychConv,  psychConv .* meanTSeries(:,2) ];
 beta = reg\meanTSeries(:,1);
+roi2Beta = beta;
 beta
 beta(3)/sum(abs(beta))
 
 newGraphWin;
 prediction = reg*beta;
-plot([meanTSeries(:,2), prediction])
+plot([meanTSeries(:,1), prediction])
+legend('time series', 'prediction')
 set(gca,'ylim',[-3 3]);
 
-%%
+%% Correlation of BOLD signal between roi1 and roi2
+
+goIdx   = (psych == 1);
+noGoIdx = (psych == -1);
+
+newGraphWin;
+plot(meanTSeries(goIdx,1), meanTSeries(goIdx,2), 'b.');
+hold on;
+plot(meanTSeries(noGoIdx,1), meanTSeries(noGoIdx,2), 'g.');
+legend('Go', 'NoGo');
+xlabel(['roi ' roiName(1)...
+    ' beta ' roi1Beta(3)...
+    ' norm beta ' roi1Beta(3)/sum(abs(roi1Beta))], 'Interpreter', 'none');
+ylabel(['roi ' roiName(2)...
+    ' beta ' roi2Beta(3)...
+    ' norm beta ' roi2Beta(3)/sum(abs(roi2Beta))], 'Interpreter', 'none');
+plot([0 0], [-50 50], 'k');
+plot([-50 50], [0 0], 'k');
+set(gca,'ylim',[-2 2], 'xlim', [-2 2]);
+
+lsline;
+
+
+%%  Find the correlation line of the blue points and separately of the green
