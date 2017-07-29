@@ -193,7 +193,7 @@ if ischar(srch)
                     srch.projects.bool.must{end + 1}.match.group = val;
                 end
                 
-            % SESSIOS
+            % SESSIONS
             case {'sessionlabelcontains'}
                 % srch.sessions.match.label = val;
                 if ~isfield(srch,'sessions')

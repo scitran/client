@@ -1,20 +1,20 @@
-function [status, id] = exist(obj,label, containerType, varargin)
-% Not yet implemented
-%
+function [status, id, results] = exist(obj,label, containerType, varargin)
 % Tests whether a project, session, acquisition label exists in FW
 %
-%   [status, id] = st.exist(label,'containerType',[parentContainerID])
+%   [status, id, results] = st.exist(label, containerType,[parentContainerID])
 %
-% Searches for a container of particular type with the given label.  If the
+% Searches for a type of container with a specific label.  If the
 % parent container ID is known, the search is faster.
 %
 % Returns:
-%   status - Number of returned matches (0, 1 or N)
-%   id     - The id of the object(s) (acq, or session, or project)
+%   status  - Number of returned matches (0, 1 or N)
+%   id      - The id of the object(s) (acq, or session, or project)
+%   results - Cell array of the matching search result
 %
 % N.B. We are thinking about collections
 %
 % Example usage:
+% [~, id] = st.exist('VWFA FOV','projects')
 % [status, gid] = st.exist('Wandell Lab', 'groups')
 % [status, pid] = st.exist('vwfa', 'projects', 'parentID', gid{1})
 % [status, pid] = st.exist('vwfa_nims', 'projects', 'parentID', gid{1})
@@ -38,12 +38,14 @@ parentID          = p.Results.parentID;
 
 srch.path = containerType;
 %% for groups search by _id 
+
 if strcmp(containerType, 'groups')
     srch.(containerType).match.x0x5Fid = label;
 else
     srch.(containerType).match.exact_label = label;
 end
-%% add a search clause on the parentID if it exists
+
+%% Add a search clause on the parentID (if it exists)
 if ~isempty(parentID)
    switch containerType
        case 'projects'

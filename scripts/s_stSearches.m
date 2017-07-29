@@ -199,4 +199,11 @@ fprintf('Found %d matching files\n',length(files))
     'session contains subject','4279',...
     'all_data',true,'summary',true);
 
+%%  Find the number of projects owned by a specific group
+groupName = {'ALDIT','wandell','jwday','leanew1'}
+for ii=1:length(groupName)
+    projects = st.search('projects','project group',groupName{ii});
+    fprintf('%d projects owned by the %s group\n',length(projects), groupName{ii});
+end
+
 %%
