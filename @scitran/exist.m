@@ -30,7 +30,8 @@ p.addRequired('containerType',@(x)(ismember(x,allowableContainers)));
 p.addParameter('parentID',[], @ischar);
 p.parse(label, containerType, varargin{:});
 
-status = []; id = [];
+status = 0;   % Number of objects found
+id = [];      % Cell array with the id of the objects
 
 label             = p.Results.label;
 containerType     = p.Results.containerType;

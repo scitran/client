@@ -50,7 +50,6 @@ p.addParameter('session',[],@ischar);
 p.addParameter('acquisition',[],@ischar);
 p.addParameter('additionalData', struct, @isstruct);
 
-
 p.parse(group,project,varargin{:});
 
 group       = p.Results.group;
@@ -65,15 +64,17 @@ id = [];
 %% Check whether the group exists
 [status, groupID] = obj.exist(group, 'groups');
 
+% If the group doesn't exist, we should report back that we can't do
+% anything.
+if isempty(status), error('No group with name %s was found\n',group); end
 
-if isfield(additionalData, 'project')
-    prjData = additionalData.project;
-else
-    prjData = struct;
+%% OK, we have a group.  Now look for the project data.
+if isfield(additionalData, 'project'),  prjData = additionalData.project;
+else,                                   prjData = struct;
 end
 
-% If it does not exist, we check with the user and then create it.
-[status, projectID] =  obj.exist(project, 'projects', 'parentID', groupID{1});;
+% If the project does not exist, we check with the user and then create it.
+[status, projectID] =  obj.exist(project, 'projects', 'parentID', groupID{1});
 
 % If it does not exist, we check with the user and then create it.
 if ~status
@@ -88,12 +89,6 @@ end
 
 % If no session is passed, then we are done and return the project ID
 if isempty(session), id = projectID; return; end
-
-
-
-%% Test for the session label; does it exist on flywheel? If not create it
-
-
 
 %% Test for the session label; does it exist on flywheel? If not create it
 
@@ -133,24 +128,31 @@ end
 
 end
 
-
-%%
-
-%% Private method that creates a single container
+%% Creates a single container
 function id = createPrivate(obj, containerType, label, parentType, parentID, additionalContent)
-    payload.(parentType) = parentID;
-    payload.label = label;
-    additionalFields = fieldnames(additionalContent);
-    for i = 1:length(additionalFields)
-        payload.(additionalFields{i}) = additionalContent.(additionalFields{i});
-    end
-    payload = jsonwrite(payload,struct('indent','  ','replacementstyle','hex'));
-    cmd = obj.createCmd(containerType, payload);
-    [status, result] = stCurlRun(cmd);
-    if status
-        error(result);
-    end
-    result = jsonread(result);
-    id = result.x_id;
-    
+% This routine issues the command to create the container on Flywheel
+
+%
+payload.(parentType) = parentID;
+payload.label = label;
+additionalFields = fieldnames(additionalContent);
+
+for i = 1:length(additionalFields)
+    payload.(additionalFields{i}) = additionalContent.(additionalFields{i});
+end
+
+% Turn it into json and then the curl command
+payload = jsonwrite(payload,struct('indent','  ','replacementstyle','hex'));
+cmd = obj.createCmd(containerType, payload);
+
+% Execute the curl command
+[status, result] = stCurlRun(cmd);
+if status, error(result); end
+
+% Returned OK.  Pass back the result
+result = jsonread(result);
+
+% Not sure this is correction with the new jsonio, but maybe.
+id = result.x_id;
+
 end
