@@ -16,17 +16,17 @@ st = scitran('vistalab');
 % [status, gid] = st.exist('wandell', 'groups')
 % [status, pid] = st.exist('VWFA FOV', 'projects', 'parentID', gid{1})
 
-%%  Checks for the group
+%%  Validate the group
+
 thisGroup   = 'wandell';
 [status, groupID] = st.exist(thisGroup, 'groups');
-if ~status
-    fprintf('Group not found %s\n',thisGroup);
-else
-    fprintf('Group %s found\n',thisGroup);
+
+if ~status, fprintf('Group not found %s\n',thisGroup);
+else,       fprintf('Group %s found\n',thisGroup);
 end
 
+%% Create the project
 
-%% Creates the project
 thisProject = 'BIDS-Test';
 [status, projectID] = st.exist(thisProject,'projects');
 if ~status
@@ -37,7 +37,8 @@ else
 end
 
 
-%%
+%% Make the session
+
 thisSessionLabel = 'sub-01-ses-1';
 [status, sessionID] = st.exist(thisSessionLabel,'sessions','parentID',projectID);
 if ~status
@@ -47,10 +48,10 @@ else
     fprintf('Session %s exists\n',thisSessionLabel);
 end
 
+%% Make the acquistion
 
-%%
 thisAcquisitionLabel = 'anat';
-[status, acquisitionID] = st.exist(thisAcquisitionLabel,'acquisitions','parentID',sessionID{1});
+[status, acquisitionID] = st.exist(thisAcquisitionLabel,'acquisitions','parentID',sessionID);
 if ~status
     fprintf('Create the acquisition %s\n',thisAcquisitionLabel);
     acquisitionID = st.create(thisGroup,thisProject,'session',thisSessionLabel,'acquisition',thisAcquisitionLabel);
@@ -58,5 +59,10 @@ else
     fprintf('Acquisition %s exists\n',thisAcquisitionLabel);
 end
 %%
+[p,s,a] = st.projectHierarchy(thisProject);
+
+%%
+st.eraseProject(thisProject);
+
     
     

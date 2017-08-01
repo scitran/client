@@ -5,7 +5,7 @@ function [project, sessions, acquisitions] = projectHierarchy(obj, projectLabel)
 %   scitran.projectHierarchy(projectLabel)
 %
 % Input:
-%   projectLabel: value of the project label used in the search.  The
+%   projectLabel: the project label used in the search.  The
 %                 search is for 'project label exact'
 %
 % Output:
