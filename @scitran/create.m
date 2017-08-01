@@ -10,9 +10,15 @@ function id = create(obj, group, project, varargin)
 % Check if the acq exists within the session. If not, well you get the
 % idea.
 %
-% Inputs
-%  project - Required project name
-%  object-name pairs
+% Required Inputs
+%  group     - group name
+%  project   - project label
+%
+% Input parameter/values
+%  'session'        - session label
+%  'acquisition'    - acquisition label
+%  'additionalData' - Struct of additional data is unclear to me ????.
+%                     There is an example in desFMRI/uploadDES.m
 %
 % Returns:
 %   ID of the created object
@@ -28,18 +34,28 @@ function id = create(obj, group, project, varargin)
 % Create an acquisition within a session within a project
 %    idA = st.create(gName, pLabel,'session',sLabel,'acquisition',aLabel);
 %
-% When you create an acquisition, you can use the returned idA to put a
-% file, as in
+% When you create an acquisition, you can use the returned acquisition id,
+% idA, to put a file 
 %
 %     st.put('file',filename,'id',idA);
 %
-% For example, we add an acquisition to the Logothetis_DES
+% For example, we can add an acquisition to the Logothetis_DES project
+% inside of folderName, with a specific acquisition label
 %
-%   st.create('Logothetis_DES','session','folderName','acquisition','FMRI');
+%   idA = st.create('Logothetis_DES','session','folderName','acquisition','FMRI');
+%   st.put('file',fullFmriFileName,'id',idA);
+%
 % or
-%   st.create('Logothetis_DES','session','folderName','acquisition','Anatomical');
+%   idA = st.create('Logothetis_DES','session','folderName','acquisition','Anatomical');
+%   st.put('file',fullAnatomicalFileName,'id',idA);
 %
 % RF/BW Scitran Team, 2016
+
+%% Programming TODO
+%
+%   1. We should allow sending the projectID or sessionID rather than the
+%   label. This could speed things up a bit.
+%
 
 %% Input arguments are the project/session/acquisition labels
 
@@ -87,15 +103,14 @@ end
 
 % We now have a project id
 
-% If no session is passed, then we are done and return the project ID
-if isempty(session), id = projectID; return; end
 
 %% Test for the session label; does it exist on flywheel? If not create it
 
-if isfield(additionalData, 'session')
-    sesData = additionalData.session;
-else
-    sesData = struct;
+% If no session is passed, then we are done and return the project ID
+if isempty(session), id = projectID; return; end
+
+if isfield(additionalData, 'session'),     sesData = additionalData.session;
+else,                                      sesData = struct;
 end
 
 [status, sessionID] = obj.exist(session, 'sessions', 'parentID', projectID);
@@ -103,18 +118,22 @@ end
 if ~status
     sessionID = createPrivate(obj, 'sessions', session, 'project', projectID, sesData);
 elseif status ~= 1
+    fprintf('Multiple sessions with the label %s were found\n',session)
     return
 else
     sessionID = sessionID{1};
 end
 
+
 %% Test for the acquisition label; does it exist on flywheel? If not create it
+
+% If no acquisition is passed, then we are done and return the session ID
+if isempty(acquisition), id = sessionID; return; end
+
 [status, acquisitionID] = obj.exist(acquisition, 'acquisitions', 'parentID', sessionID);
 
-if isfield(additionalData, 'acquisition')
-    acqData = additionalData.acquisition;
-else
-    acqData = struct;
+if isfield(additionalData, 'acquisition'), acqData = additionalData.acquisition;
+else                                       acqData = struct;
 end
 
 if ~status
@@ -129,16 +148,27 @@ end
 end
 
 %% Creates a single container
-function id = createPrivate(obj, containerType, label, parentType, parentID, additionalContent)
+function id = createPrivate(obj, containerType, label, ...
+    parentType, parentID, additionalContent)
 % This routine issues the command to create the container on Flywheel
+% We are creating 
 
+% The containerType can be
 %
+% Check this list with LMP
+%
+%     {'projects','sessions','acquisitions'} 
+%
+% What is in the payload?  It seems to be a struct that we convert into a
+% JSON file.  What are the allowable fields in the payload?
+%
+
 payload.(parentType) = parentID;
 payload.label = label;
 additionalFields = fieldnames(additionalContent);
 
-for i = 1:length(additionalFields)
-    payload.(additionalFields{i}) = additionalContent.(additionalFields{i});
+for ii = 1:length(additionalFields)
+    payload.(additionalFields{ii}) = additionalContent.(additionalFields{ii});
 end
 
 % Turn it into json and then the curl command
