@@ -5,6 +5,12 @@
 % put the files
 %
 %
+%
+% %If needed
+% bidsDir = fullfile(stRootPath,'local','BIDS-Examples','7t_trt');
+% b = bids(bidsDir);
+%
+% Wandell, Scitran Team, 2017
 
 %%
 st = scitran('vistalab');
@@ -35,7 +41,6 @@ if ~status
 else
     fprintf('Project %s exists\n',thisProject);
 end
-
 
 %% Make the session
 

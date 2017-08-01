@@ -62,7 +62,7 @@ if lower(response) == 'y'
     end
     
     %% delete the project
-    cmd = obj.deleteContainerCmd('projects', projectLabel);
+    cmd = obj.deleteContainerCmd('projects', project{ii}.id);
     [~,~] = system(cmd);
     
 else
