@@ -1,7 +1,7 @@
-function  eraseProject(obj, projectLabel)
+function  deleteProject(obj, projectLabel)
 % Remove a project completely from a scitran site
 %
-%   @scitran.eraseProject('PROJECTLABEL');
+%   @scitran.deleteProject('PROJECTLABEL');
 %
 % This call uses the projectHierarchy method to build the hierarchy of
 % project,sessions and acquisitions.  It then deletes each of them

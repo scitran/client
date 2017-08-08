@@ -34,7 +34,7 @@
 
 % The auth returns a token and the url of the flywheel instance.  These are
 % fixed as part of 's' throughout the examples, below.
-fw = scitran('scitran');
+fw = scitran('vistalab');
 
 %% List all projects
 
