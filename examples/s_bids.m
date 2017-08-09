@@ -12,6 +12,9 @@ bidsDir = fullfile(stRootPath,'local','BIDS-Examples','7t_trt');
 % Create the bids object
 b = bids(bidsDir);
 
+% Run trough all metadata and subject data and test whether they exist:
+b.doDataExist;
+
 %% These are the routines that run when we initiate the bids object
 
 % The file paths stored are all relative to the root directory, which is

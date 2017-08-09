@@ -5,10 +5,6 @@ function subjData(obj)
 %
 % Fills the subjectData slot in the bids object.
 %
-% Programming
-%  check: does this subject have sessions?
-%    if no sessions: do the following
-%    if sessions: TODO
 %
 % DH Scitran 2017
 
