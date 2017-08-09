@@ -65,6 +65,8 @@ if isempty(which(tbx.testcmd))
             gitrepo.user,gitrepo.project,gitrepo.commit);
         fprintf('Downloading zip file ...\n');
         
+        % There is some weird thing going on with the url and websave that
+        % I don't understand.  It was working ... and now ...
         outfilename = websave(filename,url);
         if exist(outfilename,'file')
             fprintf('Unzipping to %s ...\n',repoDirectory);
