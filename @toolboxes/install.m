@@ -1,5 +1,12 @@
-function install(tbx,varargin)
+function tbxDir = install(tbx,varargin)
 % Install a  github toolbox repository as a zip file.
+%
+%     tbxDir = @toolboxes.install
+%
+% Inputs:
+% 
+% Return
+%   tbxDir - Full path to the toolbox installed directory 
 %
 % The tbx.install command brings the github repository as a zip file. 
 % The tbx.clone command clones the whole repository (history, everything)
@@ -12,6 +19,8 @@ function install(tbx,varargin)
 %
 % Or use a commit sha for a particular commit
 %   tbx.gitrepo.commit = 'fa1f7b0b4349d8be4620c29ca002bcf8620952dd';
+%
+% See also: v_stToolbox.m
 %
 % BW, Scitran Team, 2017
 
@@ -30,8 +39,6 @@ end
 
 %% Download toolbox as zip and add to path
 
-startDirectory = pwd;
-
 if isempty(which(tbx.testcmd))
     
     % This could be updated to a window that selects the
@@ -39,10 +46,10 @@ if isempty(which(tbx.testcmd))
     chdir(installDirectory);
 
     gitrepo = tbx.gitrepo;
-    repoDirectory = sprintf('%s-%s',gitrepo.project,gitrepo.commit(1:6));
-    repoDirectory = fullfile(installDirectory,repoDirectory);
+    tbxDir = sprintf('%s-%s',gitrepo.project,gitrepo.commit(1:6));
+    tbxDir = fullfile(installDirectory,tbxDir);
     
-    if exist(repoDirectory,'dir')
+    if exist(tbxDir,'dir')
         % Directory is there but not on the path
         fprintf('Repository exists, but is not on your path. Adding.\n')
     else
@@ -69,34 +76,33 @@ if isempty(which(tbx.testcmd))
         % I don't understand.  It was working ... and now ...
         outfilename = websave(filename,url);
         if exist(outfilename,'file')
-            fprintf('Unzipping to %s ...\n',repoDirectory);
+            fprintf('Unzipping to %s ...\n',tbxDir);
             unzip(outfilename);
             if ~isequal(gitrepo.commit,'master')
                 % Download name after unzipping
                 tmp = sprintf('%s-%s',gitrepo.project,gitrepo.commit);
                 % Desired name
-                movefile(tmp,repoDirectory);
+                movefile(tmp,tbxDir);
             end
             delete(outfilename); % Removes the zip file.
         end
         fprintf('Done\n');
     end
 else
-    fprintf('Found <%s> in <%s>\n',tbx.testcmd,which(tbx.testcmd));
+    tbxDir = fileparts(which(tbx.testcmd));
+    fprintf('Found <%s> in <%s>\n',tbx.testcmd,tbxDir);
     return;
 end
 
 
 %% Add repository to the path
-chdir(repoDirectory);
-addpath(genpath(pwd));
-chdir(startDirectory);
+addpath(genpath(tbxDir));
 
 % Test that we find the test command
 if isempty(which(tbx.testcmd))
     fprintf('%s not found.\n',tbx.testcmd)
 else
-    fprintf('Repository <%s> installed and added to path.\n',repoDirectory);
+    fprintf('Repository <%s> installed and added to path.\n',tbxDir);
 end
 
 end
