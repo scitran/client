@@ -76,7 +76,7 @@ classdef bids < handle
             
             % Add data directories and files for each subject
             obj.subjData;
-            
+           
             % To see the allowable data types
             % b.dataTypes
             
@@ -84,9 +84,12 @@ classdef bids < handle
             % JSON and TSV files
             obj.metaDataFiles;
 
+            % Test whether data exist
+            obj.doDataExist;
+
             % We need one of these
             % obj.validate
-
+            
         end
         
     end
