@@ -12,7 +12,8 @@ bidsDir = fullfile(stRootPath,'local','BIDS-Examples','7t_trt');
 % Create the bids object
 b = bids(bidsDir);
 
-% Run trough all metadata and subject data and test whether they exist:
+% Run trough all metadata and subject data and test whether they
+% exist  Maybe dataValidate?
 b.doDataExist;
 
 %% These are the routines that run when we initiate the bids object
