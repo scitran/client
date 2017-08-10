@@ -96,7 +96,7 @@ end
 if ~status
     projectID = createPrivate(obj, 'projects', project, 'group', groupID{1}, prjData);
 elseif status ~= 1
-    return
+    error('Multiple projects with the label <%s> were found\n',project);
 else
     projectID = projectID{1};
 end
@@ -118,8 +118,7 @@ end
 if ~status
     sessionID = createPrivate(obj, 'sessions', session, 'project', projectID, sesData);
 elseif status ~= 1
-    fprintf('Multiple sessions with the label %s were found\n',session)
-    return
+    error('Multiple sessions labeled <%s> were found\n',session)
 else
     sessionID = sessionID{1};
 end
@@ -133,17 +132,18 @@ if isempty(acquisition), id = sessionID; return; end
 [status, acquisitionID] = obj.exist(acquisition, 'acquisitions', 'parentID', sessionID);
 
 if isfield(additionalData, 'acquisition'), acqData = additionalData.acquisition;
-else                                       acqData = struct;
+else,                                      acqData = struct;
 end
 
 if ~status
+    % Doesn't exist.  Create it.
     id = createPrivate(obj, 'acquisitions', acquisition, 'session', sessionID, acqData);
 elseif status ~= 1
-    return
+    error('Multiple acquisitions labeled <%s> exist.',acquisition.source.id);
 else
+    % One exists.  That's good.  We are done.
     id = acquisitionID{1};
 end
-    
 
 end
 

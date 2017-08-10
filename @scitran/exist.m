@@ -20,6 +20,7 @@ function [status, id, results] = exist(obj,label, containerType, varargin)
 % [status, pid] = st.exist('vwfa_nims', 'projects', 'parentID', gid{1})
 % [status, sid] = st.exist('20151128_1621', 'sessions', 'parentID', pid{1})
 % [status, aid] = st.exist('localizer', 'acquisitions', 'parentID', sid{1})
+%
 % RF/BW Scitran Team, 2016
 
 %%
