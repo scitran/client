@@ -2,19 +2,17 @@
 %
 % v_stToolbox
 %
+% Create a json file describing a small github repository at vistalab.  Use
+% that file to define a toolboxes object.  Download and delete the toolbox
+% in several ways (clone, install, install a specific commit).
+%
+% Warnings are generated because we add the repository to the path, and
+% then we delete the repository.  So Matlab warns us that files are deleted
+% and removed from the path.
+%
+% Takes about 20 seconds on the Stanford network.
 %
 % BW Scitran Team, 2017
-
-% If you a json file defining the directory, you can just read it
-%
-%   tbx = toolboxes('file','WLVernierAcuity.json');
-% 
-% Or, 
-%
-%   tbx = toolboxes;
-%   tbx.read('WLVernierAcuity.json');
-%   
-% Or 
 
 %% Set up a scitran client
 st = scitran('vistalab');
@@ -42,7 +40,7 @@ chdir(fullfile(stRootPath,'local'));
 tbxDir = tbx.clone;
 
 %%
-fprintf('Removing the dtiError directory %s',tbxDir);
+fprintf('Deleting %s',tbxDir);
 rmdir(tbxDir,'s');
 
 %% Place the toolbox we created on the remote site.
@@ -57,23 +55,27 @@ fname = [baseName,ext];
 tbxFile = st.search('files','project label','DEMO','filename',fname);
 tbx = toolboxes('scitran',st,'file',tbxFile{1});
 tbxDir = tbx.install;
-
+fprintf('Downloaded and stored in %s\n',tbxDir);
+pause(1)
 %% 
-disp('Deleting the directory');
+fprintf('Deleting %s',tbxDir);
 rmdir(tbxDir,'s');
 
 %% Read a local file and download a shallow clone
 
 tbxDir = tbx.clone('cloneDepth',1);
+fprintf('Downloaded and stored in %s\n',tbxDir);
+pause(1)
+fprintf('Deleting %s',tbxDir);
 rmdir(tbxDir,'s');
 
 %% Or a particular commit as a zip file
 tbx.gitrepo.commit = '0b944082e0c850e568ed46d1ad001fcb2bc658b7';
 tbxDir = tbx.install;
 
-%% A simple method using only the scitran client object.
-tbxFile = st.search('files',...
-    'project label','SOC ECoG (Hermes)',...
-    'file name','toolboxes.json');
+fprintf('Downloaded and stored in %s\n',tbxDir);
+pause(1)
+fprintf('Deleting %s',tbxDir);
+rmdir(tbxDir,'s');
 
 %%
