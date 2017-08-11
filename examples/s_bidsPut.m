@@ -54,11 +54,21 @@ end
 
 %% Make the sessions, acquisitions and upload the data files
 
+% We think, for now, that we will make the sessionLabels a 1-d cell array
+% that marches through the subject1.session1, subject1.session2,
+% subject2.session1, ...
+%
+% *** Make the nSessions method
+nSessions = b.nSessions;   % Total number of sessions
+sessionLabels = cell(nSessions,1);
+
 % If we have no sessions, we could just do this
 for ii=1:length(b.subjectFolders)
-    % This is how we put a session.
-    thisSessionLabel = b.subjectFolders{ii};
-    fprintf('Uploading for subject %s\n',thisSessionLabel);
+    % This is how we name a session.  We should probably save all the
+    % session names in a cell array for this.
+    thisSessionLabel = b.subjectFolders{ii};  % **** save the sessionLabels
+    
+    fprintf('Uploading for session %s\n',thisSessionLabel);
     sessionID = st.create(thisGroup,thisProject,'session',thisSessionLabel);
     pause(2);
     session = st.search('sessions','session id',sessionID);
@@ -67,9 +77,12 @@ for ii=1:length(b.subjectFolders)
     data.subject.code = thisSessionLabel;
     st.update(data,'container', session{1});
     
+    % *** Should this be all 1s?  Or are we OK with 0s.
     if b.nSessions(ii) == 0
+        % We need a counter for the sessions
         % For each subject folder find the subjectData fields
         acqNames = fieldnames(b.subjectData(ii).session);
+
         for jj=1:length(acqNames)
             thisAcquisitionLabel = acqNames{jj};
             fprintf('Create acquisition %s in session %s\n',thisAcquisitionLabel,thisSessionLabel);
@@ -79,31 +92,50 @@ for ii=1:length(b.subjectFolders)
             % Upload the data files
             nFiles = length(b.subjectData(ii).session.(thisAcquisitionLabel));
             acquisition = st.search('acquisitions','acquisition id',acquisitionID);
-            if ii== 1
-                % Only for the first subject, upload some files
-                fprintf('Subject %d.  Uploading %d files',ii,nFiles);
-                for kk=1:nFiles
-                    fname = fullfile(b.directory,b.subjectData(ii).session.(thisAcquisitionLabel){kk});
-                    st.put(fname,acquisition);
-                end
-                fprintf('Done with file upload\n');
+            % Only for the first subject, upload some files
+            fprintf('Subject %d.  Uploading %d files',ii,nFiles);
+            for kk=1:nFiles
+                fname = fullfile(b.directory,b.subjectData(ii).session.(thisAcquisitionLabel){kk});
+                st.put(fname,acquisition);
             end
-            % Label the files at some point with a measurement type.
-            %    switch (thisAcquistionLabel)
-            %       case 'anat'
-            %         d.measurement = 'anatomy'
-            %       case 'func'
-            %         d.measurement = 'functional';
-            %       otherwise
-            %         d.measurement = 'unknown'
-            %     end
-            %  st.update(d,'containerid', acquisitionID,'container',acquisition{1});
-            % 
+            fprintf('Done with file upload\n');
         end
+    else
+        disp('Multiple sessions per subject.  NYI');
+        %         for ss=1:b.nSessions(ii)
+        %         end
+        
     end
 end
 
 %% Upload the metadata
+
+% Put the meta data into the Project tab as an attachment
+if ~isempty(b.projectMeta)
+    project = st.search('projects','project label',thisProject);
+    for ii=1:length(b.projectMeta)
+        fname = fullfile(b.directory,b.projectMeta{ii});
+        st.put(fname,project);
+    end
+end
+
+% Put the meta data into the Session Anotation tab as an attachment.
+for ii=1:length(b.sessionMeta)
+    if ~isempty(b.sessionMeta{ii})
+        sessionLabel = sessionLabel{ii};
+        session = st.search('sessions','session label',sessionLabel,'project label',thisProject);
+        fname = fullfile(b.directory,b.sessionMeta{ii});
+        st.put(fname,session);
+    end
+end
+
+for ii=1:length(b.subjectMeta)
+    if 1
+        disp('NYI')
+    end
+end
+
+% Put the bids object up on the site to help us when we download
 
 
 %% How to set with default group permission
