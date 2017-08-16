@@ -116,12 +116,15 @@ end
 if ~isempty(b.projectMeta)
     project = st.search('projects','project label',thisProject);
     for ii=1:length(b.projectMeta)
-        fname = fullfile(b.directory,b.projectMeta{ii});
-        st.put(fname,project);
+        localName  = fullfile(b.directory,b.projectMeta{ii});
+        remoteName = fullfile(b.directory,['bids@',b.projectMeta{ii}]);
+        copyfile(localName,remoteName);
+        st.put(remoteName,project);
+        delete(remoteName);
     end
 end
 
-% Put the meta data into the Session Anotation tab as an attachment.
+%% Put the meta data into the Session Anotation tab as an attachment.
 for ii=1:length(b.sessionMeta)
     if ~isempty(b.sessionMeta{ii})
         sessionLabel = sessionLabel{ii};
