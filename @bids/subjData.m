@@ -1,9 +1,9 @@
 function subjData(obj)
-%SUBJDATA - - Make a list of the data types for one subject
+%SUBJDATA - - Make a list of the data types for each subject
 %
 %   @bids.subjData;
 %
-% Fills the subjectData slot in the bids object.
+% Fills the subjectData slot with the session().dataType information.
 %
 %
 % DH Scitran 2017
@@ -14,7 +14,7 @@ for ss = 1:obj.nParticipants
     
     thisDir = fullfile(obj.directory,obj.subjectFolders{ss});
     
-    if obj.nSessions(ss) == 0
+    if obj.nSessions(ss) == 1
         % There is one session and thus no ses-XXX directory
         
         % gets subject data for subject s
@@ -34,7 +34,7 @@ for ss = 1:obj.nParticipants
                     fnames{ii} = fullfile(obj.subjectFolders{ss},dataFolders{kk},DataInFolder{ii});
                 end
                 % Set the cell array to the structure
-                obj.subjectData(ss).session(1).(dataFolders{kk}) = fnames;
+                obj.subjectData(ss,1).session(1).(dataFolders{kk}) = fnames;
             else
                 [~,subject] = fileparts(obj.subjectFolders{ss});
                 warning('Folder %s for subject %s not an allowable type.',dataFolders{kk},subject);
@@ -67,7 +67,7 @@ for ss = 1:obj.nParticipants
                         fnames{ii} = ...
                             fullfile(obj.subjectFolders{ss},sessionFolders{ff},dataFolders{kk},DataInFolder{ii});
                     end
-                    obj.subjectData(ss).session(ff).(dataFolders{kk}) = fnames;
+                    obj.subjectData(ss,1).session(ff).(dataFolders{kk}) = fnames;
                 else
                     [~,subject] = fileparts(obj.subjectFolders{ss});
                     warning('Folder %s for subject %s not an allowable type.',dataFolders{kk},subject);

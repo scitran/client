@@ -4,18 +4,17 @@
 % create the Flywheel Project/Session/Acquisition structure and where we
 % put the files
 %
+% The next case to check
 %
-%
-% %If needed
-% bidsDir = fullfile(stRootPath,'local','BIDS-Examples','7t_trt');
-% b = bids(bidsDir);
+%   bidsDir = fullfile(stRootPath,'local','BIDS-Examples','7t_trt');
+%   b = bids(bidsDir);
 %
 % Wandell, Scitran Team, 2017
 
 %% Here is an example bids data set
 
-bidsDir = fullfile(stRootPath,'local','BIDS-Examples','ds001');
-
+% bidsDir = fullfile(stRootPath,'local','BIDS-Examples','ds001');
+bidsDir = fullfile(stRootPath,'local','BIDS-Examples','7t_trt');
 % Create the bids object
 b = bids(bidsDir);
 
@@ -59,29 +58,38 @@ end
 % subject2.session1, ...
 %
 % *** Make the nSessions method
-nSessions = b.nSessions;   % Total number of sessions
+nSessions = sum(b.nSessions);   % Total number of sessions
 sessionLabels = cell(nSessions,1);
 
 % If we have no sessions, we could just do this
+cntr = 1;
 for ii=1:length(b.subjectFolders)
-    % This is how we name a session.  We should probably save all the
-    % session names in a cell array for this.
-    thisSessionLabel = b.subjectFolders{ii};  % **** save the sessionLabels
     
-    fprintf('Uploading for session %s\n',thisSessionLabel);
-    sessionID = st.create(thisGroup,thisProject,'session',thisSessionLabel);
-    pause(2);
-    session = st.search('sessions','session id',sessionID);
+    nSessions = b.nSessions(ii);
     
-    % We can add more subject fields here
-    data.subject.code = thisSessionLabel;
-    st.update(data,'container', session{1});
-    
-    % *** Should this be all 1s?  Or are we OK with 0s.
-    if b.nSessions(ii) == 0
+    for ss = 1:nSessions
+        
+        % This is how we name a session.  We should probably save all the
+        % session names in a cell array for this.
+        if nSessions > 1
+            thisSessionLabel = sprintf('%s-ses-%d',b.subjectFolders{ii},ss);  % **** save the sessionLabels
+        else
+            thisSessionLabel = sprintf('%s',b.subjectFolders{ii});  % **** save the sessionLabels
+        end
+        sessionLabels{cntr} = thisSessionLabel; cntr = cntr+1;
+        
+        fprintf('Uploading for session %s\n',thisSessionLabel);
+        sessionID = st.create(thisGroup,thisProject,'session',thisSessionLabel);
+        pause(2);
+        session = st.search('sessions','session id',sessionID);
+        
+        % We can add more subject fields here
+        data.subject.code = thisSessionLabel;
+        st.update(data,'container', session{1});
+        
         % We need a counter for the sessions
         % For each subject folder find the subjectData fields
-        acqNames = fieldnames(b.subjectData(ii).session);
+        acqNames = fieldnames(b.subjectData(ii).session(ss));
 
         for jj=1:length(acqNames)
             thisAcquisitionLabel = acqNames{jj};
@@ -90,21 +98,16 @@ for ii=1:length(b.subjectFolders)
             pause(2);
             
             % Upload the data files
-            nFiles = length(b.subjectData(ii).session.(thisAcquisitionLabel));
+            nFiles = length(b.subjectData(ii).session(ss).(thisAcquisitionLabel));
             acquisition = st.search('acquisitions','acquisition id',acquisitionID);
-            % Only for the first subject, upload some files
-            fprintf('Subject %d.  Uploading %d files',ii,nFiles);
+            
+            fprintf('Subject %d. Session %d.  Uploading %d files',ii,ss,nFiles);
             for kk=1:nFiles
-                fname = fullfile(b.directory,b.subjectData(ii).session.(thisAcquisitionLabel){kk});
+                fname = fullfile(b.directory,b.subjectData(ii).session(ss).(thisAcquisitionLabel){kk});
                 st.put(fname,acquisition);
             end
-            fprintf('Done with file upload\n');
+            fprintf('Done uploading.\n');
         end
-    else
-        disp('Multiple sessions per subject.  NYI');
-        %         for ss=1:b.nSessions(ii)
-        %         end
-        
     end
 end
 

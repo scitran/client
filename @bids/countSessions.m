@@ -1,23 +1,20 @@
-function [nSessions,participantList] = checkSessions(obj,participantList)
-% DEPRECATED
-%
-% Using countSessions instead.
-%
+function nSessions = countSessions(obj)
 % CHECKSESSIONS - Count the number of session folders for each participant
 %
-%    [nSessions,participantList] = obj.checkSessions(participantList)
+%   nSessions = obj.countSessions;
 %
 % DH,BW Scitran Team, 2017
 
 %% If empty, report on all of them
-if ~exist('participantList','var') || isempty(participantList)
-    participantList = 1:obj.nParticipants; 
-end
+% if ~exist('participantList','var') || isempty(participantList)
+%     participantList = 1:obj.nParticipants; 
+% end
 
 % nSessions = sum(obj.nSessions);
 
 %% For each participant, find the number of sessions
 
+nSessions = zeros(obj.nParticipants,1);
 for ii=1:(obj.nParticipants)
     
     % Find the folders beginning with 'ses'
@@ -30,7 +27,7 @@ for ii=1:(obj.nParticipants)
     % If the count is 0, then there is really one session.  Otherwise
     % store the full count.
     if ~isempty(sessionFolders),  nSessions(ii) = length(sessionFolders);
-    else                          nSessions(ii) = 1;
+    else,                         nSessions(ii) = 1;
     end
     
 

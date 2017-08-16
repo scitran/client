@@ -1,5 +1,7 @@
 function participants(obj)
-% PARTICIPANTS
+% DEPRECATED
+%
+%  PARTICIPANTS
 %
 %   @bids.participants
 %
@@ -7,22 +9,16 @@ function participants(obj)
 %
 % DH Scitran, 2017
 
-curDir = pwd;
 
-chdir(obj.directory);
+%% List the number of subject folders 
 
-% Check for the file and load it
-if exist('participants.tsv','file')
-    participants = readtable('participants.tsv','filetype','text','delimiter','\t');
-    obj.nParticipants = length(participants.participant_id);
-else
-    error('Missing participants.tsv file');
-end
+folders = dirPlus(obj.directory,...
+    'ReturnDirs',true,...
+    'DirFilter','sub-*',...
+    'PrependPath',false);
 
-chdir(curDir);
+obj.nParticipants = length(folders);
 
-% fw.putBids will need to put the participants file on the
-% project
-%
-% fw.put('participants.tsv','container is the project');
+
+
 end
