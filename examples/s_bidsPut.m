@@ -57,7 +57,6 @@ end
 % that marches through the subject1.session1, subject1.session2,
 % subject2.session1, ...
 %
-% *** Make the nSessions method
 nSessions = sum(b.nSessions);   % Total number of sessions
 sessionLabels = cell(nSessions,1);
 
@@ -84,7 +83,7 @@ for ii=1:length(b.subjectFolders)
         session = st.search('sessions','session id',sessionID);
         
         % We can add more subject fields here
-        data.subject.code = thisSessionLabel;
+        data.subject.code = sprintf('%s',b.subjectFolders{ii});
         st.update(data,'container', session{1});
         
         % We need a counter for the sessions
