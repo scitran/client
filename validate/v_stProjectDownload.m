@@ -18,7 +18,7 @@ chdir(fullfile(stRootPath,'local'));
 st = scitran('vistalab');
 
 %% Choose the project
-projectLabel = 'BIDS-Test';
+projectLabel = 'BIDS-RoundTrip';
 [~, id] = st.exist(projectLabel,'projects');
 projectID  = id{1};
 
