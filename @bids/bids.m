@@ -25,7 +25,7 @@ classdef bids < handle
     %   fileName = @bids.subjectData(ii).session(jj).dataType{kk}
     %   fullfile(directory,fileName);
     %
-    % To validate use: @bids.dataCheck;
+    % To validate use: @bids.validate;
     %
     % To see the allowable data types: @bids.dataTypes
     %
@@ -44,13 +44,21 @@ classdef bids < handle
         % folders always start with sub-
         subjectFolders = '';   % Cell array of paths to subject folder names
         
-        % Struct array with format
+        % dataFiles is an array of structs with format
         %
-        %   subjectData(ss).session(nn).<dataType>
+        %   dataFiles(ss).session(nn).<dataType>
         %
-        % is a cell array to the dataType files in the nn^th session for
-        % the ss^th subject.
-        subjectData = '';
+        % Each element is a cell array that stores the data file names for
+        % <dataType> in the nn^th session for the ss^th subject.  For
+        % example,
+        %
+        %   dataFiles(2).session(1).anat
+        %
+        % is a cell array of files names in the anat folder of subject 2,
+        % session 1.  (Maybe this should be dataFiles(ss,nn).anat.  But we
+        % did it this way because different subjects could have different
+        % numbers of sessions and different data types).
+        dataFiles = '';
         
         % Cell arrays with the relative file paths to these project,
         % subject or session level metadata.
@@ -73,16 +81,16 @@ classdef bids < handle
             obj.directory = directory;
             
             % Add folder for each participant
-            obj.subjFolders;
+            obj.listSubjectFolders;
             
             obj.countSessions;
             
             % Add data directories and files for each subject
-            obj.subjData;
+            obj.listDataFiles;
             
             % Auxiliary files in the root directory
             % JSON and TSV files
-            obj.metaDataFiles;
+            obj.listMetaDataFiles;
             
         end
     

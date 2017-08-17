@@ -29,11 +29,27 @@ delete(destination)
 rmdir(tarfile,'s');
 
 %% Now, rearrange the files to be in the BIDS organization
-subjectMetaFiles = dirPlus('FIND the bids@sub files')
+bidsDir = fullfile(pwd,projectLabel);
+subjectMetaFiles = dirPlus(bidsDir,...
+            'ReturnDirs',false,...
+            'PrependPath',false,...
+            'FileFilter','bids@sub');
+fprintf('Moving %d subject metadata files\n',length(subjectMetaFiles));
+
+curDir = pwd; chdir(bidsDir);
 for ii=1:length(subjectMetaFiles)
     % Move the files into the appropriate sub folder
-    %
+    % Get the two parts on other side of the @
+    splitName = split(subjectMetaFiles{ii},'@');
+    % Get the subject name from the front of the 2nd part
+    subName    = split(splitName{2},'_');
+    % Move the file into the folder with the subject name
+    movefile(subjectMetaFiles{ii},fullfile(subName{1},splitName{2}));
 end
+chdir(curDir);
+
+newBids = bids(bidsDir);
+
 
 %% Do we strip the sub-01 and rename the sub-01-XXX folders?
 

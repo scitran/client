@@ -1,5 +1,5 @@
-function [projectMeta, subjectMeta, sessionMeta] = metaDataFiles(obj)
-% METADATAFILE
+function [projectMeta, subjectMeta, sessionMeta] = listMetaDataFiles(obj)
+% listMetaDataFiles
 %
 %  Make a cell array of the meta data files at each of the different levels
 %    Project (root directory)     cell is 1

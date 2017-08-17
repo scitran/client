@@ -1,5 +1,5 @@
-function subjData(obj)
-%SUBJDATA - - Make a list of the data types for each subject
+function listDataFiles(obj)
+%listDataFiles - - Make a list of the data types for each subject
 %
 %   @bids.subjData;
 %
@@ -34,10 +34,10 @@ for ss = 1:obj.nParticipants
                     fnames{ii} = fullfile(obj.subjectFolders{ss},dataFolders{kk},DataInFolder{ii});
                 end
                 % Set the cell array to the structure
-                obj.subjectData(ss,1).session(1).(dataFolders{kk}) = fnames;
+                obj.dataFiles(ss,1).session(1).(dataFolders{kk}) = fnames;
             else
                 [~,subject] = fileparts(obj.subjectFolders{ss});
-                warning('Folder %s for subject %s not an allowable type.',dataFolders{kk},subject);
+                warning('Data folder %s for subject %s not an allowable type.',dataFolders{kk},subject);
             end
         end
     else
@@ -67,10 +67,10 @@ for ss = 1:obj.nParticipants
                         fnames{ii} = ...
                             fullfile(obj.subjectFolders{ss},sessionFolders{ff},dataFolders{kk},DataInFolder{ii});
                     end
-                    obj.subjectData(ss,1).session(ff).(dataFolders{kk}) = fnames;
+                    obj.dataFiles(ss,1).session(ff).(dataFolders{kk}) = fnames;
                 else
                     [~,subject] = fileparts(obj.subjectFolders{ss});
-                    warning('Folder %s for subject %s not an allowable type.',dataFolders{kk},subject);
+                    warning('Data folder %s for subject %s not an allowable type.',dataFolders{kk},subject);
                 end
             end
         end

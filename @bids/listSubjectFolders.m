@@ -1,5 +1,5 @@
-function subjFolders(obj)
-% SUBJFOLDERS - Make a list of all the subject folders
+function listSubjectFolders(obj)
+% listSubjectFolders - Make a list of all the subject folders
 %
 %   @bids.subjFolders;
 %
@@ -12,13 +12,12 @@ function subjFolders(obj)
 folders = dirPlus(obj.directory,...
     'ReturnDirs',true,...
     'DirFilter','sub-*',...
+    'Depth',0,...
     'PrependPath',false);
 
 obj.subjectFolders = folders;
 
-%% The participants.tsv is optional.
-
-% But if it exists, we check that it matches the subject folders
+%% If the participants.tsv exists, check that it matches the subject folders
 
 participantsFile = fullfile(obj.directory,'participants.tsv');
 if exist(participantsFile,'file')
