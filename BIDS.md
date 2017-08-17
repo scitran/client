@@ -2,22 +2,19 @@
 
 ## Planning
 
-Write a Matlab BIDS validator
+We have a Matlab class for BIDS. It walks through any of the BIDS-example directories and finds all the files, storing the directory tree.
 
-* First Local - check that the local data have file names and directory tree compliant with BIDS
-* Second Local - check that the content of the JSON and NII files are consistent and compliant
-* Third Remote - Check that the session and acquisition names are compliant with BIDS
-* Fourth Remote - Check that the files in the sessions and acquisition are BIDS compliant
+We have an example of using the BIDS object and uploading all the files to a Flywheel project.
 
-We will write a BIDS class (@bids) that contains the information in the directory tree (dirwalk or dirPlus can get us the directories and files.  These are on the FileExchange Central at Mathworks).  
+We have an example of downloading a project that was uploaded as BIDS, and writing it back out as a BIDS directory.  (Round trip).
 
-We will write validation methods.
-
-* @bids.validateDirectoryTree(session)
-* @bids.validateDirectoryFiles(directory)
-* @bids.validateFileContents(dataType)
+We have one brief validate method, and others are in the works.
 
 ## The BIDS class
+
+Methods include - bids (constructor), listSubjectFolders, listDataFiles, listMetaDataFiles, validate, countSessions
+
+Directory names are stored relative to the main directory.
 
 ### Variables
 
@@ -29,6 +26,11 @@ We will write validation methods.
 * Data types in each session
 * Number of runs of a given data type in a session
 * Metadata files (json and tsv)
-* 
+
+## Usage in scripts
+
+s_bidsPut
+
+v_stProjectDownload
 
 
