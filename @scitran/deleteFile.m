@@ -4,7 +4,8 @@ function [status, result, cmd] = deleteFile(obj, file, varargin )
 %   [status, result, cmd] = scitran.deleteFile(obj, file, varargin)
 %
 % Required parameter
-%    file - cell with one element, struct, or string (needs optional then)
+%    file - cell with one element, struct, or string.  If a string, then it
+%           must have a containerType and containerID.
 %
 % Optional parameters for string
 %    containerType - {'projects','sessions','acquisitions','collections'}

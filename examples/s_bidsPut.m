@@ -30,6 +30,10 @@ st = scitran('vistalab');
 
 %%  Validate the group
 %
+%   b.createProject(projectName, groupName);
+%
+
+
 thisGroup   = 'wandell';
 [status, groupID] = st.exist(thisGroup, 'groups');
 
@@ -52,6 +56,8 @@ else
 end
 
 %% Make the sessions, acquisitions and upload the data files
+%
+%  b.uploadData;
 
 % We think, for now, that we will make the sessionLabels a 1-d cell array
 % that marches through the subject1.session1, subject1.session2,
@@ -93,7 +99,9 @@ for ii=1:length(b.subjectFolders)
         for jj=1:length(acqNames)
             thisAcquisitionLabel = acqNames{jj};
             fprintf('Create acquisition %s in session %s\n',thisAcquisitionLabel,thisSessionLabel);
-            acquisitionID = st.create(thisGroup,thisProject,'session',thisSessionLabel,'acquisition',thisAcquisitionLabel);
+            acquisitionID = st.create(thisGroup,thisProject,...
+                'session',thisSessionLabel,...
+                'acquisition',thisAcquisitionLabel);
             pause(2);
             
             % Upload the data files
@@ -105,38 +113,53 @@ for ii=1:length(b.subjectFolders)
                 fname = fullfile(b.directory,b.subjectData(ii).session(ss).(thisAcquisitionLabel){kk});
                 st.put(fname,acquisition);
             end
-            fprintf('Done uploading.\n');
         end
+        fprintf('Done uploading session %s.\n',session{1}.source.label);
     end
 end
 
-%% Upload the metadata
+%% Upload the PROJECT metadata
+%
+% b.uploadMetadata(varargin)
+%
 
 % Put the meta data into the Project tab as an attachment
 if ~isempty(b.projectMeta)
     project = st.search('projects','project label',thisProject);
     for ii=1:length(b.projectMeta)
         localName  = fullfile(b.directory,b.projectMeta{ii});
-        remoteName = fullfile(b.directory,['bids@',b.projectMeta{ii}]);
-        copyfile(localName,remoteName);
-        st.put(remoteName,project);
-        delete(remoteName);
+        st.put(localName,project);
     end
 end
 
-%% Put the meta data into the Session Anotation tab as an attachment.
-for ii=1:length(b.sessionMeta)
-    if ~isempty(b.sessionMeta{ii})
-        sessionLabel = sessionLabel{ii};
-        session = st.search('sessions','session label',sessionLabel,'project label',thisProject);
-        fname = fullfile(b.directory,b.sessionMeta{ii});
-        st.put(fname,session);
+%% Upload the SESSION meta data into the anotation tab as an attachment.
+
+cntr = 1;
+project = st.search('projects','project label',thisProject);
+for ii=1:length(b.subjectFolders)
+    for ss = 1:b.nSessions(ii)
+        session = st.search('sessions','session label',sessionLabels{cntr},'project label',thisProject);
+        theseFiles = b.sessionMeta{ii,ss};
+        fprintf('Uploading %d files to %s\n',length(theseFiles),session{1}.source.label);
+        for ff = 1:length(theseFiles)
+            localName = fullfile(b.directory,theseFiles{ff});
+            st.put(localName,session);            
+        end
+        cntr = cntr+1;
     end
 end
+
+%% Upload the subject meta data
+% project = st.search('projects','project label',thisProject);
 
 for ii=1:length(b.subjectMeta)
-    if 1
-        disp('NYI')
+    theseFiles = b.subjectMeta{ii};
+    for ff = 1:length(theseFiles)
+        localName = fullfile(b.directory,theseFiles{ff});
+        [~,name,ext] = fileparts(theseFiles{ff});
+        remoteName = ['bids@',name,ext];
+        copyfile(localName,remoteName)
+        st.put(remoteName,project);
     end
 end
 
