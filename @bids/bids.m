@@ -22,7 +22,7 @@ classdef bids < handle
     % Note the array of structs () and the array of cells {}.
     %
     %   ii = subject, jj = session, and kk = file 
-    %   fileName = @bids.subjectData(ii).session(jj).dataType{kk}
+    %   fileName = @bids.dataFiles(ii).session(jj).dataType{kk}
     %   fullfile(directory,fileName);
     %
     % To validate use: @bids.validate;
@@ -31,10 +31,15 @@ classdef bids < handle
     %
     % Example:
     %   thisBids = bids(fullfile(stRootPath,'local','BIDS-examples','ds001'));
-    %   thisBids.participants;
+    %   thisBids.nParticipants
+    %   thisBids.validate
+    %   sum(thisBids.nSessions)
+    %
+    % See also: s_bidsPut.m, v_stProjectDownload.m
     %
     % DH/BW Scitran Team, 2017
     
+    %%
     properties (SetAccess = public, GetAccess = public)
         
         directory = '';        % Root directory
@@ -43,6 +48,9 @@ classdef bids < handle
         % Cell array of relative paths to each subject folder.  Subject
         % folders always start with sub-
         subjectFolders = '';   % Cell array of paths to subject folder names
+        
+        % Potential, not yet implemented
+        % sessionFolders = '';
         
         % dataFiles is an array of structs with format
         %
@@ -68,7 +76,7 @@ classdef bids < handle
         
     end
     
-    % Methods (public)
+    %% Methods (public)
     methods
         
         function obj = bids(directory,varargin)
@@ -101,7 +109,7 @@ classdef bids < handle
     
         end
 
-    
+    %% Static methods for the bids class
     methods (Static)
         
         function val = dataTypes

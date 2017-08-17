@@ -24,7 +24,7 @@ for ii=1:length(dirList)
     fprintf('\n\nDirectory %s ***\n',dirList{ii});
     bidsDir = fullfile(stRootPath,'local','BIDS-Examples',dirList{ii});
     b = bids(bidsDir);
-    b.dataCheck;
+    b.validate;
     disp(b)
 end
 

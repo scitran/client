@@ -15,6 +15,7 @@
 
 % bidsDir = fullfile(stRootPath,'local','BIDS-Examples','ds001');
 bidsDir = fullfile(stRootPath,'local','BIDS-Examples','7t_trt');
+
 % Create the bids object
 b = bids(bidsDir);
 
@@ -33,7 +34,6 @@ st = scitran('vistalab');
 %   b.createProject(projectName, groupName);
 %
 
-
 thisGroup   = 'wandell';
 [status, groupID] = st.exist(thisGroup, 'groups');
 
@@ -46,7 +46,7 @@ end
 % Try running this against 'dev-flywheel.io' and see if the default group
 % permissions are set correctly.
 
-thisProject = 'BIDS-Test';
+thisProject = 'BIDS-RoundTrip';
 [status, projectID] = st.exist(thisProject,'projects');
 if ~status
     fprintf('Create the project %s\n',thisProject);
@@ -93,8 +93,8 @@ for ii=1:length(b.subjectFolders)
         st.update(data,'container', session{1});
         
         % We need a counter for the sessions
-        % For each subject folder find the subjectData fields
-        acqNames = fieldnames(b.subjectData(ii).session(ss));
+        % For each subject folder find the dataFiles fields
+        acqNames = fieldnames(b.dataFiles(ii).session(ss));
 
         for jj=1:length(acqNames)
             thisAcquisitionLabel = acqNames{jj};
@@ -105,12 +105,12 @@ for ii=1:length(b.subjectFolders)
             pause(2);
             
             % Upload the data files
-            nFiles = length(b.subjectData(ii).session(ss).(thisAcquisitionLabel));
+            nFiles = length(b.dataFiles(ii).session(ss).(thisAcquisitionLabel));
             acquisition = st.search('acquisitions','acquisition id',acquisitionID);
             
             fprintf('Subject %d. Session %d.  Uploading %d files',ii,ss,nFiles);
             for kk=1:nFiles
-                fname = fullfile(b.directory,b.subjectData(ii).session(ss).(thisAcquisitionLabel){kk});
+                fname = fullfile(b.directory,b.dataFiles(ii).session(ss).(thisAcquisitionLabel){kk});
                 st.put(fname,acquisition);
             end
         end
@@ -166,62 +166,11 @@ end
 % Put the bids object up on the site to help us when we download
 
 
-%% How to set with default group permission
-% # Create a project (with default group permissions)
-% curl -X POST -H "Content-Type: application/json" -H "Authorization: scitran-user <your_API_key>" -d '{
-%     "label": "your new project",
-%         "group": "scitran"
-% }' "https://docker.local.flywheel.io:8443/api/projects"
+%%
+% [p,s,a] = st.projectHierarchy(thisProject);
 
-%% How to set the subject code
-
-% Scitran data model V2
-% https://github.com/scitran/core/wiki/Data-Model
-
-% This is handled in the @scitran.update method
 %
-% # Set the subject code
-% curl -X PUT -H "Content-Type: application/json" -H "Authorization: scitran-user <your_API_key>" -d '{
-%     "subject": {
-%         "code": "the subject code"
-%     }
-% }' "https://docker.local.flywheel.io:8443/api/sessions/<session_id>"
+% st.deleteProject(thisProject);
 
 %%
-% 
-% thisSessionLabel = b.subjectFolders{ii};
-% fprintf('Uploading for subject %s\n',thisSessionLabel);
-% % [status, sessionID] = st.exist(thisSessionLabel,'sessions','parentID',projectID);
-% if ~status
-%     fprintf('Creating session <%s>\n',thisSessionLabel);
-%     sessionID = st.create(thisGroup,thisProject,'session',thisSessionLabel);
-% elseif length(status) > 1
-%     fprintf('Multiple sessions with the label <%s> found\n',thisSessionLabel);
-%     for kk=1:status
-%         sessionList = st.search('sessions','session id',sessionID{kk});
-%         sessionList{1}.source.project
-%     end
-% else
-%     fprintf('Session <%s> exists\n',thisSessionLabel);
-% end
-    
-%% Make the acquistion
-
-% thisAcquisitionLabel = 'anat';
-% [status, acquisitionID] = st.exist(thisAcquisitionLabel,'acquisitions','parentID',sessionID);
-% if ~status
-%     fprintf('Create the acquisition %s\n',thisAcquisitionLabel);
-%     acquisitionID = st.create(thisGroup,thisProject,'session',thisSessionLabel,'acquisition',thisAcquisitionLabel);
-% else
-%     fprintf('Acquisition %s exists\n',thisAcquisitionLabel);
-% end
-
-%%
-
-%%
-[p,s,a] = st.projectHierarchy(thisProject);
-
-%%
-st.deleteProject(thisProject);
-
 

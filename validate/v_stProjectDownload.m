@@ -1,17 +1,23 @@
 %% Download an entire project 
 %
-% Used to start the process of making a BIDS compliant directory tree
+% This examples is for a BIDS compliant directory tree.  The download is
+% arranged into a BIDS data structure.
 %
-% v_stProjectDownload
+% We need to test with more examples.
+%
+% This will become a method, something like
+%
+%    thisBids = @scitran.bidsDownload(projectLabel,'destination',destination);
+%
+% BW, Scitran Team, 2017
 
-%%
+%% Location for testing
 chdir(fullfile(stRootPath,'local'));
 
-%% Open a channel
+%% Open the database
 st = scitran('vistalab');
 
 %% Choose the project
-
 projectLabel = 'BIDS-Test';
 [~, id] = st.exist(projectLabel,'projects');
 projectID  = id{1};
@@ -38,68 +44,24 @@ fprintf('Moving %d subject metadata files\n',length(subjectMetaFiles));
 
 curDir = pwd; chdir(bidsDir);
 for ii=1:length(subjectMetaFiles)
-    % Move the files into the appropriate sub folder
-    % Get the two parts on other side of the @
+    % Move the files into the appropriate sub folder,  This code is not yet
+    % adequately general across different directory names.  Just a start.
+
+    % The subject data are stored as bids@sub-01_<...>
     splitName = split(subjectMetaFiles{ii},'@');
+    
     % Get the subject name from the front of the 2nd part
     subName    = split(splitName{2},'_');
+    
     % Move the file into the folder with the subject name
     movefile(subjectMetaFiles{ii},fullfile(subName{1},splitName{2}));
 end
 chdir(curDir);
 
+%% Here is the new bids 
 newBids = bids(bidsDir);
-
 
 %% Do we strip the sub-01 and rename the sub-01-XXX folders?
 
 
 %%
-
-% jstruct = jsonread('projectTicket.json');
-% 
-% case {'projectticket'}
-% 
-%     
-%     
-%     
-%     
-%     % Basic idea to get a ticket for download
-%     
-%     clear payload
-%     payload.optional = true;
-%     payload.nodes.level = 'project';
-%     payload.nodes.x0x5Fid = project{1}.id;
-%     
-%     % Format for curl command
-%     jPayload = jsonwrite(payload,struct('indent','  ','replacementstyle','hex'));
-%     jPayload = regexprep(jPayload, '\n|\t', ' ');
-%     jPayload = regexprep(jPayload, ' *', ' ');
-%     
-%     jPayload = strrep(jPayload,'"nodes":','"nodes":[');
-%     jPayload = strrep(jPayload,'" } ','" }] ');
-%     
-%     cmd = sprintf('curl ''%s/api/download'' -H ''Authorization: %s'' --data-binary ''%s''',st.url, st.showToken, jPayload);
-%     [status, result] = system(cmd);
-%     
-%     sResult = jsonread(result);
-%     
-%     % curl https://flywheel.scitran.stanford.edu -H "Authorization":"scitran-user OQlKDTTTlkZsmDDQi_Pz3r1-_2E1m5D24REuP_3LNggUrwEkMVI1Up3i" --data-binary '{ "optional": true, "nodes": { "level": "project", "_id": "5993e2ba97276d001b87ed6c" } }'
-%     
-%     % curl 'https://flywheel.scitran.stanford.edu/api/download'
-%     % -H 'Authorization: z9Ssc187IE_Kb28h-6u6n6aoiwvaZtHSFx9if5Z-ijvGT3yhA9bS-Pjd'
-%     % --data-binary '{"optional":true,"nodes":[{"level":"project","_id":"5993e2ba97276d001b87ed6c"}]}'
-%     
-%     case {'projectdownload'}
-%         % With the ticket, which is only good for a minute, you can download the
-%         % whole thing.
-%         % curl 'https://flywheel.scitran.stanford.edu/api/download?ticket=e0cd7b7e-9b2e-4310-aebc-bcb3c823643b'
-%         
-%         dcmd = sprintf('curl ''%s/api/download?ticket=%s'' > deleteMe.tar',st.url,foo.ticket);
-%         
-%         [status, result] = system(dcmd);
-% 
-% 
-% %%
-% cmd = 'curl 'https://flywheel.scitran.stanford.edu' -H 'Authorization: OQlKDTTTlkZsmDDQi_Pz3r1-_2E1m5D24REuP_3LNggUrwEkMVI1Up3i' --data-binary '{ "optional": true, "nodes": { "level": "project", "_id": "5993e2ba97276d001b87ed6c" } }'';
-% jPayload = '{ "optional": true, "nodes": [{ "level": "project", "_id": "5993e2ba97276d001b87ed6c" }]}';
