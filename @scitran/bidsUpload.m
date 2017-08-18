@@ -1,43 +1,8 @@
-%% s_bidsPut
-%
-% In which we take a bids data structure (e.g., s_bids.m) and start to
-% create the Flywheel Project/Session/Acquisition structure and where we
-% put the files
-%
-% The next case to check
-%
-%   bidsDir = fullfile(stRootPath,'local','BIDS-Examples','7t_trt');
-%   b = bids(bidsDir);
-%   st.bidsUpload(@bids,'project label',projectLabel);
-%   st.bidsDownload(projectLabel)
-%
-% Wandell, Scitran Team, 2017
-
-%% Here is an example bids data set
-
-thisProject = 'BIDS-Test';
-
-bidsDir = fullfile(stRootPath,'local','BIDS-Examples','ds001');
-% bidsDir = fullfile(stRootPath,'local','BIDS-Examples','7t_trt');
-
-% Create the bids object
-b = bids(bidsDir);
-b.projectLabel = thisProject;
-
-%%
-st = scitran('vistalab');
-
-% This works.  id is a cell and id{1} is an id string
-% [~, id] = st.exist('VWFA FOV','projects')
-%
-% % And this works
-% [status, gid] = st.exist('wandell', 'groups')
-% [status, pid] = st.exist('VWFA FOV', 'projects', 'parentID', gid{1})
-
-%% Create the project
+function projectID = bidsUpload(bidsData, projectLabel,varargin)
 %
 %   b.createProject(projectName, groupName);
 %
+% BW/DH Scitran Team, 2017
 
 thisGroup   = 'wandell';
 [~, groupID] = st.exist(thisGroup, 'groups');
@@ -167,14 +132,4 @@ for ii=1:length(b.subjectMeta)
     end
 end
 
-% Put the bids object up on the site to help us when we download
-
-
-%%
-% [p,s,a] = st.projectHierarchy(thisProject);
-
-%
-% st.deleteProject(thisProject);
-
-%%
-
+end
