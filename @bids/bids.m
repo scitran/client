@@ -42,6 +42,7 @@ classdef bids < handle
     %%
     properties (SetAccess = public, GetAccess = public)
         
+        projectLabel = '';     % Name of the BIDS project
         directory = '';        % Root directory
         nSessions = [];        % Vector of nSessions for each participant
         
@@ -83,6 +84,9 @@ classdef bids < handle
             % The constructor - builds the bids object
             p = inputParser;
             p.addRequired('directory',@(x)(exist(x,'dir')));
+            
+            p.addParameter('label','',@ischar);
+
             p.parse(directory,varargin{:});
             
             % chdir(directory);
@@ -99,6 +103,13 @@ classdef bids < handle
             % Auxiliary files in the root directory
             % JSON and TSV files
             obj.listMetaDataFiles;
+            
+            if isempty(p.Results.label)
+                [~,n] = fileparts(obj.directory);
+                obj.projectLabel = n;
+            else
+                obj.projectLabel = p.Results.label;
+            end
             
         end
     

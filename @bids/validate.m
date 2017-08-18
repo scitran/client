@@ -1,9 +1,11 @@
 function nWarnings = validate(obj)
-% validate:
-%   1) Test whether the data files in a BIDS structure exist
-%   2) Test whether all files in the directory are included in the BIDS structure
+% Validate the bids directory tree structure
 %
 %     nWarnings = @bids.validate
+%
+%  1) Tests whether the data files in a BIDS structure exist
+%  2) Tests whether all files found in the directory are included in the
+%     BIDS structure 
 %
 % Returns
 %   nWarnings is number of warnings about missing files
@@ -14,7 +16,7 @@ function nWarnings = validate(obj)
 nWarnings = 0;
 
 %%
-%% %%% First check whether the data files in a BIDS structure exist
+%% %%% First check whether the data files in the BIDS structure exist
 %%
 
 %% Do project metadata exist?
@@ -73,7 +75,7 @@ for kk = 1:length(obj.dataFiles) % run through subjects
 end
 
 %%
-%% %%% Now check whether all files in the directory are included in the BIDS structure
+%% %%% Second check whether all files in the directory are included in the BIDS structure
 %%
 
 % Get a list of all the files:
@@ -121,7 +123,7 @@ end
 
 %% check whether the files not found in the subject data are in the metadata
 
-% make a list of all metadata in the bids structure
+% make a list of all metadata files in the bids structure
 metaDataList = [];
 fileCounter = 0;
 % add project metadata to list

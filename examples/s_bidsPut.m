@@ -8,16 +8,21 @@
 %
 %   bidsDir = fullfile(stRootPath,'local','BIDS-Examples','7t_trt');
 %   b = bids(bidsDir);
+%   st.bidsUpload(@bids,'project label',projectLabel);
+%
 %
 % Wandell, Scitran Team, 2017
 
 %% Here is an example bids data set
 
-% bidsDir = fullfile(stRootPath,'local','BIDS-Examples','ds001');
-bidsDir = fullfile(stRootPath,'local','BIDS-Examples','7t_trt');
+thisProject = 'BIDS-Test';
+
+bidsDir = fullfile(stRootPath,'local','BIDS-Examples','ds001');
+% bidsDir = fullfile(stRootPath,'local','BIDS-Examples','7t_trt');
 
 % Create the bids object
 b = bids(bidsDir);
+b.projectLabel = thisProject;
 
 %%
 st = scitran('vistalab');
@@ -29,31 +34,29 @@ st = scitran('vistalab');
 % [status, gid] = st.exist('wandell', 'groups')
 % [status, pid] = st.exist('VWFA FOV', 'projects', 'parentID', gid{1})
 
-%%  Validate the group
+%% Create the project
 %
 %   b.createProject(projectName, groupName);
 %
 
 thisGroup   = 'wandell';
-[status, groupID] = st.exist(thisGroup, 'groups');
-
-if ~status, fprintf('Group not found %s\n',thisGroup);
-else,       fprintf('Group %s found\n',thisGroup);
-end
-
-%% Create the project
+% [~, groupID] = st.exist(thisGroup, 'groups');
 %
+% if ~status, fprintf('Group not found %s\n',thisGroup);
+% else,       fprintf('Group %s found\n',thisGroup);
+% end
+
 % Try running this against 'dev-flywheel.io' and see if the default group
 % permissions are set correctly.
-
-thisProject = 'BIDS-RoundTrip';
-[status, projectID] = st.exist(thisProject,'projects');
-if ~status
-    fprintf('Create the project %s\n',thisProject);
-    projectID = st.create(thisGroup,thisProject);
-else
-    fprintf('Project %s exists\n',thisProject);
+sessions = st.search('sessions','project label',thisProject);
+if ~isempty(sessions)
+    error('Project %s exists with sessions.',thisProject);
 end
+
+% [status, projectID] = st.exist(thisProject,'projects');
+fprintf('Create the project %s\n',thisProject);
+projectID = st.create(thisGroup,thisProject);
+% p = st.search('projects','project id',projectID)
 
 %% Make the sessions, acquisitions and upload the data files
 %

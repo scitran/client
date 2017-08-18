@@ -1,7 +1,9 @@
 function destination = download(st,downloadType,ID,varargin)
-%Download a tar file of a project or session
+%Download a tar file of a project or session or an acq or a collection
 %
 %    st.download(projectID,'destination','tarfile name');
+%
+% Only tested for projects at this point.
 %
 % BW Scitran Team, 2017
 
