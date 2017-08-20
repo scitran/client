@@ -1,36 +1,29 @@
 # Brain Imaging Data Structure (BIDS)
 
-## Planning
+The scitran Matlab client includes a class definition for BIDS (Brain Imaging Data Structure). The class constructor is invoked by
 
-We have a Matlab class for BIDS. It walks through any of the BIDS-example directories and finds all the files, storing the directory tree.
+    thisBIDS = bids(dataDir)
 
-We have an example of using the BIDS object and uploading all the files to a Flywheel project.
-
-We have an example of downloading a project that was uploaded as BIDS, and writing it back out as a BIDS directory.  (Round trip).
-
-We have one brief validate method, and others are in the works.
-
-## The BIDS class
-
-Methods include - bids (constructor), listSubjectFolders, listDataFiles, listMetaDataFiles, validate, countSessions
+where dataDir is the directory containing a BIDS formatted directory tree.  The invocation scans the directory and returns a structure with a listing of all the BIDS directories, meta data and imaging data files. There is a @bids.validate method, and a few other utilities.
 
 Directory names are stored relative to the main directory.
 
-### Variables
+@bids methods include - bids (constructor), listSubjectFolders, listDataFiles, listMetaDataFiles, validate, countSessions
 
-* Project name
-* Number of subjects (participants.tsv file)
-* Stimulus folder (contents are arbitrary?)
-* Folder for every subject
-* Number of sessions per subject
-* Data types in each session
-* Number of runs of a given data type in a session
-* Metadata files (json and tsv)
+## Uploading a BIDS directory tree to Flywheel
 
-## Usage in scripts
+The @scitran class has a method (bidsUpload) for uploading the @bids data to Flywheel.  An example of its usage is
+```
+thisBids = bids(bidsDir);
+thisBids.projectLabel = 'The FW project label you want';
+@scitran.bidsUpload(thisBids,'group label');
+```
+This will create a project on Flywheel that contains the data and meta data from the bidsDir.  
 
-s_bidsPut
+To download a BIDS project from Flywheel you can use
 
-v_stProjectDownload
+     projectLabel = 'The FW project label'
+     bidsDir = @scitran.bidsDownload(projectLabel,'destination',<destination directory>);
+
 
 
