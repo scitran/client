@@ -3,6 +3,14 @@ function destination = download(st,downloadType,ID,varargin)
 %
 %    st.download(projectID,'destination','tarfile name');
 %
+% Inputs:
+%   downloadType:  one of {'project','session','acquisition','collection'};
+%   ID:  ID of the Flywheel data
+%
+% Parameters
+%   destination:  Full path and name to the download file.  Default is
+%                 fullfile(pwd,'download.tar');
+%
 % Only tested for projects at this point.
 %
 % BW Scitran Team, 2017
