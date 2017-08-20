@@ -1,7 +1,7 @@
-function val = stProjectGet(obj, projects,param)
+function val = stProjectGet(projects,param)
 % Get a field from a cell array of projects
 %
-%  stProjectGet(st,projCellArray,<param>);
+%  stProjectGet(projCellArray,<param>);
 %
 % LMP, BW Scitran Team
 

@@ -1,12 +1,15 @@
-function  deleteProject(obj, projectLabel)
+function  deleteProject(obj, projectLabel, varargin)
 % Remove a project completely from a scitran site
 %
 %   @scitran.deleteProject('PROJECTLABEL');
 %
-% This call uses the projectHierarchy method to build the hierarchy of
-% project,sessions and acquisitions.  It then deletes each of them
+% Uses the projectHierarchy method to build the list of sessions,
+% acquisitions, and files. It then loops, deleting each of them
 % systematically. I have seen it work up to (but not including) the project
 % itself.
+%
+% The saveproject flag determines whether the project itself is deleted, or
+% just the contents.
 %
 %% WARNING WARNING WARNING
 %  Unfortunately there is no proper testing yet for this method.
@@ -18,7 +21,12 @@ function  deleteProject(obj, projectLabel)
 
 p = inputParser;
 p.addRequired('projectLabel',@ischar);
-p.parse(projectLabel);
+
+% If true, don't delete the project itself, just the contents
+p.addParameter('saveproject',false,@islogical);  
+
+p.parse(projectLabel,varargin{:});
+saveproject = p.Results.saveproject;
 
 %% Find the project hierarchy 
 
@@ -62,8 +70,10 @@ if lower(response) == 'y'
     end
     
     %% delete the project
-    cmd = obj.deleteContainerCmd('projects', project{1}.id);
-    [~,~] = system(cmd);
+    if ~saveproject
+        cmd = obj.deleteContainerCmd('projects', project{1}.id);
+        [~,~] = system(cmd);
+    end
     
 else
     disp('User canceled.');

@@ -124,7 +124,7 @@ fprintf('Found %d sessions with subject code %s\n',length(sessions),subjectCode)
 
 %% Get sessions in which the subject age is within a range
 
-sessions = st.search('sessions',...
+sessions = fw.search('sessions',...
     'subject age gt', 9, ...
     'subject age lt', 10,...
     'summary',true);
@@ -202,7 +202,7 @@ fprintf('Found %d matching files\n',length(files))
 %%  Find the number of projects owned by a specific group
 groupName = {'ALDIT','wandell','jwday','leanew1'}
 for ii=1:length(groupName)
-    projects = st.search('projects','project group',groupName{ii});
+    projects = fw.search('projects','project group',groupName{ii});
     fprintf('%d projects owned by the %s group\n',length(projects), groupName{ii});
 end
 
