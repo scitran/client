@@ -10,6 +10,7 @@ function destination = download(st,downloadType,ID,varargin)
 % Parameters
 %   destination:  Full path and name to the download file.  Default is
 %                 fullfile(pwd,'download.tar');
+%   untar:        Logical variable, if you want the untar.  Default false.
 %
 % Only tested for projects at this point.
 %
@@ -24,9 +25,12 @@ p.addRequired('downloadType',@(x)(ismember(x,validTypes)));
 p.addRequired('ID',@ischar);
 
 p.addParameter('destination','download.tar',@ischar)
+p.addParameter('untar',false,@islogical)
 
 p.parse(downloadType,ID,varargin{:});
+
 destination = p.Results.destination;
+untar       = p.Results.untar;
 
 %% Build the Matlab struct for the download
 clear payload
@@ -55,6 +59,9 @@ cmd = sprintf('curl ''%s/api/download?ticket=%s'' > %s',st.url,sTicket.ticket,de
 [status, result] = system(cmd);
 if status, disp(result); end
 
-untar(destination);
+if untar
+    untar(destination);
+end
+
 
 end

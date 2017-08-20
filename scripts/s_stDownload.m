@@ -10,21 +10,26 @@
 %%
 st = scitran('vistalab');
 
-project = st.search('projects','project label','Templates Macaque');
-
-%%
+curDir = pwd;
 chdir(fullfile(stRootPath,'local'));
 
+%% Test whole project
+
+project = st.search('projects','project label','Templates Macaque');
 st.download('project',project{1}.id,'destination','MacaqueTemplate.tar');
 
-%%
+%% Test session
 
 session = st.search('sessions','project label','Templates Macaque','session label','D99 Macaque Atlas');
 st.download('session',session{1}.id,'destination','MacaqueSession.tar');
 
-%%
-acquisition = st.search('acquisitions','project label','Templates Macaque','acquisition label','example');
+%% Test acquisition
 
-st.download('acquisition',acquisition{1}.id,'destination','MacaqueAcquisition.tar');
+acquisition = st.search('acquisitions','project label','Templates Macaque','acquisition label','example');
+destination = st.download('acquisition',acquisition{1}.id,'destination','MacaqueAcquisition.tar');
+fprintf('Acquisition stored in %s\n',destination);
+
+%%
+chdir(curDir);
 
 %%
