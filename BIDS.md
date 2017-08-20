@@ -32,7 +32,7 @@ To download a BIDS project that is stored on Flywheel use
 
 More generally, you can download any project to a tar file simply using
 
-   project = st.search('projects','project label','VWFA');
-   st.download('project',project{1}.id,'destination','tarfile name');
+    project = st.search('projects','project label','VWFA');
+    st.download('project',project{1}.id,'destination','tarfile name');
 
 
