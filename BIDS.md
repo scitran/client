@@ -1,10 +1,10 @@
 ## Brain Imaging Data Structure (BIDS)
 
-The scitran Matlab client includes a class definition for BIDS (Brain Imaging Data Structure). The class constructor is invoked by
+The scitran Matlab client (@scitran) includes a class definition (@bids) for BIDS (Brain Imaging Data Structure). The @bids class constructor is invoked by
 
     thisBIDS = bids(dataDir)
 
-where dataDir is the directory containing a BIDS formatted directory tree.  The constructor scans the directory and returns a bids object that contains a listing of all the BIDS directories, meta data files and imaging data files. There is a @bids.validate method, and a few other utilities to help you check that the directory is compliant. 
+where dataDir is the local directory containing a BIDS formatted directory tree.  The constructor scans the directory and returns a bids object that contains a listing of all the BIDS directories, meta data files and imaging data files. There is a @bids.validate method, and a few other utilities to help you check that the directory is compliant. 
 
 Directory names in the bids object are stored relative to the home of the data directory.
 
