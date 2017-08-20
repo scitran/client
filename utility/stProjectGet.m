@@ -1,9 +1,9 @@
 function val = stProjectGet(projects,param)
-% Get a field from a cell array of projects
+% Return a cell array with a specific field from a cell array of projects
 %
 %  stProjectGet(projCellArray,<param>);
 %
-% LMP, BW Scitran Team
+% LMP, BW Scitran Team, 2017
 
 n = length(projects);
 
@@ -27,13 +27,6 @@ switch lower(param)
         end
         return
         
-    case {'numsessions', 'nsessions'}
-        val = zeros(n,1);
-        for ii=1:n
-            val(ii) = numel(obj.search('sessions', 'project label', projects{ii}.source.label));
-%             fprintf('%s : %d\n', projects{ii}.source.label, val(ii));
-        end
-        return
     case 'id'
         val = cell(n,1);
         for ii=1:n

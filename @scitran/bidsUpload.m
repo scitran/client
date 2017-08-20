@@ -12,8 +12,13 @@ function project = bidsUpload(st,bidsData, groupLabel, varargin)
 %
 %    fw.deleteProject('fw_bids_test','saveproject',true);
 %
-%  Then delete the project itself by hand, after checking that the sessions
-%  have been removed.
+%  and then delete the project itself by hand, after checking that the
+%  sessions have been removed.  Or, simply use
+%
+%    fw.deleteProject('fw_bids_test');
+%
+%  However, we have been having difficulty with elastic search indexing of
+%  the deleted project.  Hopefully this will be solved shortly.
 %
 % BW/DH Scitran Team, 2017
 

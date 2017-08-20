@@ -3,17 +3,24 @@ function  deleteProject(obj, projectLabel, varargin)
 %
 %   @scitran.deleteProject('PROJECTLABEL');
 %
+% Inputs:
+%    projectLabel - a string.  
+% 
+% Parameters:
+%    saveproject - a logical.  If true, then the project is not deleted,
+%                  only the sessions, acquisitions and files.
+%
 % Uses the projectHierarchy method to build the list of sessions,
 % acquisitions, and files. It then loops, deleting each of them
 % systematically. I have seen it work up to (but not including) the project
 % itself.
 %
-% The saveproject flag determines whether the project itself is deleted, or
-% just the contents.
-%
 %% WARNING WARNING WARNING
-%  Unfortunately there is no proper testing yet for this method.
-%  Therefore a bug could be destructive. 
+%  There is no proper testing yet for this method.
+%  Therefore a bug could be destructive. Also, we have found that deleting
+%  the project does not appear to be taken up by the elastic search
+%  indexing.  The project is staying in the search index.  We are not sure
+%  whether the acquisitions are properly deleted.
 %
 %  RF/BW Scitran Team, 2017
 
