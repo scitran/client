@@ -13,13 +13,13 @@ function [status, id, results] = exist(obj,label, containerType, varargin)
 %
 % N.B. We are thinking about collections
 %
-% Example usage:
-% [~, id] = st.exist('VWFA FOV','projects')
-% [status, gid] = st.exist('Wandell Lab', 'groups')
-% [status, pid] = st.exist('vwfa', 'projects', 'parentID', gid{1})
-% [status, pid] = st.exist('vwfa_nims', 'projects', 'parentID', gid{1})
-% [status, sid] = st.exist('20151128_1621', 'sessions', 'parentID', pid{1})
-% [status, aid] = st.exist('localizer', 'acquisitions', 'parentID', sid{1})
+% Example usage (case sensitive searches)
+%
+%  [~, id] = st.exist('VWFA FOV','projects')
+%  [status, gid] = st.exist('wandell', 'groups')
+%  [status, pid] = st.exist('VWFA', 'projects')
+%  [status, sid] = st.exist('20151128_1621', 'sessions', 'parentID', pid{1})
+%  [status, aid] = st.exist('Localizer', 'acquisitions', 'parentID', sid{1})
 %
 % RF/BW Scitran Team, 2016
 
@@ -62,7 +62,9 @@ if ~isempty(parentID)
    srch.(parentType).match.x0x5Fid = parentID;
 end
 %% exec the search and create a list of ids matching the search
+
 results = obj.search(srch, 'all_data', true);
+
 if ~isempty(results)
     id = cell(1,length(results));
     for ii = 1:length(results)
