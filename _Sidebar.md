@@ -6,7 +6,7 @@
 * [Search](Search)
     * [Examples](Search-examples)
     * [Syntax](Search-syntax)
-* [Gears and docker containers](Gears)
+* [Analyses with Gears](Gears)
 * [Uploading and downloading](Uploading-and-downloading)
      * [BIDS](BIDS)
      * [Analyses](Analysis-objects)
