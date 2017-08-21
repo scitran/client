@@ -29,6 +29,7 @@ p.addRequired('projectLabel',@ischar);
 p.parse(projectLabel);
 
 %%
+[status,projectID] = obj.exist(
 project = obj.search('projects','project label exact',projectLabel);
 
 %% Check that there is exactly one project returned

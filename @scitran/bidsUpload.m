@@ -44,7 +44,7 @@ if isempty(projectLabel), projectLabel = bidsData.projectLabel; end
 % Otherwise, create it.
 status = st.exist(projectLabel,'projects');
 if ~status
-    projectID = st.create(groupLabel,projectLabel);
+    st.create(groupLabel,projectLabel);
     fprintf('Created project %s\n',projectLabel);
 else
     error('Project %s exists.\n');

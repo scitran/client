@@ -1,7 +1,7 @@
-function  deleteProject(obj, projectLabel, varargin)
+function  deleteProject(obj, projectLabel, groupdID, varargin)
 % Remove a project completely from a scitran site
 %
-%   @scitran.deleteProject('PROJECTLABEL');
+%   scitran.deleteProject('PROJECTLABEL',groupID);
 %
 % Inputs:
 %    projectLabel - a string.  
