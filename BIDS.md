@@ -4,7 +4,7 @@ The scitran Matlab client (@scitran) includes a class definition (@bids) for BID
 
     thisBIDS = bids(dataDir)
 
-where dataDir is the local directory containing a BIDS formatted directory tree.  The constructor scans the directory and returns a bids object that contains a listing of all the BIDS directories, meta data files and imaging data files. There is a @bids.validate method, and a few other utilities to help you check that the directory is compliant. 
+where dataDir is the local directory containing a BIDS formatted directory tree.  The constructor scans the directory and returns a bids object that contains a listing of all the BIDS directories, meta data files and imaging data files. There is a thisBids.validate method, and a few other utilities to help you check that the directory is compliant. 
 
 Directory names in the bids object are stored relative to the home of the data directory.
 
@@ -26,7 +26,7 @@ st.bidsUpload(thisBids,'group label');
 To download a BIDS project that is stored on Flywheel use
 
      projectLabel = 'The FW project label'
-     bidsDir = @scitran.bidsDownload(projectLabel,'destination',<destination directory>);
+     bidsDir = st.bidsDownload(projectLabel,'destination',<destination directory>);
 
 
 
