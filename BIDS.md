@@ -28,11 +28,6 @@ To download a BIDS project that is stored on Flywheel use
      projectLabel = 'The FW project label'
      bidsDir = @scitran.bidsDownload(projectLabel,'destination',<destination directory>);
 
-## General downloading from Flywheel
 
-More generally, you can download any project to a tar file simply using
-
-    project = st.search('projects','project label','VWFA');
-    st.download('project',project{1}.id,'destination','tarfile name');
 
 
