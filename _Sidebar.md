@@ -7,10 +7,10 @@
     * [Examples](Search-examples)
     * [Syntax](Search-syntax)
 * [Computing with Gears](Gears)
+    * [Building Gears](https://github.com/scitran/client/wiki/Building-Gears)
 * [Uploading and downloading](Uploading-and-downloading)
      * [BIDS](BIDS)
      * [Analyses](Analysis-objects)
 * [Client scripts](Client-scripts)
-* [Building Gears](https://github.com/scitran/client/wiki/Building-Gears)
 * [Reproducible papers](Reproducible-Research)
 
