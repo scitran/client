@@ -1,6 +1,6 @@
 ## Paper of the future concepts
 
-The @toolboxes implementation.
+The @toolboxes.install implementation.
 
 The @scitran.runFunction() implementation.
 
