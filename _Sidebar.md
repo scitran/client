@@ -6,7 +6,7 @@
 * [Search](Search)
     * [Examples](Search-examples)
     * [Syntax](Search-syntax)
-* [Analyses with Gears](Gears)
+* [Computing with Gears](Gears)
 * [Uploading and downloading](Uploading-and-downloading)
      * [BIDS](BIDS)
      * [Analyses](Analysis-objects)
