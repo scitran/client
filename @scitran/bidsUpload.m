@@ -75,7 +75,8 @@ for ii=1:length(bidsData.subjectFolders)
         
         fprintf('Uploading session %s.\n',thisSessionLabel);
         sessionID = st.create(groupLabel,projectLabel,'session',thisSessionLabel);
-        pause(2);
+        pause(2);   % Remove when SDK updates
+        
         % Until we have the direct database query, we pause to allow
         % elastic search to index.
         session = st.search('sessions','session id',sessionID);

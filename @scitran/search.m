@@ -181,6 +181,7 @@ if ischar(srch)
                 end
             case {'projectid'}
                 % Note the ugly x0x5F, needed for jsonio
+                % Might not be working!!! (BW)
                 if ~isfield(srch,'projects')
                     srch.projects.bool.must{1}.match.x0x5Fid = val;
                 else

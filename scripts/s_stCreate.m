@@ -9,46 +9,31 @@ st = scitran('vistalab');
 
 %% Create a dummy project and session
 projectLabel = 'DeleteMe';
-groupID   = 'wandell';
+groupName    = 'wandell lab';
+
+[status, id] = st.exist(groupName, 'groups');
+groupID = id{1};
 
 %%  Create the project
 
 % Check if it already exists.  If it does, throw an error
 % Otherwise, create it.
-st.create(groupID,projectLabel);
-
-st.deleteProject(projectLabel,groupID);
+st.create(groupName,projectLabel);
 
 result = st.search('projects','project label',projectLabel);
-if ~isempty(result)
-    disp('Project NOT deleted properly');
-end
+disp(result)
 
 %% Make a session in the project and then delete it
 
 thisSessionLabel = 'mySession';
-st.create(groupID,projectLabel,...
+st.create(groupName,projectLabel,...
     'session',thisSessionLabel);
-
-% disp('Waiting 5 sec for elastic search to update');
-% pause(5);
-
-st.deleteProject(projectLabel);
-% disp('Waiting 5 sec for elastic search to update');
-% pause(5);
 
 result = st.search('projects','project label',projectLabel);
-if ~isempty(result)
-    disp('Project NOT deleted properly');
-end
+disp(result);
 
 %% Update the subject code for the session
-
-thisSessionLabel = 'mySession';
-sessionID = st.create(groupID,projectLabel,...
-    'session',thisSessionLabel);
-
-pause(3);
+pause(3);  % Get rid of this with SDK update.
 session = st.search('sessions',...
     'project label',projectLabel,...
     'session label',thisSessionLabel);
@@ -56,13 +41,17 @@ session = st.search('sessions',...
 data.subject.code = sprintf('%s','My Subject');
 st.update(data,'container', session{1});
 
-%%
-pause(3);
-st.deleteProject(projectLabel);
-pause(5);
+%% Create an acquisition
 
-result = st.search('projects','project label',projectLabel);
-if ~isempty(result)
-    disp('Project NOT deleted properly');
-end
+thisAcquisitionLabel = 'myAcquisition';
+st.create(groupName,projectLabel,...
+    'session',thisSessionLabel,...
+    'acquisition',thisAcquisitionLabel);
+
+%% Now, delete the whole project
+
+st.deleteProject(projectLabel,groupID);
+
+% disp('Waiting 5 sec for elastic search to update');
+% pause(5);
 %%

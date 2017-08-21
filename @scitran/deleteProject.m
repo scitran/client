@@ -1,10 +1,11 @@
-function  deleteProject(obj, projectLabel, groupdID, varargin)
+function  deleteProject(obj, projectLabel, groupID, varargin)
 % Remove a project completely from a scitran site
 %
-%   scitran.deleteProject('PROJECTLABEL',groupID);
+%   scitran.deleteProject('PROJECTLABEL',groupID,'saveproject',true/false);
 %
 % Inputs:
-%    projectLabel - a string.  
+%    projectLabel - a string
+%    groupID      - the group ID of this project
 % 
 % Parameters:
 %    saveproject - a logical.  If true, then the project is not deleted,
@@ -22,23 +23,27 @@ function  deleteProject(obj, projectLabel, groupdID, varargin)
 %  indexing.  The project is staying in the search index.  We are not sure
 %  whether the acquisitions are properly deleted.
 %
+% Example:
+%   st.deleteProject('BIDS-Test','wandell');
+%
 %  RF/BW Scitran Team, 2017
 
 %% We should parse better and use a proper search.
 
 p = inputParser;
 p.addRequired('projectLabel',@ischar);
+p.addRequired('groupID',@ischar);
 
 % If true, don't delete the project itself, just the contents
 p.addParameter('saveproject',false,@islogical);  
 
-p.parse(projectLabel,varargin{:});
+p.parse(projectLabel,groupID,varargin{:});
 saveproject = p.Results.saveproject;
 
 %% Find the project hierarchy 
 
 % Cell arrays for the project, sessions, and acquisitions are returned.
-[project, sess, acqs] = obj.projectHierarchy(projectLabel);
+[project, sess, acqs] = obj.projectHierarchy(projectLabel,groupID);
 if length(project) ~= 1
     error('Project %s not found',projectLabel);
 end
@@ -87,4 +92,6 @@ else
     return;
 end
 
+disp('Pausing for elastic search to index. Delete when SDK is updated.');
+pause(3);
 end
