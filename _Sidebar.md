@@ -1,6 +1,6 @@
 * [Introduction](Home)
 * [Installation](Installation)
-* [Client methods](Client-methods-(Matlab))
+* [Overview of methods](Client-methods-(Matlab))
 * [Authorization](Authorization)
 * [Database terms](Database-principles)
 * [Search](Search)
