@@ -8,7 +8,7 @@
     * [Syntax](Search-syntax)
 * [Gears and docker containers](Gears)
 * [Analyses](Analysis-objects)
-* [Uploading and downloading](Uploading)
+* [Uploading and downloading](Uploading-and-downloading)
      * [BIDS](BIDS)
 * [Client scripts](Client-scripts)
 * [Building Gears](https://github.com/scitran/client/wiki/Building-Gears)
