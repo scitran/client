@@ -287,7 +287,11 @@ srch.path = 'sessions';
 srch.collections.match.label = 'DWI';
 sessionNames = cell(1,length(files));
 for ii=1:length(files)
+    if isfield(files{ii}.source,'session')
     srch.sessions.match.label = files{ii}.source.session.label;
+    else
+        fprintf('No session for file %d, name %s\n',ii,files{ii}.source.name);
+    end
     thisSession = st.search(srch);
     sessionNames{ii} = thisSession{1}.source.label;
 end
