@@ -11,6 +11,5 @@
 * [Uploading and downloading](Uploading-and-downloading)
      * [BIDS](BIDS)
      * [Analyses](Analysis-objects)
-* [Client scripts](Client-scripts)
 * [Reproducible papers](Reproducible-Research)
-
+* [Examples](Client-scripts)
