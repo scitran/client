@@ -29,5 +29,7 @@ To download a BIDS project that is stored on Flywheel use
      bidsDir = st.bidsDownload(projectLabel,'destination',<destination directory>);
 
 
+### NOTE
 
+At present, we have slowed down the upload/download process considerably to account for the indexing time of elastic search. We use elastic search methods for now.  However, soon the Flywheel team will enable us to replace all elastic search calls with direct addressing to the MongoDB.  At that time, the pauses will be removed and the process will become much much faster.
 
