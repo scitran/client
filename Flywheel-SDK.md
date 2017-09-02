@@ -6,14 +6,15 @@
             %          apiKey must be in format <domain>:<API token>
             
      Methods (auto-generated)
-        **# The mighty search**
+
+## Search related
         % search(obj, search_query)
 
         % getAllBatches(obj)
         % getBatch(obj, id)
         % startBatch(obj, id)
 
-        **# Collections related**
+## Collections related
         % getAllCollections(obj)
         % getCollection(obj, id)
         % getCollectionSessions(obj, id)
@@ -32,7 +33,7 @@
         % uploadFileToCollection(obj, id, path)
         % downloadFileFromCollection(obj, id, name, path)
 
-        # - Acquisition related
+## Acquisition related
         % getAllAcquisitions(obj)
         % getAcquisition(obj, id)
         % addAcquisition(obj, acquisition)
@@ -47,13 +48,13 @@
         % uploadFileToAcquisition(obj, id, path)
         % downloadFileFromAcquisition(obj, id, name, path)
 
-        **# Job related**
+## Job related
         % getJob(obj, id)
         % getJobLogs(obj, id)
         % addJob(obj, job)  
         % heartbeatJob(obj, id)
 
-        **# Project related**
+## Project related
         % getAllProjects(obj)
         % getProject(obj, id)
         % getProjectSessions(obj, id)
@@ -68,6 +69,8 @@
         % deleteProjectFileInfoFields(obj, id, filename, keys)  
         % uploadFileToProject(obj, id, path)
         % downloadFileFromProject(obj, id, name, path)
+
+## Gear related
         % getAllGears(obj)
         % getGear(obj, id)
         % addGear(obj, gear)
@@ -78,8 +81,11 @@
         % addGroupTag(obj, id, tag)
         % modifyGroup(obj, id, group)
         % deleteGroup(obj, id)
+
         % getConfig(obj)
         % getVersion(obj)
+
+## Session related
         % getAllSessions(obj)  
         % getSession(obj, id)
         % getSessionAcquisitions(obj, id)
