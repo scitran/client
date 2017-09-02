@@ -107,7 +107,7 @@
         % modifyUser(obj, id, user)
         % deleteUser(obj,id)
 
-     Static methods in separate files
+## Static methods in separate files
         % version = getSdkVersion()
         % structFromJson = handleJson(statusPtr,ptrValue)
         % cmdout = testBridge(obj, s)
