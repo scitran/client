@@ -5,7 +5,7 @@
             %  apiKey - API Key assigned for each user through the Flywheel UI
             %          apiKey must be in format <domain>:<API token>
             
-     Methods
+     Methods (auto-generated)
         % getAllBatches(obj)
         % getBatch(obj, id)
         % startBatch(obj, id)
@@ -57,11 +57,9 @@
         % replaceProjectFileInfo(obj, id, filename, replace)
         % deleteProjectFileInfoFields(obj, id, filename, keys)  
         % uploadFileToProject(obj, id, path)
-
         % downloadFileFromProject(obj, id, name, path)
         % getAllGears(obj)
         % getGear(obj, id)
-            
         % addGear(obj, gear)
         % deleteGear(obj, id)
         % getAllGroups(obj)
@@ -93,45 +91,8 @@
         % modifyUser(obj, id, user)
         % deleteUser(obj,id)
 
-
-    methods (Static)
-        function version = getSdkVersion()
-            version = '0.2.0';
-        end
-        function structFromJson = handleJson(statusPtr,ptrValue)
-            % Handle JSON using JSONlab
-            statusValue = statusPtr;
-
-            % If status indicates success, load JSON
-            if statusValue == 0
-                % Interpret JSON string blob as a struct object
-                loadedJson = loadjson(ptrValue);
-                % loadedJson contains status, message and data, only return
-                %   the data information.
-                dataFromJson = loadedJson.data;
-                %  Call replaceField on loadedJson to replace x0x5F_id with id
-                structFromJson = Flywheel.replaceField(dataFromJson,'x0x5F_id','id');
-            % Otherwise, nonzero statusCode indicates an error
-            else
-                % Try to load message from the JSON
-                try
-                    loadedJson = loadjson(ptrValue);
-                    msg = loadedJson.message;
-                    ME = MException('FlywheelException:handleJson', msg);
-                % If unable to load message, throw an 'unknown' error
-                catch ME
-                    msg = sprintf('Unknown error (status %d).',statusValue);
-                    causeException = MException('FlywheelException:handleJson', msg);
-                    ME = addCause(ME,causeException);
-                    rethrow(ME)
-                end
-                throw(ME)
-            end
-        end
-        
-        
-
-        % TestBridge - 
-        function cmdout = testBridge(obj, s)
-            [status,cmdout] = system([obj.folder '/sdk TestBridge ' s]);
-        end
+     Static methods in separate files
+        % version = getSdkVersion()
+        % structFromJson = handleJson(statusPtr,ptrValue)
+        % cmdout = testBridge(obj, s)
+        % newStruct = replaceField(oldStruct,oldField,newField)
