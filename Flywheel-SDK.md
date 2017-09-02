@@ -5,7 +5,7 @@
             %  apiKey - API Key assigned for each user through the Flywheel UI
             %          apiKey must be in format <domain>:<API token>
             
-
+     Methods
         % getAllBatches(obj)
         % getBatch(obj, id)
         % startBatch(obj, id)
@@ -18,7 +18,6 @@
         % addAcquisitionsToCollection(obj, id, aqids)
         % addSessionsToCollection(obj, id, sessionids)
         % addCollectionNote(obj, id, text)
-
         % modifyCollection(obj, id, collection)
         % deleteCollection(obj, id)
         % modifyCollectionFile(obj, id, filename, attributes)
@@ -52,136 +51,27 @@
         % addProjectNote(obj, id, text)
         % addProjectTag(obj, id, tag)
         % modifyProject(obj, id, project)
-        % deleteProject
-        function result = deleteProject(obj, id)
-            statusPtr = libpointer('int32Ptr',-100);
-            [status,cmdout] = system([obj.folder '/sdk DeleteProject ' obj.key ' '  '''' id ''' ']);
-
-            result = Flywheel.handleJson(status,cmdout);
-        end
+        % deleteProject(obj, id)
         % modifyProjectFile(obj, id, filename, attributes)
         % setProjectFileInfo(obj, id, filename, set)
         % replaceProjectFileInfo(obj, id, filename, replace)
-        % deleteProjectFileInfoFields(obj, id, filename, keys)
-            statusPtr = libpointer('int32Ptr',-100);
-            oldField = 'id';
-            newField = 'x0x5F_id';
-            keys = Flywheel.replaceField(keys,oldField,newField);
-            keys = savejson('',keys);
-            [status,cmdout] = system([obj.folder '/sdk DeleteProjectFileInfoFields ' obj.key ' '  '''' id ''' ' '''' filename ''' ' '''' keys ''' ']);
+        % deleteProjectFileInfoFields(obj, id, filename, keys)  
+        % uploadFileToProject(obj, id, path)
 
-            result = Flywheel.handleJson(status,cmdout);
-        end
-        % uploadFileToProject
-        function result = uploadFileToProject(obj, id, path)
-            statusPtr = libpointer('int32Ptr',-100);
-            [status,cmdout] = system([obj.folder '/sdk UploadFileToProject ' obj.key ' '  '''' id ''' ' '''' path ''' ']);
-
-            result = Flywheel.handleJson(status,cmdout);
-        end
-        % downloadFileFromProject
-        function result = downloadFileFromProject(obj, id, name, path)
-            statusPtr = libpointer('int32Ptr',-100);
-            [status,cmdout] = system([obj.folder '/sdk DownloadFileFromProject ' obj.key ' '  '''' id ''' ' '''' name ''' ' '''' path ''' ']);
-
-            result = Flywheel.handleJson(status,cmdout);
-        end
-        % getAllGears
-        function result = getAllGears(obj)
-            statusPtr = libpointer('int32Ptr',-100);
-            [status,cmdout] = system([obj.folder '/sdk GetAllGears ' obj.key ' ' ]);
-
-            result = Flywheel.handleJson(status,cmdout);
-        end
-        % getGear
-        function result = getGear(obj, id)
-            statusPtr = libpointer('int32Ptr',-100);
-            [status,cmdout] = system([obj.folder '/sdk GetGear ' obj.key ' '  '''' id ''' ']);
-
-            result = Flywheel.handleJson(status,cmdout);
-        end
-        % addGear
-        function result = addGear(obj, gear)
-            statusPtr = libpointer('int32Ptr',-100);
-            oldField = 'id';
-            newField = 'x0x5F_id';
-            gear = Flywheel.replaceField(gear,oldField,newField);
-            gear = savejson('',gear);
-            [status,cmdout] = system([obj.folder '/sdk AddGear ' obj.key ' '  '''' gear ''' ']);
-
-            result = Flywheel.handleJson(status,cmdout);
-        end
-        % deleteGear
-        function result = deleteGear(obj, id)
-            statusPtr = libpointer('int32Ptr',-100);
-            [status,cmdout] = system([obj.folder '/sdk DeleteGear ' obj.key ' '  '''' id ''' ']);
-
-            result = Flywheel.handleJson(status,cmdout);
-        end
-        % getAllGroups
-        function result = getAllGroups(obj)
-            statusPtr = libpointer('int32Ptr',-100);
-            [status,cmdout] = system([obj.folder '/sdk GetAllGroups ' obj.key ' ' ]);
-
-            result = Flywheel.handleJson(status,cmdout);
-        end
-        % getGroup
-        function result = getGroup(obj, id)
-            statusPtr = libpointer('int32Ptr',-100);
-            [status,cmdout] = system([obj.folder '/sdk GetGroup ' obj.key ' '  '''' id ''' ']);
-
-            result = Flywheel.handleJson(status,cmdout);
-        end
-        % addGroup
-        function result = addGroup(obj, group)
-            statusPtr = libpointer('int32Ptr',-100);
-            oldField = 'id';
-            newField = 'x0x5F_id';
-            group = Flywheel.replaceField(group,oldField,newField);
-            group = savejson('',group);
-            [status,cmdout] = system([obj.folder '/sdk AddGroup ' obj.key ' '  '''' group ''' ']);
-
-            result = Flywheel.handleJson(status,cmdout);
-        end
-        % addGroupTag
-        function result = addGroupTag(obj, id, tag)
-            statusPtr = libpointer('int32Ptr',-100);
-            [status,cmdout] = system([obj.folder '/sdk AddGroupTag ' obj.key ' '  '''' id ''' ' '''' tag ''' ']);
-
-            result = Flywheel.handleJson(status,cmdout);
-        end
-        % modifyGroup
-        function result = modifyGroup(obj, id, group)
-            statusPtr = libpointer('int32Ptr',-100);
-            oldField = 'id';
-            newField = 'x0x5F_id';
-            group = Flywheel.replaceField(group,oldField,newField);
-            group = savejson('',group);
-            [status,cmdout] = system([obj.folder '/sdk ModifyGroup ' obj.key ' '  '''' id ''' ' '''' group ''' ']);
-
-            result = Flywheel.handleJson(status,cmdout);
-        end
-        % deleteGroup
-        function result = deleteGroup(obj, id)
-            statusPtr = libpointer('int32Ptr',-100);
-            [status,cmdout] = system([obj.folder '/sdk DeleteGroup ' obj.key ' '  '''' id ''' ']);
-
-            result = Flywheel.handleJson(status,cmdout);
-        end
-        % getConfig
-        function result = getConfig(obj)
-            statusPtr = libpointer('int32Ptr',-100);
-            [status,cmdout] = system([obj.folder '/sdk GetConfig ' obj.key ' ' ]);
-
-            result = Flywheel.handleJson(status,cmdout);
-        end
-        % getVersion
-        function result = getVersion(obj)
-            statusPtr = libpointer('int32Ptr',-100);
-            [status,cmdout] = system([obj.folder '/sdk GetVersion ' obj.key ' ' ]);
-
-            result = Flywheel.handleJson(status,cmdout);
-        end
+        % downloadFileFromProject(obj, id, name, path)
+        % getAllGears(obj)
+        % getGear(obj, id)
+            
+        % addGear(obj, gear)
+        % deleteGear(obj, id)
+        % getAllGroups(obj)
+        % getGroup(obj, id)
+        % addGroup(obj, group)
+        % addGroupTag(obj, id, tag)
+        % modifyGroup(obj, id, group)
+        % deleteGroup(obj, id)
+        % getConfig(obj)
+        % getVersion(obj)
         % getAllSessions(obj)  
         % getSession(obj, id)
         % getSessionAcquisitions(obj, id)
@@ -203,9 +93,6 @@
         % modifyUser(obj, id, user)
         % deleteUser(obj,id)
 
-        
-        % AUTO GENERATED CODE ENDS
-    end
 
     methods (Static)
         function version = getSdkVersion()
