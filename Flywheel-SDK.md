@@ -6,9 +6,14 @@
             %          apiKey must be in format <domain>:<API token>
             
      Methods (auto-generated)
+        **# The mighty search**
+        % search(obj, search_query)
+
         % getAllBatches(obj)
         % getBatch(obj, id)
         % startBatch(obj, id)
+
+        **# Collections related**
         % getAllCollections(obj)
         % getCollection(obj, id)
         % getCollectionSessions(obj, id)
@@ -26,7 +31,8 @@
         % deleteCollectionFileInfoFields(obj, id, filename, keys)
         % uploadFileToCollection(obj, id, path)
         % downloadFileFromCollection(obj, id, name, path)
-        % search(obj, search_query)
+
+        # - Acquisition related
         % getAllAcquisitions(obj)
         % getAcquisition(obj, id)
         % addAcquisition(obj, acquisition)
@@ -40,10 +46,14 @@
         % deleteAcquisitionFileInfoFields(obj, id, filename, keys)
         % uploadFileToAcquisition(obj, id, path)
         % downloadFileFromAcquisition(obj, id, name, path)
+
+        **# Job related**
         % getJob(obj, id)
         % getJobLogs(obj, id)
         % addJob(obj, job)  
-        % heartbeatJob(obj, id)  
+        % heartbeatJob(obj, id)
+
+        **# Project related**
         % getAllProjects(obj)
         % getProject(obj, id)
         % getProjectSessions(obj, id)
