@@ -1,4 +1,4 @@
-function structFromJson = handleJson(statusPtr,ptrValue)
+function structFromJson = handleJson(obj,statusPtr,ptrValue)
 % Handle JSON using JSONlab
 statusValue = statusPtr;
 
