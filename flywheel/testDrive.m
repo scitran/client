@@ -4,9 +4,10 @@ disp('Setup')
 % Before running this script, ensure the following paths were added
 %   path to Flywheel.m to be tested
 %   path to JSONlab
-%   setenv('SdkTestKey','flywheel-cni.scitran.stanford.edu:p707Q4tQxEhfNM0315')
+%   for BW at Flywheel-cni.stanford.edu
 %   set SdkTestKey environment variable as user API key
-%       ex: setenv('SdkTestKey', APIKEY)
+%    APIKEY = 'flywheel-cni.scitran.stanford.edu:p707Q4tQxEhfNM0315';
+%    setenv('SdkTestKey',APIKEY)
 
 % Create string to be used in testdrive
 testString = 'abcdefg';
