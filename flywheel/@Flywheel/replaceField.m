@@ -1,4 +1,4 @@
-function newStruct = replaceField(oldStruct,oldField,newField)
+function newStruct = replaceField(~,oldStruct,oldField,newField)
 % Replace a field within a struct or a cell array of structs
 % Check if variable is a cell
 if iscell(oldStruct)

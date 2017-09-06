@@ -9,7 +9,7 @@ disp('Setup')
 %    APIKEY = 'flywheel-cni.scitran.stanford.edu:p707Q4tQxEhfNM0315';
 %    setenv('SdkTestKey',APIKEY)
 
-% Create string to be used in testdrive
+%% Create string to be used in testdrive
 testString = 'abcdefg';
 % A test file
 filename = 'test.txt';
@@ -19,7 +19,8 @@ fclose(fid);
 % Define error message
 errMsg = 'Strings not equal';
 
-% Create client
+%% Create client
+
 apiKey = getenv('SdkTestKey');
 fw = Flywheel(apiKey);
 
@@ -85,6 +86,7 @@ assert(strcmp(project.notes{1,1}.text, 'This is a note'), errMsg)
 assert(strcmp(project.files{1,1}.name, filename), errMsg)
 s = dir('/tmp/download.txt');
 assert(project.files{1,1}.size == s.bytes, errMsg)
+disp('Done');
 
 %% Sessions
 disp('Testing Sessions')
@@ -111,6 +113,7 @@ assert(strcmp(session.notes{1,1}.text, 'This is a note'), errMsg)
 assert(strcmp(session.files{1,1}.name, filename), errMsg)
 s = dir('/tmp/download2.txt');
 assert(session.files{1,1}.size == s.bytes, errMsg)
+disp('Done');
 
 %% Acquisitions
 disp('Testing Acquisitions')
@@ -137,6 +140,7 @@ assert(strcmp(acq.notes{1,1}.text, 'This is a note'), errMsg)
 assert(strcmp(acq.files{1,1}.name, filename), errMsg)
 s = dir('/tmp/download3.txt');
 assert(session.files{1,1}.size == s.bytes, errMsg)
+disp('Done');
 
 %% Gears
 disp('Testing Gears')
@@ -157,6 +161,7 @@ assert(strcmp(job.gear_id,gearId), errMsg)
 
 logs = fw.getJobLogs(jobId);
 % Likely will not have anything in them yet
+disp('Done');
 
 %% Misc
 disp('Testing Misc')
@@ -166,6 +171,7 @@ assert(~isempty(config), errMsg)
 
 fwVersion = fw.getVersion();
 assert(fwVersion.database >= 25, errMsg)
+disp('Done');
 
 %% Cleanup
 disp('Cleanup')
@@ -178,3 +184,6 @@ fw.deleteGear(gearId);
 
 disp('')
 disp('Test drive complete.')
+disp('Done');
+
+%%

@@ -10,7 +10,7 @@ if statusValue == 0
     %   the data information.
     dataFromJson = loadedJson.data;
     %  Call replaceField on loadedJson to replace x0x5F_id with id
-    structFromJson = Flywheel.replaceField(dataFromJson,'x0x5F_id','id');
+    structFromJson = obj.replaceField(dataFromJson,'x0x5F_id','id');
     % Otherwise, nonzero statusCode indicates an error
 else
     % Try to load message from the JSON

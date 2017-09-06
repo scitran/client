@@ -117,7 +117,7 @@ classdef Flywheel
             statusPtr = libpointer('int32Ptr',-100);
             oldField = 'id';
             newField = 'x0x5F_id';
-            collection = Flywheel.replaceField(collection,oldField,newField);
+            collection = obj.replaceField(collection,oldField,newField);
             collection = savejson('',collection);
             [status,cmdout] = system([obj.folder '/sdk AddCollection ' obj.key ' '  '''' collection ''' ']);
 
@@ -128,7 +128,7 @@ classdef Flywheel
             statusPtr = libpointer('int32Ptr',-100);
             oldField = 'id';
             newField = 'x0x5F_id';
-            aqids = Flywheel.replaceField(aqids,oldField,newField);
+            aqids = obj.replaceField(aqids,oldField,newField);
             aqids = savejson('',aqids);
             [status,cmdout] = system([obj.folder '/sdk AddAcquisitionsToCollection ' obj.key ' '  '''' id ''' ' '''' aqids ''' ']);
 
@@ -139,7 +139,7 @@ classdef Flywheel
             statusPtr = libpointer('int32Ptr',-100);
             oldField = 'id';
             newField = 'x0x5F_id';
-            sessionids = Flywheel.replaceField(sessionids,oldField,newField);
+            sessionids = obj.replaceField(sessionids,oldField,newField);
             sessionids = savejson('',sessionids);
             [status,cmdout] = system([obj.folder '/sdk AddSessionsToCollection ' obj.key ' '  '''' id ''' ' '''' sessionids ''' ']);
 
@@ -157,7 +157,7 @@ classdef Flywheel
             statusPtr = libpointer('int32Ptr',-100);
             oldField = 'id';
             newField = 'x0x5F_id';
-            collection = Flywheel.replaceField(collection,oldField,newField);
+            collection = obj.replaceField(collection,oldField,newField);
             collection = savejson('',collection);
             [status,cmdout] = system([obj.folder '/sdk ModifyCollection ' obj.key ' '  '''' id ''' ' '''' collection ''' ']);
 
@@ -175,7 +175,7 @@ classdef Flywheel
             statusPtr = libpointer('int32Ptr',-100);
             oldField = 'id';
             newField = 'x0x5F_id';
-            attributes = Flywheel.replaceField(attributes,oldField,newField);
+            attributes = obj.replaceField(attributes,oldField,newField);
             attributes = savejson('',attributes);
             [status,cmdout] = system([obj.folder '/sdk ModifyCollectionFile ' obj.key ' '  '''' id ''' ' '''' filename ''' ' '''' attributes ''' ']);
 
@@ -186,7 +186,7 @@ classdef Flywheel
             statusPtr = libpointer('int32Ptr',-100);
             oldField = 'id';
             newField = 'x0x5F_id';
-            set = Flywheel.replaceField(set,oldField,newField);
+            set = obj.replaceField(set,oldField,newField);
             set = savejson('',set);
             [status,cmdout] = system([obj.folder '/sdk SetCollectionFileInfo ' obj.key ' '  '''' id ''' ' '''' filename ''' ' '''' set ''' ']);
 
@@ -197,7 +197,7 @@ classdef Flywheel
             statusPtr = libpointer('int32Ptr',-100);
             oldField = 'id';
             newField = 'x0x5F_id';
-            replace = Flywheel.replaceField(replace,oldField,newField);
+            replace = obj.replaceField(replace,oldField,newField);
             replace = savejson('',replace);
             [status,cmdout] = system([obj.folder '/sdk ReplaceCollectionFileInfo ' obj.key ' '  '''' id ''' ' '''' filename ''' ' '''' replace ''' ']);
 
@@ -208,7 +208,7 @@ classdef Flywheel
             statusPtr = libpointer('int32Ptr',-100);
             oldField = 'id';
             newField = 'x0x5F_id';
-            keys = Flywheel.replaceField(keys,oldField,newField);
+            keys = obj.replaceField(keys,oldField,newField);
             keys = savejson('',keys);
             [status,cmdout] = system([obj.folder '/sdk DeleteCollectionFileInfoFields ' obj.key ' '  '''' id ''' ' '''' filename ''' ' '''' keys ''' ']);
 
@@ -233,7 +233,7 @@ classdef Flywheel
             statusPtr = libpointer('int32Ptr',-100);
             oldField = 'id';
             newField = 'x0x5F_id';
-            search_query = Flywheel.replaceField(search_query,oldField,newField);
+            search_query = obj.replaceField(search_query,oldField,newField);
             search_query = savejson('',search_query);
             [status,cmdout] = system([obj.folder '/sdk Search ' obj.key ' '  '''' search_query ''' ']);
 
@@ -258,7 +258,7 @@ classdef Flywheel
             statusPtr = libpointer('int32Ptr',-100);
             oldField = 'id';
             newField = 'x0x5F_id';
-            acquisition = Flywheel.replaceField(acquisition,oldField,newField);
+            acquisition = obj.replaceField(acquisition,oldField,newField);
             acquisition = savejson('',acquisition);
             [status,cmdout] = system([obj.folder '/sdk AddAcquisition ' obj.key ' '  '''' acquisition ''' ']);
 
@@ -283,7 +283,7 @@ classdef Flywheel
             statusPtr = libpointer('int32Ptr',-100);
             oldField = 'id';
             newField = 'x0x5F_id';
-            acquisition = Flywheel.replaceField(acquisition,oldField,newField);
+            acquisition = obj.replaceField(acquisition,oldField,newField);
             acquisition = savejson('',acquisition);
             [status,cmdout] = system([obj.folder '/sdk ModifyAcquisition ' obj.key ' '  '''' id ''' ' '''' acquisition ''' ']);
 
@@ -301,7 +301,7 @@ classdef Flywheel
             statusPtr = libpointer('int32Ptr',-100);
             oldField = 'id';
             newField = 'x0x5F_id';
-            attributes = Flywheel.replaceField(attributes,oldField,newField);
+            attributes = obj.replaceField(attributes,oldField,newField);
             attributes = savejson('',attributes);
             [status,cmdout] = system([obj.folder '/sdk ModifyAcquisitionFile ' obj.key ' '  '''' id ''' ' '''' filename ''' ' '''' attributes ''' ']);
 
@@ -312,7 +312,7 @@ classdef Flywheel
             statusPtr = libpointer('int32Ptr',-100);
             oldField = 'id';
             newField = 'x0x5F_id';
-            set = Flywheel.replaceField(set,oldField,newField);
+            set = obj.replaceField(set,oldField,newField);
             set = savejson('',set);
             [status,cmdout] = system([obj.folder '/sdk SetAcquisitionFileInfo ' obj.key ' '  '''' id ''' ' '''' filename ''' ' '''' set ''' ']);
 
@@ -323,7 +323,7 @@ classdef Flywheel
             statusPtr = libpointer('int32Ptr',-100);
             oldField = 'id';
             newField = 'x0x5F_id';
-            replace = Flywheel.replaceField(replace,oldField,newField);
+            replace = obj.replaceField(replace,oldField,newField);
             replace = savejson('',replace);
             [status,cmdout] = system([obj.folder '/sdk ReplaceAcquisitionFileInfo ' obj.key ' '  '''' id ''' ' '''' filename ''' ' '''' replace ''' ']);
 
@@ -334,7 +334,7 @@ classdef Flywheel
             statusPtr = libpointer('int32Ptr',-100);
             oldField = 'id';
             newField = 'x0x5F_id';
-            keys = Flywheel.replaceField(keys,oldField,newField);
+            keys = obj.replaceField(keys,oldField,newField);
             keys = savejson('',keys);
             [status,cmdout] = system([obj.folder '/sdk DeleteAcquisitionFileInfoFields ' obj.key ' '  '''' id ''' ' '''' filename ''' ' '''' keys ''' ']);
 
@@ -373,7 +373,7 @@ classdef Flywheel
             statusPtr = libpointer('int32Ptr',-100);
             oldField = 'id';
             newField = 'x0x5F_id';
-            job = Flywheel.replaceField(job,oldField,newField);
+            job = obj.replaceField(job,oldField,newField);
             job = savejson('',job);
             [status,cmdout] = system([obj.folder '/sdk AddJob ' obj.key ' '  '''' job ''' ']);
 
@@ -412,7 +412,7 @@ classdef Flywheel
             statusPtr = libpointer('int32Ptr',-100);
             oldField = 'id';
             newField = 'x0x5F_id';
-            project = Flywheel.replaceField(project,oldField,newField);
+            project = obj.replaceField(project,oldField,newField);
             project = savejson('',project);
             [status,cmdout] = system([obj.folder '/sdk AddProject ' obj.key ' '  '''' project ''' ']);
 
@@ -437,7 +437,7 @@ classdef Flywheel
             statusPtr = libpointer('int32Ptr',-100);
             oldField = 'id';
             newField = 'x0x5F_id';
-            project = Flywheel.replaceField(project,oldField,newField);
+            project = obj.replaceField(project,oldField,newField);
             project = savejson('',project);
             [status,cmdout] = system([obj.folder '/sdk ModifyProject ' obj.key ' '  '''' id ''' ' '''' project ''' ']);
 
@@ -455,7 +455,7 @@ classdef Flywheel
             statusPtr = libpointer('int32Ptr',-100);
             oldField = 'id';
             newField = 'x0x5F_id';
-            attributes = Flywheel.replaceField(attributes,oldField,newField);
+            attributes = obj.replaceField(attributes,oldField,newField);
             attributes = savejson('',attributes);
             [status,cmdout] = system([obj.folder '/sdk ModifyProjectFile ' obj.key ' '  '''' id ''' ' '''' filename ''' ' '''' attributes ''' ']);
 
@@ -466,7 +466,7 @@ classdef Flywheel
             statusPtr = libpointer('int32Ptr',-100);
             oldField = 'id';
             newField = 'x0x5F_id';
-            set = Flywheel.replaceField(set,oldField,newField);
+            set = obj.replaceField(set,oldField,newField);
             set = savejson('',set);
             [status,cmdout] = system([obj.folder '/sdk SetProjectFileInfo ' obj.key ' '  '''' id ''' ' '''' filename ''' ' '''' set ''' ']);
 
@@ -477,7 +477,7 @@ classdef Flywheel
             statusPtr = libpointer('int32Ptr',-100);
             oldField = 'id';
             newField = 'x0x5F_id';
-            replace = Flywheel.replaceField(replace,oldField,newField);
+            replace = obj.replaceField(replace,oldField,newField);
             replace = savejson('',replace);
             [status,cmdout] = system([obj.folder '/sdk ReplaceProjectFileInfo ' obj.key ' '  '''' id ''' ' '''' filename ''' ' '''' replace ''' ']);
 
@@ -488,7 +488,7 @@ classdef Flywheel
             statusPtr = libpointer('int32Ptr',-100);
             oldField = 'id';
             newField = 'x0x5F_id';
-            keys = Flywheel.replaceField(keys,oldField,newField);
+            keys = obj.replaceField(keys,oldField,newField);
             keys = savejson('',keys);
             [status,cmdout] = system([obj.folder '/sdk DeleteProjectFileInfoFields ' obj.key ' '  '''' id ''' ' '''' filename ''' ' '''' keys ''' ']);
 
@@ -527,7 +527,7 @@ classdef Flywheel
             statusPtr = libpointer('int32Ptr',-100);
             oldField = 'id';
             newField = 'x0x5F_id';
-            gear = Flywheel.replaceField(gear,oldField,newField);
+            gear = obj.replaceField(gear,oldField,newField);
             gear = savejson('',gear);
             [status,cmdout] = system([obj.folder '/sdk AddGear ' obj.key ' '  '''' gear ''' ']);
 
@@ -559,7 +559,7 @@ classdef Flywheel
             statusPtr = libpointer('int32Ptr',-100);
             oldField = 'id';
             newField = 'x0x5F_id';
-            group = Flywheel.replaceField(group,oldField,newField);
+            group = obj.replaceField(group,oldField,newField);
             group = savejson('',group);
             [status,cmdout] = system([obj.folder '/sdk AddGroup ' obj.key ' '  '''' group ''' ']);
 
@@ -577,7 +577,7 @@ classdef Flywheel
             statusPtr = libpointer('int32Ptr',-100);
             oldField = 'id';
             newField = 'x0x5F_id';
-            group = Flywheel.replaceField(group,oldField,newField);
+            group = obj.replaceField(group,oldField,newField);
             group = savejson('',group);
             [status,cmdout] = system([obj.folder '/sdk ModifyGroup ' obj.key ' '  '''' id ''' ' '''' group ''' ']);
 
@@ -630,7 +630,7 @@ classdef Flywheel
             statusPtr = libpointer('int32Ptr',-100);
             oldField = 'id';
             newField = 'x0x5F_id';
-            session = Flywheel.replaceField(session,oldField,newField);
+            session = obj.replaceField(session,oldField,newField);
             session = savejson('',session);
             [status,cmdout] = system([obj.folder '/sdk AddSession ' obj.key ' '  '''' session ''' ']);
 
@@ -655,7 +655,7 @@ classdef Flywheel
             statusPtr = libpointer('int32Ptr',-100);
             oldField = 'id';
             newField = 'x0x5F_id';
-            session = Flywheel.replaceField(session,oldField,newField);
+            session = obj.replaceField(session,oldField,newField);
             session = savejson('',session);
             [status,cmdout] = system([obj.folder '/sdk ModifySession ' obj.key ' '  '''' id ''' ' '''' session ''' ']);
 
@@ -673,7 +673,7 @@ classdef Flywheel
             statusPtr = libpointer('int32Ptr',-100);
             oldField = 'id';
             newField = 'x0x5F_id';
-            attributes = Flywheel.replaceField(attributes,oldField,newField);
+            attributes = obj.replaceField(attributes,oldField,newField);
             attributes = savejson('',attributes);
             [status,cmdout] = system([obj.folder '/sdk ModifySessionFile ' obj.key ' '  '''' id ''' ' '''' filename ''' ' '''' attributes ''' ']);
 
@@ -684,7 +684,7 @@ classdef Flywheel
             statusPtr = libpointer('int32Ptr',-100);
             oldField = 'id';
             newField = 'x0x5F_id';
-            set = Flywheel.replaceField(set,oldField,newField);
+            set = obj.replaceField(set,oldField,newField);
             set = savejson('',set);
             [status,cmdout] = system([obj.folder '/sdk SetSessionFileInfo ' obj.key ' '  '''' id ''' ' '''' filename ''' ' '''' set ''' ']);
 
@@ -695,7 +695,7 @@ classdef Flywheel
             statusPtr = libpointer('int32Ptr',-100);
             oldField = 'id';
             newField = 'x0x5F_id';
-            replace = Flywheel.replaceField(replace,oldField,newField);
+            replace = obj.replaceField(replace,oldField,newField);
             replace = savejson('',replace);
             [status,cmdout] = system([obj.folder '/sdk ReplaceSessionFileInfo ' obj.key ' '  '''' id ''' ' '''' filename ''' ' '''' replace ''' ']);
 
@@ -706,7 +706,7 @@ classdef Flywheel
             statusPtr = libpointer('int32Ptr',-100);
             oldField = 'id';
             newField = 'x0x5F_id';
-            keys = Flywheel.replaceField(keys,oldField,newField);
+            keys = obj.replaceField(keys,oldField,newField);
             keys = savejson('',keys);
             [status,cmdout] = system([obj.folder '/sdk DeleteSessionFileInfoFields ' obj.key ' '  '''' id ''' ' '''' filename ''' ' '''' keys ''' ']);
 
@@ -752,7 +752,7 @@ classdef Flywheel
             statusPtr = libpointer('int32Ptr',-100);
             oldField = 'id';
             newField = 'x0x5F_id';
-            user = Flywheel.replaceField(user,oldField,newField);
+            user = obj.replaceField(user,oldField,newField);
             user = savejson('',user);
             [status,cmdout] = system([obj.folder '/sdk AddUser ' obj.key ' '  '''' user ''' ']);
 
@@ -763,7 +763,7 @@ classdef Flywheel
             statusPtr = libpointer('int32Ptr',-100);
             oldField = 'id';
             newField = 'x0x5F_id';
-            user = Flywheel.replaceField(user,oldField,newField);
+            user = obj.replaceField(user,oldField,newField);
             user = savejson('',user);
             [status,cmdout] = system([obj.folder '/sdk ModifyUser ' obj.key ' '  '''' id ''' ' '''' user ''' ']);
 
