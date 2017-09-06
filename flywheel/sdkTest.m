@@ -210,3 +210,30 @@ projects = fw.search(srch);
 %     'filters': [
 %         {'match': {'project.label': 'ADNI'}}
         
+%%
+% 'return_type': 'session',
+%     'all_data': True,
+%     'filters': [
+%         {'match': {'project.label': 'UMN'}},
+%         {'match': {'analysis.label': 'AFQ'}},
+%         {'term': {'subject.code': '4279'}}
+%     ]
+% }).get('results', []) ]
+clear srch
+srch.return_type = 'session';
+srch.all_data = 1;
+srch.filters(2).match.project0x2Elabel = 'UMN';
+srch.filters(2).match.analysis0x2Elabel = 'AFQ';
+% srch.filters.term.subject0x2Ecode = '4279';
+jsonwrite(srch,struct('indent','  ','replacementstyle','hex'))
+projects = fw.search(srch);
+
+% Produces this error
+%
+% Error using Flywheel/handleJson (line 28)
+% json: cannot unmarshal number into Go struct field SearchQuery.all_data of type bool
+% 
+% Error in Flywheel/search (line 240)
+%             result = obj.handleJson(status,cmdout);
+%  
+%             
