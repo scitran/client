@@ -1,25 +1,28 @@
-%% Test methods in Flywheel.m
-%% Setup
-disp('Setup')
+%% Test SDK methods in @Flywheel
+%
 % Before running this script, ensure the following paths were added
-%   path to Flywheel.m to be tested
+%
 %   path to JSONlab
 %   for BW at Flywheel-cni.stanford.edu
 %   set SdkTestKey environment variable as user API key
-%    APIKEY = 'flywheel-cni.scitran.stanford.edu:p707Q4tQxEhfNM0315';
-%    setenv('SdkTestKey',APIKEY)
+%     APIKEY = 'flywheel-cni.scitran.stanford.edu:******';
+%     setenv('SdkTestKey',APIKEY)
 
 %% Create string to be used in testdrive
+
+% Used for labels, tags, user names
 testString = 'abcdefg';
-% A test file
+
+% A test file we upload and download later
 filename = 'test.txt';
 fid = fopen(filename, 'w');
 fprintf(fid, 'This is a test file');
 fclose(fid);
+
 % Define error message
 errMsg = 'Strings not equal';
 
-%% Create client
+%% Create FW client
 
 apiKey = getenv('SdkTestKey');
 fw = Flywheel(apiKey);
@@ -47,6 +50,7 @@ assert(strcmp(user2.email, email), errMsg)
 assert(strcmp(user2.firstname,'John'), errMsg)
 
 fw.deleteUser(userId);
+disp('Done')
 
 %% Groups
 disp('Testing Groups')
@@ -62,6 +66,7 @@ assert(~isempty(groups))
 group = fw.getGroup(groupId);
 assert(strcmp(group.tags{1},'blue'), errMsg)
 assert(strcmp(group.label,'testdrive'), errMsg)
+disp('Done')
 
 %% Projects
 disp('Testing Projects')
@@ -186,4 +191,22 @@ disp('')
 disp('Test drive complete.')
 disp('Done');
 
-%%
+%% Search
+
+clear srch
+srch.return_type = 'project';
+projects = fw.search(srch);
+
+% Deal with '.' replacement in jsonwrite
+clear srch
+srch.return_type = 'project';
+srch.filters(1).match.project0x2Elabel = 'ENGAGE';
+srch.filters(2).match.project0x2Egrouplabel = 'PanLab';
+jsonwrite(srch,struct('indent','  ','replacementstyle','hex'))
+
+projects = fw.search(srch);
+
+% 'return_type': 'project',
+%     'filters': [
+%         {'match': {'project.label': 'ADNI'}}
+        
