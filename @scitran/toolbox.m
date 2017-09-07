@@ -20,10 +20,10 @@ function tbx = toolbox(st,varargin)
 %
 %  Retrieves toolboxes.json from this project
 %   % Default filename is toolboxes.json
-%   tbxFile = st.toolbox('project','Diffusion Noise Analysis');  
+%   tbxFile = st.toolbox('project','ALDIT');  
 
 %   % Specify the filename
-%   tbxFile = st.toolbox('project','Diffusion Noise Analysis','file','yourName.json');
+%   tbxFile = st.toolbox('project','ALDIT','file','yourName.json');
 %
 %  Returns a toolboxes struct without installing
 %   tbxFile = st.search('files','project label','Diffusion Noise Analysis','filename','toolboxes.json')

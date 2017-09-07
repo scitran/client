@@ -16,15 +16,15 @@
 %% Illustrates use of the @scitran toolbox method
 
 % Open a scitran object
-st = scitran('scitran', 'action', 'create');
+st = scitran('vistalab');
 
 % Find the toolboxes file for a
 tbxFile = st.search('files',...
-    'project label','Diffusion Noise Analysis',...
-    'file name','toolboxes.json');
+    'project label','ALDIT',...
+    'file name','dtiError.json');
 
 % Checks for the toolboxes and installs if necessary.
-st.toolbox(tbxFile{1});
+st.toolbox('project','ALDIT','file','dtiError.json');
 
 %% Alternatively, get the tbx and install separately
 
