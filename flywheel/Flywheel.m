@@ -17,13 +17,13 @@ classdef Flywheel
                 throw(ME)
             end
             obj.key = apiKey;
-            % Check if JSONlab is in path
-            if ~exist('savejson')
-                ME = MException('FlywheelException:JSONlab', 'JSONlab function savejson is not loaded. Please install JSONlab and add to path.')
+            % Check if JSONio is in path
+            if ~exist('jsonread')
+                ME = MException('FlywheelException:JSONio', 'JSONio function jsonsave is not loaded. Please install JSONio and add to path.')
                 throw(ME)
             end
-            if ~exist('loadjson')
-                ME = MException('FlywheelException:JSONlab', 'JSONlab function loadjson is not loaded. Please install JSONlab and add to path.')
+            if ~exist('jsonwrite')
+                ME = MException('FlywheelException:JSONio', 'JSONio function jsonwrite is not loaded. Please install JSONio and add to path.')
                 throw(ME)
             end
 
@@ -55,6 +55,101 @@ classdef Flywheel
         %
 
         
+        function result = getCurrentUser(obj)
+            % getCurrentUser()
+
+            [status,cmdout] = system([obj.folder '/sdk GetCurrentUser ' obj.key ' ' ]);
+
+            result = Flywheel.handleJson(status,cmdout);
+        end
+        
+        function result = getAllUsers(obj)
+            % getAllUsers()
+
+            [status,cmdout] = system([obj.folder '/sdk GetAllUsers ' obj.key ' ' ]);
+
+            result = Flywheel.handleJson(status,cmdout);
+        end
+        
+        function result = getUser(obj, id)
+            % getUser(id)
+
+            [status,cmdout] = system([obj.folder '/sdk GetUser ' obj.key ' '  '''' id ''' ']);
+
+            result = Flywheel.handleJson(status,cmdout);
+        end
+        
+        function result = addUser(obj, user)
+            % addUser(user)
+
+            oldField = 'id';
+            newField = 'x0x5Fid';
+            user = Flywheel.replaceField(user,oldField,newField);
+            opts = struct('replacementStyle','hex');
+            user = jsonwrite(user,opts);
+            [status,cmdout] = system([obj.folder '/sdk AddUser ' obj.key ' '  '''' user ''' ']);
+
+            result = Flywheel.handleJson(status,cmdout);
+        end
+        
+        function result = modifyUser(obj, id, user)
+            % modifyUser(id, user)
+
+            oldField = 'id';
+            newField = 'x0x5Fid';
+            user = Flywheel.replaceField(user,oldField,newField);
+            opts = struct('replacementStyle','hex');
+            user = jsonwrite(user,opts);
+            [status,cmdout] = system([obj.folder '/sdk ModifyUser ' obj.key ' '  '''' id ''' ' '''' user ''' ']);
+
+            result = Flywheel.handleJson(status,cmdout);
+        end
+        
+        function result = deleteUser(obj, id)
+            % deleteUser(id)
+
+            [status,cmdout] = system([obj.folder '/sdk DeleteUser ' obj.key ' '  '''' id ''' ']);
+
+            result = Flywheel.handleJson(status,cmdout);
+        end
+        
+        function result = getAllGears(obj)
+            % getAllGears()
+
+            [status,cmdout] = system([obj.folder '/sdk GetAllGears ' obj.key ' ' ]);
+
+            result = Flywheel.handleJson(status,cmdout);
+        end
+        
+        function result = getGear(obj, id)
+            % getGear(id)
+
+            [status,cmdout] = system([obj.folder '/sdk GetGear ' obj.key ' '  '''' id ''' ']);
+
+            result = Flywheel.handleJson(status,cmdout);
+        end
+        
+        function result = addGear(obj, gear)
+            % addGear(gear)
+
+            oldField = 'id';
+            newField = 'x0x5Fid';
+            gear = Flywheel.replaceField(gear,oldField,newField);
+            opts = struct('replacementStyle','hex');
+            gear = jsonwrite(gear,opts);
+            [status,cmdout] = system([obj.folder '/sdk AddGear ' obj.key ' '  '''' gear ''' ']);
+
+            result = Flywheel.handleJson(status,cmdout);
+        end
+        
+        function result = deleteGear(obj, id)
+            % deleteGear(id)
+
+            [status,cmdout] = system([obj.folder '/sdk DeleteGear ' obj.key ' '  '''' id ''' ']);
+
+            result = Flywheel.handleJson(status,cmdout);
+        end
+        
         function result = getAllGroups(obj)
             % getAllGroups()
 
@@ -75,9 +170,10 @@ classdef Flywheel
             % addGroup(group)
 
             oldField = 'id';
-            newField = 'x0x5F_id';
+            newField = 'x0x5Fid';
             group = Flywheel.replaceField(group,oldField,newField);
-            group = savejson('',group,'ParseLogical',1);
+            opts = struct('replacementStyle','hex');
+            group = jsonwrite(group,opts);
             [status,cmdout] = system([obj.folder '/sdk AddGroup ' obj.key ' '  '''' group ''' ']);
 
             result = Flywheel.handleJson(status,cmdout);
@@ -95,9 +191,10 @@ classdef Flywheel
             % modifyGroup(id, group)
 
             oldField = 'id';
-            newField = 'x0x5F_id';
+            newField = 'x0x5Fid';
             group = Flywheel.replaceField(group,oldField,newField);
-            group = savejson('',group,'ParseLogical',1);
+            opts = struct('replacementStyle','hex');
+            group = jsonwrite(group,opts);
             [status,cmdout] = system([obj.folder '/sdk ModifyGroup ' obj.key ' '  '''' id ''' ' '''' group ''' ']);
 
             result = Flywheel.handleJson(status,cmdout);
@@ -111,154 +208,39 @@ classdef Flywheel
             result = Flywheel.handleJson(status,cmdout);
         end
         
-        function result = getAllAcquisitions(obj)
-            % getAllAcquisitions()
+        function result = getJob(obj, id)
+            % getJob(id)
 
-            [status,cmdout] = system([obj.folder '/sdk GetAllAcquisitions ' obj.key ' ' ]);
-
-            result = Flywheel.handleJson(status,cmdout);
-        end
-        
-        function result = getAcquisition(obj, id)
-            % getAcquisition(id)
-
-            [status,cmdout] = system([obj.folder '/sdk GetAcquisition ' obj.key ' '  '''' id ''' ']);
+            [status,cmdout] = system([obj.folder '/sdk GetJob ' obj.key ' '  '''' id ''' ']);
 
             result = Flywheel.handleJson(status,cmdout);
         end
         
-        function result = addAcquisition(obj, acquisition)
-            % addAcquisition(acquisition)
+        function result = getJobLogs(obj, id)
+            % getJobLogs(id)
+
+            [status,cmdout] = system([obj.folder '/sdk GetJobLogs ' obj.key ' '  '''' id ''' ']);
+
+            result = Flywheel.handleJson(status,cmdout);
+        end
+        
+        function result = addJob(obj, job)
+            % addJob(job)
 
             oldField = 'id';
-            newField = 'x0x5F_id';
-            acquisition = Flywheel.replaceField(acquisition,oldField,newField);
-            acquisition = savejson('',acquisition,'ParseLogical',1);
-            [status,cmdout] = system([obj.folder '/sdk AddAcquisition ' obj.key ' '  '''' acquisition ''' ']);
+            newField = 'x0x5Fid';
+            job = Flywheel.replaceField(job,oldField,newField);
+            opts = struct('replacementStyle','hex');
+            job = jsonwrite(job,opts);
+            [status,cmdout] = system([obj.folder '/sdk AddJob ' obj.key ' '  '''' job ''' ']);
 
             result = Flywheel.handleJson(status,cmdout);
         end
         
-        function result = addAcquisitionNote(obj, id, text)
-            % addAcquisitionNote(id, text)
+        function result = heartbeatJob(obj, id)
+            % heartbeatJob(id)
 
-            [status,cmdout] = system([obj.folder '/sdk AddAcquisitionNote ' obj.key ' '  '''' id ''' ' '''' text ''' ']);
-
-            result = Flywheel.handleJson(status,cmdout);
-        end
-        
-        function result = addAcquisitionTag(obj, id, tag)
-            % addAcquisitionTag(id, tag)
-
-            [status,cmdout] = system([obj.folder '/sdk AddAcquisitionTag ' obj.key ' '  '''' id ''' ' '''' tag ''' ']);
-
-            result = Flywheel.handleJson(status,cmdout);
-        end
-        
-        function result = modifyAcquisition(obj, id, acquisition)
-            % modifyAcquisition(id, acquisition)
-
-            oldField = 'id';
-            newField = 'x0x5F_id';
-            acquisition = Flywheel.replaceField(acquisition,oldField,newField);
-            acquisition = savejson('',acquisition,'ParseLogical',1);
-            [status,cmdout] = system([obj.folder '/sdk ModifyAcquisition ' obj.key ' '  '''' id ''' ' '''' acquisition ''' ']);
-
-            result = Flywheel.handleJson(status,cmdout);
-        end
-        
-        function result = deleteAcquisition(obj, id)
-            % deleteAcquisition(id)
-
-            [status,cmdout] = system([obj.folder '/sdk DeleteAcquisition ' obj.key ' '  '''' id ''' ']);
-
-            result = Flywheel.handleJson(status,cmdout);
-        end
-        
-        function result = modifyAcquisitionFile(obj, id, filename, attributes)
-            % modifyAcquisitionFile(id, filename, attributes)
-
-            oldField = 'id';
-            newField = 'x0x5F_id';
-            attributes = Flywheel.replaceField(attributes,oldField,newField);
-            attributes = savejson('',attributes,'ParseLogical',1);
-            [status,cmdout] = system([obj.folder '/sdk ModifyAcquisitionFile ' obj.key ' '  '''' id ''' ' '''' filename ''' ' '''' attributes ''' ']);
-
-            result = Flywheel.handleJson(status,cmdout);
-        end
-        
-        function result = setAcquisitionFileInfo(obj, id, filename, set)
-            % setAcquisitionFileInfo(id, filename, set)
-
-            oldField = 'id';
-            newField = 'x0x5F_id';
-            set = Flywheel.replaceField(set,oldField,newField);
-            set = savejson('',set,'ParseLogical',1);
-            [status,cmdout] = system([obj.folder '/sdk SetAcquisitionFileInfo ' obj.key ' '  '''' id ''' ' '''' filename ''' ' '''' set ''' ']);
-
-            result = Flywheel.handleJson(status,cmdout);
-        end
-        
-        function result = replaceAcquisitionFileInfo(obj, id, filename, replace)
-            % replaceAcquisitionFileInfo(id, filename, replace)
-
-            oldField = 'id';
-            newField = 'x0x5F_id';
-            replace = Flywheel.replaceField(replace,oldField,newField);
-            replace = savejson('',replace,'ParseLogical',1);
-            [status,cmdout] = system([obj.folder '/sdk ReplaceAcquisitionFileInfo ' obj.key ' '  '''' id ''' ' '''' filename ''' ' '''' replace ''' ']);
-
-            result = Flywheel.handleJson(status,cmdout);
-        end
-        
-        function result = deleteAcquisitionFileInfoFields(obj, id, filename, keys)
-            % deleteAcquisitionFileInfoFields(id, filename, keys)
-
-            oldField = 'id';
-            newField = 'x0x5F_id';
-            keys = Flywheel.replaceField(keys,oldField,newField);
-            keys = savejson('',keys,'ParseLogical',1);
-            [status,cmdout] = system([obj.folder '/sdk DeleteAcquisitionFileInfoFields ' obj.key ' '  '''' id ''' ' '''' filename ''' ' '''' keys ''' ']);
-
-            result = Flywheel.handleJson(status,cmdout);
-        end
-        
-        function result = uploadFileToAcquisition(obj, id, path)
-            % uploadFileToAcquisition(id, path)
-
-            [status,cmdout] = system([obj.folder '/sdk UploadFileToAcquisition ' obj.key ' '  '''' id ''' ' '''' path ''' ']);
-
-            result = Flywheel.handleJson(status,cmdout);
-        end
-        
-        function result = downloadFileFromAcquisition(obj, id, name, path)
-            % downloadFileFromAcquisition(id, name, path)
-
-            [status,cmdout] = system([obj.folder '/sdk DownloadFileFromAcquisition ' obj.key ' '  '''' id ''' ' '''' name ''' ' '''' path ''' ']);
-
-            result = Flywheel.handleJson(status,cmdout);
-        end
-        
-        function result = getAllBatches(obj)
-            % getAllBatches()
-
-            [status,cmdout] = system([obj.folder '/sdk GetAllBatches ' obj.key ' ' ]);
-
-            result = Flywheel.handleJson(status,cmdout);
-        end
-        
-        function result = getBatch(obj, id)
-            % getBatch(id)
-
-            [status,cmdout] = system([obj.folder '/sdk GetBatch ' obj.key ' '  '''' id ''' ']);
-
-            result = Flywheel.handleJson(status,cmdout);
-        end
-        
-        function result = startBatch(obj, id)
-            % startBatch(id)
-
-            [status,cmdout] = system([obj.folder '/sdk StartBatch ' obj.key ' '  '''' id ''' ']);
+            [status,cmdout] = system([obj.folder '/sdk HeartbeatJob ' obj.key ' '  '''' id ''' ']);
 
             result = Flywheel.handleJson(status,cmdout);
         end
@@ -291,9 +273,10 @@ classdef Flywheel
             % addProject(project)
 
             oldField = 'id';
-            newField = 'x0x5F_id';
+            newField = 'x0x5Fid';
             project = Flywheel.replaceField(project,oldField,newField);
-            project = savejson('',project,'ParseLogical',1);
+            opts = struct('replacementStyle','hex');
+            project = jsonwrite(project,opts);
             [status,cmdout] = system([obj.folder '/sdk AddProject ' obj.key ' '  '''' project ''' ']);
 
             result = Flywheel.handleJson(status,cmdout);
@@ -319,9 +302,10 @@ classdef Flywheel
             % modifyProject(id, project)
 
             oldField = 'id';
-            newField = 'x0x5F_id';
+            newField = 'x0x5Fid';
             project = Flywheel.replaceField(project,oldField,newField);
-            project = savejson('',project,'ParseLogical',1);
+            opts = struct('replacementStyle','hex');
+            project = jsonwrite(project,opts);
             [status,cmdout] = system([obj.folder '/sdk ModifyProject ' obj.key ' '  '''' id ''' ' '''' project ''' ']);
 
             result = Flywheel.handleJson(status,cmdout);
@@ -339,9 +323,10 @@ classdef Flywheel
             % modifyProjectFile(id, filename, attributes)
 
             oldField = 'id';
-            newField = 'x0x5F_id';
+            newField = 'x0x5Fid';
             attributes = Flywheel.replaceField(attributes,oldField,newField);
-            attributes = savejson('',attributes,'ParseLogical',1);
+            opts = struct('replacementStyle','hex');
+            attributes = jsonwrite(attributes,opts);
             [status,cmdout] = system([obj.folder '/sdk ModifyProjectFile ' obj.key ' '  '''' id ''' ' '''' filename ''' ' '''' attributes ''' ']);
 
             result = Flywheel.handleJson(status,cmdout);
@@ -351,9 +336,10 @@ classdef Flywheel
             % setProjectFileInfo(id, filename, set)
 
             oldField = 'id';
-            newField = 'x0x5F_id';
+            newField = 'x0x5Fid';
             set = Flywheel.replaceField(set,oldField,newField);
-            set = savejson('',set,'ParseLogical',1);
+            opts = struct('replacementStyle','hex');
+            set = jsonwrite(set,opts);
             [status,cmdout] = system([obj.folder '/sdk SetProjectFileInfo ' obj.key ' '  '''' id ''' ' '''' filename ''' ' '''' set ''' ']);
 
             result = Flywheel.handleJson(status,cmdout);
@@ -363,9 +349,10 @@ classdef Flywheel
             % replaceProjectFileInfo(id, filename, replace)
 
             oldField = 'id';
-            newField = 'x0x5F_id';
+            newField = 'x0x5Fid';
             replace = Flywheel.replaceField(replace,oldField,newField);
-            replace = savejson('',replace,'ParseLogical',1);
+            opts = struct('replacementStyle','hex');
+            replace = jsonwrite(replace,opts);
             [status,cmdout] = system([obj.folder '/sdk ReplaceProjectFileInfo ' obj.key ' '  '''' id ''' ' '''' filename ''' ' '''' replace ''' ']);
 
             result = Flywheel.handleJson(status,cmdout);
@@ -375,9 +362,10 @@ classdef Flywheel
             % deleteProjectFileInfoFields(id, filename, keys)
 
             oldField = 'id';
-            newField = 'x0x5F_id';
+            newField = 'x0x5Fid';
             keys = Flywheel.replaceField(keys,oldField,newField);
-            keys = savejson('',keys,'ParseLogical',1);
+            opts = struct('replacementStyle','hex');
+            keys = jsonwrite(keys,opts);
             [status,cmdout] = system([obj.folder '/sdk DeleteProjectFileInfoFields ' obj.key ' '  '''' id ''' ' '''' filename ''' ' '''' keys ''' ']);
 
             result = Flywheel.handleJson(status,cmdout);
@@ -399,130 +387,136 @@ classdef Flywheel
             result = Flywheel.handleJson(status,cmdout);
         end
         
-        function result = search(obj, search_query)
-            % search(search_query)
+        function result = getAllAcquisitions(obj)
+            % getAllAcquisitions()
+
+            [status,cmdout] = system([obj.folder '/sdk GetAllAcquisitions ' obj.key ' ' ]);
+
+            result = Flywheel.handleJson(status,cmdout);
+        end
+        
+        function result = getAcquisition(obj, id)
+            % getAcquisition(id)
+
+            [status,cmdout] = system([obj.folder '/sdk GetAcquisition ' obj.key ' '  '''' id ''' ']);
+
+            result = Flywheel.handleJson(status,cmdout);
+        end
+        
+        function result = addAcquisition(obj, acquisition)
+            % addAcquisition(acquisition)
 
             oldField = 'id';
-            newField = 'x0x5F_id';
-            search_query = Flywheel.replaceField(search_query,oldField,newField);
-            search_query = savejson('',search_query,'ParseLogical',1);
-            [status,cmdout] = system([obj.folder '/sdk Search ' obj.key ' '  '''' search_query ''' ']);
+            newField = 'x0x5Fid';
+            acquisition = Flywheel.replaceField(acquisition,oldField,newField);
+            opts = struct('replacementStyle','hex');
+            acquisition = jsonwrite(acquisition,opts);
+            [status,cmdout] = system([obj.folder '/sdk AddAcquisition ' obj.key ' '  '''' acquisition ''' ']);
 
             result = Flywheel.handleJson(status,cmdout);
         end
         
-        function result = addSessionAnalysisNote(obj, sessionId, analysisId, text)
-            % addSessionAnalysisNote(sessionId, analysisId, text)
+        function result = addAcquisitionNote(obj, id, text)
+            % addAcquisitionNote(id, text)
 
-            [status,cmdout] = system([obj.folder '/sdk AddSessionAnalysisNote ' obj.key ' '  '''' sessionId ''' ' '''' analysisId ''' ' '''' text ''' ']);
-
-            result = Flywheel.handleJson(status,cmdout);
-        end
-        
-        function result = getJob(obj, id)
-            % getJob(id)
-
-            [status,cmdout] = system([obj.folder '/sdk GetJob ' obj.key ' '  '''' id ''' ']);
+            [status,cmdout] = system([obj.folder '/sdk AddAcquisitionNote ' obj.key ' '  '''' id ''' ' '''' text ''' ']);
 
             result = Flywheel.handleJson(status,cmdout);
         end
         
-        function result = getJobLogs(obj, id)
-            % getJobLogs(id)
+        function result = addAcquisitionTag(obj, id, tag)
+            % addAcquisitionTag(id, tag)
 
-            [status,cmdout] = system([obj.folder '/sdk GetJobLogs ' obj.key ' '  '''' id ''' ']);
+            [status,cmdout] = system([obj.folder '/sdk AddAcquisitionTag ' obj.key ' '  '''' id ''' ' '''' tag ''' ']);
 
             result = Flywheel.handleJson(status,cmdout);
         end
         
-        function result = addJob(obj, job)
-            % addJob(job)
+        function result = modifyAcquisition(obj, id, acquisition)
+            % modifyAcquisition(id, acquisition)
 
             oldField = 'id';
-            newField = 'x0x5F_id';
-            job = Flywheel.replaceField(job,oldField,newField);
-            job = savejson('',job,'ParseLogical',1);
-            [status,cmdout] = system([obj.folder '/sdk AddJob ' obj.key ' '  '''' job ''' ']);
+            newField = 'x0x5Fid';
+            acquisition = Flywheel.replaceField(acquisition,oldField,newField);
+            opts = struct('replacementStyle','hex');
+            acquisition = jsonwrite(acquisition,opts);
+            [status,cmdout] = system([obj.folder '/sdk ModifyAcquisition ' obj.key ' '  '''' id ''' ' '''' acquisition ''' ']);
 
             result = Flywheel.handleJson(status,cmdout);
         end
         
-        function result = heartbeatJob(obj, id)
-            % heartbeatJob(id)
+        function result = deleteAcquisition(obj, id)
+            % deleteAcquisition(id)
 
-            [status,cmdout] = system([obj.folder '/sdk HeartbeatJob ' obj.key ' '  '''' id ''' ']);
-
-            result = Flywheel.handleJson(status,cmdout);
-        end
-        
-        function result = getCurrentUser(obj)
-            % getCurrentUser()
-
-            [status,cmdout] = system([obj.folder '/sdk GetCurrentUser ' obj.key ' ' ]);
+            [status,cmdout] = system([obj.folder '/sdk DeleteAcquisition ' obj.key ' '  '''' id ''' ']);
 
             result = Flywheel.handleJson(status,cmdout);
         end
         
-        function result = getAllUsers(obj)
-            % getAllUsers()
-
-            [status,cmdout] = system([obj.folder '/sdk GetAllUsers ' obj.key ' ' ]);
-
-            result = Flywheel.handleJson(status,cmdout);
-        end
-        
-        function result = getUser(obj, id)
-            % getUser(id)
-
-            [status,cmdout] = system([obj.folder '/sdk GetUser ' obj.key ' '  '''' id ''' ']);
-
-            result = Flywheel.handleJson(status,cmdout);
-        end
-        
-        function result = addUser(obj, user)
-            % addUser(user)
+        function result = modifyAcquisitionFile(obj, id, filename, attributes)
+            % modifyAcquisitionFile(id, filename, attributes)
 
             oldField = 'id';
-            newField = 'x0x5F_id';
-            user = Flywheel.replaceField(user,oldField,newField);
-            user = savejson('',user,'ParseLogical',1);
-            [status,cmdout] = system([obj.folder '/sdk AddUser ' obj.key ' '  '''' user ''' ']);
+            newField = 'x0x5Fid';
+            attributes = Flywheel.replaceField(attributes,oldField,newField);
+            opts = struct('replacementStyle','hex');
+            attributes = jsonwrite(attributes,opts);
+            [status,cmdout] = system([obj.folder '/sdk ModifyAcquisitionFile ' obj.key ' '  '''' id ''' ' '''' filename ''' ' '''' attributes ''' ']);
 
             result = Flywheel.handleJson(status,cmdout);
         end
         
-        function result = modifyUser(obj, id, user)
-            % modifyUser(id, user)
+        function result = setAcquisitionFileInfo(obj, id, filename, set)
+            % setAcquisitionFileInfo(id, filename, set)
 
             oldField = 'id';
-            newField = 'x0x5F_id';
-            user = Flywheel.replaceField(user,oldField,newField);
-            user = savejson('',user,'ParseLogical',1);
-            [status,cmdout] = system([obj.folder '/sdk ModifyUser ' obj.key ' '  '''' id ''' ' '''' user ''' ']);
+            newField = 'x0x5Fid';
+            set = Flywheel.replaceField(set,oldField,newField);
+            opts = struct('replacementStyle','hex');
+            set = jsonwrite(set,opts);
+            [status,cmdout] = system([obj.folder '/sdk SetAcquisitionFileInfo ' obj.key ' '  '''' id ''' ' '''' filename ''' ' '''' set ''' ']);
 
             result = Flywheel.handleJson(status,cmdout);
         end
         
-        function result = deleteUser(obj, id)
-            % deleteUser(id)
+        function result = replaceAcquisitionFileInfo(obj, id, filename, replace)
+            % replaceAcquisitionFileInfo(id, filename, replace)
 
-            [status,cmdout] = system([obj.folder '/sdk DeleteUser ' obj.key ' '  '''' id ''' ']);
-
-            result = Flywheel.handleJson(status,cmdout);
-        end
-        
-        function result = getConfig(obj)
-            % getConfig()
-
-            [status,cmdout] = system([obj.folder '/sdk GetConfig ' obj.key ' ' ]);
+            oldField = 'id';
+            newField = 'x0x5Fid';
+            replace = Flywheel.replaceField(replace,oldField,newField);
+            opts = struct('replacementStyle','hex');
+            replace = jsonwrite(replace,opts);
+            [status,cmdout] = system([obj.folder '/sdk ReplaceAcquisitionFileInfo ' obj.key ' '  '''' id ''' ' '''' filename ''' ' '''' replace ''' ']);
 
             result = Flywheel.handleJson(status,cmdout);
         end
         
-        function result = getVersion(obj)
-            % getVersion()
+        function result = deleteAcquisitionFileInfoFields(obj, id, filename, keys)
+            % deleteAcquisitionFileInfoFields(id, filename, keys)
 
-            [status,cmdout] = system([obj.folder '/sdk GetVersion ' obj.key ' ' ]);
+            oldField = 'id';
+            newField = 'x0x5Fid';
+            keys = Flywheel.replaceField(keys,oldField,newField);
+            opts = struct('replacementStyle','hex');
+            keys = jsonwrite(keys,opts);
+            [status,cmdout] = system([obj.folder '/sdk DeleteAcquisitionFileInfoFields ' obj.key ' '  '''' id ''' ' '''' filename ''' ' '''' keys ''' ']);
+
+            result = Flywheel.handleJson(status,cmdout);
+        end
+        
+        function result = uploadFileToAcquisition(obj, id, path)
+            % uploadFileToAcquisition(id, path)
+
+            [status,cmdout] = system([obj.folder '/sdk UploadFileToAcquisition ' obj.key ' '  '''' id ''' ' '''' path ''' ']);
+
+            result = Flywheel.handleJson(status,cmdout);
+        end
+        
+        function result = downloadFileFromAcquisition(obj, id, name, path)
+            % downloadFileFromAcquisition(id, name, path)
+
+            [status,cmdout] = system([obj.folder '/sdk DownloadFileFromAcquisition ' obj.key ' '  '''' id ''' ' '''' name ''' ' '''' path ''' ']);
 
             result = Flywheel.handleJson(status,cmdout);
         end
@@ -571,9 +565,10 @@ classdef Flywheel
             % addCollection(collection)
 
             oldField = 'id';
-            newField = 'x0x5F_id';
+            newField = 'x0x5Fid';
             collection = Flywheel.replaceField(collection,oldField,newField);
-            collection = savejson('',collection,'ParseLogical',1);
+            opts = struct('replacementStyle','hex');
+            collection = jsonwrite(collection,opts);
             [status,cmdout] = system([obj.folder '/sdk AddCollection ' obj.key ' '  '''' collection ''' ']);
 
             result = Flywheel.handleJson(status,cmdout);
@@ -583,9 +578,10 @@ classdef Flywheel
             % addAcquisitionsToCollection(id, aqids)
 
             oldField = 'id';
-            newField = 'x0x5F_id';
+            newField = 'x0x5Fid';
             aqids = Flywheel.replaceField(aqids,oldField,newField);
-            aqids = savejson('',aqids,'ParseLogical',1);
+            opts = struct('replacementStyle','hex');
+            aqids = jsonwrite(aqids,opts);
             [status,cmdout] = system([obj.folder '/sdk AddAcquisitionsToCollection ' obj.key ' '  '''' id ''' ' '''' aqids ''' ']);
 
             result = Flywheel.handleJson(status,cmdout);
@@ -595,9 +591,10 @@ classdef Flywheel
             % addSessionsToCollection(id, sessionids)
 
             oldField = 'id';
-            newField = 'x0x5F_id';
+            newField = 'x0x5Fid';
             sessionids = Flywheel.replaceField(sessionids,oldField,newField);
-            sessionids = savejson('',sessionids,'ParseLogical',1);
+            opts = struct('replacementStyle','hex');
+            sessionids = jsonwrite(sessionids,opts);
             [status,cmdout] = system([obj.folder '/sdk AddSessionsToCollection ' obj.key ' '  '''' id ''' ' '''' sessionids ''' ']);
 
             result = Flywheel.handleJson(status,cmdout);
@@ -615,9 +612,10 @@ classdef Flywheel
             % modifyCollection(id, collection)
 
             oldField = 'id';
-            newField = 'x0x5F_id';
+            newField = 'x0x5Fid';
             collection = Flywheel.replaceField(collection,oldField,newField);
-            collection = savejson('',collection,'ParseLogical',1);
+            opts = struct('replacementStyle','hex');
+            collection = jsonwrite(collection,opts);
             [status,cmdout] = system([obj.folder '/sdk ModifyCollection ' obj.key ' '  '''' id ''' ' '''' collection ''' ']);
 
             result = Flywheel.handleJson(status,cmdout);
@@ -635,9 +633,10 @@ classdef Flywheel
             % modifyCollectionFile(id, filename, attributes)
 
             oldField = 'id';
-            newField = 'x0x5F_id';
+            newField = 'x0x5Fid';
             attributes = Flywheel.replaceField(attributes,oldField,newField);
-            attributes = savejson('',attributes,'ParseLogical',1);
+            opts = struct('replacementStyle','hex');
+            attributes = jsonwrite(attributes,opts);
             [status,cmdout] = system([obj.folder '/sdk ModifyCollectionFile ' obj.key ' '  '''' id ''' ' '''' filename ''' ' '''' attributes ''' ']);
 
             result = Flywheel.handleJson(status,cmdout);
@@ -647,9 +646,10 @@ classdef Flywheel
             % setCollectionFileInfo(id, filename, set)
 
             oldField = 'id';
-            newField = 'x0x5F_id';
+            newField = 'x0x5Fid';
             set = Flywheel.replaceField(set,oldField,newField);
-            set = savejson('',set,'ParseLogical',1);
+            opts = struct('replacementStyle','hex');
+            set = jsonwrite(set,opts);
             [status,cmdout] = system([obj.folder '/sdk SetCollectionFileInfo ' obj.key ' '  '''' id ''' ' '''' filename ''' ' '''' set ''' ']);
 
             result = Flywheel.handleJson(status,cmdout);
@@ -659,9 +659,10 @@ classdef Flywheel
             % replaceCollectionFileInfo(id, filename, replace)
 
             oldField = 'id';
-            newField = 'x0x5F_id';
+            newField = 'x0x5Fid';
             replace = Flywheel.replaceField(replace,oldField,newField);
-            replace = savejson('',replace,'ParseLogical',1);
+            opts = struct('replacementStyle','hex');
+            replace = jsonwrite(replace,opts);
             [status,cmdout] = system([obj.folder '/sdk ReplaceCollectionFileInfo ' obj.key ' '  '''' id ''' ' '''' filename ''' ' '''' replace ''' ']);
 
             result = Flywheel.handleJson(status,cmdout);
@@ -671,9 +672,10 @@ classdef Flywheel
             % deleteCollectionFileInfoFields(id, filename, keys)
 
             oldField = 'id';
-            newField = 'x0x5F_id';
+            newField = 'x0x5Fid';
             keys = Flywheel.replaceField(keys,oldField,newField);
-            keys = savejson('',keys,'ParseLogical',1);
+            opts = struct('replacementStyle','hex');
+            keys = jsonwrite(keys,opts);
             [status,cmdout] = system([obj.folder '/sdk DeleteCollectionFileInfoFields ' obj.key ' '  '''' id ''' ' '''' filename ''' ' '''' keys ''' ']);
 
             result = Flywheel.handleJson(status,cmdout);
@@ -695,38 +697,15 @@ classdef Flywheel
             result = Flywheel.handleJson(status,cmdout);
         end
         
-        function result = getAllGears(obj)
-            % getAllGears()
-
-            [status,cmdout] = system([obj.folder '/sdk GetAllGears ' obj.key ' ' ]);
-
-            result = Flywheel.handleJson(status,cmdout);
-        end
-        
-        function result = getGear(obj, id)
-            % getGear(id)
-
-            [status,cmdout] = system([obj.folder '/sdk GetGear ' obj.key ' '  '''' id ''' ']);
-
-            result = Flywheel.handleJson(status,cmdout);
-        end
-        
-        function result = addGear(obj, gear)
-            % addGear(gear)
+        function result = search(obj, search_query)
+            % search(search_query)
 
             oldField = 'id';
-            newField = 'x0x5F_id';
-            gear = Flywheel.replaceField(gear,oldField,newField);
-            gear = savejson('',gear,'ParseLogical',1);
-            [status,cmdout] = system([obj.folder '/sdk AddGear ' obj.key ' '  '''' gear ''' ']);
-
-            result = Flywheel.handleJson(status,cmdout);
-        end
-        
-        function result = deleteGear(obj, id)
-            % deleteGear(id)
-
-            [status,cmdout] = system([obj.folder '/sdk DeleteGear ' obj.key ' '  '''' id ''' ']);
+            newField = 'x0x5Fid';
+            search_query = Flywheel.replaceField(search_query,oldField,newField);
+            opts = struct('replacementStyle','hex');
+            search_query = jsonwrite(search_query,opts);
+            [status,cmdout] = system([obj.folder '/sdk Search ' obj.key ' '  '''' search_query ''' ']);
 
             result = Flywheel.handleJson(status,cmdout);
         end
@@ -759,9 +738,10 @@ classdef Flywheel
             % addSession(session)
 
             oldField = 'id';
-            newField = 'x0x5F_id';
+            newField = 'x0x5Fid';
             session = Flywheel.replaceField(session,oldField,newField);
-            session = savejson('',session,'ParseLogical',1);
+            opts = struct('replacementStyle','hex');
+            session = jsonwrite(session,opts);
             [status,cmdout] = system([obj.folder '/sdk AddSession ' obj.key ' '  '''' session ''' ']);
 
             result = Flywheel.handleJson(status,cmdout);
@@ -787,9 +767,10 @@ classdef Flywheel
             % modifySession(id, session)
 
             oldField = 'id';
-            newField = 'x0x5F_id';
+            newField = 'x0x5Fid';
             session = Flywheel.replaceField(session,oldField,newField);
-            session = savejson('',session,'ParseLogical',1);
+            opts = struct('replacementStyle','hex');
+            session = jsonwrite(session,opts);
             [status,cmdout] = system([obj.folder '/sdk ModifySession ' obj.key ' '  '''' id ''' ' '''' session ''' ']);
 
             result = Flywheel.handleJson(status,cmdout);
@@ -807,9 +788,10 @@ classdef Flywheel
             % modifySessionFile(id, filename, attributes)
 
             oldField = 'id';
-            newField = 'x0x5F_id';
+            newField = 'x0x5Fid';
             attributes = Flywheel.replaceField(attributes,oldField,newField);
-            attributes = savejson('',attributes,'ParseLogical',1);
+            opts = struct('replacementStyle','hex');
+            attributes = jsonwrite(attributes,opts);
             [status,cmdout] = system([obj.folder '/sdk ModifySessionFile ' obj.key ' '  '''' id ''' ' '''' filename ''' ' '''' attributes ''' ']);
 
             result = Flywheel.handleJson(status,cmdout);
@@ -819,9 +801,10 @@ classdef Flywheel
             % setSessionFileInfo(id, filename, set)
 
             oldField = 'id';
-            newField = 'x0x5F_id';
+            newField = 'x0x5Fid';
             set = Flywheel.replaceField(set,oldField,newField);
-            set = savejson('',set,'ParseLogical',1);
+            opts = struct('replacementStyle','hex');
+            set = jsonwrite(set,opts);
             [status,cmdout] = system([obj.folder '/sdk SetSessionFileInfo ' obj.key ' '  '''' id ''' ' '''' filename ''' ' '''' set ''' ']);
 
             result = Flywheel.handleJson(status,cmdout);
@@ -831,9 +814,10 @@ classdef Flywheel
             % replaceSessionFileInfo(id, filename, replace)
 
             oldField = 'id';
-            newField = 'x0x5F_id';
+            newField = 'x0x5Fid';
             replace = Flywheel.replaceField(replace,oldField,newField);
-            replace = savejson('',replace,'ParseLogical',1);
+            opts = struct('replacementStyle','hex');
+            replace = jsonwrite(replace,opts);
             [status,cmdout] = system([obj.folder '/sdk ReplaceSessionFileInfo ' obj.key ' '  '''' id ''' ' '''' filename ''' ' '''' replace ''' ']);
 
             result = Flywheel.handleJson(status,cmdout);
@@ -843,9 +827,10 @@ classdef Flywheel
             % deleteSessionFileInfoFields(id, filename, keys)
 
             oldField = 'id';
-            newField = 'x0x5F_id';
+            newField = 'x0x5Fid';
             keys = Flywheel.replaceField(keys,oldField,newField);
-            keys = savejson('',keys,'ParseLogical',1);
+            opts = struct('replacementStyle','hex');
+            keys = jsonwrite(keys,opts);
             [status,cmdout] = system([obj.folder '/sdk DeleteSessionFileInfoFields ' obj.key ' '  '''' id ''' ' '''' filename ''' ' '''' keys ''' ']);
 
             result = Flywheel.handleJson(status,cmdout);
@@ -867,6 +852,54 @@ classdef Flywheel
             result = Flywheel.handleJson(status,cmdout);
         end
         
+        function result = addSessionAnalysisNote(obj, sessionId, analysisId, text)
+            % addSessionAnalysisNote(sessionId, analysisId, text)
+
+            [status,cmdout] = system([obj.folder '/sdk AddSessionAnalysisNote ' obj.key ' '  '''' sessionId ''' ' '''' analysisId ''' ' '''' text ''' ']);
+
+            result = Flywheel.handleJson(status,cmdout);
+        end
+        
+        function result = getConfig(obj)
+            % getConfig()
+
+            [status,cmdout] = system([obj.folder '/sdk GetConfig ' obj.key ' ' ]);
+
+            result = Flywheel.handleJson(status,cmdout);
+        end
+        
+        function result = getVersion(obj)
+            % getVersion()
+
+            [status,cmdout] = system([obj.folder '/sdk GetVersion ' obj.key ' ' ]);
+
+            result = Flywheel.handleJson(status,cmdout);
+        end
+        
+        function result = getAllBatches(obj)
+            % getAllBatches()
+
+            [status,cmdout] = system([obj.folder '/sdk GetAllBatches ' obj.key ' ' ]);
+
+            result = Flywheel.handleJson(status,cmdout);
+        end
+        
+        function result = getBatch(obj, id)
+            % getBatch(id)
+
+            [status,cmdout] = system([obj.folder '/sdk GetBatch ' obj.key ' '  '''' id ''' ']);
+
+            result = Flywheel.handleJson(status,cmdout);
+        end
+        
+        function result = startBatch(obj, id)
+            % startBatch(id)
+
+            [status,cmdout] = system([obj.folder '/sdk StartBatch ' obj.key ' '  '''' id ''' ']);
+
+            result = Flywheel.handleJson(status,cmdout);
+        end
+        
         % AUTO GENERATED CODE ENDS
     end
     methods (Static)
@@ -874,23 +907,23 @@ classdef Flywheel
             version = '0.2.0';
         end
         function structFromJson = handleJson(statusPtr,ptrValue)
-            % Handle JSON using JSONlab
+            % Handle JSON using JSONio
             statusValue = statusPtr;
 
             % If status indicates success, load JSON
             if statusValue == 0
                 % Interpret JSON string blob as a struct object
-                loadedJson = loadjson(ptrValue);
+                loadedJson = jsonread(ptrValue);
                 % loadedJson contains status, message and data, only return
                 %   the data information.
                 dataFromJson = loadedJson.data;
                 %  Call replaceField on loadedJson to replace x0x5F_id with id
-                structFromJson = Flywheel.replaceField(dataFromJson,'x0x5F_id','id');
+                structFromJson = Flywheel.replaceField(dataFromJson,'x_id','id');
             % Otherwise, nonzero statusCode indicates an error
             else
                 % Try to load message from the JSON
                 try
-                    loadedJson = loadjson(ptrValue);
+                    loadedJson = jsonread(ptrValue);
                     msg = loadedJson.message;
                     ME = MException('FlywheelException:handleJson', msg);
                 % If unable to load message, throw an 'unknown' error

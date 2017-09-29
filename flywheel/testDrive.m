@@ -4,13 +4,11 @@ disp('Setup')
 % Before running this script, ensure the following paths were added
 %   path to Flywheel.m to be tested
 %   path to JSONlab
-%   for BW at Flywheel-cni.stanford.edu
 %   set SdkTestKey environment variable as user API key
-%    APIKEY = 'flywheel-cni.scitran.stanford.edu:p707Q4tQxEhfNM0315';
-%    setenv('SdkTestKey',APIKEY)
+%       ex: setenv('SdkTestKey', APIKEY)
 
 % Create string to be used in testdrive
-testString = 'abcdefg';
+testString = 'aeu84sdfarew2h23333';
 % A test file
 filename = 'test.txt';
 fid = fopen(filename, 'w');
@@ -81,10 +79,10 @@ fw.downloadFileFromProject(projectId, filename, '/tmp/download.txt');
 project = fw.getProject(projectId);
 assert(strcmp(project.tags{1},'blue'), errMsg)
 assert(strcmp(project.label,'testdrive'), errMsg)
-assert(strcmp(project.notes{1,1}.text, 'This is a note'), errMsg)
-assert(strcmp(project.files{1,1}.name, filename), errMsg)
+assert(strcmp(project.notes.text, 'This is a note'), errMsg)
+assert(strcmp(project.files.name, filename), errMsg)
 s = dir('/tmp/download.txt');
-assert(project.files{1,1}.size == s.bytes, errMsg)
+assert(project.files.size == s.bytes, errMsg)
 
 %% Sessions
 disp('Testing Sessions')
@@ -107,10 +105,10 @@ fw.downloadFileFromSession(sessionId, filename, '/tmp/download2.txt');
 session = fw.getSession(sessionId);
 assert(strcmp(session.tags{1}, 'blue'), errMsg)
 assert(strcmp(session.label, 'testdrive'), errMsg)
-assert(strcmp(session.notes{1,1}.text, 'This is a note'), errMsg)
-assert(strcmp(session.files{1,1}.name, filename), errMsg)
+assert(strcmp(session.notes.text, 'This is a note'), errMsg)
+assert(strcmp(session.files.name, filename), errMsg)
 s = dir('/tmp/download2.txt');
-assert(session.files{1,1}.size == s.bytes, errMsg)
+assert(session.files.size == s.bytes, errMsg)
 
 %% Acquisitions
 disp('Testing Acquisitions')
@@ -133,15 +131,15 @@ fw.downloadFileFromAcquisition(acqId, filename, '/tmp/download3.txt');
 acq = fw.getAcquisition(acqId);
 assert(strcmp(acq.tags{1},'blue'), errMsg)
 assert(strcmp(acq.label,'testdrive'), errMsg)
-assert(strcmp(acq.notes{1,1}.text, 'This is a note'), errMsg)
-assert(strcmp(acq.files{1,1}.name, filename), errMsg)
+assert(strcmp(acq.notes.text, 'This is a note'), errMsg)
+assert(strcmp(acq.files.name, filename), errMsg)
 s = dir('/tmp/download3.txt');
-assert(session.files{1,1}.size == s.bytes, errMsg)
+assert(session.files.size == s.bytes, errMsg)
 
 %% Gears
 disp('Testing Gears')
 
-gearId = fw.addGear(struct('category','converter','exchange', struct('git_0x2D_commit','example','rootfs_0x2D_hash','sha384:example','rootfs_0x2D_url','https://example.example'),'gear', struct('name','test-drive-gear','label','Test Drive Gear','version','3','author','None','description','An empty example gear','license','Other','source','http://example.example','url','http://example.example','inputs', struct('x', struct('base','file')))));
+gearId = fw.addGear(struct('category','converter','exchange', struct('git0x2Dcommit','example','rootfs0x2Dhash','sha384:example','rootfs0x2Durl','https://example.example'),'gear', struct('name','test-drive-gear','label','Test Drive Gear','version','3','author','None','description','An empty example gear','license','Other','source','http://example.example','url','http://example.example','inputs', struct('x', struct('base','file')))));
 
 gear = fw.getGear(gearId);
 assert(strcmp(gear.gear.name, 'test-drive-gear'), errMsg)
@@ -149,7 +147,7 @@ assert(strcmp(gear.gear.name, 'test-drive-gear'), errMsg)
 gears = fw.getAllGears();
 assert(~isempty(gears), errMsg)
 
-job2Add = struct('gear_id',gearId,'state','pending','inputs',struct('x',struct('type','acquisition','id',acqId,'name','testDrive.m')));
+job2Add = struct('gear_id',gearId,'state','pending','inputs',struct('x',struct('type','acquisition','id',acqId,'name',filename)));
 jobId = fw.addJob(job2Add);
 
 job = fw.getJob(jobId);
