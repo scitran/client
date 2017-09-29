@@ -7,10 +7,14 @@
 % projects = fw.search('projects')
 searchStruct = struct('return_type', 'project');
 results = fw.search(searchStruct).results;
-% Extract projects from results
+% Extract projects from results struct
 projects = [];
 for n = 1 : length(results)
-    projects{n} = results{n}.x0x5F_source;
+    projects{n} = results(n).x_source;
+end
+
+for p = 1:numel(projects)
+    disp(projects{p}.project.label)
 end
 
 
@@ -21,9 +25,10 @@ end
 % Define search -- return a project and match filters
 %    Put _0x2E_ in the Matlab variable to create a '.' (dot) in the JSON variable
 searchStruct = struct('return_type', 'project', ...
-        'filters', {{struct('match', struct('project_0x2E_label', 'vwfa'))}});
+        'filters', {{struct('match', struct('project0x2Elabel', 'vwfa'))}});
 results = fw.search(searchStruct);
-projectID = results.results{1}.x0x5F_source.project.x0x5F_id;
+
+projectID = results.results(1).x_source.project.x_id;
 
 
 
@@ -31,12 +36,12 @@ projectID = results.results{1}.x0x5F_source.project.x0x5F_id;
 % [sessions, srchCmd] = fw.search('sessions in collection',...
 %    'collection label contains','Anatomy Male 45-55');
 searchStruct = struct('return_type', 'session', ...
-        'filters', {{struct('match', struct('collection_0x2E_label', 'Amatomy Male 45-55'))}});
+        'filters', {{struct('match', struct('collection0x2Elabel', 'Amatomy Male 45-55'))}});
 results = fw.search(searchStruct).results;
 % Extract sessions from results
 sessions = [];
 for n = 1 : length(results)
-    sessions{n} = results{n}.x0x5F_source;
+    sessions{n} = results(n).x_source;
 end
 
 
@@ -44,15 +49,15 @@ end
 %% Get the sessions within the first project
 % sessions = fw.search('sessions','project id',projectID);
 searchStruct = struct('return_type', 'session', ...
-        'filters', {{struct('term', struct('project_0x2E__id', projectID))}});
+        'filters', {{struct('term', struct('project0x2E_id', projectID))}});
 results = fw.search(searchStruct).results;
 % Extract sessions from results
 sessions = [];
 for n = 1 : length(results)
-    sessions{n} = results{n}.x0x5F_source;
+    sessions{n} = results(n).x_source;
 end
 
-sessionID = sessions{1}.session.x0x5F_id;
+sessionID = sessions{1}.session.x_id;
 sessionLabel = sessions{1}.session.label;
 
 
@@ -62,12 +67,12 @@ sessionLabel = sessions{1}.session.label;
 % acquisitions = fw.search('acquisitions',...
 %     'session id',sessionID);
 searchStruct = struct('return_type', 'acquisition', ...
-        'filters', {{struct('term', struct('session_0x2E__id', sessionID))}});
+        'filters', {{struct('term', struct('session0x2E_id', sessionID))}});
 results = fw.search(searchStruct).results;
 % Extract sessions from results
 acquisitions = [];
 for n = 1 : length(results)
-    acquisitions{n} = results{n}.x0x5F_source;
+    acquisitions{n} = results(n).x_source;
 end
 
 
@@ -79,8 +84,8 @@ end
 % nFiles = length(files);
 
 searchStruct = struct('return_type', 'file', ...
-        'filters', {{struct('term', struct('session_0x2E__id', sessionID)) ...
-                    struct('term', struct('file_0x2E_type', 'nifti'))}});
+        'filters', {{struct('term', struct('session0x2E_id', sessionID)) ...
+                    struct('term', struct('file0x2Etype', 'nifti'))}});
 files = fw.search(searchStruct).results;
 % Display result info
 fprintf('Found %d nifti files in the session: %s\n', length(files), sessionLabel);
@@ -102,8 +107,10 @@ fprintf('Found %d nifti files in the session: %s\n', length(files), sessionLabel
 
 % analyses = fw.search('analysesincollection','collection label','GearTest');
 % fprintf('Analyses in collections only %d\n',length(analyses));
+
+% TODO - does not work with analysis + collection:
 searchStruct = struct('return_type', 'analysis', ...
-        'filters', {{struct('match', struct('collection_0x2E_label', 'GearTest'))}});
+        'filters', {{struct('match', struct('collection0x2Elabel', 'GearTest'))}});
 analyses = fw.search(searchStruct).results;
 
 
@@ -111,16 +118,16 @@ analyses = fw.search(searchStruct).results;
 % collections = fw.search('collections','collection label','GearTest');
 % fprintf('Collections found %d\n',length(collections));
 searchStruct = struct('return_type', 'collection', ...
-        'filters', {{struct('match', struct('collection_0x2E_label', 'GearTest'))}});
+        'filters', {{struct('match', struct('collection0x2Elabel', 'GearTest'))}});
 collections = fw.search(searchStruct).results;
 % Display result info
-fprintf('Collections found %d', length(collections));
+fprintf('Collections found %d\n', length(collections));
 
 
 
 
 
-% Returns analyses attached only to the sessions in the collection,
+%% Returns analyses attached only to the sessions in the collection,
 % but not to the collection as a whole.
 
 % analyses = fw.search('analyses in session','collection label','GearTest');
@@ -130,12 +137,12 @@ fprintf('Collections found %d', length(collections));
 %   if this is a hard requirement for the fist release
 
 % Find a session from that collection
-
 % sessions = fw.search('sessions','session label',sessions{1}.source.label);
 
+sessionLabel = '20151128_1621';
 searchStruct = struct('return_type', 'session', ...
-        'filters', {{struct('match', struct('session_0x2E_label', ...
-        'sessionLabel'))}});
+        'filters', {{struct('match', struct('session0x2Elabel', ...
+        sessionLabel))}});
 sessions = fw.search(searchStruct).results;
 
 
@@ -147,7 +154,7 @@ sessions = fw.search(searchStruct).results;
 % fprintf('Found %d sessions in previous four weeks \n',length(sessions))
 
 searchStruct = struct('return_type', 'session', ...
-        'filters', {{struct('range', struct('session_0x2E_created', ...
+        'filters', {{struct('range', struct('session0x2Ecreated', ...
         struct('gte', 'now-16w')))}});
 sessions = fw.search(searchStruct).results;
 
@@ -163,7 +170,7 @@ fprintf('Found %d sessions in the previous 16 weeks\n', length(sessions));
 
 subjectCode = 'ex4842';
 searchStruct = struct('return_type', 'session', ...
-        'filters', {{struct('match', struct('subject_0x2E_code', ...
+        'filters', {{struct('match', struct('subject0x2Ecode', ...
         subjectCode))}});
 sessions = fw.search(searchStruct).results;
 
@@ -180,7 +187,7 @@ fprintf('Found %d sessions with subject code %s\n', length(sessions), subjectCod
 
 searchStruct = struct('return_type', 'session', ...
         'filters', {{struct('range', ...
-        struct('subject_0x2E_age_in_years', ...
+        struct('subject0x2Eage_in_years', ...
         struct('gte', 9, 'lt', 10) ...
         ))}});
 sessions = fw.search(searchStruct).results;
@@ -198,7 +205,7 @@ fprintf('Found %d sessions in the age range 9-10\n', length(sessions));
 sessionLabel = '20151128_1621';
 searchStruct = struct('return_type', 'file', ...
         'filters', {{struct('match', ...
-        struct('session_0x2E_label', sessionLabel) ...
+        struct('session0x2Elabel', sessionLabel) ...
         )}});
 files = fw.search(searchStruct).results;
 
@@ -221,9 +228,9 @@ fprintf('Found %d files from session label %s\n', length(files), sessionLabel);
 
 searchStruct = struct('return_type', 'file', ...
         'filters', ...
-        {{struct('match', struct('project_0x2E_label', 'VWFA FOV')), ...
-        struct('match', struct('acquisition_0x2E_label', '11_1_spiral_high_res_fieldmap')), ...
-        struct('term', struct('file_0x2E_type', 'nifti')), ...
+        {{struct('match', struct('project0x2Elabel', 'VWFA FOV')), ...
+        struct('match', struct('acquisition0x2Elabel', '11_1_spiral_high_res_fieldmap')), ...
+        struct('term', struct('file0x2Etype', 'nifti')), ...
         }});
 files = fw.search(searchStruct).results;
 
@@ -236,8 +243,8 @@ files = fw.search(searchStruct).results;
 
 searchStruct = struct('return_type', 'file', ...
         'filters', ...
-        {{struct('match', struct('collection_0x2E_label', 'DWI')), ...
-        struct('match', struct('acquisition_0x2E_label', '00 Coil Survey')), ...
+        {{struct('match', struct('collection0x2Elabel', 'DWI')), ...
+        struct('match', struct('acquisition0x2Elabel', '00 Coil Survey')), ...
         }});
 files = fw.search(searchStruct).results;
 
@@ -273,13 +280,13 @@ fprintf('Found %d files\n',length(files));
 
 sessionNames = [];
 for ii=1:length(files)
-    sessionNames{ii} = files{ii}.x0x5F_source.session.label
+    sessionNames{ii} = files(ii).x_source.session.label
 end
 
 sessionsNames = unique(sessionNames);
 fprintf('\n---------\n');
-for ii=1:length(sessionNames)
-    fprintf('%3d:  Session name %s\n',ii,sessionNames{ii});
+for ii=1:length(sessionsNames)
+    fprintf('%3d:  Session name %s\n',ii,sessionsNames{ii});
 end
 fprintf('---------\n');
 
@@ -293,8 +300,8 @@ fprintf('---------\n');
 
 searchStruct = struct('return_type', 'file', ...
         'filters', ...
-        {{struct('match', struct('collection_0x2E_label', 'ENGAGE')), ...
-        struct('match', struct('acquisition_0x2E_label', 'T1w 1mm')), ...
+        {{struct('match', struct('collection0x2Elabel', 'ENGAGE')), ...
+        struct('match', struct('acquisition0x2Elabel', 'T1w 1mm')), ...
         }});
 files = fw.search(searchStruct).results;
 % Display result info
@@ -314,9 +321,9 @@ fprintf('Found %d files\n',length(files));
 
 searchStruct = struct('return_type', 'file', ...
         'filters', ...
-        {{struct('match', struct('collection_0x2E_label', 'Anatomy Male 45-55')), ...
-        struct('match', struct('acquisition_0x2E_label', 'Localizer')), ...
-        struct('term', struct('file_0x2E_type', 'nifti')), ...
+        {{struct('match', struct('collection0x2Elabel', 'Anatomy Male 45-55')), ...
+        struct('match', struct('acquisition0x2Elabel', 'Localizer')), ...
+        struct('term', struct('file0x2Etype', 'nifti')), ...
         }});
 files = fw.search(searchStruct).results;
 % Display result info
@@ -339,9 +346,9 @@ fprintf('Found %d files\n',length(files));
 searchStruct = struct('return_type', 'session', ...
         'all_data', true, ...
         'filters', ...
-        {{struct('match', struct('project_0x2E_label', 'UMN')), ...
-        struct('match', struct('analysis_0x2E_label', 'AFQ')), ...
-        struct('term', struct('subject_0x2E_code', '4279')), ...
+        {{struct('match', struct('project0x2Elabel', 'UMN')), ...
+        struct('match', struct('analysis0x2Elabel', 'AFQ')), ...
+        struct('term', struct('subject0x2Ecode', '4279')), ...
         }});
 sessions = fw.search(searchStruct).results;
 % Display result info
@@ -362,12 +369,14 @@ fprintf('Found %d sessions\n',length(sessions));
 % We do not index _id fields a way that is useful for terms searches (exact matching a list of strings)
 % Ticket added to support this behavior
 
-groupName = {{'adni', 'wandell', 'jwday', 'leanew1'}};
+% FIXED!
+groupName = {'adni', 'wandell', 'jwday'};
 for ii=1:length(groupName)
     searchStruct = struct('return_type', 'project', ...
         'filters', ...
-        {{struct('term', struct('group_0x2E_label', groupName{ii})), ...
+        {{struct('term', struct('group0x2E_id', groupName{ii})), ...
         }});
     projects = fw.search(searchStruct).results;
     fprintf('%d projects owned by the %s group\n',length(projects), groupName{ii});
+    clear searchStruct
 end
