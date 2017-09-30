@@ -18,6 +18,10 @@ classdef scitran < handle
     url = '';
     instance = 'scitran';
     
+    % Perhaps scitran should be a subclass of the @flywheel.  For now, we
+    % are storing it as an object within the scitran object.
+    fw = [];    % A flywheel SDK class.
+    
     end    % Data stuff (public)
 
     properties (SetAccess = private, GetAccess = private)
@@ -51,6 +55,13 @@ classdef scitran < handle
             p.parse(instance,varargin{:});
             
             authAPIKey(obj,instance,varargin{:});
+            
+            % Create the Flywheel SDK object
+            % Flywheel uses a ':' where we have a space ' ' in the token.
+            % Let's change that.
+            token = strrep(obj.token,' ',':');
+            obj.fw = Flywheel(token);
+            
         end
         
         function val = showToken(obj)

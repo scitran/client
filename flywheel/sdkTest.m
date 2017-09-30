@@ -1,23 +1,36 @@
-%% Test methods in Flywheel.m
-%% Setup
-disp('Setup')
+%% Test SDK methods in @Flywheel
+%
 % Before running this script, ensure the following paths were added
-%   path to Flywheel.m to be tested
+%
 %   path to JSONlab
 %   set SdkTestKey environment variable as user API key
+<<<<<<< HEAD:flywheel/testDrive.m
 %       ex: setenv('SdkTestKey', APIKEY)
 
 % Create string to be used in testdrive
 testString = 'aeu84sdfarew2h23333';
 % A test file
+=======
+%     APIKEY = 'flywheel-cni.scitran.stanford.edu:******';
+%     setenv('SdkTestKey',APIKEY)
+
+%% Create string to be used in testdrive
+
+% Used for labels, tags, user names
+testString = 'abcdefg';
+
+% A test file we upload and download later
+>>>>>>> sdk:flywheel/sdkTest.m
 filename = 'test.txt';
 fid = fopen(filename, 'w');
 fprintf(fid, 'This is a test file');
 fclose(fid);
+
 % Define error message
 errMsg = 'Strings not equal';
 
-% Create client
+%% Create FW client
+
 apiKey = getenv('SdkTestKey');
 fw = Flywheel(apiKey);
 
@@ -44,6 +57,7 @@ assert(strcmp(user2.email, email), errMsg)
 assert(strcmp(user2.firstname,'John'), errMsg)
 
 fw.deleteUser(userId);
+disp('Done')
 
 %% Groups
 disp('Testing Groups')
@@ -59,6 +73,7 @@ assert(~isempty(groups))
 group = fw.getGroup(groupId);
 assert(strcmp(group.tags{1},'blue'), errMsg)
 assert(strcmp(group.label,'testdrive'), errMsg)
+disp('Done')
 
 %% Projects
 disp('Testing Projects')
@@ -82,7 +97,12 @@ assert(strcmp(project.label,'testdrive'), errMsg)
 assert(strcmp(project.notes.text, 'This is a note'), errMsg)
 assert(strcmp(project.files.name, filename), errMsg)
 s = dir('/tmp/download.txt');
+<<<<<<< HEAD:flywheel/testDrive.m
 assert(project.files.size == s.bytes, errMsg)
+=======
+assert(project.files{1,1}.size == s.bytes, errMsg)
+disp('Done');
+>>>>>>> sdk:flywheel/sdkTest.m
 
 %% Sessions
 disp('Testing Sessions')
@@ -108,7 +128,12 @@ assert(strcmp(session.label, 'testdrive'), errMsg)
 assert(strcmp(session.notes.text, 'This is a note'), errMsg)
 assert(strcmp(session.files.name, filename), errMsg)
 s = dir('/tmp/download2.txt');
+<<<<<<< HEAD:flywheel/testDrive.m
 assert(session.files.size == s.bytes, errMsg)
+=======
+assert(session.files{1,1}.size == s.bytes, errMsg)
+disp('Done');
+>>>>>>> sdk:flywheel/sdkTest.m
 
 %% Acquisitions
 disp('Testing Acquisitions')
@@ -134,7 +159,12 @@ assert(strcmp(acq.label,'testdrive'), errMsg)
 assert(strcmp(acq.notes.text, 'This is a note'), errMsg)
 assert(strcmp(acq.files.name, filename), errMsg)
 s = dir('/tmp/download3.txt');
+<<<<<<< HEAD:flywheel/testDrive.m
 assert(session.files.size == s.bytes, errMsg)
+=======
+assert(session.files{1,1}.size == s.bytes, errMsg)
+disp('Done');
+>>>>>>> sdk:flywheel/sdkTest.m
 
 %% Gears
 disp('Testing Gears')
@@ -155,6 +185,7 @@ assert(strcmp(job.gear_id,gearId), errMsg)
 
 logs = fw.getJobLogs(jobId);
 % Likely will not have anything in them yet
+disp('Done');
 
 %% Misc
 disp('Testing Misc')
@@ -164,6 +195,7 @@ assert(~isempty(config), errMsg)
 
 fwVersion = fw.getVersion();
 assert(fwVersion.database >= 25, errMsg)
+disp('Done');
 
 %% Cleanup
 disp('Cleanup')
@@ -176,3 +208,51 @@ fw.deleteGear(gearId);
 
 disp('')
 disp('Test drive complete.')
+disp('Done');
+
+%% Search
+
+clear srch
+srch.return_type = 'project';
+projects = fw.search(srch);
+
+% Deal with '.' replacement in jsonwrite
+clear srch
+srch.return_type = 'project';
+srch.filters(1).match.project0x2Elabel = 'ENGAGE';
+srch.filters(2).match.project0x2Egrouplabel = 'PanLab';
+jsonwrite(srch,struct('indent','  ','replacementstyle','hex'))
+
+projects = fw.search(srch);
+
+% 'return_type': 'project',
+%     'filters': [
+%         {'match': {'project.label': 'ADNI'}}
+        
+%%
+% 'return_type': 'session',
+%     'all_data': True,
+%     'filters': [
+%         {'match': {'project.label': 'UMN'}},
+%         {'match': {'analysis.label': 'AFQ'}},
+%         {'term': {'subject.code': '4279'}}
+%     ]
+% }).get('results', []) ]
+clear srch
+srch.return_type = 'session';
+srch.all_data = 1;
+srch.filters(2).match.project0x2Elabel = 'UMN';
+srch.filters(2).match.analysis0x2Elabel = 'AFQ';
+% srch.filters.term.subject0x2Ecode = '4279';
+jsonwrite(srch,struct('indent','  ','replacementstyle','hex'))
+projects = fw.search(srch);
+
+% Produces this error
+%
+% Error using Flywheel/handleJson (line 28)
+% json: cannot unmarshal number into Go struct field SearchQuery.all_data of type bool
+% 
+% Error in Flywheel/search (line 240)
+%             result = obj.handleJson(status,cmdout);
+%  
+%             

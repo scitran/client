@@ -107,10 +107,18 @@ fprintf('Found %d nifti files in the session: %s\n', length(files), sessionLabel
 
 % analyses = fw.search('analysesincollection','collection label','GearTest');
 % fprintf('Analyses in collections only %d\n',length(analyses));
+<<<<<<< HEAD
 %  TODO:
 % searchStruct = struct('return_type', 'analysis', ...
 %         'filters', {{struct('match', struct('collection0x2Elabel', 'GearTest'))}});
 % analyses = fw.search(searchStruct).results;
+=======
+
+% TODO - does not work with analysis + collection:
+searchStruct = struct('return_type', 'analysis', ...
+        'filters', {{struct('match', struct('collection0x2Elabel', 'GearTest'))}});
+analyses = fw.search(searchStruct).results;
+>>>>>>> sdk
 
 
 % Which collection is the analysis in?
@@ -126,7 +134,11 @@ fprintf('Collections found %d\n', length(collections));
 
 
 
+<<<<<<< HEAD
 % Returns analyses attached only to the sessions in the collection,
+=======
+%% Returns analyses attached only to the sessions in the collection,
+>>>>>>> sdk
 % but not to the collection as a whole.
 
 % analyses = fw.search('analyses in session','collection label','GearTest');
@@ -136,8 +148,13 @@ fprintf('Collections found %d\n', length(collections));
 %   if this is a hard requirement for the fist release
 
 % Find a session from that collection
+<<<<<<< HEAD
 
 % sessions = fw.search('sessions','session label',sessions{1}.source.label);
+=======
+% sessions = fw.search('sessions','session label',sessions{1}.source.label);
+
+>>>>>>> sdk
 sessionLabel = '20151128_1621';
 searchStruct = struct('return_type', 'session', ...
         'filters', {{struct('match', struct('session0x2Elabel', ...
