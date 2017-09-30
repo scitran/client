@@ -2,6 +2,9 @@
 % NOTE: These examples are specific to one Flywheel Instance (Vistalab @Stanford).
 % The specific search terms would need to be modified to be used with another FW instance.
 
+
+% fw = Flywheel('vistalab.flywheel.io:OQlKDTTTlkZsmDDQi_Pz3r1-_2E1m5D24REuP_3LNggUrwEkMVI1Up3i');
+%
 %% List all projects
 
 % projects = fw.search('projects')
@@ -166,15 +169,18 @@ fprintf('Found %d sessions in the previous 16 weeks\n', length(sessions));
 % sessions = fw.search('sessions','subject code','ex4842',...
 %     'all_data',true);
 % fprintf('Found %d sessions with subject code %s\n',length(sessions),subjectCode)
+% 
 
-subjectCode = 'ex4842';
-searchStruct = struct('return_type', 'session', ...
-        'filters', {{struct('match', struct('subject0x2Ecode', ...
-        subjectCode))}});
-sessions = fw.search(searchStruct).results;
+%% Doesn't work ... not sure why
 
-% Display result info
-fprintf('Found %d sessions with subject code %s\n', length(sessions), subjectCode);
+% subjectCode = 'ex4842';
+% searchStruct = struct('return_type', 'session', ...
+%         'filters', {{struct('match', struct('subject0x2Ecode', ...
+%         subjectCode))}});
+% sessions = fw.search(searchStruct).results;
+% 
+% % Display result info
+% fprintf('Found %d sessions with subject code %s\n', length(sessions), subjectCode);
 
 
 %% Get sessions in which the subject age is within a range

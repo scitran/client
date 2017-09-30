@@ -1,7 +1,14 @@
 classdef scitran < handle
     % Scitran object to interact with a scitran database
     %
-    %   st = scitran('scitran','action',...,'verify',...)
+    %   st = scitran(instance,'action',...,'verify',...)
+    %
+    %  'instance' -  String denoting the st instance to authorize
+    %
+    % Param/Value:
+    %       
+    %  'actions'  - {'create', 'refresh', 'remove'}
+    %  'verify'   - performs a search to verify validity.
     %
     % Methods include:
     %   auth    - Authorize interaction with database
@@ -10,6 +17,11 @@ classdef scitran < handle
     %   browser - Browse to a page in the Flywheel instance
     %   get     - Get a file
     %   put     - Put a file
+    %
+    % Examples:
+    %
+    %    scitran('vistalab','action','refresh')
+    %    scitran('vistalab','verify',true);
     %
     % LMP/BW Scitran Team, 2016
     
