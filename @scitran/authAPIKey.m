@@ -17,8 +17,6 @@ function authAPIKey(obj, instance,varargin)
 %             'refresh' - refresh an existing @scitran object
 %             'remove'  - remove an existing @scitran object from the
 %                         tokens file.
-%  'verify'   - Print out messages verifying the site is found.s
-%
 % OUTPUTS:
 %   @scitran object with url, instance name.  Token is private.
 %
@@ -87,8 +85,6 @@ switch lower(action)
         st.token = '';
         jsonwrite(tokenFile,st);
         
-        % Never verify on a remove.
-        verify = false;
         
     case 'refresh'
         if ~isfield(st,instance)
@@ -99,7 +95,8 @@ switch lower(action)
             prompt = sprintf('Would you like to refresh the API key for %s? (y/n): ', instance);
             response = input(prompt,'s');
             if lower(response) == 'y'
-                obj.token   = ['scitran-user ', input('Please enter the API key: ', 's')];
+                % obj.token   = ['scitran-user ', input('Please enter the API key: ', 's')];
+                obj.token   = input('Please enter the API key: ', 's');
                 if isempty(obj.token)
                     disp('User canceled.');
                     return;
@@ -125,17 +122,6 @@ switch lower(action)
             obj = stNew(obj,st,instance,tokenFile);
         end
         
-end
-
-%% Verify by running a search on projects
-
-% This is fast enough for a little test.s
-if verify
-    try
-        fprintf('%d projects found\n',length(obj.search('projects')));
-    catch ME
-        rethrow(ME)
-    end
 end
 
 end

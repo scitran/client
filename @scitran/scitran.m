@@ -1,7 +1,13 @@
 classdef scitran < handle
     % Scitran object to interact with a scitran database
     %
-    %   st = scitran('scitran','action',...,'verify',...)
+    %   st = scitran('scitran','action',{'},'verify',...)
+    %
+    % Required
+    %  'instance' -  String denoting the site to authorize
+    %
+    % Parameter/Value
+    %  'actions'  - {'create', 'refresh', 'remove'}
     %
     % Methods include:
     %   auth    - Authorize interaction with database
@@ -43,12 +49,9 @@ classdef scitran < handle
             %   <https://github.com/scitran/client>
             %
             % Example:
-            %   st = scitran('scitran','action','create');
-            %
-            %  'instance' -  String denoting the st instance to authorize
-            %  'actions'  - {'create', 'refresh', 'remove'}
-            %  'verify'   - performs a search to verify validity.
-            
+            %   st = scitran('scitran','action','refresh');
+            %   st = scitran('vistalab','verify',true);
+
             p = inputParser;
             p.KeepUnmatched = true;
             p.addRequired('instance', @ischar);
@@ -59,8 +62,7 @@ classdef scitran < handle
             % Create the Flywheel SDK object
             % Flywheel uses a ':' where we have a space ' ' in the token.
             % Let's change that.
-            token = strrep(obj.token,' ',':');
-            obj.fw = Flywheel(token);
+            obj.fw = Flywheel(obj.showToken);
             
         end
         

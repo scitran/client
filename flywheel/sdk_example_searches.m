@@ -2,6 +2,12 @@
 % NOTE: These examples are specific to one Flywheel Instance (Vistalab @Stanford).
 % The specific search terms would need to be modified to be used with another FW instance.
 
+% Vistalab, wandell account
+%
+%  fw = Flywheel('vistalab.flywheel.io:OQlKDTTTlkZsmDDQi_Pz3r1-_2E1m5D24REuP_3LNggUrwEkMVI1Up3i');
+%  st = scitran('vistalab');
+%  fw = st.fw;
+
 %% List all projects
 
 % projects = fw.search('projects')
@@ -107,19 +113,10 @@ fprintf('Found %d nifti files in the session: %s\n', length(files), sessionLabel
 
 % analyses = fw.search('analysesincollection','collection label','GearTest');
 % fprintf('Analyses in collections only %d\n',length(analyses));
-<<<<<<< HEAD
-%  TODO:
+% TODO - does not work with analysis + collection:
 % searchStruct = struct('return_type', 'analysis', ...
 %         'filters', {{struct('match', struct('collection0x2Elabel', 'GearTest'))}});
 % analyses = fw.search(searchStruct).results;
-=======
-
-% TODO - does not work with analysis + collection:
-searchStruct = struct('return_type', 'analysis', ...
-        'filters', {{struct('match', struct('collection0x2Elabel', 'GearTest'))}});
-analyses = fw.search(searchStruct).results;
->>>>>>> sdk
-
 
 % Which collection is the analysis in?
 % collections = fw.search('collections','collection label','GearTest');
@@ -134,11 +131,8 @@ fprintf('Collections found %d\n', length(collections));
 
 
 
-<<<<<<< HEAD
-% Returns analyses attached only to the sessions in the collection,
-=======
+
 %% Returns analyses attached only to the sessions in the collection,
->>>>>>> sdk
 % but not to the collection as a whole.
 
 % analyses = fw.search('analyses in session','collection label','GearTest');
@@ -148,13 +142,9 @@ fprintf('Collections found %d\n', length(collections));
 %   if this is a hard requirement for the fist release
 
 % Find a session from that collection
-<<<<<<< HEAD
-
 % sessions = fw.search('sessions','session label',sessions{1}.source.label);
-=======
 % sessions = fw.search('sessions','session label',sessions{1}.source.label);
 
->>>>>>> sdk
 sessionLabel = '20151128_1621';
 searchStruct = struct('return_type', 'session', ...
         'filters', {{struct('match', struct('session0x2Elabel', ...
@@ -184,6 +174,9 @@ fprintf('Found %d sessions in the previous 16 weeks\n', length(sessions));
 %     'all_data',true);
 % fprintf('Found %d sessions with subject code %s\n',length(sessions),subjectCode)
 
+% FAILS because .results doesn't exist.  Maybe the subject code is off? 
+% Made me edit the FLywheel.search().
+
 subjectCode = 'ex4842';
 searchStruct = struct('return_type', 'session', ...
         'filters', {{struct('match', struct('subject0x2Ecode', ...
@@ -195,6 +188,10 @@ fprintf('Found %d sessions with subject code %s\n', length(sessions), subjectCod
 
 
 %% Get sessions in which the subject age is within a range
+
+% When the results are empty, the fw.search(struct) returns a struct with
+% no fields, so fw.search(struct).results does not exist.  That needs to be
+% changed in the Flywheel.search() by adding results = [];
 
 % sessions = st.search('sessions',...
 %     'subject age gt', 9, ...
