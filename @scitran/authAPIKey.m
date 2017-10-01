@@ -3,8 +3,10 @@ function authAPIKey(obj, instance,varargin)
 %
 %    st.authAPIKey(instance, varargin)
 %
-% For Flywheel sites, the API key is generated for the user on under the
-% the 'user' name.
+% The API key is generated under the User -> Profile (typically upper right).
+%
+% This routine is invoked by the scitran constructor, and not usually
+% needed by the user.
 %
 % REQUIRED INPUTS:
 %  'instance' - String denoting the name of the @scitran instance.

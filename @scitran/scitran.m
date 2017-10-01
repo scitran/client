@@ -1,21 +1,15 @@
 classdef scitran < handle
     % Scitran object to interact with a scitran database
     %
-    %   st = scitran('scitran','action',{'},'verify',...)
+    %   st = scitran('scitran','action',...)
     %
     % Required
     %  'instance' -  String denoting the site to authorize
     %
     % Parameter/Value
-    %  'actions'  - {'create', 'refresh', 'remove'}
+    %  'action'  - {'create', 'refresh', 'remove'}
     %
-    % Methods include:
-    %   auth    - Authorize interaction with database
-    %   search  - Search
-    %   docker  - Run a docker container (Gear)
-    %   browser - Browse to a page in the Flywheel instance
-    %   get     - Get a file
-    %   put     - Put a file
+    % See https://github.com/scitran/client/wiki
     %
     % LMP/BW Scitran Team, 2016
     
@@ -39,19 +33,28 @@ classdef scitran < handle
     methods
         
         function obj = scitran(instance,varargin)
-            % Creates the object and authorizes the instance The url and
-            % the token are stored in the object. 
+            % Enables Matlab command line interactions with a Flywheel instance.
             %
-            % To set up the software environment for creating a scitran
-            % client object and obtaining authorization, see the scitran
-            % client wiki page
-            % 
-            %   <https://github.com/scitran/client>
+            % This constructor creates the scitran object and authorizes
+            % secure interactions with the Flywheel instance. The url of
+            % the instance and the user's security token for that instance
+            % are stored locally.
             %
-            % Example:
+            % The constructor can be invoked using
+            %
+            %      st = scitran('instanceName');
+            %
+            % See https://github.com/scitran/client/wiki for installation
+            % and usage
+            %
+            % Examples:
+            %
+            %   st = scitran('scitran','action','create');
             %   st = scitran('scitran','action','refresh');
-            %   st = scitran('vistalab','verify',true);
-
+            %   st = scitran('scitran','action','remove');
+            % 
+            % BW Copyright Scitran Team, 2017
+            
             p = inputParser;
             p.KeepUnmatched = true;
             p.addRequired('instance', @ischar);

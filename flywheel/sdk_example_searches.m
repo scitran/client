@@ -4,9 +4,9 @@
 
 % Vistalab, wandell account
 %
-%  fw = Flywheel('vistalab.flywheel.io:OQlKDTTTlkZsmDDQi_Pz3r1-_2E1m5D24REuP_3LNggUrwEkMVI1Up3i');
-%  st = scitran('vistalab');
+%  st = scitran('vistalab'); if ~st.verify, error('Verification error.'); end
 %  fw = st.fw;
+%
 
 %% List all projects
 
