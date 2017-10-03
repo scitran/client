@@ -1,7 +1,7 @@
 classdef scitran < handle
     % Scitran object to interact with a scitran database
     %
-    %   st = scitran('scitran','action',...)
+    %   st = scitran('instance','action',...)
     %
     % Required
     %  'instance' -  String denoting the site to authorize
@@ -58,14 +58,20 @@ classdef scitran < handle
             p = inputParser;
             p.KeepUnmatched = true;
             p.addRequired('instance', @ischar);
+            actions = {'create','refresh','remove'};
+            p.addParameter('action','create',@(x)(ismember(x,actions)));
+            
             p.parse(instance,varargin{:});
+            action = p.Results.action;
             
             authAPIKey(obj,instance,varargin{:});
             
             % Create the Flywheel SDK object
             % Flywheel uses a ':' where we have a space ' ' in the token.
             % Let's change that.
-            obj.fw = Flywheel(obj.showToken);
+            if strcmp(action,'create')
+                obj.fw = Flywheel(obj.showToken);
+            end
             
         end
         
