@@ -10,6 +10,7 @@
 
 %% List all projects
 
+% projects = st.search2('project')
 searchStruct = struct('return_type', 'project');
 results = fw.search(searchStruct).results;
 % Extract projects from results struct
@@ -24,38 +25,43 @@ end
 
 
 %% Find project by label
-% Needs short form
-% Define search -- return a project and match filters
-%    Put _0x2E_ in the Matlab variable to create a '.' (dot) in the JSON variable
+
+[projects, srch] = st.search2('project','project label contains','vwfa');
+
 searchStruct = struct('return_type', 'project', ...
-        'filters', {{struct('match', struct('project0x2Elabel', 'vwfa'))}});
-    
+    'filters', {{struct('match', struct('project0x2Elabel', 'vwfa'))}});
+if ~isequal(srch,searchStruct), warning('Structure mismatch'); end
+
 results = fw.search(searchStruct);
-
-projectID = results.results(1).x_source.project.x_id;
-
-
+projectID = results.results(1).x_source.project.x_id;  % Save for later
 
 %% Get all the sessions within a specific collection
-% [sessions, srchCmd] = st.search2('sessions in collection',...
-%    'collection label contains','Anatomy Male 45-55');
-% [sessions, srch] = st.search2('session','collection label contains','Anatomy Male 45-55');
+
+% Not sure this is correct.
+[sessions, srch] = st.search2('session','collection label contains','Anatomy Male 45-55');
+
 searchStruct = struct('return_type', 'session', ...
         'filters', {{struct('match', struct('collection0x2Elabel', 'Anatomy Male 45-55'))}});
+if ~isequal(srch,searchStruct), warning('Structure mismatch'); end
 results = fw.search(searchStruct).results;
-% Extract sessions from results
-sessions = [];
-for n = 1 : length(results)
-    sessions{n} = results(n).x_source;
-end
+
+% % Extract sessions from results
+% sessions = [];
+% for n = 1 : length(results)
+%     sessions{n} = results(n).x_source;
+% end
 
 
 
 %% Get the sessions within the first project
-% sessions = fw.search('sessions','project id',projectID);
+
+[sessions,srch] = st.search2('session','project id',projectID);
 searchStruct = struct('return_type', 'session', ...
-        'filters', {{struct('term', struct('project0x2E_id', projectID))}});
+    'filters', {{struct('term', struct('project0x2E_id', projectID))}});
+if ~isequal(srch,searchStruct), warning('Structure mismatch'); end
+
 results = fw.search(searchStruct).results;
+
 % Extract sessions from results
 sessions = [];
 for n = 1 : length(results)
@@ -65,14 +71,17 @@ end
 sessionID = sessions{1}.session.x_id;
 sessionLabel = sessions{1}.session.label;
 
-
-
 %% Get the acquisitions inside a session
+
+[acquisitions,srch] = st.search2('acquisition','session id',sessionID);
 
 % acquisitions = fw.search('acquisitions',...
 %     'session id',sessionID);
 searchStruct = struct('return_type', 'acquisition', ...
         'filters', {{struct('term', struct('session0x2E_id', sessionID))}});
+if ~isequal(srch,searchStruct), warning('Structure mismatch'); end
+
+
 results = fw.search(searchStruct).results;
 % Extract sessions from results
 acquisitions = [];
@@ -87,6 +96,7 @@ end
 %     'session id',sessionID,...
 %     'file type','nifti');
 % nFiles = length(files);
+[files, srch] = st.search2('file','session id',sessionID,'file type','nifti');
 
 searchStruct = struct('return_type', 'file', ...
         'filters', {{struct('term', struct('session0x2E_id', sessionID)) ...
