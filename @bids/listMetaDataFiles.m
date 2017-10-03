@@ -1,5 +1,5 @@
-function [projectMeta, subjectMeta, sessionMeta] = metaDataFiles(obj)
-% METADATAFILE
+function [projectMeta, subjectMeta, sessionMeta] = listMetaDataFiles(obj)
+% listMetaDataFiles
 %
 %  Make a cell array of the meta data files at each of the different levels
 %    Project (root directory)     cell is 1
@@ -47,10 +47,10 @@ end
 obj.subjectMeta = subjectMeta;
 
 %% get session metadata
-sessionMeta = cell(obj.nParticipants,max([1,obj.nSessions]));
+sessionMeta = cell(obj.nParticipants,max(obj.nSessions(:)));
 
 for ss = 1:obj.nParticipants
-    if obj.nSessions(ss)>0 % if sessions exist for this participant
+    if obj.nSessions(ss)>1 % if sessions exist for this participant
         % Find the session folders
         thisDir = fullfile(obj.directory,obj.subjectFolders{ss});
         sessionFolders = dirPlus(thisDir,...

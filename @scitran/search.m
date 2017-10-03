@@ -181,6 +181,7 @@ if ischar(srch)
                 end
             case {'projectid'}
                 % Note the ugly x0x5F, needed for jsonio
+                % Might not be working!!! (BW)
                 if ~isfield(srch,'projects')
                     srch.projects.bool.must{1}.match.x0x5Fid = val;
                 else
@@ -320,6 +321,19 @@ if ischar(srch)
                     srch.files.bool.must{1}.match.measurements = val;
                 else
                     srch.files.bool.must{end + 1}.match.measurements = val;
+                end
+            case {'filecontainer'}
+                % An attachment to the project.  We should probably be able
+                % to specify that it is an attachment in the command line.
+                % Or, that it is a note???  We can't search for notes,
+                % yet.
+                % Also, we should validate the container name as a possible
+                % string.
+                % 
+                if ~isfield(srch,'files')
+                    srch.files.bool.must{1}.match.container_name = val;
+                else
+                    srch.files.bool.must{end + 1}.match.container_name = val;
                 end
                 
             % SUBJECTS    

@@ -1,12 +1,14 @@
-function [project, sessions, acquisitions] = projectHierarchy(obj, projectLabel)
+function [project, sessions, acquisitions] = projectHierarchy(obj, projectLabel, groupID)
 % PROJECTHIERARCHY -  Returns the project hierarchy (sessions and
 % acquisitions) 
 %
-%   scitran.projectHierarchy(projectLabel)
+%   scitran.projectHierarchy(projectLabel, groupID)
 %
 % Input:
-%   projectLabel: value of the project label used in the search.  The
+%   projectLabel: the project label used in the search.  The
 %                 search is for 'project label exact'
+%   groupID:      group id because multiple groups may have the same
+%                 project label.
 %
 % Output:
 %   project:      the project retrieved by the search
@@ -14,11 +16,12 @@ function [project, sessions, acquisitions] = projectHierarchy(obj, projectLabel)
 %   acquisitions: all the acquisitions contained in the project
 %
 % Example:
-%   [project, sessions, acquisitions] = st.projectHierarchy('VWFA');
-%   [project, sessions, acquisitions] = st.projectHierarchy('VWFA FOV');
+%   
+%   [project, sessions, acquisitions] = st.projectHierarchy('VWFA','wandell');
 %
 % this will return the project labeled 'foo', its sessions and its
 % acquisitions.
+%
 %
 % RF 2016, Scitran Team
 
@@ -26,24 +29,21 @@ function [project, sessions, acquisitions] = projectHierarchy(obj, projectLabel)
 
 p = inputParser;
 p.addRequired('projectLabel',@ischar);
-p.parse(projectLabel);
+p.addRequired('groupID',@ischar);
+
+p.parse(projectLabel,groupID);
 
 %%
-project = obj.search('projects','project label exact',projectLabel);
-
-%% Check that there is exactly one project returned
-
-if length(project) > 1
-    error('More than one project with label %s returned',projectLabel)
-elseif isempty(project)
-    error('No project found with label %s\n',projectLabel);
+status = obj.exist(projectLabel,'projects','parentID',groupID); 
+if ~status
+    error('Project not found');
 end
 
-% Good to go
-projectID = project{1}.id;
+% Figure out why we can't get the projectID from 'exist' and use it here.
+project = obj.search('projects','project label',projectLabel,'project group',groupID);
 
 %% search the sessions
-sessions = obj.search('sessions','project id',projectID);
+sessions = obj.search('sessions','project label',projectLabel);
 
 %% for each session search its acquisitions
 acquisitions = cell(1,length(sessions));

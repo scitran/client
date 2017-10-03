@@ -18,7 +18,7 @@ function [status, result] = put(obj,filename,container,varargin)
 % Inputs:
 %      filename   - A full path to a file
 %      container  - Struct defining the container of the file, a project,
-%         session, acquisition, or collection
+%                   session, acquisition, or collection
 %
 % Optional:
 %       metadata - Not yet implemented, but this will be a json struct that
@@ -30,14 +30,17 @@ function [status, result] = put(obj,filename,container,varargin)
 %
 % Example:
 %   fw = scitran('vistalab');
-%  % Full file path
+%
+% % Full file path
 %   fullFilename = fullfile(stRootPath,'data','WLVernierAcuity.json');
-%  % Get the container
+%
+% % Get the container
 %    project = fw.search('projects','project label contains','SOC');
-%  % Go.
+%
+% % Go.
 %    fw.put(fullFilename,project);
 %
-% See also:  stCurlRun
+% See also:  stCurlRun, @scitran.get
 %
 % LMP/BW Vistasoft Team, 2015-16
 

@@ -1,18 +1,21 @@
-function clone(tbx,varargin)
+function tbxDir = clone(tbx,varargin)
 % Clone the toolboxes (tbx) locally
 %
-% The clone command downloads the history.
+%    tbxDir = @toolboxes.clone('destination',<directory>,'cloneDepth',<scalar>);%
+%
+% Required inputs 
+%
+% Optional inputs
+%    'cloneDepth'  - Depth of the clone
+%    'destination' - The directory that will contain the repo
+%
+% Return
+%    'tbxDir' - Directory of the clone or install
+%
+% The clone command downloads the full history.  Set the cloneDepth to
+% download only a shallow version of the repository.
 %
 % Examples
-%  If you have this json file, you can just read it
-%
-%   tbx = toolboxes('file','WLVernierAcuity.json');
-% 
-% Or, 
-%   tbx = toolboxes;
-%   tbx.read('WLVernierAcuity.json');
-%   
-% Or 
 %   tbx = toolboxes;
 %   tbx.testcmd         = 'wlvRootPath';
 %   tbx.gitrepo.user    = 'isetbio';
@@ -23,11 +26,16 @@ function clone(tbx,varargin)
 %   tbx.read('WLVernierAcuity.json');
 %   tbx.gitrepo.commit = 'fa1f7b0b4349d8be4620c29ca002bcf8620952dd';
 %
-%  Specify the depth of the clone and the destination
+% You can clone the directory this way
+%
+%    tbx.clone
+%
+% Or, you can specify the depth of the clone and the destination
+%
 %    tbx.clone('cloneDepth',1,'destination',pwd);
 %
-% See also:
-%  The alternative install method downloads a zip file.
+% See also: The alternative install method downloads a zip file. See
+%           @toolboxes.install
 %
 % BW Scitran Team, 2017
 
@@ -49,7 +57,7 @@ end
 % Save these
 startDirectory = pwd;
 gitrepo = tbx.gitrepo;
-repoDirectory = fullfile(installDirectory,gitrepo.project);
+tbxDir = fullfile(installDirectory,gitrepo.project);
 
 %% Download the toolboxes
 
@@ -60,7 +68,7 @@ if isempty(which(tbx.testcmd))
     %         fprintf('<Return> to continue: ');     pause
     %         fprintf('\n');
     
-    if exist(repoDirectory,'dir')
+    if exist(tbxDir,'dir')
         % Directory is there but not on the path
         fprintf('Repository exists, but is not on your path. Adding.\n')        
     else
@@ -82,12 +90,12 @@ if isempty(which(tbx.testcmd))
         end
     end
     
-    chdir(repoDirectory);
+    chdir(tbxDir);
     addpath(genpath(pwd));
     gitRemovePath;
     chdir(installDirectory);
 else
-    fprintf('Found toolbox <%s>\n',repoDirectory);
+    fprintf('Found toolbox <%s>\n',tbxDir);
     return;
 end
 
@@ -99,7 +107,7 @@ chdir(startDirectory);
 if isempty(which(tbx.testcmd))
     fprintf('%s not found.\n',tbx.testcmd)
 else
-    fprintf('Repository <%s> installed and added to path.\n',repoDirectory);
+    fprintf('Repository <%s> installed and added to path.\n',tbxDir);
 end
 
 end

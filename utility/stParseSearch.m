@@ -29,7 +29,7 @@ switch srchType{1}
     % TODO:  Sort several of these by their label before returning.
     case 'groups'
         nGroups = length(srchResult.groups);
-        if nGroups == 0; disp('No groups found'); return; end
+        if nGroups == 0; return; end
         
         result = cell(1,nGroups);
         for ii=1:nGroups
@@ -41,7 +41,7 @@ switch srchType{1}
         end
     case 'projects'
         nProjects = length(srchResult.projects);
-        if nProjects == 0; disp('No projects found'); return; end
+        if nProjects == 0; return; end
 
         result = cell(1,nProjects);
         for ii=1:nProjects
@@ -53,7 +53,7 @@ switch srchType{1}
         end
     case 'sessions'
         nSessions = length(srchResult.sessions);
-        if nSessions == 0; disp('No sessions found'); return; end
+        if nSessions == 0; return; end
 
         result = cell(1,nSessions);
         for ii=1:nSessions
@@ -65,7 +65,7 @@ switch srchType{1}
         end
     case 'acquisitions'
         nAcquisitions = length(srchResult.acquisitions);
-        if nAcquisitions == 0; disp('No acquisitions found'); return; end
+        if nAcquisitions == 0; return; end
 
         result = cell(1,nAcquisitions);
         for ii=1:nAcquisitions
@@ -77,7 +77,7 @@ switch srchType{1}
         end
     case {'files','analyses/files'}
         nFiles = length(srchResult.files);
-        if nFiles == 0; disp('No files found'); return; end
+        if nFiles == 0; return; end
         
         result = cell(1,nFiles);
         for ii=1:nFiles
@@ -89,7 +89,7 @@ switch srchType{1}
         end
     case 'collections'
         nCollections = length(srchResult.collections);
-        if nCollections == 0; disp('No collections found'); return; end
+        if nCollections == 0; return; end
 
         result = cell(1,nCollections);
         for ii=1:nCollections

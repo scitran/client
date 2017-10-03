@@ -1,13 +1,21 @@
 function cmd = updateCmd(obj, containerType, containerId, payload, varargin)
-
+%
 % Build the command to update a project/session/acquisition
 % More info in the documentation for scitran.update
 %
 % RF 2016
 
+% PROGRAMMING TODO
+% Better type checking on the container strings
+%
+
 %%
 p = inputParser;
+
+% validType = {'project','session','acquisition','collection',''};
+% @(x)(ismember(x,validType))
 p.addRequired('containerType',@ischar);
+
 p.addRequired('containerId',@ischar);
 p.addRequired('payload',@ischar);
 p.addParameter('replaceMetadata', 'false',@ischar);
