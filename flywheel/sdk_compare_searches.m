@@ -52,6 +52,7 @@ results = fw.search(searchStruct).results;
 %     sessions{n} = results(n).x_source;
 % end
 
+project = st.search2('project','project label contains','TBI: Neuro');
 
 
 %% Get the sessions within the first project
@@ -165,9 +166,13 @@ sessions = fw.search(searchStruct).results;
 
 %% Count the number of sessions created in a recent time period
 
-% sessions = fw.search('sessions',...
-%     'session after time','now-16w');
-% fprintf('Found %d sessions in previous four weeks \n',length(sessions))
+% sessions = st.search2('session','session after time','now-16w');
+% fprintf('Found %d sessions in recent four weeks \n',length(sessions))
+
+% sessions = st.search2('session','session before time','now-16w');
+% fprintf('Found %d sessions prior to 160 w \n',length(sessions))
+
+% [sessions,srch] = st.search2('project','project label exact','VWFA');
 
 searchStruct = struct('return_type', 'session', ...
         'filters', {{struct('range', struct('session0x2Ecreated', ...
@@ -376,9 +381,6 @@ searchStruct = struct('return_type', 'session', ...
 sessions = fw.search(searchStruct).results;
 % Display result info
 fprintf('Found %d sessions\n',length(sessions));
-
-
-
 
 
 %% Find the number of projects owned by a specific group
