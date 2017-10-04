@@ -2,12 +2,12 @@
 % NOTE: These examples are specific to one Flywheel Instance (Vistalab @Stanford).
 % The specific search terms would need to be modified to be used with another FW instance.
 
+%{
 % Vistalab, wandell account
-%
-%  st = scitran('vistalab');
-%  if ~st.verify, error('Verification error.'); end
-%  fw = st.fw;
-%
+ st = scitran('vistalab');
+ if ~st.verify, error('Verification error.'); end
+ fw = st.fw;
+%}
 
 %% List all projects
 

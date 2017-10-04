@@ -91,10 +91,14 @@ all_data = p.Results.all_data;
 
 %% If srch is a char array, we build a srch structure
 
-% If it is not an array, it may be the struct already.  This condition
-% could be 
+% If it is not a char array, it should be a properly formatted struct.
 if ischar(srch)    
-    % Validate the search result type
+    % This condition could be moved to a separate function
+    % 
+    %   srch = searchStruct(searchType,varargin{:});
+    %
+    
+    % Validate the search result_type
     vFunc = @(x)(ismember(x,{...
         'file','session','acquisition','project','collection','analysis'
         }));
@@ -107,9 +111,6 @@ if ischar(srch)
     if mod(length(varargin),2)
         error('Must have an even number of param/val varargin');
     end
-    
-    % Off we go.  This could be a separate function such as
-    % srch = searchStruct(searchType,varargin{:});
     
     clear srch
     srch.return_type = searchType;
@@ -306,8 +307,10 @@ if ischar(srch)
                     srch.filters{end + 1}.match.subject0x2Ecode = val;
                 end
             case {'subjectagerange'}
-                % search('session','subject age range',[5 10]);  Years.
-                % Subject age range
+                % s = st.search2('session','subject age range',[90.1 96]);  
+                % s = st.search2('session','subject age range',[70.1 76]);  
+                % Subject age range in years
+                % If you set  age range twice, it is AND.  Not needed.
                 if ~isfield(srch,'filters')
                     srch.filters{1}.range.subject0x2Eage.gt= year2sec(val(1));
                     srch.filters{1}.range.subject0x2Eage.lt= year2sec(val(2));
@@ -317,11 +320,11 @@ if ischar(srch)
                 end
             case {'subjectsex'}
                 % val must be 'male' or 'female'
-                % Not working properly yet - BW!!!
+                % st.search2('session','subject sex','male');
                 if ~isfield(srch,'filters')
-                    srch.sessions.bool.must{1}.match.subject0x2Esex= val;
+                    srch.filters{1}.match.subject0x2Esex = val;
                 else
-                    srch.sessions.bool.must{end + 1}.match.subject0x2Esex = val;
+                    srch.filters{end + 1}.match.subject0x2Esex = val;
                 end
                        
             otherwise
@@ -332,11 +335,14 @@ if ischar(srch)
 end
 
 %% Perform the search
+
 %{
-% This is the JSON form created in the Flywheel.search method.
+
+% For convenience, you might want to look at the JSON
+% created in the Flywheel.search method.
  oldField = 'id';
  newField = 'x0x5Fid';
- search_query = fw.replaceField(srch,oldField,newField);
+ search_query = obj.fw.replaceField(srch,oldField,newField);
  opts = struct('replacementStyle','hex');
  search_query = jsonwrite(srch,opts);
 %}
@@ -350,25 +356,25 @@ if isfield(srchResult,'message')
     return;
 end
 
-result  = struct(length(srchResult));
-% What is the x_id at the top, results(ii).x_id??
+% Convert to cell array.  I tried allocating structs, but this turns out
+% not be easy. See 
+% https://www.mathworks.com/matlabcentral/answers/12912-how-to-create-an-empty-array-of-structs
+result = cell(length(srchResult),1);
 for ii=1:length(srchResult)
-    result(ii) = srchResult(ii).x_source;
+    result{ii} = srchResult(ii).x_source;
 end
-
-
-%% If the search file is not returned, delete it
-% if nargout == 1,  delete(srchFile); end
 
 %% If summary flag is set, do this
 
 if summary
-    % This summary will get bigger and better and more helpful.
+    % This summary might get more helpful.  Or deleted.
     fprintf('Number of %s found:  %d\n',searchType, length(result));
 end
 
 
-return;
+end
+
+%% Old code, deprecated.  But might be useful
 
 %% Convert the Matlab struct to json text
 
@@ -409,5 +415,3 @@ return;
 %     %   toc
 % end
 
-
-end
