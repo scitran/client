@@ -9,10 +9,23 @@
  fw = st.fw;
 %}
 
+%% Note
+%
+% Extract .x_source from results manually here.  Done with
+% scitran.search automatically.  Hence the difference.
+
 %% List all projects
 
-% projects = st.search('project')
+%{
+[projects,srch] = st.search('project');
+for p = 1:numel(projects)
+    disp(projects{p}.project.label)
+end
+%}
+
 searchStruct = struct('return_type', 'project');
+if ~isequal(srch,searchStruct), warning('Structure mismatch'); end
+
 results = fw.search(searchStruct).results;
 % Extract projects from results struct
 projects = [];
@@ -25,10 +38,29 @@ for p = 1:numel(projects)
 end
 
 
+%%
+
+%{
+[projects, srch] = st.search('project','project label exact','VWFA');
+%}
+
+searchStruct = struct('return_type', 'project', ...
+        'all_data', true, ... 
+        'filters', {{struct('terms', struct('project0x2Elabel', {{'VWFA'}}))}});
+results = fw.search(searchStruct)
+
+
 %% Find project by label
 
-[projects, srch] = st.search('project','project label contains','vwfa');
+%{
+[projects, srch] = st.search('project',...
+      'project label contains','vwfa', ...
+      'summary',true);
 
+[projects, srch] = st.search('project',...
+                   'project label exact','VWFA','summary',true);
+projectID = projects{1}.project.x_id;  % Save for later
+%}
 searchStruct = struct('return_type', 'project', ...
     'filters', {{struct('match', struct('project0x2Elabel', 'vwfa'))}});
 if ~isequal(srch,searchStruct), warning('Structure mismatch'); end
@@ -38,12 +70,19 @@ projectID = results.results(1).x_source.project.x_id;  % Save for later
 
 %% Get all the sessions within a specific collection
 
-% Not sure this is correct.
-[sessions, srch] = st.search('session','collection label contains','Anatomy Male 45-55');
+%{
+[sessions, srch] = st.search('session',...
+                  'collection label exact','Anatomy Male 45-55',...
+                  'summary',true);
+[sessions, srch] = st.search('session',...
+                  'collection label contains','Anatomy',...
+                  'summary',true);
+%}
 
 searchStruct = struct('return_type', 'session', ...
         'filters', {{struct('match', struct('collection0x2Elabel', 'Anatomy Male 45-55'))}});
 if ~isequal(srch,searchStruct), warning('Structure mismatch'); end
+
 results = fw.search(searchStruct).results;
 
 % % Extract sessions from results
@@ -52,19 +91,26 @@ results = fw.search(searchStruct).results;
 %     sessions{n} = results(n).x_source;
 % end
 
-project = st.search('project','project label contains','TBI: Neuro');
-
+%{
+[project,srch] = st.search('project','project label contains','TBI: Neuro');
+fprintf('Project: %s\n',project{1}.project.label)
+%}
 
 %% Get the sessions within the first project
 
-[sessions,srch] = st.search('session','project id',projectID);
+%{
+[sessions,srch] = st.search('session',...
+                 'summary',true,'project id',projectID);
+sessionID    = sessions{1}.session.x_id;
+sessionLabel = sessions{1}.session.label;
+%}
 searchStruct = struct('return_type', 'session', ...
     'filters', {{struct('term', struct('project0x2E_id', projectID))}});
 if ~isequal(srch,searchStruct), warning('Structure mismatch'); end
 
+% Extract sessions from results manually here.  Done with
+% scitran.search.
 results = fw.search(searchStruct).results;
-
-% Extract sessions from results
 sessions = [];
 for n = 1 : length(results)
     sessions{n} = results(n).x_source;
@@ -75,7 +121,10 @@ sessionLabel = sessions{1}.session.label;
 
 %% Get the acquisitions inside a session
 
-[acquisitions,srch] = st.search('acquisition','session id',sessionID);
+%{
+[acquisitions,srch] = st.search('acquisition','summary',true, ...
+                      'session id',sessionID);
+%}
 
 % acquisitions = fw.search('acquisitions',...
 %     'session id',sessionID);
@@ -94,18 +143,30 @@ end
 
 
 %% Find nifti files in the session
+
 % files = fw.search('files',...
 %     'session id',sessionID,...
 %     'file type','nifti');
 % nFiles = length(files);
-[files, srch] = st.search('file','session id',sessionID,'file type','nifti');
+
+%{
+[files, srch] = st.search('file','session id',sessionID,...
+                'file type','nifti', ...
+                'summary',true);
+[files, srch] = st.search('acquisition','session id',sessionID,...
+                'file type','nifti', ...
+                'summary',true);
+%}
 
 searchStruct = struct('return_type', 'file', ...
-        'filters', {{struct('term', struct('session0x2E_id', sessionID)) ...
-                    struct('term', struct('file0x2Etype', 'nifti'))}});
+    'filters', {{struct('term', struct('session0x2E_id', sessionID)) ...
+    struct('term', struct('file0x2Etype', 'nifti'))}});
+if ~isequal(srch,searchStruct), warning('Structure mismatch'); end
+
+fprintf('Found %d nifti files in the session: %s\n', length(files), sessionLabel);
+
 files = fw.search(searchStruct).results;
 % Display result info
-fprintf('Found %d nifti files in the session: %s\n', length(files), sessionLabel);
 
 
 
@@ -129,6 +190,11 @@ fprintf('Found %d nifti files in the session: %s\n', length(files), sessionLabel
 %         'filters', {{struct('match', struct('collection0x2Elabel', 'GearTest'))}});
 % analyses = fw.search(searchStruct).results;
 
+
+collections = st.search('collection',...
+    'collection label contains','GearTest', ...
+    'summary',true);
+
 % Which collection is the analysis in?
 % collections = fw.search('collections','collection label','GearTest');
 % fprintf('Collections found %d\n',length(collections));
@@ -137,11 +203,6 @@ searchStruct = struct('return_type', 'collection', ...
 collections = fw.search(searchStruct).results;
 % Display result info
 fprintf('Collections found %d\n', length(collections));
-
-
-
-
-
 
 %% Returns analyses attached only to the sessions in the collection,
 % but not to the collection as a whole.
@@ -161,8 +222,6 @@ searchStruct = struct('return_type', 'session', ...
         'filters', {{struct('match', struct('session0x2Elabel', ...
         sessionLabel))}});
 sessions = fw.search(searchStruct).results;
-
-
 
 %% Count the number of sessions created in a recent time period
 

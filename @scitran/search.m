@@ -126,9 +126,12 @@ if ischar(srch)
             % OVERALL SWITCHES
             case {'all_data'}
                 % Search all of the data.  By default you search only your
-                % own data.  Not sure how to set this for the new earch
-                % method.s
-                all_data = val;
+                % own data.
+                % Force to be logical
+                if p.Results.all_data, val = true; 
+                else, val = false; 
+                end
+                srch.all_data = val;
             case {'summary'}
                 % Printout a summary description of the return cell array
                 summary = val;
@@ -142,11 +145,16 @@ if ischar(srch)
                     srch.filters{end+1}.match.project0x2Elabel = val;
                 end
             case {'projectlabelexact','projectlabel'}
+                % Note the cell here, which is not used in the
+                % contains case.
                 if ~isfield(srch,'projects')
-                    srch.filters{1}.match.exact_label = val;
+                    srch.filters{1}.terms.project0x2Elabel = {val};
                 else
-                    srch.filters{end+11}.match.exact_label = val;
+                    srch.filters{end+1}.terms.project0x2Elabel = {val};
                 end
+                %                 searchStruct = struct('return_type', 'project', ...
+                %                     'filters', {{struct('term', struct('project0x2Elabel', 'vwfa'))}});
+                %                 results = fw.search(searchStruct);
             case {'projectid'}
                 % This is like project._id, I think.
                 % filters', {{struct('term', struct('project0x2E_id'
@@ -171,11 +179,11 @@ if ischar(srch)
                     srch.filters{end + 1}.match.session0x2Elabel = val;
                 end
             case {'sessionlabelexact','sessionlabel'}
-                %srch.sessions.match.exact_label = val;
-                if ~isfield(srch,'sessions')
-                    srch.sessions.bool.must{1}.match.exact_label = val;
+                % st.search('session','session label exact',STRING);
+                if ~isfield(srch,'projects')
+                    srch.filters{1}.terms.session0x2Elabel = {val};
                 else
-                    srch.sessions.bool.must{end + 1}.match.exact_label = val;
+                    srch.filters{end+1}.terms.session0x2Elabel = {val};
                 end
             case 'sessionid'
                 if ~isfield(srch,'filters')
@@ -210,17 +218,17 @@ if ischar(srch)
                 end
                 
             % ANALYSES
-            case {'analysislabelexact','analysislabel'}
-                if ~isfield(srch,'analyses')
-                    srch.analyses.bool.must{1}.match.exact_label= val;
-                else
-                    srch.analyses.bool.must{end + 1}.match.exact_label = val;
-                end
             case {'analysislabelcontains'}
                 if ~isfield(srch,'filters')
                     srch.filters{1}.match.analysis0x2Elabel = val;
                 else
                     srch.filters{end + 1}.match.analysis0x2Elabel = val;
+                end
+            case {'analysislabelexact','analysislabel'}
+                if ~isfield(srch,'projects')
+                    srch.filters{1}.terms.analysis0x2Elabel = {val};
+                else
+                    srch.filters{end+1}.terms.analysis0x2Elabel = {val};
                 end
             case {'analysisid'}
                 if ~isfield(srch,'filters')
@@ -230,25 +238,25 @@ if ischar(srch)
                 end
                 
             % ACQUISITIONS
-            case {'acquisitionid'}
-                if ~isfield(srch,'filters')
-                    srch.filters{1}.term.acquisition0x2E_id = val;
-                else
-                    srch.filters{end+1}.term.acquisition0x2E_id = val; 
-                end
             case {'acquisitionlabelcontains'}
                 if ~isfield(srch,'filters')
                     srch.filters{1}.match.acquisition0x2Elabel = val;
                 else
                     srch.filters{end+1}.match.acquisition0x2Elabel = val;
-                end
+                end                
             case {'acquisitionlabelexact','acquisitionlabel'}
-                if ~isfield(srch,'acquisitions')
-                    srch.acquisitions.bool.must{1}.match.exact_label = val;
+                if ~isfield(srch,'projects')
+                    srch.filters{1}.terms.acquisition0x2Elabel = {val};
                 else
-                    srch.acquisitions.bool.must{end + 1}.match.exact_label = val;
+                    srch.filters{end+1}.terms.acquisition0x2Elabel = {val};
                 end
-                
+            case {'acquisitionid'}
+                if ~isfield(srch,'filters')
+                    srch.filters{1}.term.acquisition0x2E_id = val;
+                else
+                    srch.filters{end+1}.term.acquisition0x2E_id = val;
+                end
+    
             % COLLECTIONS                    
             case {'collectionlabelcontains'}
                 if ~isfield(srch,'filters')
@@ -257,10 +265,10 @@ if ischar(srch)
                     srch.filters{end + 1}.match.collection0x2Elabel = val;
                 end
             case {'collectionlabelexact','collectionlabel'}
-                if ~isfield(srch,'filters')
-                    srch.filters{1}.match0x2Eexact_label = val;
+                if ~isfield(srch,'projects')
+                    srch.filters{1}.terms.collection0x2Elabel = {val};
                 else
-                    srch.filters{end+1}.match0x2Eexact_label = val;
+                    srch.filters{end+1}.terms.collection0x2Elabel = {val};
                 end
             case {'collectionid'}
                 if ~isfield(srch,'filters')
@@ -277,10 +285,18 @@ if ischar(srch)
                     srch.filters{end + 1}.match.name = val;
                 end
             case {'filenameexact','filename'}
-                if ~isfield(srch,'filters')
-                    srch.filters{1}.match.exact_name = val;
+                % NEEDS CHECKING
+                if ~isfield(srch,'projects')
+                    srch.filters{1}.terms.filename0x2Elabel = {val};
                 else
-                    srch.filters{end+1}.match.exact_name = val;
+                    srch.filters{end+1}.terms.filename0x2Elabel = {val};
+                end
+            case {'fileid'}
+                % Not tested.
+                if ~isfield(srch,'filters')
+                    srch.filters{1}.term.file0x2E_id = val;
+                else
+                    srch.filters{end+1}.term.file0x2E_id = val;
                 end
             case {'filetype'}
                 % Nifti, dicom, bvec, bval,montage ...
