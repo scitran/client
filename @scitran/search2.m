@@ -368,7 +368,7 @@ end
 
 if summary
     % This summary might get more helpful.  Or deleted.
-    fprintf('Number of %s found:  %d\n',searchType, length(result));
+    fprintf('Found %d (%s)\n',length(result), searchType);
 end
 
 
