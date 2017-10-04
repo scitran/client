@@ -37,9 +37,9 @@ projectID = results.results(1).x_source.project.x_id;
 
 
 %% Get all the sessions within a specific collection
-% [sessions, srchCmd] = st.search2('sessions in collection',...
+% [sessions, srchCmd] = st.search('sessions in collection',...
 %    'collection label contains','Anatomy Male 45-55');
-% [sessions, srch] = st.search2('session','collection label contains','Anatomy Male 45-55');
+% [sessions, srch] = st.search('session','collection label contains','Anatomy Male 45-55');
 searchStruct = struct('return_type', 'session', ...
         'filters', {{struct('match', struct('collection0x2Elabel', 'Anatomy Male 45-55'))}});
 results = fw.search(searchStruct).results;

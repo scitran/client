@@ -17,8 +17,7 @@ status = 0;   %Assume the worst;
 
 try
     searchStruct.return_type = 'project';
-    disp('verify:  Change to search from search2 when ready');
-    results = obj.search2(searchStruct);
+    results = obj.search(searchStruct);
     if ~isempty(results), status = 1; end
 catch ME
     % It is possible status doesn't get returned in this case.

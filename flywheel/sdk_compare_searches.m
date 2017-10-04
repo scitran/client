@@ -11,7 +11,7 @@
 
 %% List all projects
 
-% projects = st.search2('project')
+% projects = st.search('project')
 searchStruct = struct('return_type', 'project');
 results = fw.search(searchStruct).results;
 % Extract projects from results struct
@@ -27,7 +27,7 @@ end
 
 %% Find project by label
 
-[projects, srch] = st.search2('project','project label contains','vwfa');
+[projects, srch] = st.search('project','project label contains','vwfa');
 
 searchStruct = struct('return_type', 'project', ...
     'filters', {{struct('match', struct('project0x2Elabel', 'vwfa'))}});
@@ -39,7 +39,7 @@ projectID = results.results(1).x_source.project.x_id;  % Save for later
 %% Get all the sessions within a specific collection
 
 % Not sure this is correct.
-[sessions, srch] = st.search2('session','collection label contains','Anatomy Male 45-55');
+[sessions, srch] = st.search('session','collection label contains','Anatomy Male 45-55');
 
 searchStruct = struct('return_type', 'session', ...
         'filters', {{struct('match', struct('collection0x2Elabel', 'Anatomy Male 45-55'))}});
@@ -52,12 +52,12 @@ results = fw.search(searchStruct).results;
 %     sessions{n} = results(n).x_source;
 % end
 
-project = st.search2('project','project label contains','TBI: Neuro');
+project = st.search('project','project label contains','TBI: Neuro');
 
 
 %% Get the sessions within the first project
 
-[sessions,srch] = st.search2('session','project id',projectID);
+[sessions,srch] = st.search('session','project id',projectID);
 searchStruct = struct('return_type', 'session', ...
     'filters', {{struct('term', struct('project0x2E_id', projectID))}});
 if ~isequal(srch,searchStruct), warning('Structure mismatch'); end
@@ -75,7 +75,7 @@ sessionLabel = sessions{1}.session.label;
 
 %% Get the acquisitions inside a session
 
-[acquisitions,srch] = st.search2('acquisition','session id',sessionID);
+[acquisitions,srch] = st.search('acquisition','session id',sessionID);
 
 % acquisitions = fw.search('acquisitions',...
 %     'session id',sessionID);
@@ -98,7 +98,7 @@ end
 %     'session id',sessionID,...
 %     'file type','nifti');
 % nFiles = length(files);
-[files, srch] = st.search2('file','session id',sessionID,'file type','nifti');
+[files, srch] = st.search('file','session id',sessionID,'file type','nifti');
 
 searchStruct = struct('return_type', 'file', ...
         'filters', {{struct('term', struct('session0x2E_id', sessionID)) ...
@@ -166,13 +166,13 @@ sessions = fw.search(searchStruct).results;
 
 %% Count the number of sessions created in a recent time period
 
-% sessions = st.search2('session','session after time','now-16w');
+% sessions = st.search('session','session after time','now-16w');
 % fprintf('Found %d sessions in recent four weeks \n',length(sessions))
 
-% sessions = st.search2('session','session before time','now-16w');
+% sessions = st.search('session','session before time','now-16w');
 % fprintf('Found %d sessions prior to 160 w \n',length(sessions))
 
-% [sessions,srch] = st.search2('project','project label exact','VWFA');
+% [sessions,srch] = st.search('project','project label exact','VWFA');
 
 searchStruct = struct('return_type', 'session', ...
         'filters', {{struct('range', struct('session0x2Ecreated', ...
@@ -209,7 +209,7 @@ fprintf('Found %d sessions with subject code %s\n', length(sessions), subjectCod
 % changed in the Flywheel.search() by adding results = [];
 
 %{
- sessions = st.search2('session',...
+ sessions = st.search('session',...
      'subject age range', [9,10], ... 
      'summary',true);
 %}
@@ -233,7 +233,7 @@ fprintf('Found %d sessions in the age range 9-10\n', length(sessions));
 
 %{
 sessionLabel = '20151128_1621';
-st.search2('file','session label contains',sessionLabel,'summary',true);
+st.search('file','session label contains',sessionLabel,'summary',true);
 %}
 sessionLabel = '20151128_1621';
 searchStruct = struct('return_type', 'file', ...
@@ -251,7 +251,7 @@ fprintf('Found %d files from session label %s\n', length(files), sessionLabel);
 
 %{
 sessionLabel = '20151128_1621';
-st.search2('file',...
+st.search('file',...
            'project label contains','WVFA FOV',...
            'session label contains','20140425_1020',...
            'acquisition label contains', '11_1_spiral_high_res_fieldmap',...
@@ -284,7 +284,7 @@ files = fw.search(searchStruct).results;
 % searches.
 
 %{
- files = st.search2('file',...
+ files = st.search('file',...
          'collection label contains','DWI',...
          'acquisition label contains','00 Coil Survey');
  fprintf('Found %d files\n',length(files));
@@ -344,7 +344,7 @@ fprintf('---------\n');
 %% Get files in project/session/acquisition/collection
 
 %{
- files = st.search2('file',...
+ files = st.search('file',...
      'collection label contains','ENGAGE',...
      'acquisition label contains','T1w 1mm', ...
      'summary',true); 
@@ -363,7 +363,7 @@ fprintf('Found %d files\n',length(files));
 %% Get files in project/session/acquisition/collection
 
 %{
- files = st.search2('file',...
+ files = st.search('file',...
      'collection label contains','Anatomy Male 45-55',...
      'acquisition label contains','Localizer',...
      'file type','nifti');
@@ -388,7 +388,7 @@ fprintf('Found %d files\n',length(files));
 
 % Not ready yet.
 %{
- [sessions,srch] = st.search2('session',...
+ [sessions,srch] = st.search('session',...
      'project label contains','UMN', ...
      'session contains analysis', 'AFQ', ...
      'session contains subject','4279',...
