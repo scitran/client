@@ -1,19 +1,26 @@
-function nProjects = verify(obj)
+function status = verify(obj)
 % Search for number of projects, mainly to verify that the APIkey works
 %
-%   nProjects = scitran.verify;
+%   status = st.verify;
 %
-% Example:
+% Examples:
 %
-%   if ~scitran.verify,  error('Bad scitran key, or no projects.'); end
+%   st = scitran('vistalab');
+%   if ~st.verify,  error('Bad scitran key, or no projects.'); end
+%   
+% % Returns a 1 if verified, 0 otherwise.
+%   status = st.verify
 %
 % BW Scitran team, 2017
+
+status = 0;   %Assume the worst;
 
 try
     searchStruct = struct('return_type', 'project');
     results = obj.fw.search(searchStruct).results;
-    nProjects = length(results);
+    if isempty(results), status = 1; end
 catch ME
+    % It is possible status doesn't get returned in this case.
     rethrow(ME)
 end
 

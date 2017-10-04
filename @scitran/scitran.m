@@ -4,7 +4,10 @@ classdef scitran < handle
     %   st = scitran('instance','action',...)
     %
     % Required
-    %  'instance' -  String denoting the site to authorize
+    %  'instance' -  String denoting the site to look up in your
+    %                database and authorize.  In the special case that
+    %                instance is set to 'list', the sites in your
+    %                database are listed.
     %
     % Parameter/Value
     %  'action'  - {'create', 'refresh', 'remove'}
@@ -18,8 +21,7 @@ classdef scitran < handle
     url = '';
     instance = 'scitran';
     
-    % Perhaps scitran should be a subclass of the @flywheel.  For now, we
-    % are storing it as an object within the scitran object.
+    % We are storing the Flywheel object within the scitran object.
     fw = [];    % A flywheel SDK class.
     
     end    % Data stuff (public)
@@ -49,9 +51,14 @@ classdef scitran < handle
             %
             % Examples:
             %
-            %   st = scitran('scitran','action','create');
-            %   st = scitran('scitran','action','refresh');
-            %   st = scitran('scitran','action','remove');
+            %   st = scitran('vistalab','action','create');
+            %   st = scitran('cni','action','refresh');
+            %   st = scitran('cni','action','remove');
+            %
+            % % There is a special case for just listing the entries
+            % % of your local scitran database.  Set instance to list.
+            %
+            %   scitran('list');    % Lists the instances in your database
             % 
             % BW Copyright Scitran Team, 2017
             
@@ -64,12 +71,19 @@ classdef scitran < handle
             p.parse(instance,varargin{:});
             action = p.Results.action;
             
+            if ismember(instance,{'dir','list','ls'})
+                fprintf('\nStored Flywheel site names\n');
+                fprintf('----------------------------\n');
+                obj.listInstances;
+                obj.instance = 'listing only';
+                return;
+            end
+            
             authAPIKey(obj,instance,varargin{:});
             
             % Create the Flywheel SDK object
-            % Flywheel uses a ':' where we have a space ' ' in the token.
-            % Let's change that.
-            if strcmp(action,'create')
+            % We do this for create or refresh, but not for remove.
+            if strcmp(action,'create') || strcmp(action,'refresh')
                 obj.fw = Flywheel(obj.showToken);
             end
             

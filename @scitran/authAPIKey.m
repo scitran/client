@@ -121,7 +121,7 @@ switch lower(action)
             obj.url = st.(instance).client_url;
         else
             % Create a new instance and save data in st_tokens file.
-            obj = stNew(obj,st,instance,tokenFile);
+            stNew(obj,st,instance,tokenFile);
         end
         
 end
@@ -144,10 +144,10 @@ if isempty(newStr{1})
     return;
 elseif length(newStr) == 2
     obj.url = ['https://', newStr{1}];
-    obj.token = ['scitran-user ', newStr{2}];
+    obj.token = apiKey;
 elseif length(newStr) == 1
-    obj.token = ['scitran-user ', newStr{1}];
-    % Didn't find it in the API string
+    obj.token = [newStr{1}];
+    % Didn't find the URL in the API string
     obj.url = input('Please enter the url (https://...): ', 's');
     if strcmp(obj.url(1:5),'http:')
         disp('*** Replacing http: with https: ***');

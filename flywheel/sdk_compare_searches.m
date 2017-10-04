@@ -4,7 +4,8 @@
 
 % Vistalab, wandell account
 %
-%  st = scitran('vistalab'); if ~st.verify, error('Verification error.'); end
+%  st = scitran('vistalab');
+%  if ~st.verify, error('Verification error.'); end
 %  fw = st.fw;
 %
 
