@@ -1,21 +1,18 @@
-%% Scitran search
+%% Flywheel search
 %
 % This script illustrates various ways to search the database to find data
 % using the Matlab interface.
 %
-% The search data returned from Flywheel are cell arrays descring files,
-% acquisitions (groups of related files), sessions, or projects.
+% The search data returned from Flywheel are cell arrays describing files,
+% acquisitions (groups of related files), sessions, projects, or
+% collections.
 %
 % The principle of the search command is this:
 %
-%    * Get authorization to access the scitran site (st = scitran)
-%    * Create a Matlab structure (srch) to specify search requirements
-%    * Run the search (results = @scitran.search(srch))
+%    * Get authorization to access the Flywheel site
+%    * Set the search return type and the search conditions
+%    * Run the search (results = @scitran.search(srchParameters ...))
 %    * Results is a cell array of objects that meet the search criterion
-%
-% To retrieve the data for local processing use
-%
-%         @scitran.get(), or @scitran.read()
 %
 % For further documentation, see
 %
@@ -32,22 +29,29 @@
 
 %% Authorization
 
-% The auth returns a token and the url of the flywheel instance.  These are
-% fixed as part of 's' throughout the examples, below.
-fw = scitran('scitran');
+% You may need to create a local token for your site.  You can do this
+% using
+%    scitran('yourSite','action','create');
+%
+% You will be queried for the apiKey on the Flywheel User Profile page.
+%
+fw = scitran('vistalab');
 
-%% List all projects
+%% List projects you can access
 
-projects = fw.search('projects');
-fprintf('Found %d projects\n',length(projects))
+% I guess we should sort the projects on return.
+projects = fw.search('project','summary',true,'sortlabel','project label');
+for ii=1:length(projects)
+    disp(projects{ii}.project.label)
+end
 
 %% Needs short form
-projects = fw.search('projects','project label contains','vwfa');
+projects = fw.search('project','project label contains','vwfa');
 fprintf('Found %d projects for the group wandell, with label vwfa.\n',length(projects));
 
 % Save this project information
-projectID    = projects{end}.id;
-projectLabel = projects{end}.source.label;
+projectID    = projects{end}.project.x_id;
+projectLabel = projects{end}.project.label;
 
 %% Get all the sessions within a specific collection
 [sessions, srchCmd] = fw.search('sessions in collection',...

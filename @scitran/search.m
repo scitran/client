@@ -75,6 +75,7 @@ p.addRequired('srch');
 % Not sure what this means yet
 p.addParameter('all_data',false,@islogical);
 p.addParameter('summary',false,@islogical);
+p.addParameter('sortlabel',[],@ischar);
 
 % Remove the spaces from the varargin because the parser complains.  Why
 % does it do that?
@@ -83,11 +84,10 @@ for ii=1:2:length(varargin)
 end
 p.parse(srch,varargin{:});
 
-srch  = p.Results.srch;
-summary = p.Results.summary;
-
-% Not sure how to set the flag to search through all the data
-all_data = p.Results.all_data;
+srch      = p.Results.srch;
+summary   = p.Results.summary;
+sortlabel = p.Results.sortlabel;
+all_data  = p.Results.all_data;
 
 %% If srch is a char array, we build a srch structure
 
@@ -128,10 +128,12 @@ if ischar(srch)
                 % Search all of the data.  By default you search only your
                 % own data.
                 % Force to be logical
-                if p.Results.all_data, val = true; 
+                if all_data, val = true; 
                 else, val = false; 
                 end
                 srch.all_data = val;
+            case {'sortlabel'}
+                % Ignore - We manage this at the end.
             case {'summary'}
                 % Printout a summary description of the return cell array
                 summary = val;
@@ -382,6 +384,11 @@ end
 
 %% If summary flag is set, do this
 
+if ~isempty(sortlabel)
+    fprintf('NYI.  We want to sort using this label:  %s\n',sortlabel);
+end
+
+    
 if summary
     % This summary might get more helpful.  Or deleted.
     fprintf('Found %d (%s)\n',length(result), searchType);
