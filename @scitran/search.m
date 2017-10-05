@@ -146,7 +146,7 @@ if ischar(srch)
                 else
                     srch.filters{end+1}.match.project0x2Elabel = val;
                 end
-            case {'projectlabelexact','projectlabel'}
+            case {'projectlabelexact'}
                 % Note the cell here, which is not used in the
                 % contains case.
                 if ~isfield(srch,'projects')
@@ -166,10 +166,10 @@ if ischar(srch)
                     srch.filters{end+1}.term.project0x2E_id = val; 
                 end
             case{'projectgroup'}
-                if ~isfield(srch,'projects')
-                    srch.projects.bool.must{1}.match.group = val;
+                if ~isfield(srch,'filters')
+                    srch.filters{1}.term.group0x2E_id = val;
                 else
-                    srch.projects.bool.must{end + 1}.match.group = val;
+                    srch.filters{end + 1}.term.group0x2E_id = val;
                 end
                 
             % SESSIONS
@@ -207,10 +207,10 @@ if ischar(srch)
                     srch.filters{end + 1}.range.session0x2Ecreated.lte = val;
                 end
             case {'sessioncontainsanalysis','sessioncontainsanalysislabel'}
-                if ~isfield(srch,'sessions')
-                    srch.sessions.bool.must{1}.match.analyses0x2Elabel = val;
+                if ~isfield(srch,'filters')
+                    srch.filters{1}.match.analyses0x2Elabel = val;
                 else
-                    srch.sessions.bool.must{end + 1}.match.analyses0x2Elabel = val;
+                    srch.filters{end + 1}.match.analyses0x2Elabel = val;
                 end
             case {'sessioncontainssubject'}
                 if ~isfield(srch,'sessions')
@@ -320,9 +320,9 @@ if ischar(srch)
             % SUBJECTS    
             case {'subjectcode'}
                 if ~isfield(srch,'filters')
-                    srch.filters{1}.match.subject0x2Ecode = val;
+                    srch.filters{1}.term.subject0x2Ecode = val;
                 else
-                    srch.filters{end + 1}.match.subject0x2Ecode = val;
+                    srch.filters{end + 1}.term.subject0x2Ecode = val;
                 end
             case {'subjectagerange'}
                 % s = st.search('session','subject age range',[90.1 96]);  
