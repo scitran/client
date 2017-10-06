@@ -1,18 +1,26 @@
 %% Flywheel search
 %
-% This script illustrates various ways to search the database to find data
-% using the Matlab interface.
+% This script illustrates ways to search the database using the Matlab
+% interface.
 %
-% The search data returned from Flywheel are cell arrays describing files,
-% acquisitions (groups of related files), sessions, projects, or
-% collections.
+% The returned data are cell arrays describing files, acquisitions (groups
+% of related files), sessions, projects, or collections.  Each element of
+% the cell array is a struct that contains information about the returned
+% object.  For example, if you find a file the cell array will be a struct
+% with fields
+% 
+%         project: [1×1 struct]
+%           group: [1×1 struct]
+%         session: [1×1 struct]
+%         subject: [1×1 struct]
+%            file: [1×1 struct]
+%     permissions: [11×1 struct]
+%          parent: [1×1 struct]
 %
-% The principle of the search command is this:
+% To perform a search you must create a scitran object and be authorized to
+% access the Flywheel site.  The scitran search method has the syntax
 %
-%    * Get authorization to access the Flywheel site
-%    * Set the search return type and the search conditions
-%    * Run the search (results = @scitran.search(srchParameters ...))
-%    * Results is a cell array of objects that meet the search criterion
+%    results = scitran.search(result_type,'parameter',value,...)
 %
 % For further documentation, see
 %
@@ -54,14 +62,19 @@ projects = fw.search('project',...
 projectID    = projects{end}.project.x_id;
 projectLabel = projects{end}.project.label;
 
-%% Get all the sessions within a specific collection
-[sessions, srchCmd] = fw.search('session',...
+%% Get a sessions within a specific collection with a subject code
+
+% BUG - This seems like a bug.  There is an SU in front of the code and I don't
+% understand why.
+sessions = fw.search('session',...
     'collection label exact','Anatomy Male 45-55',...
+    'subject code','ex10316',...
     'summary',true);
+sessions{1}.subject.code
 
 %% Get all the sessions within a specific collection
 
-% Not working.  Returns too many sessions.
+% BUG - Returns too many sessions.
 [sessions, srchCmd] = fw.search('session',...
     'collection label contains','Anatomy Male 45-55',...
     'summary',true);
@@ -121,16 +134,19 @@ analyses = fw.search('analysis',...
 
 %% Find a session from that collection
 
+thisLabel = sessions{1}.session.label;
 sessions = fw.search('session',...
-    'session label',sessions{1}.session.label,...
+    'session label',thisLabel,...
     'summary',true);
-sessions{1}.session.label
+if ~strcmp(sessions{1}.session.label,thisLabel)
+    warning('Session label does not match'); 
+end
 
 %% Count the number of sessions created in a recent time period
 
 sessions = fw.search('session',...
-    'session after time','now-16w');
-fprintf('Found %d sessions in previous 16 weeks \n',length(sessions))
+    'session after time','now-16w',...
+    'summary',true);
 
 %% Get sessions with this subject code
 sessions = fw.search('session',...
@@ -147,7 +163,6 @@ sessions = fw.search('session', ...
 %% Find a session with a specific label
 
 sessionLabel = '20151128_1621';  % There are two sessions with this label
-
 sessions = fw.search('session',...
     'session label exact',sessionLabel,...
     'summary',true);
@@ -162,7 +177,7 @@ files = fw.search('file',...
 %% get files from a particular project and acquisition
 
 files = fw.search('file', ...
-    'project label','VWFA FOV', ...
+    'project label exact','VWFA FOV', ...
     'acquisition label','11_1_spiral_high_res_fieldmap',...
     'file type','nifti',...
     'summary',true);
@@ -177,28 +192,6 @@ files = fw.search('file',...
     'collection label','DWI',...
     'acquisition label','00 Coil Survey',...
     'summary',true);
-
-%% Find the session name for these files
-% Make this work.  Something wrong!
-%
-% for ii=1:length(files)
-%     % srch.sessions.match.label = files{ii}.source.session.label;
-%     files{ii}.source.session.label
-%     thisSession = st.search('sessions','session label',files{ii}.source.session.label);
-%
-%     if ~isempty(thisSession)
-%         % This should not happen.  But it does.  So fix it. (BW).
-%         ii
-%         sessionNames{ii} = thisSession{1}.source.label;
-%     end
-% end
-% %
-% sessionNames = unique(sessionNames);
-% fprintf('\n---------\n');
-% for ii=1:length(sessionNames)
-%     fprintf('%3d:  Session name %s\n',ii,sessionNames{ii});
-% end
-% fprintf('---------\n');
 
 %% get files in project/session/acquisition/collection
 files = fw.search('file',...
@@ -234,6 +227,8 @@ files = fw.search('file',...
     'subject code','4279',...
     'all_data',true,'summary',true);
 
+sessions = fw.search(srchS,'all_data',true,'summary',true);
+
 %%  Find the number of projects owned by a specific group
 
 groupName = 'wandell';
@@ -241,7 +236,7 @@ groupName = 'wandell';
     'project group',groupName,...
     'summary',true);
 
-groupName = {'aldit','wandell','jwday','leanew1'};
+groupName = {'aldit','jwday','leanew1'};
 for ii=1:length(groupName)
     projects = fw.search('project',...
         'project group',groupName{ii},...

@@ -17,6 +17,12 @@ function [data, destination] = read(st,pLink,varargin)
 %
 % Wandell/SCITRAN Team, 2017
 
+% We should use fw.downloadFileFrom<XXX>
+% What does it take as an input argument?
+% I guess id is the file id.
+% Name is the 
+% downloadFileFromProject(id, name, path)
+
 %% Parse inputs
 p = inputParser;
 

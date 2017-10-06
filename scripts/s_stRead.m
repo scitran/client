@@ -15,9 +15,11 @@ fw = scitran('vistalab');
 %%  Get an example nifti file
 
 % From the VWFA project
-files = fw.search('files', ...
-    'project label','VWFA',...
+files = fw.search('file', ...
+    'project label exact','VWFA',...
     'file type','nifti');
+
+fw.fw.downloadFileFromAcquisition(files{1}.parent.x_id,files{1}.file.name,fullfile(pwd,'foo.nii.gz');
 
 [data, destination] = fw.read(files{1},'fileType','nifti');
 

@@ -5,19 +5,26 @@ function [result, srch] = search(obj,srch,varargin)
 %
 % Required Input:
 %  srch:  A struct or a string
-%     If a struct, then it must contain all the fields needed to create the
-%       search command 
-%     If a string, then the search return type, and we build the struct
-%       from the parameter/value pairs in varargin.  See s_stSearches.m for
-%       many examples.
+%     If a struct, it must contain the fields that define the search
+%     parameters 
+%
+%     If a string, then the search return type. In this case, we
+%     build the struct from the parameter/value pairs in varargin.  
+%
+% See s_stSearches.m for many examples.
 %
 % Return:
-%  result:  Array of returned data structs
-%  srch:    The structure defined by the search varargins
+%  result:  A cell array of data structs that match the search parameters
+%  srch:    The struct that is defined by the search varargins
+%
+%  Notice that running these commands in sequence return the same results
+%
+%     [results,srch] = st.search(srch,'parameter',value);
+%     results = st.search(srch);
 %
 % Parameters
-%   Many parameter/value pairs are possible to define the search.  For the
-%   common simple search arguments, see the examples in *s_stSearches*.
+%   Many parameter/value pairs are possible to define the search.  For 
+%   common search arguments, see the examples in *s_stSearches*.
 %
 %   In addition to the search parameters, there are two special parameters
 %
@@ -319,6 +326,7 @@ if ischar(srch)
                 
             % SUBJECTS    
             case {'subjectcode'}
+                % This seems to be 'contains', though I am not sure.
                 if ~isfield(srch,'filters')
                     srch.filters{1}.term.subject0x2Ecode = val;
                 else
@@ -350,7 +358,11 @@ if ischar(srch)
         end
         
     end
+else
+    % The srch term was a struct.  So we need to get searchType
+    searchType = srch.return_type;
 end
+
 
 %% Perform the search
 
@@ -382,13 +394,12 @@ for ii=1:length(srchResult)
     result{ii} = srchResult(ii).x_source;
 end
 
-%% If summary flag is set, do this
+%% If sortlab or summary flag are set, deal with it here.
 
 if ~isempty(sortlabel)
     fprintf('NYI.  We want to sort using this label:  %s\n',sortlabel);
 end
 
-    
 if summary
     % This summary might get more helpful.  Or deleted.
     fprintf('Found %d (%s)\n',length(result), searchType);
