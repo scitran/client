@@ -11,10 +11,13 @@ function [data, destination] = read(st,pLink,varargin)
 %    'fileType' - {obj, mat, nifti, json, csv}
 %
 % Examples:
-%    st = scitran('vistalab');
-%    file = st.search('files','project label','ADNI: T1','subject code',4256,'filetype','nifti');
-%    data = st.read(file{1},'fileType','nifti');
-%
+%{
+    fw = scitran('vistalab');
+    files= fw.search('file','project label exact','VWFA',...
+                     'subject code',4256,...
+                     'filetype','nifti');
+    data = st.read(file{1},'fileType','nifti');
+%}
 % Wandell/SCITRAN Team, 2017
 
 % We should use fw.downloadFileFrom<XXX>

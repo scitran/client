@@ -13,12 +13,11 @@ function status = verify(obj)
 %
 % BW Scitran team, 2017
 
-status = 0;   %Assume the worst;
-
 try
-    searchStruct.return_type = 'project';
-    results = obj.search(searchStruct);
-    if ~isempty(results), status = 1; end
+    status = obj.fw.testBridge('world!');
+    %     searchStruct.return_type = 'project';
+    %     results = obj.search(searchStruct);
+    %     if ~isempty(results), status = 1; end
 catch ME
     % It is possible status doesn't get returned in this case.
     rethrow(ME)
