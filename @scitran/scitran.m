@@ -111,8 +111,13 @@ classdef scitran < handle
             tokenFile = fullfile(stDir, 'st_tokens');
             val = jsonread(tokenFile);
             
-            % TODO Make a nicer print out of this
-            disp(val)
+            names = fieldnames(val);
+            for ii=1:length(names)
+                if ~strcmp(names{ii},'url') && ~strcmp(names{ii},'token')
+                    fprintf('\t%s \n',names{ii});
+                end
+            end
+            
         end
             
     end   
