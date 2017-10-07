@@ -1,18 +1,7 @@
 classdef scitran < handle
     % Scitran object to interact with a scitran database
     %
-<<<<<<< HEAD
-    %   st = scitran(instance,'action',...,'verify',...)
-    %
-    %  'instance' -  String denoting the st instance to authorize
-    %
-    % Param/Value:
-    %       
-    %  'actions'  - {'create', 'refresh', 'remove'}
-    %  'verify'   - performs a search to verify validity.
-=======
-    %   st = scitran('instance','action',...)
->>>>>>> a1ff6c219adaa2f736086412eef6bd391b3201d0
+    %   st = scitran(instance,'action',...)
     %
     % Required
     %  'instance' -  String denoting the site to look up in your
