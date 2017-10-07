@@ -59,7 +59,6 @@ function [result, srch] = search(obj,srch,varargin)
 %    'project label contains'
 %    'project id'
 %    
-% 
 % Important parameters we use in search are 
 %   'name', 'group', 'label', 'id','plink', subject_0x2E_age',
 %   'container_id', 'type'.  
