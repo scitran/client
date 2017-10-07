@@ -3,11 +3,14 @@
 % The specific search terms would need to be modified to be used with another FW instance.
 
 
-% fw = Flywheel('vistalab.flywheel.io:OQlKDTTTlkZsmDDQi_Pz3r1-_2E1m5D24REuP_3LNggUrwEkMVI1Up3i');
+% If you have a vistalab account, you can do this.
 %
+%  st = scitran('vistalab'); 
+%  st.verify
+%  fw = st.fw;
+
 %% List all projects
 
-% projects = fw.search('projects')
 searchStruct = struct('return_type', 'project');
 results = fw.search(searchStruct).results;
 % Extract projects from results struct
@@ -23,23 +26,21 @@ end
 
 %% Find project by label
 % Needs short form
-% projects = fw.search('projects','project label contains','vwfa');
-
 % Define search -- return a project and match filters
 %    Put _0x2E_ in the Matlab variable to create a '.' (dot) in the JSON variable
 searchStruct = struct('return_type', 'project', ...
         'filters', {{struct('match', struct('project0x2Elabel', 'vwfa'))}});
+    
 results = fw.search(searchStruct);
 
 projectID = results.results(1).x_source.project.x_id;
 
-
-
 %% Get all the sessions within a specific collection
-% [sessions, srchCmd] = fw.search('sessions in collection',...
+% [sessions, srchCmd] = st.search('sessions in collection',...
 %    'collection label contains','Anatomy Male 45-55');
+% [sessions, srch] = st.search('session','collection label contains','Anatomy Male 45-55');
 searchStruct = struct('return_type', 'session', ...
-        'filters', {{struct('match', struct('collection0x2Elabel', 'Amatomy Male 45-55'))}});
+        'filters', {{struct('match', struct('collection0x2Elabel', 'Anatomy Male 45-55'))}});
 results = fw.search(searchStruct).results;
 % Extract sessions from results
 sessions = [];
@@ -110,11 +111,10 @@ fprintf('Found %d nifti files in the session: %s\n', length(files), sessionLabel
 
 % analyses = fw.search('analysesincollection','collection label','GearTest');
 % fprintf('Analyses in collections only %d\n',length(analyses));
-%  TODO:
+% TODO - does not work with analysis + collection:
 % searchStruct = struct('return_type', 'analysis', ...
 %         'filters', {{struct('match', struct('collection0x2Elabel', 'GearTest'))}});
 % analyses = fw.search(searchStruct).results;
-
 
 % Which collection is the analysis in?
 % collections = fw.search('collections','collection label','GearTest');
@@ -129,7 +129,8 @@ fprintf('Collections found %d\n', length(collections));
 
 
 
-% Returns analyses attached only to the sessions in the collection,
+
+%% Returns analyses attached only to the sessions in the collection,
 % but not to the collection as a whole.
 
 % analyses = fw.search('analyses in session','collection label','GearTest');
@@ -139,8 +140,9 @@ fprintf('Collections found %d\n', length(collections));
 %   if this is a hard requirement for the fist release
 
 % Find a session from that collection
-
 % sessions = fw.search('sessions','session label',sessions{1}.source.label);
+% sessions = fw.search('sessions','session label',sessions{1}.source.label);
+
 sessionLabel = '20151128_1621';
 searchStruct = struct('return_type', 'session', ...
         'filters', {{struct('match', struct('session0x2Elabel', ...
@@ -171,7 +173,18 @@ fprintf('Found %d sessions in the previous 16 weeks\n', length(sessions));
 % fprintf('Found %d sessions with subject code %s\n',length(sessions),subjectCode)
 % 
 
+<<<<<<< HEAD
 %% Doesn't work ... not sure why
+=======
+% FAILS because .results doesn't exist.  Maybe the subject code is off? 
+% Made me edit the FLywheel.search().
+
+subjectCode = 'ex4842';
+searchStruct = struct('return_type', 'session', ...
+        'filters', {{struct('match', struct('subject0x2Ecode', ...
+        subjectCode))}});
+sessions = fw.search(searchStruct).results;
+>>>>>>> a1ff6c219adaa2f736086412eef6bd391b3201d0
 
 % subjectCode = 'ex4842';
 % searchStruct = struct('return_type', 'session', ...
@@ -184,6 +197,10 @@ fprintf('Found %d sessions in the previous 16 weeks\n', length(sessions));
 
 
 %% Get sessions in which the subject age is within a range
+
+% When the results are empty, the fw.search(struct) returns a struct with
+% no fields, so fw.search(struct).results does not exist.  That needs to be
+% changed in the Flywheel.search() by adding results = [];
 
 % sessions = st.search('sessions',...
 %     'subject age gt', 9, ...
@@ -342,11 +359,13 @@ fprintf('Found %d files\n',length(files));
 % In this case, we are searching through all the data, not just the data
 % that we have ownership on.
 
-% [sessions,srchS] = fw.search('sessions',...
-%     'project label','UMN', ...
-%     'session contains analysis', 'AFQ', ...
-%     'session contains subject','4279',...
-%     'all_data',true,'summary',true);
+%{
+ [sessions,srchS] = fw.search('session',...
+     'project label contains','UMN', ...
+     'analysis label contains', 'AFQ', ...
+     'subject code','4279',...
+     'all_data',true,'summary',true);
+%}
 
 searchStruct = struct('return_type', 'session', ...
         'all_data', true, ...
@@ -355,7 +374,7 @@ searchStruct = struct('return_type', 'session', ...
         struct('match', struct('analysis0x2Elabel', 'AFQ')), ...
         struct('term', struct('subject0x2Ecode', '4279')), ...
         }});
-sessions = fw.search(searchStruct).results;
+sessions = fw.fw.search(searchStruct).results;
 % Display result info
 fprintf('Found %d sessions\n',length(sessions));
 

@@ -3,8 +3,10 @@ function authAPIKey(obj, instance,varargin)
 %
 %    st.authAPIKey(instance, varargin)
 %
-% For Flywheel sites, the API key is generated for the user on under the
-% the 'user' name.
+% The API key is generated under the User -> Profile (typically upper right).
+%
+% This routine is invoked by the scitran constructor, and not usually
+% needed by the user.
 %
 % REQUIRED INPUTS:
 %  'instance' - String denoting the name of the @scitran instance.
@@ -17,8 +19,6 @@ function authAPIKey(obj, instance,varargin)
 %             'refresh' - refresh an existing @scitran object
 %             'remove'  - remove an existing @scitran object from the
 %                         tokens file.
-%  'verify'   - Print out messages verifying the site is found.s
-%
 % OUTPUTS:
 %   @scitran object with url, instance name.  Token is private.
 %
@@ -87,8 +87,6 @@ switch lower(action)
         st.token = '';
         jsonwrite(tokenFile,st);
         
-        % Never verify on a remove.
-        verify = false;
         
     case 'refresh'
         if ~isfield(st,instance)
@@ -99,7 +97,8 @@ switch lower(action)
             prompt = sprintf('Would you like to refresh the API key for %s? (y/n): ', instance);
             response = input(prompt,'s');
             if lower(response) == 'y'
-                obj.token   = ['scitran-user ', input('Please enter the API key: ', 's')];
+                % obj.token   = ['scitran-user ', input('Please enter the API key: ', 's')];
+                obj.token   = input('Please enter the API key: ', 's');
                 if isempty(obj.token)
                     disp('User canceled.');
                     return;
@@ -122,52 +121,39 @@ switch lower(action)
             obj.url = st.(instance).client_url;
         else
             % Create a new instance and save data in st_tokens file.
-            obj = stNew(obj,st,instance,tokenFile);
+            stNew(obj,st,instance,tokenFile);
         end
         
-end
-
-%% Verify by running a search on projects
-
-% This is fast enough for a little test.s
-if verify
-    try
-        fprintf('%d projects found\n',length(obj.search('projects')));
-    catch ME
-        rethrow(ME)
-    end
 end
 
 end
 
 %%
 function obj = stNew(obj,st,instance,tokenFile)
-% Get the URL and the API key
+% We assume the user copied the apiKey from the Flywheel site.
+% The apiKey format is URL:KEY, where URL is missing the https://
+%
+% We could check this.
 
-% In some cases, the API key copied from the site (e.g., Flywheel) has the
-% url embedded in it.  We check for that.  If it is there, we do not ask
-% for the url.  If it is not there, we do ask.
-apiKey = input('Please enter the API key: ', 's');
-
-% If there is a url embeded, then we get two cells
-newStr = split(apiKey,':');
-if isempty(newStr{1})
-    disp('User canceled.');
+apiKey = input('Please enter the API key (domain:key format): ', 's');
+if isempty(apiKey)
+    disp('User canceled');
     return;
-elseif length(newStr) == 2
-    obj.url = ['https://', newStr{1}];
-    obj.token = ['scitran-user ', newStr{2}];
-elseif length(newStr) == 1
-    obj.token = ['scitran-user ', newStr{1}];
-    % Didn't find it in the API string
-    obj.url = input('Please enter the url (https://...): ', 's');
-    if strcmp(obj.url(1:5),'http:')
-        disp('*** Replacing http: with https: ***');
-        obj.url = ['https:',obj.url(6:end)];
-        disp(obj.url);
-    end
 end
 
+% The part before the ':' is the URL.  Get it.
+newStr = split(apiKey,':');
+if length(newStr) < 2
+    % Oops, there was no URL before the :
+    ME = MException('FlywheelException:Invalid', 'Invalid API Key');
+    throw(ME)
+end
+
+% Save the whole apiKey in the token slot.
+obj.token = apiKey;
+obj.url = ['https://', newStr{1}];
+
+% Create and store the JSON representation in the tokenFile
 st.(instance).token = obj.token;
 st.(instance).client_url = obj.url;
 jsonwrite(tokenFile,st);

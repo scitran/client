@@ -1,21 +1,26 @@
-%% Scitran search
+%% Flywheel search
 %
-% This script illustrates various ways to search the database to find data
-% using the Matlab interface.
+% This script illustrates ways to search the database using the Matlab
+% interface.
 %
-% The search data returned from Flywheel are cell arrays descring files,
-% acquisitions (groups of related files), sessions, or projects.
+% The returned data are cell arrays describing files, acquisitions (groups
+% of related files), sessions, projects, or collections.  Each element of
+% the cell array is a struct that contains information about the returned
+% object.  For example, if you find a file the cell array will be a struct
+% with fields
+% 
+%         project: [1×1 struct]
+%           group: [1×1 struct]
+%         session: [1×1 struct]
+%         subject: [1×1 struct]
+%            file: [1×1 struct]
+%     permissions: [11×1 struct]
+%          parent: [1×1 struct]
 %
-% The principle of the search command is this:
+% To perform a search you must create a scitran object and be authorized to
+% access the Flywheel site.  The scitran search method has the syntax
 %
-%    * Get authorization to access the scitran site (st = scitran)
-%    * Create a Matlab structure (srch) to specify search requirements
-%    * Run the search (results = @scitran.search(srch))
-%    * Results is a cell array of objects that meet the search criterion
-%
-% To retrieve the data for local processing use
-%
-%         @scitran.get(), or @scitran.read()
+%    results = scitran.search(result_type,'parameter',value,...)
 %
 % For further documentation, see
 %
@@ -32,178 +37,211 @@
 
 %% Authorization
 
-% The auth returns a token and the url of the flywheel instance.  These are
-% fixed as part of 's' throughout the examples, below.
+% You may need to create a local token for your site.  You can do this
+% using
+%    scitran('yourSite','action','create');
+%
+% You will be queried for the apiKey on the Flywheel User Profile page.
+%
 fw = scitran('vistalab');
+% fw.verify
 
-%% List all projects
+%% List projects you can access
 
-projects = fw.search('projects');
-fprintf('Found %d projects\n',length(projects))
+% I guess we should sort the projects on return.
+projects = fw.search('project','summary',true,'sortlabel','project label');
+for ii=1:length(projects)
+    disp(projects{ii}.project.label)
+end
 
 %% Needs short form
-projects = fw.search('projects','project label contains','vwfa');
-fprintf('Found %d projects for the group wandell, with label vwfa.\n',length(projects));
+projects = fw.search('project',...
+    'summary',true,...
+    'project label contains','vwfa');
 
 % Save this project information
-projectID    = projects{end}.id;
-projectLabel = projects{end}.source.label;
+projectID    = projects{end}.project.x_id;
+projectLabel = projects{end}.project.label;
+
+%% Get a sessions within a specific collection with a subject code
+
+% BUG - This seems like a bug.  There is an SU in front of the code and I don't
+% understand why.
+sessions = fw.search('session',...
+    'collection label exact','Anatomy Male 45-55',...
+    'subject code','ex10316',...
+    'summary',true);
+sessions{1}.subject.code
 
 %% Get all the sessions within a specific collection
-[sessions, srchCmd] = fw.search('sessions in collection',...
-    'collection label contains','Anatomy Male 45-55');
-fprintf('Found %d sessions\n',length(sessions));
+
+% BUG - Returns too many sessions.
+[sessions, srchCmd] = fw.search('session',...
+    'collection label contains','Anatomy Male 45-55',...
+    'summary',true);
 
 %% Get the sessions within the first project
-sessions = fw.search('sessions','project id',projectID);
-fprintf('Found %d sessions in the project %s\n',length(sessions),projectLabel);
+sessions = fw.search('session',...
+    'project id',projectID,...
+    'summary',true);
+
 % Save this session information
-sessionID = sessions{end}.id;
-sessionLabel = sessions{end}.source.label;
+sessionID = sessions{1}.session.x_id;
+sessionLabel = sessions{1}.session.label;
 
 %% Get the acquisitions inside a session
 
-acquisitions = fw.search('acquisitions',...
-    'session id',sessionID);
-fprintf('Found %d acquisitions in session %s\n',length(acquisitions),sessionLabel);
+acquisitions = fw.search('session',...
+    'session id',sessionID,...
+    'summary',true);
 
 %% Find nifti files in the session
-files = fw.search('files',...
+files = fw.search('file',...
     'session id',sessionID,...
-    'file type','nifti');
-nFiles = length(files);
-fprintf('Found %d nifti files in the session %s\n',nFiles,sessionLabel);
-for ii=1:nFiles
-    fprintf('%d:  %s\n',ii,files{ii}.source.name);
+    'file type','nifti',...
+    'summary',true);
+for ii=1:length(files)
+    fprintf('%d:  %s\n',ii,files{ii}.file.name);
 end
 
-% Download a file this way
-%
-%  dl = stGet(files{1}.plink,s.token)
-%  d = niftiRead(dl);
+%% Look for analyses in the GearTest collection = BUG BUG
 
-%% Look for analyses in the GearTest collection
+% There is an issue - the analysis seems to be part of the session, not the
+% collection.  So we can't really search for analyses in a collection, as
+% we did earlier.  Not sure what we really want.  We used to have files in
+% analysis, analysis in collection, stuff like that.
 
-analyses = fw.search('analyses','collection label','GearTest');
-fprintf('Analyses in collections and sessions: %d\n',length(analyses));
+% This works, returns 1
+sessions = fw.search('session',...
+    'collection label exact','GearTest',...
+    'summary',true);
 
-%% Analyses that are within a collection
+% This returns 1.  Should return 4.
+analyses = fw.search('analysis',...
+    'session id',sessions{3}.session.x_id,...
+    'summary',true);
 
-% Returns analyses attached only to the collection, but not the sessions
-% and acquisitions in the collection.
+% This should work, but it does not
+analyses = fw.search('analysis',...
+    'session id',sessions{3}.session.x_id,...
+    'collection label contains','GearTest',...
+    'summary',true);
 
-analyses = fw.search('analysesincollection','collection label','GearTest');
-fprintf('Analyses in collections only %d\n',length(analyses));
-
-%% Which collection is the analysis in?
-collections = fw.search('collections','collection label','GearTest');
-fprintf('Collections found %d\n',length(collections));
-
-%% Returns analyses attached only to the sessions in the collection,
-% but not to the collection as a whole.
-
-analyses = fw.search('analyses in session','collection label','GearTest');
-fprintf('Analyses found %d\n',length(analyses));
+% Fails.  Maybe because the analysis is part of the session and not the
+% collection?
+analyses = fw.search('analysis',...
+    'collection label','GearTest', ...
+    'summary', true);
 
 %% Find a session from that collection
 
-sessions = fw.search('sessions','session label',sessions{1}.source.label);
-sessions{1}.source.label
+thisLabel = sessions{1}.session.label;
+sessions = fw.search('session',...
+    'session label',thisLabel,...
+    'summary',true);
+if ~strcmp(sessions{1}.session.label,thisLabel)
+    warning('Session label does not match'); 
+end
 
 %% Count the number of sessions created in a recent time period
 
-collections = fw.search('collections',...
-    'session after time','now-16w');
-fprintf('Found %d collections in previous four weeks \n',length(collections))
+sessions = fw.search('session',...
+    'session after time','now-16w',...
+    'summary',true);
 
 %% Get sessions with this subject code
-subjectCode = 'ex4842';
-sessions = fw.search('sessions','subject code','ex4842',...
-    'all_data',true);
-fprintf('Found %d sessions with subject code %s\n',length(sessions),subjectCode)
+sessions = fw.search('session',...
+    'subject code','ex4842',...
+    'all_data',true,...
+    'summary',true);
 
 %% Get sessions in which the subject age is within a range
 
-sessions = st.search('sessions',...
-    'subject age gt', 9, ...
-    'subject age lt', 10,...
+sessions = fw.search('session', ...
+    'subject age range',[10,11], ...
     'summary',true);
 
 %% Find a session with a specific label
 
-sessionLabel = '20151128_1621';
-files = fw.search('files','session label contains',sessionLabel);
-fprintf('Found %d files from the session label %s\n',length(files),sessionLabel)
+sessionLabel = '20151128_1621';  % There are two sessions with this label
+sessions = fw.search('session',...
+    'session label exact',sessionLabel,...
+    'summary',true);
+
+% There are a lot of files in these sessions, even a lot of nifti files.
+% Why?
+files = fw.search('file',...
+    'session label exact',sessions{1}.session.label,...
+    'filetype','nifti',...
+    'summary',true);
 
 %% get files from a particular project and acquisition
 
-files = fw.search('files', ...
-    'project label','VWFA FOV', ...
+files = fw.search('file', ...
+    'project label exact','VWFA FOV', ...
     'acquisition label','11_1_spiral_high_res_fieldmap',...
     'file type','nifti',...
     'summary',true);
+
 % This is how to download the nifti file
 %  fname = files{1}.source.name;
 %  dl_file = stGet(files{1}, s.token, 'destination', fullfile(pwd,fname));
 %  d = niftiRead(dl_file);
 
 %% Search for files in collection; find session names
-files = fw.search('files',...
+files = fw.search('file',...
     'collection label','DWI',...
-    'acquisition label','00 Coil Survey');
-fprintf('Found %d files\n',length(files));
-
-%% Find the session name for these files
-% Make this work.  Something wrong!
-%
-% for ii=1:length(files)
-%     % srch.sessions.match.label = files{ii}.source.session.label;
-%     files{ii}.source.session.label
-%     thisSession = st.search('sessions','session label',files{ii}.source.session.label);
-%
-%     if ~isempty(thisSession)
-%         % This should not happen.  But it does.  So fix it. (BW).
-%         ii
-%         sessionNames{ii} = thisSession{1}.source.label;
-%     end
-% end
-% %
-% sessionNames = unique(sessionNames);
-% fprintf('\n---------\n');
-% for ii=1:length(sessionNames)
-%     fprintf('%3d:  Session name %s\n',ii,sessionNames{ii});
-% end
-% fprintf('---------\n');
+    'acquisition label','00 Coil Survey',...
+    'summary',true);
 
 %% get files in project/session/acquisition/collection
-files = fw.search('files',...
+files = fw.search('file',...
     'collection label contains','ENGAGE',...
     'acquisition label contains','T1w 1mm', ...
-    'summary',true); %#ok<NASGU>
+    'summary',true);
 
 %% get files in project/session/acquisition/collection
-files = fw.search('files',...
+files = fw.search('file',...
     'collection label','Anatomy Male 45-55',...
     'acquisition label','Localizer',...
-    'file type','nifti');
-fprintf('Found %d matching files\n',length(files))
+    'file type','nifti',...
+    'summary',true);
 
-%% Find sessions in this project that contain an analysis
-
+%% Find sessions in a project that contain an analysis and subject code
+   
 % In this case, we are searching through all the data, not just the data
 % that we have ownership on.
-
-[sessions,srchS] = fw.search('sessions',...
-    'project label','UMN', ...
-    'session contains analysis', 'AFQ', ...
-    'session contains subject','4279',...
+[sessions,srchS] = fw.search('session',...
+    'project label exact','UMN', ...
+    'analysis label contains', 'AFQ', ...
+    'subject code','4279',...
     'all_data',true,'summary',true);
 
+[sessions,srchS] = fw.search('session',...
+    'project label contains','UMN', ...
+    'analysis label contains', 'AFQ', ...
+    'subject code','4279',...
+    'all_data',true,'summary',true);
+
+[sessions,srchS] = fw.search('session',...
+    'analysis label contains', 'AFQ', ...
+    'subject code','4279',...
+    'all_data',true,'summary',true);
+
+sessions = fw.search(srchS,'all_data',true,'summary',true);
+
 %%  Find the number of projects owned by a specific group
-groupName = {'ALDIT','wandell','jwday','leanew1'}
+
+groupName = 'wandell';
+[projects,srchS] = fw.search('project',...
+    'project group',groupName,...
+    'summary',true);
+
+groupName = {'aldit','jwday','leanew1'};
 for ii=1:length(groupName)
-    projects = st.search('projects','project group',groupName{ii});
-    fprintf('%d projects owned by the %s group\n',length(projects), groupName{ii});
+    projects = fw.search('project',...
+        'project group',groupName{ii},...
+        'summary',true);
 end
 
 %%
