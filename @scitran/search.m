@@ -104,14 +104,9 @@ if ischar(srch)
     %   srch = searchStruct(searchType,varargin{:});
     %
     
-    % Validate the search result_type
-    vFunc = @(x)(ismember(x,{...
-        'file','session','acquisition','project','collection','analysis'
-        }));
-    searchType = srch;
-    if ~vFunc(strrep(lower(searchType),' ',''))
-        error('Unknown search return type %s\n',searchType);
-    end
+    % Force to lower and singular.  Also check that it is a permissible type.
+    searchType = formatSearchType(srch);
+    
     
     % Make sure the varargin is parameter/val pairs
     if mod(length(varargin),2)
@@ -406,6 +401,32 @@ end
 
 
 end
+
+function srch = formatSearchType(srch)
+% Allow plural and upper case, but convert here
+%
+
+% Validate the search result_type
+% Maybe it is fine after we lower it.
+srch = lower(srch);
+if ismember(srch,{'file','session','acquisition','project','collection','analysis'})    
+    return;
+end
+
+% Maybe it is plural.
+if     strcmp(srch,'files'),         srch = 'file';        return;
+elseif strcmp(srch,'sessions'),      srch = 'session';     return;
+elseif strcmp(srch','acquisitions'), srch = 'acquisition'; return;
+elseif strcmp(srch,'projects'),      srch = 'project';     return;
+elseif strcmp(srch,'collections'),   srch = 'collection';  return;
+elseif strcmp(srch,'analyses'),      srch = 'analysis';    return;
+else
+    % Not fine and not plural.  Complain.
+    error('Unknown srch string %s\n',srch);
+end
+
+end
+
 
 %% Old code, deprecated.  But might be useful
 
