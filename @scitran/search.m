@@ -416,7 +416,7 @@ end
 % Maybe it is plural.
 if     strcmp(srch,'files'),         srch = 'file';        return;
 elseif strcmp(srch,'sessions'),      srch = 'session';     return;
-elseif strcmp(srch','acquisitions'), srch = 'acquisition'; return;
+elseif strcmp(srch,'acquisitions'),  srch = 'acquisition'; return;
 elseif strcmp(srch,'projects'),      srch = 'project';     return;
 elseif strcmp(srch,'collections'),   srch = 'collection';  return;
 elseif strcmp(srch,'analyses'),      srch = 'analysis';    return;

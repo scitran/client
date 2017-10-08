@@ -16,7 +16,7 @@ stPrint(projects,'project','label');
 
 % stPrint(projects,'group','label');
 
-%% Download a file
+%% Read data from a file
 %
 files = fw.search('file','project label exact','ADNI: T1',...
     'acquisition label contains','T1_MR_MPRAGE',...
@@ -26,3 +26,4 @@ files = fw.search('file','project label exact','ADNI: T1',...
 
 nii = fw.read(files{1});
 
+%%

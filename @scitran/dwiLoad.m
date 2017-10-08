@@ -2,22 +2,23 @@ function [dwi,destination] = dwiLoad(st,acquisitionID,varargin)
 % Load nifti, bvec, and bval from a flywheel acquisition
 %
 %      dwi = st.dwiLoad(acquisitionID,varargin);
-% Or,  dwi = dwiLoad(st,acquisitionID,varargin);
+%      dwi = dwiLoad(st,acquisitionID,varargin);
 %
-% We assume that there is one nifti, bval, and bvec file in the
-% acquisition.  These are downloaded and returned as a dwi struct that can
-% as per vistasoft (dwiGet/Set)
+% We assume there is one nifti, bval, and bvec file in the acquisition.
+% These three files are downloaded and their values are returned as a dwi
+% struct that can be treated as per vistasoft (dwiGet/Set)
 %
 % Required inputs
 %  st:            A scitran object
-%  acquistionID:  Flywheel acquisition
+%  acquistionID:  Flywheel acquisition id
 % 
 % Optional inputs:
-%  destination:   Directory for saving the three files.  If no directory is
-%                 specified, they are written into scitranClient/local.
+%  destination:   Directory for saving the nii, bvec, and bval files.  If
+%                 no directory is specified, they are written into
+%                 scitranClient/local. 
 %
 % Example:
-%   See s_stALDIT.m
+%   See s_stDiffusion.m, s_stALDIT.m
 %
 % BW Scitran Team, 2017
 
@@ -36,20 +37,29 @@ if ~exist(destination,'dir'), mkdir(destination); end
 bvecFile = st.search('files',...
     'acquisition id',acquisitionID,...
     'file type','bvec');
-st.get(bvecFile{1},'destination',fullfile(destination,'dmri.bvec'));
+if length(bvecFile) > 1, warning('Multiple bvec files.  Returning 1st'); end
+bvecName = fullfile(destination,bvecFile{1}.file.name);
+st.fw.downloadFileFromAcquisition(acquisitionID,bvecFile{1}.file.name,bvecName);
 
 bvalFile = st.search('files',...
     'acquisition id',acquisitionID,...
     'file type','bval');
-st.get(bvalFile{1},'destination',fullfile(destination,'dmri.bval'));
+if length(bvalFile) > 1, warning('Multiple bval files.  Returning 1st'); end
+bvalName = fullfile(destination,bvalFile{1}.file.name);
+st.fw.downloadFileFromAcquisition(acquisitionID,bvalFile{1}.file.name,bvalName);
 
 niiFile = st.search('files',...
     'acquisition id',acquisitionID,...
     'file type','nifti');
-st.get(niiFile{1},'destination',fullfile(destination,'dmri.nii.gz'));
+if length(niiFile) > 1, warning('Multiple nii files.  Returning 1st'); end
+niiName = fullfile(destination,niiFile{1}.file.name);
+st.fw.downloadFileFromAcquisition(acquisitionID,niiFile{1}.file.name,niiName);
 
 %% Read and return
-dwi = dwiLoad(fullfile(destination,'dmri.nii.gz'), fullfile(destination,'dmri.bvec'), fullfile(destination,'dmri.bval'));
+
+dwi = dwiLoad(niiName, bvecName,bvalName);
+
+%% Add option to delete after download?
 
 end
 
