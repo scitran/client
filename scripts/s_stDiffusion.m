@@ -11,7 +11,7 @@ fw = scitran('vistalab');
 
 acq = fw.search('acquisitions',...
     'project label contains','SVIP Released',...
-    'acquisition label contains','DTI_30',...
+    'acquisition label exact','DTI_30dir',...
     'summary',true);
     
 fprintf('Found %d acquisitions\n',length(acq));
@@ -36,12 +36,15 @@ end
 % session that contains each of the acquisitions.
 [uniqueLabels,ListA,ListB] = unique(sessionlabels);
 
-% These are the acquisitions that are in session idx.
-for jj=1:length(uniqueLabels);
+% These are the acquisitions that are in session idx.  Out of the first
+% 100, we have one example of two acquisitions.  Not sure why.
+for jj=1:length(uniqueLabels)
     idx = find(ListB == jj);
-    fprintf('Session %s has %d DTI_30 acquistions\n',acq{idx(1)}.session.label,length(idx));
-    for ii=1:length(idx)
-        acq{idx(ii)}.session.label
+    if length(idx) > 1
+        fprintf('Session %s subject code %s has %d DTI_30dir acquistions\n',acq{idx(1)}.session.label,acq{idx(1)}.subject.code,length(idx));
+        %     for ii=1:length(idx)
+        %         acq{idx(ii)}.session.label
+        %     end
     end
 end
 
