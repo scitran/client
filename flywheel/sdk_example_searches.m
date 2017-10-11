@@ -4,24 +4,19 @@
 
 % Vistalab, wandell account
 %
-%  st = scitran('vistalab'); if ~st.verify, error('Verification error.'); end
-%  fw = st.fw;
+%{
+  st = scitran('vistalab'); if ~st.verify, error('Verification error.'); end
+  fw = st.fw;
+%}
 %
 
 %% List all projects
 
 searchStruct = struct('return_type', 'project');
-results = fw.search(searchStruct).results;
-% Extract projects from results struct
-projects = [];
-for n = 1 : length(results)
-    projects{n} = results(n).x_source;
+results = fw.search(searchStruct);  %.results;
+for p = 1:numel(results)
+    disp(results(p).project.label)
 end
-
-for p = 1:numel(projects)
-    disp(projects{p}.project.label)
-end
-
 
 %% Find project by label
 % Needs short form

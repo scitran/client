@@ -371,7 +371,7 @@ end
  search_query = jsonwrite(srch,opts);
 %}
 
-srchResult = obj.fw.search(srch).results;
+srchResult = obj.fw.search(srch); %.results;
 
 if isfield(srchResult,'message')
     fprintf('Search error\n');
@@ -385,7 +385,7 @@ end
 % https://www.mathworks.com/matlabcentral/answers/12912-how-to-create-an-empty-array-of-structs
 result = cell(length(srchResult),1);
 for ii=1:length(srchResult)
-    result{ii} = srchResult(ii).x_source;
+    result{ii} = srchResult(ii);
 end
 
 %% If sortlab or summary flag are set, deal with it here.
