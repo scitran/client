@@ -44,6 +44,7 @@
 % You will be queried for the apiKey on the Flywheel User Profile page.
 %
 fw = scitran('vistalab');
+% fw.verify
 
 %% List projects you can access
 
