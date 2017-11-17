@@ -1,7 +1,7 @@
 classdef scitran < handle
     % Scitran object to interact with a scitran database
     %
-    %   st = scitran('instance','action',...)
+    %   st = scitran(instance,'action',...)
     %
     % Required
     %  'instance' -  String denoting the site to look up in your
@@ -13,6 +13,11 @@ classdef scitran < handle
     %  'action'  - {'create', 'refresh', 'remove'}
     %
     % See https://github.com/scitran/client/wiki
+    %
+    % Examples:
+    %
+    %    scitran('vistalab','action','refresh')
+    %    scitran('vistalab','verify',true);
     %
     % LMP/BW Scitran Team, 2016
     

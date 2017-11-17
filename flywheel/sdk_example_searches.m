@@ -2,7 +2,8 @@
 % NOTE: These examples are specific to one Flywheel Instance (Vistalab @Stanford).
 % The specific search terms would need to be modified to be used with another FW instance.
 
-% Vistalab, wandell account
+
+% If you have a vistalab account, you can do this.
 %
 %{
   st = scitran('vistalab'); if ~st.verify, error('Verification error.'); end
@@ -28,8 +29,6 @@ searchStruct = struct('return_type', 'project', ...
 results = fw.search(searchStruct);
 
 projectID = results.results(1).x_source.project.x_id;
-
-
 
 %% Get all the sessions within a specific collection
 % [sessions, srchCmd] = st.search('sessions in collection',...
@@ -167,7 +166,9 @@ fprintf('Found %d sessions in the previous 16 weeks\n', length(sessions));
 % sessions = fw.search('sessions','subject code','ex4842',...
 %     'all_data',true);
 % fprintf('Found %d sessions with subject code %s\n',length(sessions),subjectCode)
+% 
 
+%% Doesn't work ... not sure why
 % FAILS because .results doesn't exist.  Maybe the subject code is off? 
 % Made me edit the FLywheel.search().
 
@@ -177,8 +178,14 @@ searchStruct = struct('return_type', 'session', ...
         subjectCode))}});
 sessions = fw.search(searchStruct).results;
 
-% Display result info
-fprintf('Found %d sessions with subject code %s\n', length(sessions), subjectCode);
+% subjectCode = 'ex4842';
+% searchStruct = struct('return_type', 'session', ...
+%         'filters', {{struct('match', struct('subject0x2Ecode', ...
+%         subjectCode))}});
+% sessions = fw.search(searchStruct).results;
+% 
+% % Display result info
+% fprintf('Found %d sessions with subject code %s\n', length(sessions), subjectCode);
 
 
 %% Get sessions in which the subject age is within a range
