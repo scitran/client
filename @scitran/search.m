@@ -82,6 +82,7 @@ p.addRequired('srch');
 p.addParameter('all_data',false,@islogical);
 p.addParameter('summary',false,@islogical);
 p.addParameter('sortlabel',[],@ischar);
+p.addParameter('limit',-1,@isscalar);
 
 % Remove the spaces from the varargin because the parser complains.  Why
 % does it do that?
@@ -94,6 +95,7 @@ srch      = p.Results.srch;
 summary   = p.Results.summary;
 sortlabel = p.Results.sortlabel;
 all_data  = p.Results.all_data;
+limit     = p.Results.limit;
 
 %% If srch is a char array, we build a srch structure
 
@@ -126,8 +128,8 @@ if ischar(srch)
             
             % OVERALL SWITCHES
             case {'all_data'}
-                % Search all of the data.  By default you search only your
-                % own data.
+                % Search all of the data.  
+                % By default you search only your own data.
                 % Force to be logical
                 if all_data, val = true; 
                 else, val = false; 
@@ -136,9 +138,11 @@ if ischar(srch)
             case {'sortlabel'}
                 % Ignore - We manage this at the end.
             case {'summary'}
-                % Printout a summary description of the return cell array
+                % Logical - Printout a summary description of the return cell array
                 summary = val;
-            
+            case {'limit'}
+                % Ignore - We manage this at the end.
+                
             % PROJECTS
             case {'projectlabelcontains'}
                 % struct('filters', {{struct('match', struct('project0x2Elabel', 'vwfa'))}})
@@ -155,9 +159,11 @@ if ischar(srch)
                 else
                     srch.filters{end+1}.terms.project0x2Elabel = {val};
                 end
-                %                 searchStruct = struct('return_type', 'project', ...
-                %                     'filters', {{struct('term', struct('project0x2Elabel', 'vwfa'))}});
-                %                 results = fw.search(searchStruct);
+                %{
+                 searchStruct = struct('return_type', 'project', ...
+                    'filters', {{struct('term', struct('project0x2Elabel', 'vwfa'))}});
+                 results = fw.search(searchStruct);
+                %}
             case {'projectid'}
                 % This is like project._id, I think.
                 % filters', {{struct('term', struct('project0x2E_id'
@@ -195,17 +201,43 @@ if ischar(srch)
                     srch.filters{end+1}.term.session0x2E_id = val; 
                 end
             case {'sessionaftertime'}
+                % val has the format of a string like
+                % 'now-16w'.  A string with no spaces.
+                % Also, 'now-2y','now-3d'
+                val = stParamFormat(val);
                 if ~isfield(srch,'filters')
                     srch.filters{1}.range.session0x2Ecreated.gte = val;
                 else
                     srch.filters{end + 1}.range.session0x2Ecreated.gte = val;
                 end
             case {'sessionbeforetime'}
-                % Guessing
+                % When the data were placed in the database.  Not the
+                % same as the timestamp, which denotes when they were
+                % measured.
+                val = stParamFormat(val);
                 if ~isfield(srch,'filters')
                     srch.filters{1}.range.session0x2Ecreated.lte = val;
                 else
                     srch.filters{end + 1}.range.session0x2Ecreated.lte = val;
+                end
+            case {'sessionmeasuredbeforetime'}
+                % When the data were placed in the database.  Not the
+                % same as the timestamp, which denotes when they were
+                % measured.
+                val = stParamFormat(val);
+                if ~isfield(srch,'filters')
+                    srch.filters{1}.range.session0x2Etimestamp.lte = val;
+                else
+                    srch.filters{end + 1}.range.session0x2Etimestamp.lte = val;
+                end
+            case {'sessionmeasuredaftertime'}
+                % val has the format of a string like
+                % 'now-16w'
+                val = stParamFormat(val);
+                if ~isfield(srch,'filters')
+                    srch.filters{1}.range.session0x2Etimestamp.gte = val;
+                else
+                    srch.filters{end + 1}.range.session0x2Etimestamp.gte = val;
                 end
             case {'sessioncontainsanalysis','sessioncontainsanalysislabel'}
                 if ~isfield(srch,'filters')
@@ -361,7 +393,6 @@ end
 %% Perform the search
 
 %{
-
 % For convenience, you might want to look at the JSON
 % created in the Flywheel.search method.
  oldField = 'id';
@@ -371,6 +402,8 @@ end
  search_query = jsonwrite(srch,opts);
 %}
 
+% To limit the searches to the top 100, use this
+srch.limit = limit;
 srchResult = obj.fw.search(srch); %.results;
 
 if isfield(srchResult,'message')
@@ -396,7 +429,12 @@ end
 
 if summary
     % This summary might get more helpful.  Or deleted.
-    fprintf('Found %d (%s)\n',length(result), searchType);
+    if limit < 0
+        fprintf('Found %d (%s)\n',length(result), searchType);
+    else
+        fprintf('Found %d (%s). Limit set at %d\n',length(result), searchType, limit);
+    end
+
 end
 
 

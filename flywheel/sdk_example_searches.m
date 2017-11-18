@@ -6,7 +6,7 @@
 % If you have a vistalab account, you can do this.
 %
 %{
-  st = scitran('vistalab'); if ~st.verify, error('Verification error.'); end
+  st = scitran('cni'); if ~st.verify, error('Verification error.'); end
   fw = st.fw;
 %}
 %
@@ -28,7 +28,7 @@ searchStruct = struct('return_type', 'project', ...
     
 results = fw.search(searchStruct);
 
-projectID = results.results(1).x_source.project.x_id;
+projectID = results(1).project.x_id;
 
 %% Get all the sessions within a specific collection
 % [sessions, srchCmd] = st.search('sessions in collection',...
@@ -36,11 +36,11 @@ projectID = results.results(1).x_source.project.x_id;
 % [sessions, srch] = st.search('session','collection label contains','Anatomy Male 45-55');
 searchStruct = struct('return_type', 'session', ...
         'filters', {{struct('match', struct('collection0x2Elabel', 'Anatomy Male 45-55'))}});
-results = fw.search(searchStruct).results;
+results = fw.search(searchStruct);
 % Extract sessions from results
 sessions = [];
 for n = 1 : length(results)
-    sessions{n} = results(n).x_source;
+    sessions{n} = results(n);
 end
 
 
@@ -49,11 +49,11 @@ end
 % sessions = fw.search('sessions','project id',projectID);
 searchStruct = struct('return_type', 'session', ...
         'filters', {{struct('term', struct('project0x2E_id', projectID))}});
-results = fw.search(searchStruct).results;
+results = fw.search(searchStruct);
 % Extract sessions from results
 sessions = [];
 for n = 1 : length(results)
-    sessions{n} = results(n).x_source;
+    sessions{n} = results(n);
 end
 
 sessionID = sessions{1}.session.x_id;
