@@ -15,10 +15,10 @@ function info = getfileinfo(st,srchFile,varargin)
 
 st = scitran('cni');
 clear srchFile
-srchFile.filename = '16504_4_1_BOLD_EPI_Ax_AP.dicom.zip';
+srchFile.filenameexact = '16504_4_1_BOLD_EPI_Ax_AP.dicom.zip';
 srchFile.filetype = 'dicom';
 srchFile.projectlabelexact = 'qa';
-st.getfilenfo
+st.getfileinfo(srchFile);
 %}
 %%
 p = inputParser;
@@ -34,6 +34,7 @@ nFiles = length(files);
 
 %% Parse the acquisitions for the info in that file
 fprintf('Found %d files\n',nFiles);
+
 info = cell(nFiles,1);
 for ii=1:nFiles
     fname = files{ii}.name;

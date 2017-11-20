@@ -327,25 +327,26 @@ if ischar(srch)
                 
             % FILES
             case {'filenamecontains'}
+                % NEEDS CHECKING
                 if ~isfield(srch,'filters')
-                    srch.filters{1}.match.name = val;
+                    srch.filters{1}.match.file0x2Ename = val;
                 else
-                    srch.filters{end + 1}.match.name = val;
+                    srch.filters{end + 1}.match.file0x2Ename = val;
                 end
             case {'filenameexact','filename'}
-                % NEEDS CHECKING
                 if ~isfield(srch,'projects')
-                    srch.filters{1}.terms.filename0x2Elabel = {val};
+                    srch.filters{1}.terms.file0x2Ename = {val};
                 else
-                    srch.filters{end+1}.terms.filename0x2Elabel = {val};
+                    srch.filters{end+1}.terms.file0x2Ename = {val};
                 end
-            case {'fileid'}
-                % Not tested.
-                if ~isfield(srch,'filters')
-                    srch.filters{1}.match.file0x2E_id = val;
-                else
-                    srch.filters{end+1}.match.file0x2E_id = val;
-                end
+                % We don't think there is an id for a file
+                %             case {'fileid'}
+                %                 % Not tested.
+                %                 if ~isfield(srch,'filters')
+                %                     srch.filters{1}.match.file0x2E_id = val;
+                %                 else
+                %                     srch.filters{end+1}.match.file0x2E_id = val;
+                %                 end
             case {'filetype'}
                 % Nifti, dicom, bvec, bval,montage ...
                 % struct('term', struct('file0x2Etype', 'nifti'))}});
