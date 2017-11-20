@@ -86,11 +86,22 @@ p.addParameter('sortlabel',[],@ischar);
 % -1 is unlimited.  But it turns out Flywheel has a limit
 p.addParameter('limit',10000,@isscalar);   % Max allowed by flywheel
 
-% Remove the spaces from the varargin because the parser complains.  Why
-% does it do that?
-for ii=1:2:length(varargin)
-    varargin{ii} = strrep(lower(varargin{ii}),' ','');
+if isstruct(varargin{1})
+    % Convert the srch struct to be the parameter/value cell aray    
+    fields = fieldnames(varargin{1});
+    fieldvals = struct2cell(varargin{1});
+    for ii=1:2:length(fields)
+        varargin{ii}   = stParamFormat(fields{ii});
+        varargin{ii+1} = fieldvals{ii};
+    end
+else
+    % Remove the spaces from the varargin because the parser complains.  Why
+    % does it do that?
+    for ii=1:2:length(varargin)
+        varargin{ii} = stParamFormat(varargin{ii});
+    end
 end
+
 p.parse(srch,varargin{:});
 
 srch      = p.Results.srch;

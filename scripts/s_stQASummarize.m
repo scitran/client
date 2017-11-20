@@ -59,7 +59,7 @@ files = st.search('file',...
     'acquisition label exact',acquisitions{1}.acquisition.label,...
     'summary',true);
 
-%% Implement a st.getinfo('fname',fname,'filetype',ftype,'objID',id) function
+%% Implement a st.getfileinfo('fname',fname,'filetype',ftype) function
 %
 % Get info on a dicom file, and next on a QA file.
 %
