@@ -168,9 +168,9 @@ if ischar(srch)
                 % This is like project._id, I think.
                 % filters', {{struct('term', struct('project0x2E_id'
                 if ~isfield(srch,'filters')
-                    srch.filters{1}.term.project0x2E_id = val;
+                    srch.filters{1}.match.project0x2E_id = val;
                 else
-                    srch.filters{end+1}.term.project0x2E_id = val; 
+                    srch.filters{end+1}.match.project0x2E_id = val; 
                 end
             case{'projectgroup'}
                 if ~isfield(srch,'filters')
@@ -196,9 +196,9 @@ if ischar(srch)
                 end
             case 'sessionid'
                 if ~isfield(srch,'filters')
-                    srch.filters{1}.term.session0x2E_id = val;
+                    srch.filters{1}.match.session0x2E_id = val;
                 else
-                    srch.filters{end+1}.term.session0x2E_id = val; 
+                    srch.filters{end+1}.match.session0x2E_id = val; 
                 end
             case {'sessionaftertime'}
                 % val has the format of a string like
@@ -267,9 +267,9 @@ if ischar(srch)
                 end
             case {'analysisid'}
                 if ~isfield(srch,'filters')
-                    srch.filters{1}.term.analysis0x2E_id = val;
+                    srch.filters{1}.match.analysis0x2E_id = val;
                 else
-                    srch.filters{end+1}.term.analysis0x2E_id = val; 
+                    srch.filters{end+1}.match.analysis0x2E_id = val; 
                 end
                 
             % ACQUISITIONS
@@ -307,9 +307,9 @@ if ischar(srch)
                 end
             case {'collectionid'}
                 if ~isfield(srch,'filters')
-                    srch.filters{1}.term.collection0x2E_id = val;
+                    srch.filters{1}.match.collection0x2E_id = val;
                 else
-                    srch.filters{end+1}.term.collection0x2E_id = val;
+                    srch.filters{end+1}.match.collection0x2E_id = val;
                 end
                 
             % FILES
@@ -329,9 +329,9 @@ if ischar(srch)
             case {'fileid'}
                 % Not tested.
                 if ~isfield(srch,'filters')
-                    srch.filters{1}.term.file0x2E_id = val;
+                    srch.filters{1}.match.file0x2E_id = val;
                 else
-                    srch.filters{end+1}.term.file0x2E_id = val;
+                    srch.filters{end+1}.match.file0x2E_id = val;
                 end
             case {'filetype'}
                 % Nifti, dicom, bvec, bval,montage ...
