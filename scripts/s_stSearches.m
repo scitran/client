@@ -70,9 +70,8 @@ projectLabel = projects{end}.project.label;
 % understand why.
 sessions = st.search('session',...
     'collection label exact','Anatomy Male 45-55',...
-    'subject code','ex10316',...
+    'subject code','SU ex10316',...
     'summary',true);
-sessions{1}.subject.code
 
 %% Get all the sessions within a specific collection
 
@@ -103,36 +102,55 @@ acquisitions = st.search('acquisition',...
 
 %% Find files in the session using an ID
 
+[acq,cmd] = st.search('acquisition',...
+    'string','BOLD_EPI',...
+    'summary',true,...
+    'project label exact','qa');
+
+for ii=1:length(acq)
+    acq{ii}.acquisition.label
+end
+
+[projects,cmd] = st.search('project',...
+    'string','BOLD_EPI',...
+    'summary',true,...
+    'project label exact','qa');
+for ii=1:length(projects)
+    projects{ii}.project.label
+end
+
+
+
+[sessions,cmd] = st.search('session',...
+    'string','BOLD_EPI',...
+    'summary',true,...
+    'project label exact','qa');
+
+for ii=1:length(sessions)
+    sessions{ii}.project.label
+end
+
+
+
+%%
+
 % These fail
 clear cmd
 [files,cmd] = st.search('file',...
-    'acquisition id',acquisitions{3}.acquisition.x_id,...
+    'acquisition id',acquisitions{1}.acquisition.x_id,...
+    'limit',100,...
     'summary',true);
-%{
-search_query =
-    '{"return_type":"file","filters":[{"term":{"acquisition._id":"58ffe1011f4a0300150d600a"}}],"limit":-1}'
-%}
-
 [files,cmd] = st.search('file',...
     'session id',sessionID,...
     'summary',true);
-%
-%{
-search_query =
-    '{"return_type":"file","filters":[{"match":{"session._id":"58f177c11f4a0300130d5fe1"}}],"limit":-1}'
-%}
 
 [files,cmd] = st.search('file',...
-    'project id',acquisitions{1}.project.x_id,...
+    'project id',files{1}.project.x_id,...
     'summary',true);
-%{
-search_query =
-    '{"return_type":"file","filters":[{"match":{"project._id":"57fe88b1b544c40017b6b8a9"}}],"limit":-1}'
-%}   
     
-% for ii=1:length(files)
-%     fprintf('%d:  %s\n',ii,files{ii}.file.name);
-% end
+for ii=1:length(files)
+    fprintf('%d:  %s\n',ii,files{ii}.file.name);
+end
 
 %% Find files in the session using a label
 
@@ -159,16 +177,10 @@ analyses = st.search('analysis',...
     'session id',sessions{3}.session.x_id,...
     'summary',true);
 
-% This should work, but it does not
-analyses = st.search('analysis',...
-    'session id',sessions{3}.session.x_id,...
-    'collection label contains','GearTest',...
-    'summary',true);
-
-% Fails.  Maybe because the analysis is part of the session and not the
+% Returns 0.  Maybe because the analysis is part of the session and not the
 % collection?
 analyses = st.search('analysis',...
-    'collection label','GearTest', ...
+    'collection label exact','GearTest', ...
     'summary', true);
 
 %% Find a session from that collection

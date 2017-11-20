@@ -82,7 +82,9 @@ p.addRequired('srch');
 p.addParameter('all_data',false,@islogical);
 p.addParameter('summary',false,@islogical);
 p.addParameter('sortlabel',[],@ischar);
-p.addParameter('limit',-1,@isscalar);
+
+% -1 is unlimited.  But it turns out Flywheel has a limit
+p.addParameter('limit',10000,@isscalar);   % Max allowed by flywheel
 
 % Remove the spaces from the varargin because the parser complains.  Why
 % does it do that?
@@ -279,7 +281,7 @@ if ischar(srch)
                 else
                     srch.filters{end+1}.match.acquisition0x2Elabel = val;
                 end                
-            case {'acquisitionlabelexact','acquisitionlabel'}
+            case {'acquisitionlabelexact'}
                 if ~isfield(srch,'projects')
                     srch.filters{1}.terms.acquisition0x2Elabel = {val};
                 else
@@ -287,9 +289,9 @@ if ischar(srch)
                 end
             case {'acquisitionid'}
                 if ~isfield(srch,'filters')
-                    srch.filters{1}.term.acquisition0x2E_id = val;
+                    srch.filters{1}.match.acquisition0x2E_id = val;
                 else
-                    srch.filters{end+1}.term.acquisition0x2E_id = val;
+                    srch.filters{end+1}.match.acquisition0x2E_id = val;
                 end
     
             % COLLECTIONS                    
@@ -378,6 +380,14 @@ if ischar(srch)
                 else
                     srch.filters{end + 1}.match.subject0x2Esex = val;
                 end
+                
+                
+            % SEARCH_STRING
+            case {'string'}
+                % Not sure what this does yet. But it appears to
+                % search anywhere in the properties of the return_type
+                % that has this string.
+                srch.search_string = val;
                        
             otherwise
                 error('Unknown search parameter: %s\n',varargin{ii});
@@ -413,13 +423,23 @@ if isfield(srchResult,'message')
     return;
 end
 
-% Convert to cell array.  I tried allocating structs, but this turns out
-% not be easy. See 
+% Convert to cell array from struct array.
+% I tried allocating structs, but this turns out not be easy. 
+% See 
 % https://www.mathworks.com/matlabcentral/answers/12912-how-to-create-an-empty-array-of-structs
-result = cell(length(srchResult),1);
-for ii=1:length(srchResult)
-    result{ii} = srchResult(ii);
+%
+% Now, we also discovered that sometimes srchResult is already a cell
+% array, so in that case we don't do this.  We should ask Jen R about
+% this.
+if ~iscell(srchResult)
+    result = cell(length(srchResult),1);
+    for ii=1:length(srchResult)
+        result{ii} = srchResult(ii);
+    end
+else
+    result = srchResult;
 end
+
 
 %% If sortlab or summary flag are set, deal with it here.
 
@@ -429,12 +449,12 @@ end
 
 if summary
     % This summary might get more helpful.  Or deleted.
-    if limit < 0
+    if length(result) < 10000
         fprintf('Found %d (%s)\n',length(result), searchType);
     else
-        fprintf('Found %d (%s). Limit set at %d\n',length(result), searchType, limit);
+        % We ran up to the limit.  So warn.
+        fprintf('Found %d (%s). Limited to %d\n',length(result), searchType, limit);
     end
-
 end
 
 
