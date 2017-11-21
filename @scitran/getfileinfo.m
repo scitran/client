@@ -1,4 +1,4 @@
-function info = getfileinfo(st,srchFile,varargin)
+function files = getfileinfo(st,files)
 %
 % Get info on a dicom file, and next on a QA file.
 %
@@ -12,41 +12,34 @@ function info = getfileinfo(st,srchFile,varargin)
 % LMP/BW Scitran Team, 2017
 
 %{
-
 st = scitran('cni');
-clear srchFile
-srchFile.filenameexact = '16504_4_1_BOLD_EPI_Ax_AP.dicom.zip';
-srchFile.filetype = 'dicom';
-srchFile.projectlabelexact = 'qa';
-info = st.getfileinfo(srchFile);
+files = st.search('file',...
+          'filename exact','16504_4_1_BOLD_EPI_Ax_AP.dicom.zip',...
+          'filetype','dicom',...
+          'project label exact','qa');
+files = st.getfileinfo(files);
+
 %}
 %%
 p = inputParser;
-% p.KeepUnmatched = true;
+p.KeepUnmatched = true;
 
 p.addRequired('st',@(x)(isa(x,'scitran')));
-p.addRequired('srchFile',@isstruct);   % Parameters for finding the files
-p.parse(st,srchFile,varargin{:});
-
-%% Find these files
-files = st.search('file',srchFile);
-nFiles = length(files);
+p.addRequired('files',@iscell);   % Parameters for finding the files
+p.parse(st,files);
 
 %% Parse the acquisitions for the info in that file
-fprintf('Found %d files\n',nFiles);
-
-info = cell(nFiles,1);
-for ii=1:nFiles
+    
+for ii=1:numel(files)
     fname = files{ii}.file.name;
     thisAcq = st.fw.getAcquisition(files{ii}.parent.x_id);
     for jj = 1:length(thisAcq.files)
         if strcmp(fname,thisAcq.files{jj}.name)
-            info{ii} = thisAcq.files{jj}.info;
-            break
+            files{ii}.info = thisAcq.files{jj}.info;
+            break;
         end
     end   
 end
 
-%% Return the info parameter
-
 end
+

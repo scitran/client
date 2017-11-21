@@ -36,15 +36,16 @@ projectLabel = projects{1}.project.label;
 
 % Search on BOLD returns fewer than BOLD_EPI
 % Maybe they are doing something wrong with replaceField?
-[acquisitions,cmd] = st.search('acquisition',...
-    'project label exact',projectLabel,...
-    'acquisition label contains','BOLD_EPI',...
+[sessions,cmd] = st.search('session',...
+    'collection label exact','BOLD_EPI_Ax_AP',...
     'summary',true);
-%{
-search_query =
-    '{"return_type":"acquisition","filters":[{"terms":{"project.label":["qa"]}},{"match":{"acquisition.label":"BOLD_EPI"}}],"limit":10000}'
-   
-%}
+opts = struct('replacementStyle','hex') ; jsonwrite(cmd,opts)
+
+[acquisitions,cmd] = st.search('acquisition',...
+    'collection label exact','Ax_EPI_fMRI_ENC_Accel2_15mm',...
+    'summary',true);
+
+
 clear aLabels
 aLabels = cell(length(acquisitions),1);
 for ii=1:length(acquisitions)

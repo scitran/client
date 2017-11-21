@@ -6,13 +6,14 @@
 % The returned data are cell arrays describing files, acquisitions (groups
 % of related files), sessions, projects, or collections.  Each element of
 % the cell array is a struct that contains information about the returned
-% object.  For example, if you find a file the cell array will be a struct
+% object.  For example, if you find a file the cell array will be structs
 % with fields
 % 
-%         project: [1×1 struct]
-%         session: [1×1 struct]
-%     acquisition: [1×1 struct]
-%            file: [1×1 struct]
+%         project: [struct]
+%         session: [struct]
+%     acquisition: [struct]
+%            file: [struct]
+%      collection: [struct]
 %
 %     permissions: [1×1 struct]
 %         subject: [1×1 struct]
@@ -75,6 +76,10 @@ sessions = st.search('session',...
     'subject code','SU ex10316',...
     'summary',true);
 
+sessions = st.search('session',...
+    'collection label exact','Anatomy Male 45-55',...
+    'summary',true);
+
 %% Get all the sessions within a specific collection
 
 [sessions, srchCmd] = st.search('session',...
@@ -109,8 +114,8 @@ acquisitions = st.search('acquisition',...
     'summary',true);
 
 % Notice that this has BOLD<space>EPI as well.
-for ii=1:length(acq)
-    acq{ii}.acquisition.label
+for ii=1:length(acquisitions)
+    acquisitions{ii}.acquisition.label
 end
 
 %%
@@ -118,54 +123,63 @@ end
     'string','BOLD_EPI',...
     'summary',true);
 
-%%
+%% Projects that have this string somewhere in their representation
+
 [projects,cmd] = st.search('project',...
     'string','BOLD_EPI',...
-    'summary',true,...
-    'project label exact','qa');
+    'summary',true);
+    
 for ii=1:length(projects)
     projects{ii}.project.label
 end
 
-
+%% Sessions that have the string somewhere
 
 [sessions,cmd] = st.search('session',...
     'string','BOLD_EPI',...
-    'summary',true,...
-    'project label exact','qa');
+    'summary',true);
 
 for ii=1:length(sessions)
     sessions{ii}.project.label
 end
 
+%% Restrict to one project
+thisProject = 'ALDIT';
+[sessions,cmd] = st.search('session',...
+    'string','BOLD_EPI',...
+    'project label exact',thisProject,...
+    'summary',true);
 
+%% Finding files in various ways
 
-%%
-
-% These fail
-clear cmd
 [files,cmd] = st.search('file',...
     'acquisition id',acquisitions{1}.acquisition.x_id,...
     'summary',true);
 
+%%
 [files,cmd] = st.search('file',...
     'session id',sessionID,...
     'summary',true);
 
+%% A lot of files in a project
+
 [files,cmd] = st.search('file',...
     'project id',files{1}.project.x_id,...
+    'filetype','nifti',...
     'summary',true);
     
 for ii=1:length(files)
     fprintf('%d:  %s\n',ii,files{ii}.file.name);
 end
 
-%% Find files in the session using a label
+%% Find files in the project using a label
 
-% These fail
-clear cmd
+% There are a lot of files
+thisProject = st.search('project',...
+    'project label contains',...
+    'VWFA','limit',1);
 [files,cmd] = st.search('file',...
-    'acquisition label exact',acquisitions{3}.acquisition.label,...
+    'project label exact',thisProject{1}.project.label,...
     'summary',true);
 
 %% Look for analyses in the GearTest collection = BUG BUG
@@ -175,21 +189,15 @@ clear cmd
 % we did earlier.  Not sure what we really want.  We used to have files in
 % analysis, analysis in collection, stuff like that.
 
-% This works, returns 1
+% This works
 sessions = st.search('session',...
     'collection label exact','GearTest',...
     'summary',true);
 
-% This returns 1.  Should return 4.
+% This returns 1.
 analyses = st.search('analysis',...
     'session id',sessions{3}.session.x_id,...
     'summary',true);
-
-% Returns 0.  Maybe because the analysis is part of the session and not the
-% collection?
-analyses = st.search('analysis',...
-    'collection label exact','GearTest', ...
-    'summary', true);
 
 %% Find a session from that collection
 
@@ -207,7 +215,7 @@ sessions = st.search('session',...
     'session after time','now-16w',...
     'summary',true);
 
-%% Get sessions with this subject code
+%% Get sessions with this subject code (vistalab)
 sessions = st.search('session',...
     'subject code','ex4842',...
     'all_data',true,...
@@ -237,7 +245,7 @@ files = st.search('file',...
 
 files = st.search('file', ...
     'project label exact','VWFA FOV', ...
-    'acquisition label','11_1_spiral_high_res_fieldmap',...
+    'acquisition label exact','11_1_spiral_high_res_fieldmap',...
     'file type','nifti',...
     'summary',true);
 
@@ -248,8 +256,8 @@ files = st.search('file', ...
 
 %% Search for files in collection; find session names
 files = st.search('file',...
-    'collection label','DWI',...
-    'acquisition label','00 Coil Survey',...
+    'collection label exact','DWI',...
+    'acquisition label contains','00 Coil Survey',...
     'summary',true);
 
 %% get files in project/session/acquisition/collection
@@ -260,8 +268,8 @@ files = st.search('file',...
 
 %% get files in project/session/acquisition/collection
 files = st.search('file',...
-    'collection label','Anatomy Male 45-55',...
-    'acquisition label','Localizer',...
+    'collection label exact','Anatomy Male 45-55',...
+    'acquisition label contains','Localizer',...
     'file type','nifti',...
     'summary',true);
 
@@ -301,5 +309,17 @@ for ii=1:length(groupName)
         'project group',groupName{ii},...
         'summary',true);
 end
+
+%% Need to add "get group" to return a list of all group names
+
+% Put this in the search method
+st.fw.getAllGroups
+
+% Or return_type on group with a particular group name
+% That could be
+st.fw.getGroup('wandell')
+
+
+
 
 %%

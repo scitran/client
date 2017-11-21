@@ -156,6 +156,22 @@ if ischar(srch)
             case {'limit'}
                 % Ignore - We manage this at the end.
                 
+            % GROUP
+            case{'group'}
+                % Exact match to group name
+                if ~isfield(srch,'filters')
+                    srch.filters{1}.match.group0x2E_id = val;
+                else
+                    srch.filters{end + 1}.match.group0x2E_id = val;
+                end
+            case {'grouplabel'}
+                % Each group has a label in addition to a group name
+                if ~isfield(srch,'filters')
+                    srch.filters{1}.match.group0x2Elabel = val;
+                else
+                    srch.filters{end + 1}.match.group0x2label = val;
+                end
+                
             % PROJECTS
             case {'projectlabelcontains'}
                 % struct('filters', {{struct('match', struct('project0x2Elabel', 'vwfa'))}})
@@ -185,12 +201,7 @@ if ischar(srch)
                 else
                     srch.filters{end+1}.match.project0x2E_id = val; 
                 end
-            case{'projectgroup'}
-                if ~isfield(srch,'filters')
-                    srch.filters{1}.term.group0x2E_id = val;
-                else
-                    srch.filters{end + 1}.term.group0x2E_id = val;
-                end
+
                 
             % SESSIONS
             case {'sessionlabelcontains'}
