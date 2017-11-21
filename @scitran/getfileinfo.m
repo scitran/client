@@ -18,7 +18,7 @@ clear srchFile
 srchFile.filenameexact = '16504_4_1_BOLD_EPI_Ax_AP.dicom.zip';
 srchFile.filetype = 'dicom';
 srchFile.projectlabelexact = 'qa';
-st.getfileinfo(srchFile);
+info = st.getfileinfo(srchFile);
 %}
 %%
 p = inputParser;
@@ -37,7 +37,7 @@ fprintf('Found %d files\n',nFiles);
 
 info = cell(nFiles,1);
 for ii=1:nFiles
-    fname = files{ii}.name;
+    fname = files{ii}.file.name;
     thisAcq = st.fw.getAcquisition(files{ii}.parent.x_id);
     for jj = 1:length(thisAcq.files)
         if strcmp(fname,thisAcq.files{jj}.name)
