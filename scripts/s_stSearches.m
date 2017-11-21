@@ -10,11 +10,13 @@
 % with fields
 % 
 %         project: [1×1 struct]
-%           group: [1×1 struct]
 %         session: [1×1 struct]
-%         subject: [1×1 struct]
+%     acquisition: [1×1 struct]
 %            file: [1×1 struct]
-%     permissions: [11×1 struct]
+%
+%     permissions: [1×1 struct]
+%         subject: [1×1 struct]
+%           group: [1×1 struct]
 %          parent: [1×1 struct]
 %
 % To perform a search you must create a scitran object and be authorized to
@@ -75,7 +77,6 @@ sessions = st.search('session',...
 
 %% Get all the sessions within a specific collection
 
-% BUG - Returns too many sessions.
 [sessions, srchCmd] = st.search('session',...
     'collection label contains','Anatomy Male 45-55',...
     'summary',true);
@@ -102,15 +103,22 @@ acquisitions = st.search('acquisition',...
 
 %% Find files in the session using an ID
 
-[acq,cmd] = st.search('acquisition',...
+[acquisitions,cmd] = st.search('acquisition',...
     'string','BOLD_EPI',...
-    'summary',true,...
-    'project label exact','qa');
+    'project label exact','ALDIT', ...
+    'summary',true);
 
+% Notice that this has BOLD<space>EPI as well.
 for ii=1:length(acq)
     acq{ii}.acquisition.label
 end
 
+%%
+[projects,cmd] = st.search('project',...
+    'string','BOLD_EPI',...
+    'summary',true);
+
+%%
 [projects,cmd] = st.search('project',...
     'string','BOLD_EPI',...
     'summary',true,...
