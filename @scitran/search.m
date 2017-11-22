@@ -148,7 +148,7 @@ if ischar(srch)
                     result{ii} = g.permissions(ii).x_id;
                 end
             otherwise
-                error('Unknown group search term: %s',param);
+                error('Unknown group search term: %s',varargin{1});
         end
         
         return;

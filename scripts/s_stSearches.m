@@ -338,16 +338,16 @@ end
 
 %% Need to add "get group" to return a list of all group names
 
-g = st.search('groups','all');
+% Structs defining the group
+groups = st.search('group','all')
 
-% Put this in the search method
-st.fw.getAllGroups
+% Just the group labels
+labels = st.search('group','alllabels')
 
-% Or return_type on group with a particular group name
-% That could be
-st.fw.getGroup('wandell')
+% The users for a particular group
+users = st.search('group','users','wandell')
 
-
-
+% Struct for a particular group 
+thisGroup = st.search('group','name','wandell')
 
 %%
