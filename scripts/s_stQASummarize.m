@@ -3,6 +3,10 @@
 %
 % LMP/BW Vistasoft 2017
 
+% Programming notes
+%   opts = struct('replacementStyle','hex') ; jsonwrite(srchCmd,opts)
+%
+
 %% Authorization
 
 % You may need to create a local token for your site.  You can do this
@@ -12,8 +16,7 @@
 % You will be queried for the apiKey on the Flywheel User Profile page.
 %
 st = scitran('cni');
-fw = st.fw;
-% st.verify
+st.verify
 
 %% List projects you can access
 
@@ -34,14 +37,15 @@ projectLabel = projects{1}.project.label;
 
 %%  Here are all the acquisitions over time
 
+collections = st.search('collection','summary',true);
+
 % Search on BOLD returns fewer than BOLD_EPI
 % Maybe they are doing something wrong with replaceField?
-[sessions,cmd] = st.search('session',...
-    'collection label exact','BOLD_EPI_Ax_AP',...
+[collections,srchCmd] = st.search('collection',...
+    'collection label contains','BOLD_EPI_Ax_AP',...
     'summary',true);
-opts = struct('replacementStyle','hex') ; jsonwrite(cmd,opts)
 
-[acquisitions,cmd] = st.search('acquisition',...
+[acquisitions,srchCmd] = st.search('acquisition',...
     'collection label exact','Ax_EPI_fMRI_ENC_Accel2_15mm',...
     'summary',true);
 

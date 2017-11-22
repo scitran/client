@@ -162,6 +162,12 @@ if ischar(srch)
                 for ii=1:length(tmp)
                     result{ii} = tmp{ii}.label;
                 end
+            case 'allnames'
+                tmp = obj.fw.getAllGroups;
+                result = cell(length(tmp),1);
+                for ii=1:length(tmp)
+                    result{ii} = tmp{ii}.id;
+                end
             case 'name'
                 % st.search('group','name','wandell');
                 % Returns the struct for the group
@@ -226,6 +232,13 @@ if ischar(srch)
                     srch.filters{1}.match.group0x2E_id = val;
                 else
                     srch.filters{end + 1}.match.group0x2E_id = val;
+                end
+            case {'groupname'}
+                % Each group has a name, which is also its id
+                if ~isfield(srch,'filters')
+                    srch.filters{1}.match.group0x2E_id = val;
+                else
+                    srch.filters{end + 1}.match.group0x2_id = val;
                 end
             case {'grouplabel'}
                 % Each group has a label in addition to a group name

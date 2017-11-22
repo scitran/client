@@ -1,37 +1,31 @@
 %% Flywheel search
 %
-% This script illustrates ways to search the database using the Matlab
-% interface.
+% This script illustrates Flywheel database searches using the Matlab
+% interface.  The typical interface is
 %
-% The returned data are cell arrays describing files, acquisitions (groups
-% of related files), sessions, projects, or collections.  Each element of
-% the cell array is a struct that contains information about the returned
-% object.  For example, if you find a file the cell array will be structs
-% with fields
-% 
-%         project: [struct]
-%         session: [struct]
-%     acquisition: [struct]
-%            file: [struct]
-%      collection: [struct]
+%   st = scitran('yourSite');%
+%   results = st.search(searchType,'parameter',value,...)
 %
-%     permissions: [1×1 struct]
-%         subject: [1×1 struct]
-%           group: [1×1 struct]
-%          parent: [1×1 struct]
+% where searchType is a string that defines what will be returned and
+% varagin is a sequence of parameter value pairs that constrain the search.
 %
-% To perform a search you must create a scitran object and be authorized to
-% access the Flywheel site.  The scitran search method has the syntax
+%  searchType is one of these strings: file, acquisition, session,
+% project, collection, analysis or group.
 %
-%    results = scitran.search(result_type,'parameter',value,...)
+%  results is a cell array of the returned database descriptions.
 %
-% For further documentation, see
+% For further documentation, see the search method itself or these
+% documents
 %
 %  * <https://github.com/scitran/client/wiki scitran/client wiki page>, and
 %  specifically the pages on
 %
 %  * <https://github.com/scitran/client/wiki/Search Search> and the
 %  * <https://github.com/scitran/client/wiki/Search-examples search examples>
+%
+% LMP/BW Scitran Team, 2017
+
+%% Programming notes
 %
 % To convert the struct to JSON use
 %
@@ -41,7 +35,11 @@
 % See also:  st.browser - we use this function to visualize the returned
 %            object in the browser.
 %
-% LMP/BW Scitran Team, 2017
+
+%% Examples
+%{
+ This sciprt is a set of examples.
+%}
 
 %% Authorization
 
@@ -51,9 +49,17 @@
 %
 % You will be queried for the apiKey on the Flywheel User Profile page.
 %
+
+% At Stanford, we have a vistalab site.  You will have to replace
+% 'vistalab' with the name for your site.
 st = scitran('vistalab');
-fw = st.fw;
-% st.verify
+st.verify
+
+% The Flywheel SDK object is part of the scitran object.  If you want to
+% experiment with it, you might pull it out and try some calls.
+%
+%   fw = st.fw;
+%
 
 %% List projects you can access
 
@@ -313,19 +319,34 @@ files = st.search('file',...
     'all_data',true,'summary',true);
 
 
-%%  Find the number of projects owned by a specific group
+%%  Find the number of projects owned by a specific group, by label
 
-groupName = 'wandell';
+group = 'Wandell Lab';
 [projects,srchCmd] = st.search('project',...
-    'project group',groupName,...
+    'group label',group,...
     'summary',true);
 
-groupName = {'aldit','jwday','leanew1'};
-for ii=1:length(groupName)
+group = {'ALDIT','John Day Lab','PanLab'};
+for ii=1:length(group)
     projects = st.search('project',...
-        'project group',groupName{ii},...
+        'group label',group{ii},...
         'summary',true);
 end
+
+%% Or by group name, which is also the group id
+
+group = 'wandell';
+[projects,srchCmd] = st.search('project',...
+    'group name',group,...
+    'summary',true);
+
+group = {'jwday'};
+for ii=1:length(group)
+    projects = st.search('project',...
+        'group name',group{ii},...
+        'summary',true);
+end
+
 
 %% Looking up group information
 
