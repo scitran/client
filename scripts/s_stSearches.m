@@ -84,8 +84,6 @@ fprintf('%s matches %s\n',projects{end}.project.label,projectLabel);
 
 %% Get a sessions within a specific collection with a subject code
 
-% BUG - This seems like a bug.  There is an SU in front of the code and I don't
-% understand why.
 sessions = st.search('session',...
     'collection label exact','Anatomy Male 45-55',...
     'subject code','SU ex10316',...
@@ -214,11 +212,9 @@ analyses = st.search('analysis',...
 
 %% The analysis is part of the session, not the  collection.
 
-% So we can't search for analyses in a collection, as we did
-% earlier.  Not sure what we really want.  We used to have files in
-% analysis, analysis in collection, stuff like that.
-% This code finds all the analyses in the collection by looping through the
-% sessions
+% We can't search for analyses in a collections yet. We used to have files in analysis, analysis in collection,
+% stuff like that. This code finds all the analyses in the collection by
+% looping through the sessions
 analyses = cell(length(sessions),1);
 for ii=1:length(sessions)
     analyses{ii} = st.search('analysis',...
@@ -277,11 +273,6 @@ files = st.search('file', ...
     'file type','nifti',...
     'summary',true);
 
-% This is how to download the nifti file
-%  fname = files{1}.source.name;
-%  dl_file = stGet(files{1}, s.token, 'destination', fullfile(pwd,fname));
-%  d = niftiRead(dl_file);
-
 %% Search for files in collection; find session names
 files = st.search('file',...
     'collection label exact','DWI',...
@@ -336,18 +327,48 @@ for ii=1:length(groupName)
         'summary',true);
 end
 
-%% Need to add "get group" to return a list of all group names
+%% Looking up group information
 
 % Structs defining the group
-groups = st.search('group','all')
+groups = st.search('group','all');
+disp(groups)
 
 % Just the group labels
-labels = st.search('group','alllabels')
+labels = st.search('group','alllabels');
+disp(labels)
 
 % The users for a particular group
-users = st.search('group','users','wandell')
+users = st.search('group','users','wandell');
+disp(users)
 
 % Struct for a particular group 
-thisGroup = st.search('group','name','wandell')
+thisGroup = st.search('group','name','wandell');
+disp(thisGroup)
+
+%% Return collections
+
+collections = st.search('collection',...
+    'collection label contains','GearTest',...
+    'summary',true);
+
+% All collections
+collections = st.search('collection','summary',true);
+
+%% Return analyses
+
+% Analyses within a project
+analyses = st.search('analysis',...
+    'project label contains','VWFA FOV',...
+    'summary',true);
+
+% Freesurfer analyses in the whole vistalab database
+analyses = st.search('analysis',...
+    'analysis label contains','freesurfer-recon-all',...
+    'summary',true);
+
+% Wow, lots of AFQ in the vistalab database
+analyses = st.search('analysis',...
+    'analysis label contains','AFQ',...
+    'summary',true);
 
 %%

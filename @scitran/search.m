@@ -1,28 +1,27 @@
 function [result, srch] = search(obj,srch,varargin)
-% Create an elastic search cmd and run it with curl
+% Run a search against a Flywheel database
 %
+% Syntax:
 %  [srchResult, srch] = st.search(srch, ...)
 %
-% Required Input:
-%  srch:  A struct or a string
-%     If a struct, it must contain the fields that define the search
-%     parameters 
+% Description:
+%   The scitran search method that returns information about files,
+%   acquisitions, sessions, projects, collections and groups on a Flywheel
+%   site.
 %
-%     If a string, then the search return type. In this case, we
-%     build the struct from the parameter/value pairs in varargin.  
+% Input:
+%   srch:  The returned object - a struct or a string 
+%      If a string, then the search return type. In this case, we
+%      build the struct from the parameter/value pairs in varargin. The
+%      valid return types are 
 %
-% See s_stSearches.m for many examples.
+%      {'file','acquisition','session','project',
+%            'group', 'collection','analysis'}
 %
-% Return:
-%  result:  A cell array of data structs that match the search parameters
-%  srch:    The struct that is defined by the search varargins
+%      If a struct, the fields that define the search parameters must
+%      include srch.return_type and other parameters.
 %
-%  Notice that running these commands in sequence return the same results
-%
-%     [results,srch] = st.search(srch,'parameter',value);
-%     results = st.search(srch);
-%
-% Parameters
+% Optional inputs
 %   Many parameter/value pairs are possible to define the search.  For 
 %   common search arguments, see the examples in *s_stSearches*.
 %
@@ -34,6 +33,34 @@ function [result, srch] = search(obj,srch,varargin)
 %     'summary'    - print out a summary of the number of search items
 %                    returned (boolean, default false}
 %
+%
+% Returns:
+%  result:  A cell array of data structs that match the search parameters
+%  srchCmd: A struct that contains the search parameters
+%
+% Running these commands in sequence return the same results
+%      [results,srchCmd] = st.search(srch,'parameter',value);
+%      results = st.search(srchCmd);
+% 
+% See also: s_stSearches.m
+%
+% BW/LMP Vistalab 2016
+%
+% List of the search parameters
+%
+%
+
+% Examples
+%{
+% When debugging, convenience, you might want to look at the JSON
+% created in the Flywheel.search method.
+ oldField = 'id';
+ newField = 'x0x5Fid';
+ search_query = obj.fw.replaceField(srch,oldField,newField);
+ opts = struct('replacementStyle','hex');
+ search_query = jsonwrite(srch,opts);
+%}
+
 % Programming Notes
 %
 %  Matlab uses '.' in structs, and json allows '.' as part of the variable
@@ -51,23 +78,20 @@ function [result, srch] = search(obj,srch,varargin)
 %  We define the features from the slots in the srch structure. The
 %  returned object is defined by result_type
 %
-%   srch.result_type = One of 
-%     {'project','session','acquisition', 'file', 'analysis', 'collection'}
-%
 % Search constraints are further specified by additional parameters, such
 % as 
 %    'project label contains'
 %    'project id'
 %    
-% Important parameters we use in search are 
-%   'name', 'group', 'label', 'id','plink', subject_0x2E_age',
-%   'container_id', 'type'.  
+% A description of the general data model that defines searchable terms can
+% be found in the command line SDK documentation
 %
-% A list of searchable terms can be found in the scitran/core
+%   ???
+%
+% and in the data model
 %
 %  <https://github.com/scitran/core/wiki/Data-Model Data Model page>.
 % 
-% BW Scitran Team 2016
 
 %% Could check the srch struct here for the appropriate fields
 %
@@ -86,6 +110,8 @@ p.addParameter('sortlabel',[],@ischar);
 % -1 is unlimited.  But it turns out Flywheel has a limit
 p.addParameter('limit',10000,@isscalar);   % Max allowed by flywheel
 
+% Configure the varargin for different search cases, starting either with a
+% struct or the parameter/value cases
 if ~isempty(varargin) && isstruct(varargin{1})
     % Convert the srch struct to be the parameter/value cell aray    
     fields = fieldnames(varargin{1});
@@ -102,7 +128,10 @@ else
     end
 end
 
-% This enables the group cases for 'all' and 'alllabels'
+% This enables doing a search for a group for 
+%  st.search('group','all'); or st.search('group','all labels');
+% without adding the additional logical - st.search('group','all',true);
+%
 if (strcmp(srch,'group') && length(varargin) == 1), varargin{2} = true; end
 
 p.parse(srch,varargin{:});
@@ -158,7 +187,6 @@ if ischar(srch)
     if mod(length(varargin),2)
         error('Must have an even number of param/val varargin');
     end
-    
     
     % One of the standard return types
     % Force to lower and singular.  Also check that it is a permissible type.
@@ -460,16 +488,6 @@ end
 
 %% Perform the search
 
-%{
-% For convenience, you might want to look at the JSON
-% created in the Flywheel.search method.
- oldField = 'id';
- newField = 'x0x5Fid';
- search_query = obj.fw.replaceField(srch,oldField,newField);
- opts = struct('replacementStyle','hex');
- search_query = jsonwrite(srch,opts);
-%}
-
 % To limit the searches to the top 100, use this
 srch.limit = limit;
 srchResult = obj.fw.search(srch); %.results;
@@ -481,14 +499,14 @@ if isfield(srchResult,'message')
     return;
 end
 
-% Convert to cell array from struct array.
+% Convert the returned srchResult to a cell array from struct array.
 % I tried allocating structs, but this turns out not be easy. 
 % See 
 % https://www.mathworks.com/matlabcentral/answers/12912-how-to-create-an-empty-array-of-structs
-%
-% Now, we also discovered that sometimes srchResult is already a cell
-% array, so in that case we don't do this.  We should ask Jen R about
-% this.
+
+% We discovered that sometimes srchResult is already a cell array, so in
+% that case we don't do the conversion.  We should ask Jen R about this,
+% but no big deal.
 if ~iscell(srchResult)
     result = cell(length(srchResult),1);
     for ii=1:length(srchResult)
@@ -499,10 +517,10 @@ else
 end
 
 
-%% If sortlab or summary flag are set, deal with it here.
+%% Deal with sortlab or summary flag
 
 if ~isempty(sortlabel)
-    fprintf('NYI.  We want to sort using this label:  %s\n',sortlabel);
+    fprintf('sort label is not yet implemented. %s\n',sortlabel);
 end
 
 if summary
@@ -519,11 +537,12 @@ end
 end
 
 function srch = formatSearchType(srch)
-% Allow plural and upper case, but convert here
+% Validate the result_type string.
+%
+% We allow plural and upper case variants of the for the return type. The
+% lower case and conversion to singular from are done here.
 %
 
-% Validate the search result_type
-% Maybe it is fine after we lower it.
 srch = lower(srch);
 if ismember(srch,{'file','session','acquisition','project','collection','analysis'})    
     return;
@@ -543,45 +562,4 @@ end
 
 end
 
-
-%% Old code, deprecated.  But might be useful
-
-%% Convert the Matlab struct to json text
-
-
-% srch = jsonwrite(srch,struct('indent','  ','replacementstyle','hex'));
-% srch = regexprep(srch, '\n|\t', ' ');
-% srch = regexprep(srch, ' *', ' ');
-% 
-% 
-% % The all_data flag ... what does it do?
-% esCMD = obj.searchCmd(srch,'all_data',all_data);
-
-%% Run the elastic search curl command
-
-% result is a string with a bunch of stuff RF put in it, including timing
-% information and the json output file.  We get the filename below.
-
-% [~, result] = system(esCMD);
-
-%% Clean up the result
-
-% Load the result json file. NOTE the use of strtrim to get rid of the
-% final blank character
-% if ismac
-%     srchFile = strtrim(result(strfind(result,'/private/tmp'):end));
-% elseif isunix
-%     srchFile = strtrim(result(strfind(result,'/tmp'):end));
-% end
-
-% This is now a Matlab struct with a lot of ugly terms.  We clean them up
-% below.
-% if ~exist(srchFile,'file'), error('Results does not contain a valid search file');
-% else
-%     % disp('Running jsonread on returned file');
-%     %    tic
-%     % srchResult = loadjson(srchFile);
-%     srchResult = jsonread(srchFile);
-%     %   toc
-% end
 
