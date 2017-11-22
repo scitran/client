@@ -122,7 +122,6 @@ if ischar(srch)
     % Force to lower and singular.  Also check that it is a permissible type.
     searchType = formatSearchType(srch);
     
-    
     % Make sure the varargin is parameter/val pairs
     if mod(length(varargin),2)
         error('Must have an even number of param/val varargin');
@@ -130,6 +129,16 @@ if ischar(srch)
     
     clear srch
     srch.return_type = searchType;
+    
+    % Special case of group
+    if strcmp(searchType,'group')
+        % val = st.search('group','all',true);
+        % val = st.search('group','name',val);
+        % val = st.search('group','label',val);
+        %
+        % Do something with st.fw.groupXXX
+        return;
+    end
     
     % Build the search structure from the param/val pairs
     n = length(varargin);
