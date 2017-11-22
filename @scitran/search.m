@@ -86,7 +86,7 @@ p.addParameter('sortlabel',[],@ischar);
 % -1 is unlimited.  But it turns out Flywheel has a limit
 p.addParameter('limit',10000,@isscalar);   % Max allowed by flywheel
 
-if isstruct(varargin{1})
+if ~isempty(varargin) && isstruct(varargin{1})
     % Convert the srch struct to be the parameter/value cell aray    
     fields = fieldnames(varargin{1});
     fieldvals = struct2cell(varargin{1});
@@ -102,6 +102,9 @@ else
     end
 end
 
+% This enables the group cases for 'all' and 'alllabels'
+if (strcmp(srch,'group') && length(varargin) == 1), varargin{2} = true; end
+
 p.parse(srch,varargin{:});
 
 srch      = p.Results.srch;
@@ -114,32 +117,55 @@ limit     = p.Results.limit;
 
 % If it is not a char array, it should be a properly formatted struct.
 if ischar(srch)    
-    % This condition could be moved to a separate function
-    % 
-    %   srch = searchStruct(searchType,varargin{:});
-    %
     
-    % Force to lower and singular.  Also check that it is a permissible type.
-    searchType = formatSearchType(srch);
+    % Deal with special case of group searches
+    if strcmp(srch,'group')
+        % This might become its own function
+        
+        % We might move this to a call to searchGroup
+        switch stParamFormat(varargin{1})
+            case 'all'
+                % st.search('group','all');
+                result = obj.fw.getAllGroups;
+            case 'alllabels'
+                tmp = obj.fw.getAllGroups;
+                result = cell(length(tmp),1);
+                for ii=1:length(tmp)
+                    result{ii} = tmp{ii}.label;
+                end
+            case 'name'
+                % st.search('group','name','wandell');
+                % Returns the struct for the group
+                result = obj.fw.getGroup(varargin{2});
+            case 'users'
+                % users = st.search('group','users','wandell')
+                if length(varargin) < 2
+                    error('Group label required');
+                end
+                g = obj.fw.getGroup(varargin{2});
+                result = cell(numel(g.permissions),1);
+                for ii=1:numel(g.permissions)
+                    result{ii} = g.permissions(ii).x_id;
+                end
+            otherwise
+                error('Unknown group search term: %s',param);
+        end
+        
+        return;
+    end
     
     % Make sure the varargin is parameter/val pairs
     if mod(length(varargin),2)
         error('Must have an even number of param/val varargin');
     end
     
+    
+    % One of the standard return types
+    % Force to lower and singular.  Also check that it is a permissible type.
+    searchType = formatSearchType(srch); 
     clear srch
     srch.return_type = searchType;
-    
-    % Special case of group
-    if strcmp(searchType,'group')
-        % val = st.search('group','all',true);
-        % val = st.search('group','name',val);
-        % val = st.search('group','label',val);
-        %
-        % Do something with st.fw.groupXXX
-        return;
-    end
-    
+  
     % Build the search structure from the param/val pairs
     n = length(varargin);
     for ii=1:2:n
@@ -148,7 +174,7 @@ if ischar(srch)
         
         switch stParamFormat(varargin{ii})
             
-            % OVERALL SWITCHES
+            % GENERAL SEARCH PARAMETERS
             case {'all_data'}
                 % Search all of the data.  
                 % By default you search only your own data.
@@ -163,7 +189,7 @@ if ischar(srch)
                 % Logical - Printout a summary description of the return cell array
                 summary = val;
             case {'limit'}
-                % Ignore - We manage this at the end.
+                % We manage a limit on the number of returns at the end.
                 
             % GROUP
             case{'group'}
