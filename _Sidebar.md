@@ -4,7 +4,7 @@
    * [Authorization](Authorization)
    * [Search](Search)
      * [Syntax](Search-syntax)
-     * [Typical examples](Search-examples)
+     * [Typical searcyes](Search-examples)
      * [Additional parameters](Additional-search-parameters)
    * [Downloading and reading](Downloading)
    * [Uploading](Uploading)
