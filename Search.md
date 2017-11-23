@@ -1,22 +1,31 @@
+## Brief overview
 
-To perform a search, you must first obtain [authorization](https://github.com/scitran/client/wiki/Authorization).  
+To perform a search on a Flywheel database, you must obtain [authorization](https://github.com/scitran/client/wiki/Authorization).  
 
     st = scitran('<your site name.');  % For example, st = scitran('vistalab');
 
-The st.search() command specifies your search through a series of parameters.  The first parameter is a required string that indicates what type of object you would like to have returned.  For example, suppose you are searching for a project.  Then you would specify
+The st.search() command specifies the type of database object you are searching for and search parameter limits.  Suppose you are searching for a project.  Then you would specify
 
-    projectArray = st.search('project');
+    projects = st.search('projects');
 
+The first field is required and it is a string that defines the type of object you would like returned. 
+```
 objectType = ...
 {'file','acquisition','session','project','collection', 'analysis','subject','note'};
+```
 
-The next set of parameters are in parameter/val format and optional.  Suppose you would like to return the files in a collection name 'GearTest'.
+The remaining parameters are in parameter/val format that define the search parameters. 
+```
+projects = st.search('project',...
+    'summary',true,...
+    'project label exact','VWFA');
+```
 
-    % These files match the following properties
-    files = st.search('files','collection label','VWFA',...
-            'file type','nifti',...
-            'file measurement','Anatomy_t1w');
+By default, you are shown only the projects you have access to see.  To see all of the projects (or files or sessions or ...) use argument
 
-There are many types of searches, and you can see [search examples on this page](search-examples) and an [m-file with many examples](https://github.com/scitran/client/blob/master/scripts/s_stSearches.m)
+    projects = st.search('project','all_data',true);
+
+There are many types of searches; see [search examples on this page](search-examples) and an [m-file with many examples](https://github.com/scitran/client/blob/master/scripts/s_stSearches.m)
+
 
 
