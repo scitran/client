@@ -152,8 +152,13 @@ sessions = st.search('session',...
     'summary',true);
 
 % Structs defining the group
-groups = st.search('group','all');
-disp(groups)
+>> groups = st.search('group','all');
+disp(groups{1})
+          label: 'ADNI'
+        created: '2016-03-29T05:06:18.337Z'
+       modified: '2016-03-29T05:06:18.337Z'
+    permissions: [2×1 struct]
+             id: 'adni'
 
 % Projects owned by a particular group
 group = 'Wandell Lab';
