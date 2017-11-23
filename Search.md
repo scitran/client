@@ -11,19 +11,19 @@ The first argument is a required string that defines the type of object you woul
 'file','acquisition','session','project','collection', 'analysis','subject','note'
 ```
 
-The other search parameters are in parameter/val format.  For example, to find a project with a particular label you would use
+The other search parameters are in parameter/val format.  For example, to find a project with a particular label (case sensitive) use
 ```
 vwfaProject = st.search(...
                 'project',...
                 'project label exact','VWFA');
 ```
-or to find all the sessions in a project you would use
+or to find all the sessions in a specific project 
 ```
 vwfaSessions = st.search(...
                  'session',...
                  'project label exact','VWFA');
 ```
-To find partial matches to a label you can use
+To find partial label matches (case insensitive) use
 ```
 project = st.search(...
              'project',
