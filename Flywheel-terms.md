@@ -11,4 +11,3 @@ The database files are grouped logically into a set of basic categories.  The se
 
 * **Notes**  - Search for notes that people have added.  These can be searched just like files.
 
-* **<Files> or <Analyses> in**  - You can speed certain searches by looking for files that are contained in, say, collections or analyses.
