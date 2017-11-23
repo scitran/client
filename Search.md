@@ -13,19 +13,21 @@ The first argument is a required string that defines the type of object you woul
 
 The other search parameters are in parameter/val format.  For example, to find a project with a particular label you would use
 ```
-vwfaProject = st.search('project',...
-                        'project label exact','VWFA');
+vwfaProject = st.search(...
+                'project',...
+                'project label exact','VWFA');
 ```
 or to find all the sessions in a project you would use
 ```
-vwfaSessions = st.search('session',...
-                         'project label exact','VWFA');
+vwfaSessions = st.search(...
+                 'session',...
+                 'project label exact','VWFA');
 ```
-
 To find partial matches to a label you can use
 ```
-project = st.search('project',
-                    'project label contains','vwfa');
+project = st.search(...
+             'project',
+             'project label contains','vwfa');
 ```
 There are many search parameters. To learn more about these see [search examples on this page](search-examples) and an [m-file with many examples](https://github.com/scitran/client/blob/master/scripts/s_stSearches.m).
 
