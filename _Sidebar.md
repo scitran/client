@@ -8,6 +8,7 @@
      * [Special searches](Special-search-parameters)
    * [Downloading and reading](Downloading)
    * [Uploading](Uploading)
+   * [Get info](Get-info)
    * [BIDS](BIDS)
    * [Database editing](Database-editing)
 * [Toolboxes class](Toolboxes-class)
