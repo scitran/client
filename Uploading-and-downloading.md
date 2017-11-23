@@ -1,3 +1,6 @@
+
+NOTES.  This should be about st.download() and st.read() methods.
+
 ## Uploading
 
 ### Create a project
