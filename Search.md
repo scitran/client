@@ -1,27 +1,28 @@
 ## Brief overview
 
-To perform a search on a Flywheel database, you must obtain [authorization](https://github.com/scitran/client/wiki/Authorization).  
+Searching a Flywheel database is very useful when you are processing data or searching to reuse data from many projects. Searches can be performed using the scitran **search** method.  The arguments to this method specify (a) the type of database object you are searching for and (b) search parameter limits.  
 
-    st = scitran('<your site name.');  % For example, st = scitran('vistalab');
+For example, to search for all the projects in the database you would use
 
-The st.search() command specifies the type of database object you are searching for and search parameter limits.  Suppose you are searching for a project.  Then you would specify
+    projects = st.search('project');
 
-    projects = st.search('projects');
-
-The first field is required and it is a string that defines the type of object you would like returned. 
+The first argument is a required string that defines the type of object you would like returned. The permissible strings are
 ```
-objectType = ...
-{'file','acquisition','session','project','collection', 'analysis','subject','note'};
+'file','acquisition','session','project','collection', 'analysis','subject','note'
 ```
 
-The remaining parameters are in parameter/val format that define the search parameters. 
+The other search parameters are in parameter/val format.  For example, to find a project with a particular label you would use
 ```
-projects = st.search('project',...
-    'summary',true,...
+vwfaProject = st.search('project',...
+    'project label exact','VWFA');
+```
+or to find all the sessions in a project you would use
+```
+vwfaSessions = st.search('session',...
     'project label exact','VWFA');
 ```
 
-There are many types of searches; see [search examples on this page](search-examples) and an [m-file with many examples](https://github.com/scitran/client/blob/master/scripts/s_stSearches.m)
+There are many search parameters. To learn more about these see [search examples on this page](search-examples) and an [m-file with many examples](https://github.com/scitran/client/blob/master/scripts/s_stSearches.m).
 
 ## Search scope
 
