@@ -1,11 +1,6 @@
 
+The scitran search method syntax is
 
-## Overview
-To perform a search, first create a scitran Matlab object that is authorized to interact with your database (see [Authorization](Authorization)).  Then run
-
-    st = scitran('vistalab');
-
-The search method syntax is
 ```
 cellArray = st.search('objectTypeToReturn',...
                'Parameter',value, ...
@@ -49,16 +44,19 @@ ans =
 
 The search method lets you specify many different parameters.  The list is far too long to (usefully) include here.  We think the best way for you to understand search is through [examples](https://github.com/scitran/client/blob/master/scripts/s_stSearches.m) and leafing through the [search method source code](https://github.com/scitran/client/blob/master/%40scitran/search.m).
 
-The comments here provide some generally useful information that might not be obvious and some overall guidance.
+The comments here provide information that might not be obvious and some general guidance.
 
 ### Utility parameters
+
+We have some utility parameters that do not guide the search, but that we have found helpful.
 
 * **'summary'**  - A logical that indicates whether to print the number of found objects
 * **'all_data'** - Run the search across the entire database; you cannot query or download objects without permission
 * **'limit'**    - Limit number of returned cells, st.search('file','limit',17,'file name','foo); (default 10,000)
 
 ### Groups
-It is possible to use the term 'group' to retrieve information about the group, such as its projects and users. For example, to find the list of groups use
+
+It is possible to search for information about the groups using the database.  This information includes their project names and users. For example, to list all of groups use
 
     st.search('group','all')
 
@@ -105,7 +103,7 @@ Most objects are described by a **label**.  There is one exception, however.  Wh
 
 ## Search examples
 
-See the searches illustrated in [s_stSearches.m](https://github.com/scitran/client/blob/master/scripts/s_stSearches.m). Here are a few examples from that file.
+See the searches illustrated in [s_stSearches.m](https://github.com/scitran/client/blob/master/scripts/s_stSearches.m). 
 
 
 
