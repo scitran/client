@@ -1,6 +1,6 @@
 ## Downloading and reading
 
-You can download many different types of Flywheel objects: project, session, acquisition, file, collection or analysis.  In most cases these are downloaded as a zip file.
+Flywheel objects can generally be downloaded.  This includes project, session, acquisition, file, collection or analysis objects. A project, session, acquisition, collection or analysis is downloaded as a zip file.  A file is downloaded as, well, a file.
 
     project = st.search('projects','project label','VWFA');
     st.download('project',project{1}.id,'destination','tarfile name');
