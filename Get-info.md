@@ -11,7 +11,11 @@ files = st.search('file',...
           'filetype','dicom',...
           'project label exact','qa');
 files = st.getdicominfo(files);
-files{1}.info.('EchoTime')
+>> files{1}.info.('EchoTime')
+
+ans =
+
+    30
 ```
 
 ```
