@@ -5,7 +5,7 @@
    * [Search](Search)
      * [Syntax](Search-syntax)
      * [Typical searches](Search-examples)
-     * [Special searches](Additional-search-parameters)
+     * [Special searches](Special-search-parameters)
    * [Downloading and reading](Downloading)
    * [Uploading](Uploading)
    * [BIDS](BIDS)
