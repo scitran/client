@@ -1,6 +1,9 @@
 ## Brief overview
 
-Searching a Flywheel database is very useful when you are processing data or searching to reuse data from many projects. Searches can be performed using the scitran **search** method.  The arguments to this method specify (a) the type of database object you are searching for and (b) search parameter limits.  
+Searching a Flywheel database is very useful when you are processing data or searching to reuse data from many projects. Searches can be performed using the scitran **search** method. The search method returns a great deal of information about the Flywheel database objects. The best way to understand the information is to perform a few searches and explore the returned values.  In some cases, you might want to look at the [Flywheel data model](https://github.com/scitran/core/wiki/Data-Model) to see the definition of a term.
+
+### Search format
+The arguments to the search method specify (a) the type of database object you are searching for and (b) search parameter limits. 
 
 For example, to search for all the projects in the database you would use
 
