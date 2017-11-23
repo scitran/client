@@ -9,13 +9,13 @@
    * [Downloading and reading](Downloading)
    * [Uploading](Uploading)
    * [Get info](Get-info)
-   * [BIDS](BIDS)
    * [Database editing](Database-editing)
 * [Toolboxes class](Toolboxes-class)
    * [Computing with Gears](Gears)
       * [Building Gears](https://github.com/scitran/client/wiki/Building-Gears)
    * [Analyses](Analysis-objects)
 * [Examples](Client-scripts)
+* [BIDS](BIDS)
 
 ***
 
