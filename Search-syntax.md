@@ -45,45 +45,57 @@ ans =
     permissions: [11×1 struct]
 ```
 
+## Search parameters
+
+The search method lets you specify many different parameters.  The list is far too long to (usefully) include here.  We think the best way for you to understand search is through [examples](https://github.com/scitran/client/blob/master/scripts/s_stSearches.m) and leafing through the [search method source code](https://github.com/scitran/client/blob/master/%40scitran/search.m).
+
+The comments here provide some generally useful information that might not be obvious and some overall guidance.
+
+### Utility parameters
+
+* **'summary'**  - A logical that indicates whether to print the number of found objects
+* **'all_data'** - Run the search across the entire database; you cannot query or download objects without permission
+* **'limit'**    - Limit number of returned cells, st.search('file','limit',17,'file name','foo); (default 10,000)
+
 ### Groups
 It is possible to use the term 'group' to retrieve information about the group, such as its projects and users. For example, to find the list of groups use
 
     st.search('group','all')
 
-### Utility parameters
-
-* 'summary'  - A logical that indicates whether to print how many objects were found
-* 'all_data' - Run the search across the entire database; you cannot query or download objects without permission
-* 'limit'    - Set a maximum number of returned objects (default is 10,000)
-
-## Search parameters
-
-The search method lets you specify many different parameters.  The list is far too long to (usefully) include here.  We think the best way for you to understand search is through [examples](https://github.com/scitran/client/blob/master/scripts/s_stSearches.m) and leafing through the [search method source code](https://github.com/scitran/client/blob/master/%40scitran/search.m).
-
+Other 'group' search parameters are 
+```
+st.search('group','all names');       % All group names
+st.search('group','name',groupName);  % Details about a particular group
+st.search('group','users',groupName); % Users from a group
+st.search('group','all labels');      % Groups appear to have both labels and names
+```
 ### Contains and matches exactly
 
-When searching for some parameters, including label or name, you can ask that the object match the label exactly or that that label contains a string.   For example, on the vistalab site we have a project with the label 'VWFA' and several other projects that include 'VWFA' in the label.  
+Often you will search for an object based on its label (or name, see below). You can specify that an exact match or a partial match. 
 
-When we search for a project label 'VWFA', we assume an exact match.
+For example, on the vistalab site we have a project with the label 'VWFA' and several other projects that include 'VWFA' in the label.  
 
+When we search for a project label exact 'VWFA'
 ```
->> projects = st.search('projects','project label','VWFA');
->> length(projects)
-ans =
-     1
->> projects{1}.source.label
-ans =
-    'VWFA'
+>> projects = st.search('project',...
+    'summary',true,...
+    'project label exact','VWFA');
+Found 1 (project)
 ```
 
 It is possible to find all the projects that contain the string 'VWFA' as well.
 
 ```
->> projects = st.search('projects','project label contains','VWFA');
->> for ii=1:length(projects), disp(projects{ii}.source.label); end
-VWFA
+>> projects = st.search('project',...
+    'summary',true,...
+    'project label contains','vwfa');
+Found 3 (project)
+
+>> for ii=1:length(projects), disp(projects{ii}.project.label); end
 VWFA FOV
+VWFA
 VWFA FOV Hebrew
+>> 
 ```
 The exact vs. contains options are also used for labels describing session, analysis, acquisition, collection, and the file **name**.
 
