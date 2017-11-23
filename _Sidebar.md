@@ -1,6 +1,6 @@
 * [Introduction](Home)
 * [Installation](Installation)
-* [Overview of methods](Client-methods-(Matlab))
+* [Scitran class](Client-methods-(Matlab))
 * [Authorization](Authorization)
 * [Database terms](Database-principles)
 * [Search](Search)
