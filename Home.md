@@ -17,7 +17,7 @@ This wiki describes the software and provides examples including how to
 
 There is also a [**scitran python client** implementation](https://github.com/scitran/python-client).
 
-See the [scitran core wiki page](https://github.com/scitran/core/wiki) for an introduction to scientific transparency data management software and the Stanford [Project on Scientific Transparency (PoST)](http://post.stanford.edu). 
+See the [scitran core data model page](https://github.com/scitran/core/wiki/Data-Model) for an introduction to scientific transparency data management software and the Stanford [Project on Scientific Transparency (PoST)](http://post.stanford.edu). 
 
 ### Acknowledgement
 
