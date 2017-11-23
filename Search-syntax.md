@@ -71,9 +71,7 @@ st.search('group','all labels');      % Groups appear to have both labels and na
 ```
 ### Contains and matches exactly
 
-Often you will search for an object based on its label (or name, see below). You can specify that an exact match or a partial match. 
-
-For example, on the vistalab site we have a project with the label 'VWFA' and several other projects that include 'VWFA' in the label.  
+Often you will search for an object based on its label (or name, see below). You can specify that an exact match or a partial match. For example, on the vistalab site we have a project with the label 'VWFA' and several other projects that include 'VWFA' in the label.  
 
 When we search for a project label exact 'VWFA'
 ```
@@ -97,23 +95,41 @@ VWFA
 VWFA FOV Hebrew
 >> 
 ```
-The exact vs. contains options are also used for labels describing session, analysis, acquisition, collection, and the file **name**.
+The exact vs. contains options are also used for labels describing session, analysis, acquisition, collection, and file **name**.
+
+**N.B.**  'contains' is case insensitive; 'exact' is case-sensitive.
 
 ### Labels and names
 
 Most objects are described by a **label**.  There is one exception, however.  When we search for files we search on the **name**, not the **label**.
+
 ## Search examples
 
 See the searches illustrated in [s_stSearches.m](https://github.com/scitran/client/blob/master/scripts/s_stSearches.m). Here are a few examples from that file.
 
 ```
+% All the projects
 projects = st.search('projects');
-VWFAsessions = st.search('sessions','project label','VWFA');
-    
+
+% All the projects, and print the count
+projects = st.search('project',...
+    'all_data',true,...
+    'summary',true);
+
+% Get the sessions within a project
+sessions = st.search('session',...
+    'project id',projectID,...
+    'summary',true);
+
 files = st.search('files',...
     'collection label','Anatomy Male 45-55',...
     'acquisition label','Localizer',...
     'file type','nifti');
+
+sessions = st.search('session',...
+    'collection label exact','Anatomy Male 45-55',...
+    'subject code','SU ex10316',...
+    'summary',true);
 
 thisProject = 'ALDIT';
 [sessions,srchCmd] = st.search('session',...
