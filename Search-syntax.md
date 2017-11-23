@@ -3,9 +3,10 @@ This page contains more detailed descriptions of the search parameters. To perfo
     st = scitran('vistalab');
 
 You can search for a variety of different database objects.  The search returns a cell array of the database objects that match your query. Here is a list of objects you can search for.
-
-    objects = {'file','acquisition','session','project','collection', 'analysis','subject','note'};
-
+```
+objects = ...
+{'file','acquisition','session','project','collection', 'analysis','subject','note'};
+```
 The general search syntax is
 ```
 cellArray = st.search('<objectTypeToReturn>',...
