@@ -1,4 +1,3 @@
-## Additional search parameters
 
 We have some utility parameters that do not guide the search, but that we have found helpful.
 
