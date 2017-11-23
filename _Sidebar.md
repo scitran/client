@@ -19,6 +19,7 @@
 
 ***
 
+* [Flywheel SDK](Flywheel-SDK)
 * [Flywheel terms](Flywheel-terms)
 * [Reproducible papers](Reproducible-Research)
 * [Technical notes](Technical-notes)
