@@ -15,6 +15,6 @@
 
 ***
 
-* [Database terms](Database-principles)
+* [Flywheel terms](Flywheel-terms)
 * [Reproducible papers](Reproducible-Research)
 * [Technical notes](Technical-notes)
