@@ -22,6 +22,11 @@ vwfaSessions = st.search('session',...
                          'project label exact','VWFA');
 ```
 
+To find partial matches to a label you can use
+```
+project = st.search('project',
+                    'project label contains','vwfa');
+```
 There are many search parameters. To learn more about these see [search examples on this page](search-examples) and an [m-file with many examples](https://github.com/scitran/client/blob/master/scripts/s_stSearches.m).
 
 ## Search scope
