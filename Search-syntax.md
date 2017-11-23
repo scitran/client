@@ -1,5 +1,5 @@
 
-The scitran search method syntax is
+The arguments to the search method specify (a) the type of object to return and (b) parameters that define the search. 
 
 ```
 cellArray = st.search('objectTypeToReturn',...
