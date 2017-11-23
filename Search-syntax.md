@@ -54,6 +54,15 @@ We have some utility parameters that do not guide the search, but that we have f
 * **'all_data'** - Run the search across the entire database; you cannot query or download objects without permission
 * **'limit'**    - Limit number of returned cells, st.search('file','limit',17,'file name','foo); (default 10,000)
 
+### Search string
+
+You can add a parameter 'string', which does a free form search within the other parameter constraints. For example, this is a search for acquisitions that have the string 'BOLD_EPI' somewhere in a label, name, note
+```
+[acquisitions,srchCmd] = st.search('acquisition',...
+    'string','BOLD_EPI',...
+    'project label exact','ALDIT', ...
+    'summary',true);
+```
 ### Groups
 
 It is possible to search for information about the groups using the database.  This information includes their project names and users. For example, to list all of groups use
