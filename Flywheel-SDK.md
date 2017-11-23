@@ -9,10 +9,10 @@ The commands here should be presented in different ways, say all the downloadXXX
             
      Methods (auto-generated)
 
-## Search related
+## Search
         % search(obj, search_query)
 
-## Collections related
+## Collections
         % getAllCollections(obj)
         % getCollection(obj, id)
         % getCollectionSessions(obj, id)
@@ -46,7 +46,7 @@ The commands here should be presented in different ways, say all the downloadXXX
         % uploadFileToAcquisition(obj, id, path)
         % downloadFileFromAcquisition(obj, id, name, path)
 
-## Project related
+## Project
         % getAllProjects(obj)
         % getProject(obj, id)
         % getProjectSessions(obj, id)
@@ -69,10 +69,6 @@ The commands here should be presented in different ways, say all the downloadXXX
         % addGroupTag(obj, id, tag)
         % modifyGroup(obj, id, group)
         % deleteGroup(obj, id)
-
-## Configuration
-        % getConfig(obj)
-        % getVersion(obj)
 
 ## Session related
         % getAllSessions(obj)  
@@ -115,4 +111,6 @@ The commands here should be presented in different ways, say all the downloadXXX
         % addGear(obj, gear)
         % deleteGear(obj, id)
 
-
+## Flywheel
+        % getConfig(obj)
+        % getVersion(obj)
