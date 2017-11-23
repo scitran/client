@@ -21,11 +21,15 @@ projects = st.search('project',...
     'project label exact','VWFA');
 ```
 
-By default, you are shown only the projects you have access to see.  To see all of the projects (or files or sessions or ...) use argument
+There are many types of searches; see [search examples on this page](search-examples) and an [m-file with many examples](https://github.com/scitran/client/blob/master/scripts/s_stSearches.m)
+
+## Search scope
+
+By default, you search only the projects you have access to.  To search the entire database use argument
 
     projects = st.search('project','all_data',true);
 
-There are many types of searches; see [search examples on this page](search-examples) and an [m-file with many examples](https://github.com/scitran/client/blob/master/scripts/s_stSearches.m)
+You only have permission to view or download a subset of these, but you can learn about what is in the database from an 'all_data' search.
 
 
 
