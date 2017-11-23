@@ -17,7 +17,7 @@ This wiki describes the software and provides examples including how to
 
 This client is based on the [Flywheel SDK](Flywheel-SDK) that is platform independent, and written in [Golang](https://golang.org/).  The functions in the Flywheel SDK are exported into a library that is called from Matlab. You have direct access to the Flywheel SDK calls from the scitran objects.
 
-The same Flywheel SDK is also exported into libraries for [**a scitran python client**](https://github.com/scitran/python-client) and 'R'.
+The same Flywheel SDK is also exported into libraries for [**a scitran python client**](https://github.com/scitran/python-client) and a **scitran** 'R' client.
 
 See the [scitran core data model page](https://github.com/scitran/core/wiki/Data-Model) for an introduction to scientific transparency data management software and the Stanford [Project on Scientific Transparency (PoST)](http://post.stanford.edu). 
 
