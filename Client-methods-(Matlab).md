@@ -8,13 +8,10 @@ The main @scitran methods are search, get, put, read, runFunction, browser.  The
 Find projects, sessions, acquisitions, collections, files, subjects constrained by many possible limits (file type, label, date...).  This is big.
 
 ### get
-Individual files.
+Information about files or database objects
 
-### read
-File read and return data in a Matlab variable
-
-### download
-A tar file of a project, session, or acquisition
+### download and read
+A database object (A zip file of a project, session, acquisition, or a file) is brought to your local computer ('download').  In some cases (e.g., a nifti file), the file is first downloaded and then automatically read into a Matlab variable ('read').  
 
 ### projectHierarchy
 A listing of the sessions and acquisitions in a project hierarchy
