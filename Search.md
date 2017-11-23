@@ -1,6 +1,8 @@
 ## Brief overview
 
-Searching a Flywheel database is very useful when you are processing data or searching to reuse data from many projects. Searches can be performed using the scitran **search** method. The search method returns a great deal of information about the Flywheel database objects. The best way to understand the information is to perform a few searches and explore the returned values.  In some cases, you might want to look at the [Flywheel data model](https://github.com/scitran/core/wiki/Data-Model) to see the definition of a term.
+Searching a Flywheel database is very useful when you are processing data or searching to reuse data from many projects. The scitran **search** method returns a great deal of information about the object, but not the object itself. To get either the whole object or values from the object use one of the get<>, download<> or read<> methods.
+
+The best way to understand the information returned in a search is to explore the values in the returned Matlab structs.  You also might want to look at the [Flywheel data model](https://github.com/scitran/core/wiki/Data-Model) to see the definition of a term.
 
 ### Search syntax
 The arguments to the search method specify (a) the type of object to return and (b) parameters that define the search. For example, to search for all the projects in the database you would use
@@ -9,7 +11,7 @@ The arguments to the search method specify (a) the type of object to return and 
 
 The first argument is a required string that defines the type of object you would like returned. The permissible strings are
 ```
-'file','acquisition','session','project','collection', 'analysis','subject','note'
+'project','session','acquisition','file','collection', 'analysis','subject','note'
 ```
 
 The other search parameters are in parameter/val format.  For example, to find a project with a particular label (case sensitive) use
