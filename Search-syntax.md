@@ -67,9 +67,9 @@ st.search('group','name',groupName);  % Details about a particular group
 st.search('group','users',groupName); % Users from a group
 st.search('group','all labels');      % Groups appear to have both labels and names
 ```
-### Contains and matches exactly
+### Partial and exact matches
 
-Often you will search for an object based on its label (or name, see below). You can specify that an exact match or a partial match. For example, on the vistalab site we have a project with the label 'VWFA' and several other projects that include 'VWFA' in the label.  
+When searching for an object based on its label (or name), you can specify an exact match or a partial match. For example, on the vistalab site we have a project with the label 'VWFA' and several other projects that include 'VWFA' in the label.  
 
 When we search for a project label exact 'VWFA'
 ```
