@@ -40,9 +40,16 @@ ans =
         subject: [1×1 struct]
     permissions: [11×1 struct]
 ```
+
+## Utility parameters
+
+'summary'  - A logical that indicates whether to print how many objects were found
+'all_data' - Run the search across the entire database; you cannot query or download objects without permission
+'limit'    - Set a maximum number of returned objects (default is 10,000)
+
 ## Labels and names
 
-Most objects can be described by a **label**.  There is one exception, however.  When we search for files we search on the **name**, not the **label**.
+Most objects are described by a **label**.  There is one exception, however.  When we search for files we search on the **name**, not the **label**.
 
 ## Contains and matches exactly
 
