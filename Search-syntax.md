@@ -1,5 +1,6 @@
 The search method returns a wealth of information about the Flywheel database objects. The best way to understand the information is to perform a few searches and explore the returned values.  In some cases, you might want to look at the [Flywheel data model](https://github.com/scitran/core/wiki/Data-Model) to see the definition of a term.
 
+## Overview
 To perform a search, first create a scitran Matlab object that is authorized to interact with your database (see [Authorization](Authorization)).  Then run
 
     st = scitran('vistalab');
@@ -44,22 +45,22 @@ ans =
     permissions: [11×1 struct]
 ```
 
-## Groups
+### Groups
 It is possible to use the term 'group' to retrieve information about the group, such as its projects and users. For example, to find the list of groups use
 
     st.search('group','all')
 
-## Utility parameters
+### Utility parameters
 
 * 'summary'  - A logical that indicates whether to print how many objects were found
 * 'all_data' - Run the search across the entire database; you cannot query or download objects without permission
 * 'limit'    - Set a maximum number of returned objects (default is 10,000)
 
-## Labels and names
+## Search parameters
 
-Most objects are described by a **label**.  There is one exception, however.  When we search for files we search on the **name**, not the **label**.
+The search method lets you specify many different parameters.  The list is far too long to (usefully) include here.  We think the best way for you to understand search is through [examples](https://github.com/scitran/client/blob/master/scripts/s_stSearches.m) and leafing through the [search method source code](https://github.com/scitran/client/blob/master/%40scitran/search.m).
 
-## Contains and matches exactly
+### Contains and matches exactly
 
 When searching for some parameters, including label or name, you can ask that the object match the label exactly or that that label contains a string.   For example, on the vistalab site we have a project with the label 'VWFA' and several other projects that include 'VWFA' in the label.  
 
@@ -86,6 +87,9 @@ VWFA FOV Hebrew
 ```
 The exact vs. contains options are also used for labels describing session, analysis, acquisition, collection, and the file **name**.
 
+### Labels and names
+
+Most objects are described by a **label**.  There is one exception, however.  When we search for files we search on the **name**, not the **label**.
 ## Search examples
 
 See the searches illustrated in [s_stSearches.m](https://github.com/scitran/client/blob/master/scripts/s_stSearches.m). Here are a few examples from that file.
