@@ -1,3 +1,5 @@
+The commands here should be presented in different ways, say all the downloadXXX commands, and all the getXXX commands, as well as organized as shown.
+
 
     Constructor
         function obj = Flywheel(apiKey)
@@ -100,6 +102,8 @@
         % deleteSessionFileInfoFields(obj, id, filename, keys)
         % uploadFileToSession(obj, id, path)
         % downloadFileFromSession(obj, id, name, path)
+
+## User information
         % getCurrentUser(obj)
         % getAllUsers(obj)
         % getUser(obj, id)
