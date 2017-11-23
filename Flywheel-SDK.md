@@ -12,10 +12,6 @@ The commands here should be presented in different ways, say all the downloadXXX
 ## Search related
         % search(obj, search_query)
 
-        % getAllBatches(obj)
-        % getBatch(obj, id)
-        % startBatch(obj, id)
-
 ## Collections related
         % getAllCollections(obj)
         % getCollection(obj, id)
@@ -50,12 +46,6 @@ The commands here should be presented in different ways, say all the downloadXXX
         % uploadFileToAcquisition(obj, id, path)
         % downloadFileFromAcquisition(obj, id, name, path)
 
-## Job related
-        % getJob(obj, id)
-        % getJobLogs(obj, id)
-        % addJob(obj, job)  
-        % heartbeatJob(obj, id)
-
 ## Project related
         % getAllProjects(obj)
         % getProject(obj, id)
@@ -72,11 +62,7 @@ The commands here should be presented in different ways, say all the downloadXXX
         % uploadFileToProject(obj, id, path)
         % downloadFileFromProject(obj, id, name, path)
 
-## Gear related
-        % getAllGears(obj)
-        % getGear(obj, id)
-        % addGear(obj, gear)
-        % deleteGear(obj, id)
+## Group
         % getAllGroups(obj)
         % getGroup(obj, id)
         % addGroup(obj, group)
@@ -84,6 +70,7 @@ The commands here should be presented in different ways, say all the downloadXXX
         % modifyGroup(obj, id, group)
         % deleteGroup(obj, id)
 
+## Configuration
         % getConfig(obj)
         % getVersion(obj)
 
@@ -111,8 +98,21 @@ The commands here should be presented in different ways, say all the downloadXXX
         % modifyUser(obj, id, user)
         % deleteUser(obj,id)
 
-## Static methods in separate files
-        % version = getSdkVersion()
-        % structFromJson = handleJson(statusPtr,ptrValue)
-        % cmdout = testBridge(obj, s)
-        % newStruct = replaceField(oldStruct,oldField,newField)
+## Job related
+        % getJob(obj, id)
+        % getJobLogs(obj, id)
+        % addJob(obj, job)  
+        % heartbeatJob(obj, id)
+
+## Compute
+        % getAllBatches(obj)
+        % getBatch(obj, id)
+        % startBatch(obj, id)
+
+## Gear related
+        % getAllGears(obj)
+        % getGear(obj, id)
+        % addGear(obj, gear)
+        % deleteGear(obj, id)
+
+
