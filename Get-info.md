@@ -2,7 +2,7 @@ The methods named 'get<>info' return information from the info field of an objec
 
 ### getdicominfo information
 
-The dicom file info contains the header from the dicom and provides useful information about the scanning parameters.
+The dicom file info contains the header from the dicom and provides useful information about the scanning parameters. Here, we search for the dicom file and then get the info.  Any single field, such as the EchoTime, can be displayed.
 
 ```
 st = scitran('cni');
@@ -17,6 +17,8 @@ ans =
 
     30
 ```
+
+This is the complete info struct for the CNI at Stanford.
 
 ```
 files{1}.info
