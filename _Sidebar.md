@@ -17,4 +17,4 @@
 
 * [Database terms](Database-principles)
 * [Reproducible papers](Reproducible-Research)
-* [Historical notes](Historical-notes)
+* [Technical notes](Technical-notes)
