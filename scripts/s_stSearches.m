@@ -1,21 +1,24 @@
-%% Flywheel search
+%% Flywheel search examples
 %
 % This script illustrates Flywheel database searches using the Matlab
-% interface.  The typical interface is
+% interface.  The typical interface is to create the scitran object
 %
-%   st = scitran('yourSite');%
-%   results = st.search(searchType,'parameter',value,...)
+%   st = scitran('yourSite');
 %
-% where searchType is a string that defines what will be returned and
-% varagin is a sequence of parameter value pairs that constrain the search.
+% Run searches
 %
-%  searchType is one of these strings: file, acquisition, session,
-% project, collection, analysis or group.
+%   [results, srchCmd ]  = st.search(searchType,'parameter',value,...)
 %
-%  results is a cell array of the returned database descriptions.
+%  searchType - a string that defines what will be returned 
+%  ('file', 'acquisition', 'session', 'project', 'collection', 'analysis'
+%  or 'group') 
 %
-% For further documentation, see the search method itself or these
-% documents
+%  varagin - parameter value pairs that constrain the search.
+%
+%  results - a cell array of database descriptions
+%  srchCmd - a struct that can be used to rerun the search
+%
+% For further documentation, see the scitran.search or these documents
 %
 %  * <https://github.com/scitran/client/wiki scitran/client wiki page>, and
 %  specifically the pages on
@@ -41,7 +44,7 @@
  This sciprt is a set of examples.
 %}
 
-%% Authorization
+%% Site authorization
 
 % You may need to create a local token for your site.  You can do this
 % using
@@ -61,19 +64,31 @@ st.verify
 %   fw = st.fw;
 %
 
-%% List projects you can access
+%% List all projects
 
-% I guess we should sort the projects on return.
+% All the projects you are part of
 projects = st.search('project',...
-    'summary',true,...
-    'sortlabel','project label');
+    'summary',true);
 
-% Ordered by the project label
 for ii=1:length(projects)
     disp(projects{ii}.project.label)
 end
 
-%% Needs short form
+%% All the projects, not just the ones you are part of
+projects = st.search('project',...
+    'all_data',true,...
+    'summary',true);
+
+for ii=1:length(projects)
+    disp(projects{ii}.project.label)
+end
+
+%% Exact and contains matches
+
+[projects,srchCmd] = st.search('project',...
+    'summary',true,...
+    'project label exact','VWFA');
+
 [projects,srchCmd] = st.search('project',...
     'summary',true,...
     'project label contains','vwfa');
@@ -95,17 +110,13 @@ sessions = st.search('session',...
     'subject code','SU ex10316',...
     'summary',true);
 
-sessions = st.search('session',...
-    'collection label exact','Anatomy Male 45-55',...
-    'summary',true);
-
 %% Get all the sessions within a specific collection
 
 [sessions, srchCmd] = st.search('session',...
     'collection label contains','Anatomy Male 45-55',...
     'summary',true);
 
-%% Get the sessions within the first project
+%% Get the sessions within a project
 sessions = st.search('session',...
     'project id',projectID,...
     'summary',true);
@@ -206,7 +217,6 @@ thisProject = st.search('project',...
 
 %% Look for sessions in the GearTest collection
 
-% Sessions that are part of the GearTest
 sessions = st.search('session',...
     'collection label exact','GearTest',...
     'summary',true);
@@ -352,7 +362,7 @@ end
 
 % Structs defining the group
 groups = st.search('group','all');
-disp(groups)
+disp(groups{1})
 
 % Just the group labels
 labels = st.search('group','alllabels');

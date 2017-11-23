@@ -1,13 +1,25 @@
 function [result, srch] = search(obj,srch,varargin)
-% Run a search against a Flywheel database
+% Run a search within a Flywheel database
 %
 % Syntax:
 %  [srchResult, srch] = st.search(srch, ...)
 %
 % Description:
-%   The scitran search method that returns information about files,
-%   acquisitions, sessions, projects, collections and groups on a Flywheel
-%   site.
+%   This scitran search method that returns database information about
+%   files, acquisitions, sessions, projects, collections and groups on a
+%   Flywheel site. The returned information consists of cell arrays
+%   describing the database objects.
+%
+%   To access the values in these objects, we use the scitran methods
+%   starting with either 'get' or 'download'.  The 'get' routines return
+%   values about the objects, and the 'download' methods bring the
+%   information from the database, usually files, to the local file system.
+%   
+%   The 'search' method provides information about the number and identity
+%   of files meeting certain criteria (e.g., nifti files in a project
+%   representing T1 anatomical).  The 'get' method provides information
+%   about the values of these objects (e.g., TR, TI, TE, nSlices).  The
+%   'download' and 'read' methods return the file data themselves.
 %
 % Input:
 %   srch:  The returned object - a struct or a string 
@@ -42,7 +54,7 @@ function [result, srch] = search(obj,srch,varargin)
 %      [results,srchCmd] = st.search(srch,'parameter',value);
 %      results = st.search(srchCmd);
 % 
-% See also: s_stSearches.m
+%   See also: s_stSearches.m, scitran client wiki page
 %
 % BW/LMP Vistalab 2016
 %
@@ -278,7 +290,6 @@ if ischar(srch)
                     srch.filters{end+1}.match.project0x2E_id = val; 
                 end
 
-                
             % SESSIONS
             case {'sessionlabelcontains'}
                 % srch.sessions.match.label = val;

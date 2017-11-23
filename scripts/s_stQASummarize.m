@@ -21,7 +21,7 @@ st.verify
 %% List projects you can access
 
 % I guess we should sort the projects on return.
-projects = st.search('project','summary',true,'sortlabel','project label');
+projects = st.search('project','summary',true);
 for ii=1:length(projects)
     disp(projects{ii}.project.label)
 end
@@ -37,16 +37,34 @@ projectLabel = projects{1}.project.label;
 
 %%  Here are all the acquisitions over time
 
-collections = st.search('collection','summary',true);
+% This does not work, and getting the individual one does not work.  It
+% does work on vistalab, though.  Strange.
+%
+% collections = st.search('collection','summary',true);
+
+% These are struct arrays, unlike the search return of cell array
+collections = st.fw.getAllCollections;
+collectionID = collections(1).id;
+thisCollection = st.fw.getCollection(collectionID);
 
 % Search on BOLD returns fewer than BOLD_EPI
 % Maybe they are doing something wrong with replaceField?
-[collections,srchCmd] = st.search('collection',...
-    'collection label contains','BOLD_EPI_Ax_AP',...
-    'summary',true);
+%{
+ [collections,srchCmd] = st.search('collection',...
+     'collection label contains','BOLD_EPI_Ax_AP',...
+     'summary',true);
+%}
 
+% These are struct arrays, unlike the search return of cell array
+acquisitions = st.fw.getCollectionAcquisitions(collectionID);
+length(acquisitions)
+
+% Does not work yet
+% [acquisitions,srchCmd] = st.search('acquisition',...
+%     'collection id',collectionID,...
+%     'summary',true);
 [acquisitions,srchCmd] = st.search('acquisition',...
-    'collection label exact','Ax_EPI_fMRI_ENC_Accel2_15mm',...
+    'collection label contains','Ax_EPI_fMRI_ENC_Accel2_15mm',...
     'summary',true);
 
 
