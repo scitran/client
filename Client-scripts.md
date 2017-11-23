@@ -1,7 +1,8 @@
-Useful scripts, say for listing labels and names and so forth on returned cell arrays 
+These are client scripts we have implemented that do some processing.
+
+They range from simple tasks, such as listing labels and names, to downloading data and visualizing the results.
 
 (stGetProjects(projects,'labels')). 
-
 
 svip* examples
 
