@@ -2,17 +2,18 @@ This page contains more detailed descriptions of the search parameters. To perfo
 
     st = scitran('vistalab');
 
-You can search for a variety of different database objects.  The search returns a cell array of the database objects that match your query. Here is a list of objects you can search for.
+The search method syntax is
+```
+cellArray = st.search('objectTypeToReturn',...
+               'Parameter',value, ...
+                ...);
+```
+The 'objectTypeToReturn' can be one of these Flywheel data objects
 ```
 objects = ...
 {'file','acquisition','session','project','collection', 'analysis','subject','note'};
 ```
-The general search syntax is
-```
-cellArray = st.search('<objectTypeToReturn>',...
-               'Parameter',value, ...
-                ...);
-```
+
 **cellArray** is a cell array of structures containing fields that are relevant to describe the database object.  For example, the cell array returned for a project is
 ```
 >> projects{1}
@@ -41,11 +42,16 @@ ans =
     permissions: [11×1 struct]
 ```
 
+## Groups
+It is possible to use the term 'group' to retrieve information about the group, such as its projects and users. For example, to find the list of groups use
+
+    st.search('group','all')
+
 ## Utility parameters
 
-'summary'  - A logical that indicates whether to print how many objects were found
-'all_data' - Run the search across the entire database; you cannot query or download objects without permission
-'limit'    - Set a maximum number of returned objects (default is 10,000)
+* 'summary'  - A logical that indicates whether to print how many objects were found
+* 'all_data' - Run the search across the entire database; you cannot query or download objects without permission
+* 'limit'    - Set a maximum number of returned objects (default is 10,000)
 
 ## Labels and names
 
