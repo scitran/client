@@ -14,7 +14,7 @@
    * [Computing with Gears](Gears)
       * [Building Gears](https://github.com/scitran/client/wiki/Building-Gears)
    * [Analyses](Analysis-objects)
-* [Examples](Client-scripts)
+* [Scripts](Client-scripts)
 * [BIDS](BIDS)
 
 ***
