@@ -31,7 +31,7 @@ The commands here should be presented in different ways, say all the downloadXXX
         % uploadFileToCollection(obj, id, path)
         % downloadFileFromCollection(obj, id, name, path)
 
-## Acquisition related
+## Acquisition
         % getAllAcquisitions(obj)
         % getAcquisition(obj, id)
         % addAcquisition(obj, acquisition)
@@ -70,7 +70,7 @@ The commands here should be presented in different ways, say all the downloadXXX
         % modifyGroup(obj, id, group)
         % deleteGroup(obj, id)
 
-## Session related
+## Session
         % getAllSessions(obj)  
         % getSession(obj, id)
         % getSessionAcquisitions(obj, id)
@@ -94,7 +94,7 @@ The commands here should be presented in different ways, say all the downloadXXX
         % modifyUser(obj, id, user)
         % deleteUser(obj,id)
 
-## Job related
+## Job
         % getJob(obj, id)
         % getJobLogs(obj, id)
         % addJob(obj, job)  
@@ -105,7 +105,7 @@ The commands here should be presented in different ways, say all the downloadXXX
         % getBatch(obj, id)
         % startBatch(obj, id)
 
-## Gear related
+## Gear
         % getAllGears(obj)
         % getGear(obj, id)
         % addGear(obj, gear)
