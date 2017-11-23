@@ -1,6 +1,6 @@
 ## Downloading and reading
 
-You can download a project, session or acquisition to a tar file using
+You can download many different types of Flywheel objects: project, session, acquisition, file, collection or analysis.  In most cases these are downloaded as a zip file.
 
     project = st.search('projects','project label','VWFA');
     st.download('project',project{1}.id,'destination','tarfile name');
