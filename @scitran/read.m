@@ -10,6 +10,8 @@ function [data, dname] = read(st,fileInfo,varargin)
 %    'destination'  - Full path to file destination
 %    'save'         - Delete or not destination file (logical)
 %
+% See also: s_stRead, scitran.downloadFile
+%
 % BW/SCITRAN Team, 2017
 
 % Programming todo
@@ -17,7 +19,7 @@ function [data, dname] = read(st,fileInfo,varargin)
 %   now, I am just adding vistasoft to the path.  Bit niftiRead, objRead
 %   ...
 %
-
+%
 % Examples:
 %{
   % Read a JSON file
@@ -62,14 +64,24 @@ else,                               dname = destination;
 end
 
 % When we read the file, it should be one of these file types
-fileType = stParamFormat(fileInfo.file.type);
-fileTypes = {'obj','mat','matlab','nifti','json','csv'};
+if isfield(fileInfo.file,'type')
+    fileType = stParamFormat(fileInfo.file.type);
+else
+    fileType = '';
+end
+
+% Not all file types are coordinated with Flywheel.  They label json as
+% sourcecode and they ignore obj.
+fileTypes = {'matlabdata','nifti','json','csv'};
 if ~contains(fileType,fileTypes)
-    if isequal(fileType,'sourcecode') 
-        [~,~,ext] = fileparts(fname);
-        if isequal(ext,'.json'), fileType = 'json'; 
-        else, warning('unrecognized file type %s\n',fileType);
-        end
+    [~,~,ext] = fileparts(fname);
+    switch ext
+        case '.json'
+            fileType = 'json';
+        case '.obj'
+            fileType = 'obj';
+        otherwise
+            warning('unrecognized file type %s\n',fileType);
     end
 end
 
@@ -79,20 +91,23 @@ st.downloadFile(fileInfo,'destination',dname);
 
 %% Load the file data
 
+% This code depends on having certain
 switch fileType
-    case {'mat','matlab'}
-        % Not sure what to do here.  Perhaps if there is only a single
-        % variable, we set
-        data = load(dname);
+    case {'matlabdata'}
+        
+        data   = load(dname);
+        
+        % If there is only a single variable loaded, we set data to that
+        % variable.
         fnames = fieldnames(data);
-        if length(fnames) == 1
-            data = data.(fnames{1});
-        end
+        if length(fnames) == 1, data = data.(fnames{1}); end
         
     case 'nifti'
         data = niftiRead(dname);
         
     case 'mniobj'
+        %
+        disp('mniobj NYI');
         
     case 'obj'
         % Not sure what to do.  This is a text file, I think.
@@ -109,7 +124,10 @@ switch fileType
         error('Unknown file type %s\n',fileType);
 end
 
-%% If the name of the destination file is not returned, we delete it
+%% File management
+
+% If the name of the destination file is not returned, and save is false,
+% we delete the downloaded file.
 if ~save
     disp('Deleting local file');
     delete(dname);
