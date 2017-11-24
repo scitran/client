@@ -20,7 +20,7 @@ files = st.search('file', ...
     'project label exact','VWFA',...
     'file type','nifti');
 
-fw.downloadFileFromAcquisition(files{1}.parent.x_id,files{1}.file.name,fullfile(pwd,'foo.nii.gz');
+fw.downloadFileFromAcquisition(files{1}.parent.x_id,files{1}.file.name,fullfile(pwd,'foo.nii.gz'));
 
 [data, destination] = st.read(files{1},'fileType','nifti');
 

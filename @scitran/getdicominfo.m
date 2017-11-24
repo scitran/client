@@ -1,25 +1,34 @@
-function files = getfileinfo(st,files)
+function files = getdicominfo(st,files)
+% Get info about a dicom file.  Attach it to the input files{} structs
 %
-% Get info on a dicom file, and next on a QA file.
+% Syntax
+%    files = scitran.getdicominfo(files, ...)
 %
-% Implement a download function, which I think is kind of like a get()
-% call, or read, or something.
+% Dicom header information describes critical parameters about the file and
+% is stored in Flywheel in an info object.  We return the info object for a
+% cell array of dicom files here.
 %
-% Find the file(s)
-% Get the acquisitions (parents) that contain the file.
-% Return the specific file info structs
+% Inputs
+%   files - Cell array of file structs, as returned by a search
+%
+% Returns
+%  info -  Cell array of info structs for each file.  If none, empty.
+%
+% See also:  scitran.search
 %
 % LMP/BW Scitran Team, 2017
 
+% Example
 %{
 st = scitran('cni');
 files = st.search('file',...
           'filename exact','16504_4_1_BOLD_EPI_Ax_AP.dicom.zip',...
           'filetype','dicom',...
           'project label exact','qa');
-files = st.getfileinfo(files);
-
+files = st.getdicominfo(files);
+files{1}.info.('EchoTime')
 %}
+
 %%
 p = inputParser;
 p.KeepUnmatched = true;
@@ -31,6 +40,9 @@ p.parse(st,files);
 %% Parse the acquisitions for the info in that file
     
 for ii=1:numel(files)
+    if ~isequal(files{ii}.file.type,'dicom')
+        warning('File %d is not of type dicom. Skipping',ii);
+    end
     fname = files{ii}.file.name;
     thisAcq = st.fw.getAcquisition(files{ii}.parent.x_id);
     for jj = 1:length(thisAcq.files)

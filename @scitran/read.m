@@ -1,73 +1,84 @@
-function [data, dname] = read(fw,fileInfo,varargin)
+function [data, dname] = read(st,fileInfo,varargin)
 % Read scitran data from a file into a Matlab variable
 %
-%   [data, destinationFile] = fw.read(fileStruct,'fileType',...,'destination',...);
+%   [data, destinationFile] = st.read(file, ...);
 %
 % Inputs:
-%    fileStruct - a file struct returned by a search
+%    file - a file struct returned by a search
 %
 % Parameter
-%    'fileType' - {'mat', 'nifti', 'json', 'csv', 'obj', 'tsv' ...}
 %    'destination'  - Full path to file destination
-%    'save'         - Do not delete destination file
+%    'save'         - Delete or not destination file (logical)
+%
+% BW/SCITRAN Team, 2017
+
+% Programming todo
+%   We need to add some of the read functions into scitran.  Sigh.  For
+%   now, I am just adding vistasoft to the path.  Bit niftiRead, objRead
+%   ...
+%
+
 % Examples:
 %{
-  fw = scitran('vistalab');
-  file = fw.search('file','project label exact','ADNI: T1',...
-                          'subject code',4256,...
-                          'filetype','nifti');
-  data = fw.read(file{1},'fileType','nifti');
+  % Read a JSON file
+  st = scitran('vistalab');
+  file = st.search('file','project label contains','SOC','filename','toolboxes.json');
+  data = st.read(file{1});  
+  edit(fName)
+  delete(fName);
 %}
-% Wandell/SCITRAN Team, 2017
+%{
+  % Read a nifti file.
+  st = scitran('vistalab');
+  file = st.search('file',...
+                   'project label exact','ADNI: T1',...
+                   'subject code',4256,...
+                   'filetype','nifti');
+  data = st.read(file{1});
+%}
 
-% We should use fw.downloadFileFrom<XXX>
+%% Parse input parameters
 
-% downloadFileFromAcquisition(id, name, path)
-
-%% Parse inputs
 p = inputParser;
 
-% This the perma link
+p.addRequired('st',@(x)(isa(x,'scitran')));
 p.addRequired('fileInfo',@isstruct);
 
-% When we read the file, it should be one of these file types
-fileTypes = {'obj','mat','matlab','nifti','json','csv'};
-vFunc  = @(x)(ismember(lower(x),fileTypes));
-p.addParameter('fileType','mat',vFunc);
-
-% Name of destination file.
 p.addParameter('destination',[],@ischar);
 p.addParameter('save',false,@islogical);
 
-p.parse(fileInfo,varargin{:});
+p.parse(st, fileInfo, varargin{:});
 
-fileType = p.Results.fileType;
-save     = p.Results.save;
-id       = fileInfo.parent.x_id;       % Parent ID
-fname    = fileInfo.file.name;         % File name
-if isempty(p.Results.destination)
-    dname = fullfile(tempdir,fileInfo.file.name); % Destination name
-else
-    dname = destination;
-end
-
+save        = p.Results.save;
+% The only reason you would have two outputs is to save the file.
 if nargout > 1, save = true; end
 
-switch(fileInfo.parent.type)
-    case 'acquisition'
-        fw.fw.downloadFileFromAcquisition(id,fname,dname);
-    case 'session'
-        fw.fw.downloadFileFromSession(id,fname,dname);
-    case 'project'
-        fw.fw.downloadFileFromProject(id,fname,dname);
-    case 'collection'
-        fw.fw.downloadFileFromCollection(id,fname,dname);
-    otherwise
-        error('Unknown parent type %s\n',fileInfo.parent.type);
+% Create destination from file name.  Might need the extension for
+% filetype
+destination = p.Results.destination;
+fname       = fileInfo.file.name;
+if isempty(p.Results.destination),  dname = fullfile(tempdir,fname); 
+else,                               dname = destination;
 end
 
+% When we read the file, it should be one of these file types
+fileType = stParamFormat(fileInfo.file.type);
+fileTypes = {'obj','mat','matlab','nifti','json','csv'};
+if ~contains(fileType,fileTypes)
+    if isequal(fileType,'sourcecode') 
+        [~,~,ext] = fileparts(fname);
+        if isequal(ext,'.json'), fileType = 'json'; 
+        else, warning('unrecognized file type %s\n',fileType);
+        end
+    end
+end
 
-%%
+%% Download the file
+
+st.downloadFile(fileInfo,'destination',dname);
+
+%% Load the file data
+
 switch fileType
     case {'mat','matlab'}
         % Not sure what to do here.  Perhaps if there is only a single
@@ -103,7 +114,6 @@ if ~save
     disp('Deleting local file');
     delete(dname);
 end
-
 
 end
 

@@ -1,8 +1,8 @@
-function destination = get(obj,file,varargin)
+function destination = download(obj,file,varargin)
 % Retrieve a file from a scitran instance
 %
-%   outfile = get(obj,file,'destination',filename,'size',size)
-%   outfile = scitran.get(file,'destination',filename,'size',size)
+%   outfile = download(obj,file,'destination',filename,'size',size)
+%   outfile = scitran.download(file,'destination',filename,'size',size)
 
 %
 % Required Inputs
@@ -16,18 +16,23 @@ function destination = get(obj,file,varargin)
 %  fName:  Full path to the file saved on disk
 %
 % Example:
-%   fw = scitran('vistalab');
-%   file = fw.search('files','project label contains','SOC','filename','toolboxes.json');
-%   fName = fw.get(file{1});  edit(fName)
-%  Or
-%   fName = fw.get(file{1}.plink);  edit(fName)
-%
 % See also: scitran.put, scitran.deleteFile
 %
 % TODO:  See below about websave/webwrite
 %
 % LMP/BW Vistasoft Team, 2015-16
 
+% Examples
+%{
+  st = scitran('vistalab');
+  file = st.search('file','project label contains','SOC','filename','toolboxes.json');
+  fName = st.download(file{1});  
+  edit(fName)
+% Or
+  fName = st.download(file{1}.plink);  edit(fName)
+%
+
+%}
 
 %% Parse inputs
 p = inputParser;
