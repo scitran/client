@@ -15,7 +15,7 @@ Here, the methods are organized into four (redundant) lists
 * **compute** (job, batch, gear)
 * **miscellaneous** (about Flywheel)
 
-A list of the methods in Flywheel is dumped at the end of this page
+A list of the methods in Flywheel is dumped [on this page](Flywheel-methods-list).
 
 # Object
 
