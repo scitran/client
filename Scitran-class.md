@@ -43,11 +43,6 @@ browser - Bring up a browser to a location
 deleteProject - 
 
 
-## BIDS class methods
-
-### bids
-
-### validate
 
 
 
