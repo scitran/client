@@ -1,4 +1,10 @@
-These are the Flywheel SDK commands grouped in various ways (redundantly). For example, all the download<> commands are grouped and then all the <>File commands, which include download<>, are grouped. These methods are part of the Flywheel.m class file.  An instance of the Flywheel class is created and attached whenever you create a scitran instance.
+The Matlab scitran client is designed to be a clear interface to the Flywheel SDK commands.  
+
+This page lists the Flywheel SDK commands, grouped redundantly in two organizations. First, there is a list in terms of the objects, and then there is a list in terms of the actions.
+
+For example, all the project methods are listed, which include downloadProject.  Then the download methods are listed, which also includes downloadProject. 
+
+The methods listed here are part of the Flywheel.m class file, which is created and attached whenever you create a scitran instance.
 
 This is the Flywheel SDK constructor
 
@@ -7,7 +13,7 @@ This is the Flywheel SDK constructor
             %  apiKey - API Key assigned for each user through the Flywheel UI
             %          apiKey must be in format <domain>:<API token>
             
-The constructor and its methods are auto-generated for several languages as part of the Flywheel SDK.
+The constructor and its methods are auto-generated for several languages (Matlab, Python, and R) as part of the Flywheel SDK.
 
 Below, the methods are organized into four (redundant) lists
 
@@ -16,7 +22,7 @@ Below, the methods are organized into four (redundant) lists
 * **compute** (job, batch, gear)
 * **miscellaneous** (about Flywheel)
 
-A list of the methods in Flywheel by running 'grep function Flywheel.m' is [on this page](Flywheel-methods-list).
+A list of the Flywheel.m methods obtained by running 'grep function Flywheel.m' is [on this page](Flywheel-methods-list).
 
 # Object
 
