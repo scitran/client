@@ -8,8 +8,14 @@ The Flywheel SDK commands are grouped in various ways; the same command appears 
             
      Methods (auto-generated)
 
-## Search
-        % search(obj, search_query)
+The methods are organized into four (redundant) lists
+
+* **object** (project, session, acquisition, file, collection, group, user) 
+* **action** (search, upload, download, get, set, delete, modify, replace).
+* **compute** (job, batch, gear)
+* **miscellaneous** (about Flywheel)
+
+# Object
 
 ## Project
         % getAllProjects(obj)
@@ -93,27 +99,10 @@ The Flywheel SDK commands are grouped in various ways; the same command appears 
         % modifyUser(obj, id, user)
         % deleteUser(obj,id)
 
-## Job
-        % getJob(obj, id)
-        % getJobLogs(obj, id)
-        % addJob(obj, job)  
-        % heartbeatJob(obj, id)
+# Action
 
-## Compute
-        % getAllBatches(obj)
-        % getBatch(obj, id)
-        % startBatch(obj, id)
-
-## Gear
-        % getAllGears(obj)
-        % getGear(obj, id)
-        % addGear(obj, gear)
-        % deleteGear(obj, id)
-
-## Flywheel
-        % getConfig(obj)
-        % getVersion(obj)
-
+## Search
+        % search(obj, search_query)
 ## Add
 
 ## Modify
@@ -154,3 +143,25 @@ The Flywheel SDK commands are grouped in various ways; the same command appears 
 
 ## Set
 
+# Compute
+
+## Job
+        % getJob(obj, id)
+        % getJobLogs(obj, id)
+        % addJob(obj, job)  
+        % heartbeatJob(obj, id)
+
+## Batch
+        % getAllBatches(obj)
+        % getBatch(obj, id)
+        % startBatch(obj, id)
+
+## Gear
+        % getAllGears(obj)
+        % getGear(obj, id)
+        % addGear(obj, gear)
+        % deleteGear(obj, id)
+
+# Flywheel
+        % getConfig(obj)
+        % getVersion(obj)
