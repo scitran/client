@@ -21,25 +21,41 @@ The scitran methods help you identify the contents of the database (search), get
 In addition, there are methods to download a project, session, acquisition, or collection.  A project can be downloaded in the format of a [BIDS directory](http://bids.neuroimaging.io/).
 
 ## Methods
+
+Suppose 
+
+    st = scitran('vistalab');
+
+Suppose file is a struct, say as returned by a search.
+
 ```
-search -  Search for projects, sessions, acquisitions, collections, files, subjects constrained by many possible limits (file type, label, date...).
-downloadFile -
-read -   Certain file types can be downloaded and read into a Matlab variable  
-downloadObject - Download a directory tree containing a database object as a tar file
-projectHierarchy - A listing of the sessions and acquisitions in a project hierarchy 
-create - Create a project or a session or an acquistion
-put, or putAnalysis - Files, analyses, ...
-update - Database values (e.g., subject code, sex ...)
-runFunction - Download toolboxes and run a function from a remote site
-deleteProject - 
+st.search(objType,...)  -  Search for projects, sessions, acquisitions, collections, files, subjects constrained by many possible limits (file type, label, date...).
+st.downloadFile(file,...) -
+st.read(file,...)  - Certain file types can be downloaded and read into a Matlab variable  
+st.downloadObject(file,...)  - Download a directory tree containing a database object as a tar file
+st.projectHierarchy - A listing of the sessions and acquisitions in a project hierarchy 
+st.create - Create a project or a session or an acquistion
+st.put - Files, 
+st.update - Database values (e.g., subject code, sex ...)
+st.runFunction - Download toolboxes and run a function from a remote site
+st.deleteProject - 
+st,getdicominfo - Information about files or database objects
 
-getdicominfo - Information about files or database objects
+st.bidsUpload
+st.bidsDownload
+st.createCollection
+st.createCollectionFromSearch
 
-bidsUpload
-bidsDownload
+st.dwiLoad
+st.eraseProject
+st.exist
+st.putBids
+st.putAnalysis
 
-browser - Bring up a browser to a location
+st.browser - Bring a browser to a location
 
+st.verify
+```
 
 
 
