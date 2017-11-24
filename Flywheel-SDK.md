@@ -8,7 +8,7 @@ The Flywheel SDK commands are grouped in various ways; the same command appears 
             
      Methods (auto-generated)
 
-The methods are organized into four (redundant) lists
+Here, the methods are organized into four (redundant) lists
 
 * **object** (project, session, acquisition, file, collection, analysis, group, user) 
 * **action** (search, add modify, replace, delete, download, upload, get, set).
