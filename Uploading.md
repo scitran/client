@@ -7,6 +7,11 @@ NOTES.  This should be about st.download() and st.read() methods.
 
     @scitran.create(); 
 
+## Analysis upload
+
+Create an analysis and upload it to an Analysis tab
+s_stGears.m line
+
 ### Example
 
 Create a data structure and put it (upload) to the site.
