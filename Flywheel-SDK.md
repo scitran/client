@@ -84,10 +84,10 @@ The methods are organized into four (redundant) lists
         % downloadFileFromCollection(obj, id, name, path)
 
 ### Analysis
-        % result = getAnalysis(obj, id)
+        % getAnalysis(obj, id)
         % downloadFileFromAnalysis(obj, id, name, path)
-        % result = addSessionAnalysisNote(obj, sessionId, analysisId, text)
-        % result = downloadFileFromAnalysis(obj, sessionId, analysisId, filename, path)
+        % addSessionAnalysisNote(obj, sessionId, analysisId, text)
+        % downloadFileFromAnalysis(obj, sessionId, analysisId, filename, path)
 
 ### Group
         % getAllGroups(obj)
@@ -109,6 +109,8 @@ The methods are organized into four (redundant) lists
 
 ### Search
         % search(obj, search_query)
+        % searchRaw(obj, search_query)
+
 ### Add
         % addProject(obj, project)
         % addProjectNote(obj, id, text)
@@ -172,10 +174,45 @@ The methods are organized into four (redundant) lists
         % downloadFileFromCollection(obj, id, name, path)
 
 ### Upload
+        % uploadFileToProject(obj, id, path)
+        % uploadFileToSession(obj, id, path)
+        % uploadFileToAcquisition(obj, id, path)
+        % uploadFileToCollection(obj, id, path)
 
 ### Get
+        % getProject(obj, id)
+        % getProjectSessions(obj, id)
+        % getAllProjects(obj)
+
+        % getSession(obj, id)
+        % getSessionAcquisitions(obj, id)
+        % getAllSessions(obj)  
+
+        % getAcquisition(obj, id)
+        % getAllAcquisitions(obj)
+
+        % getCollection(obj, id)
+        % getCollectionSessions(obj, id)
+        % getCollectionSessionAcquisitions(obj, id, sid)
+        % getCollectionAcquisitions(obj, id)
+        % getAllCollections(obj)
+
+        % getAnalysis(obj, id)
+
+        % getAllGroups(obj)
+        % getGroup(obj, id)
+        % getCurrentUser(obj)
+        % getAllUsers(obj)
+        % getUser(obj, id)
+
+        % getAllBatches(obj)
+        % getBatch(obj, id)
 
 ### Set
+        % setProjectFileInfo(obj, id, filename, set)
+        % setSessionFileInfo(obj, id, filename, set)  
+        % setAcquisitionFileInfo(obj, id, filename, set)
+        % setCollectionFileInfo(obj, id, filename, set)
 
 # Compute
 
