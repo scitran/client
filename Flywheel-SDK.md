@@ -1,4 +1,4 @@
-These are the Flywheel SDK commands grouped in various ways (redundantly). For example, all the download<> commands are grouped and then all the <>File commands are grouped. These methods are in the Flywheel.m class file.  The Flywheel class is created and attached to each scitran object.
+These are the Flywheel SDK commands grouped in various ways (redundantly). For example, all the download<> commands are grouped and then all the <>File commands, which include download<>, are grouped. These methods are part of the Flywheel.m class file.  An instance of the Flywheel class is created and attached whenever you create a scitran instance.
 
 This is the Flywheel SDK constructor
 
