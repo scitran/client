@@ -11,9 +11,8 @@
    * [Get info](Get-info)
    * [Database editing](Database-editing)
 * [Toolboxes class](Toolboxes-class)
-   * [Computing with Gears](Gears)
-      * [Building Gears](https://github.com/scitran/client/wiki/Building-Gears)
-   * [Analyses](Analysis-objects)
+* [Gears](Gears)
+* [Analyses](Analysis-objects)
 * [Scripts](Client-scripts)
 * [BIDS](BIDS)
 
