@@ -10,14 +10,14 @@ The Flywheel SDK commands are grouped in various ways; the same command appears 
 
 The methods are organized into four (redundant) lists
 
-* **object** (project, session, acquisition, file, collection, group, user) 
-* **action** (search, upload, download, get, set, delete, modify, replace).
+* **object** (project, session, acquisition, file, collection, analysis, group, user) 
+* **action** (search, add modify, replace, delete, download, upload, get, set).
 * **compute** (job, batch, gear)
 * **miscellaneous** (about Flywheel)
 
 # Object
 
-## Project
+### Project
         % getAllProjects(obj)
         % getProject(obj, id)
         % getProjectSessions(obj, id)
@@ -33,7 +33,7 @@ The methods are organized into four (redundant) lists
         % uploadFileToProject(obj, id, path)
         % downloadFileFromProject(obj, id, name, path)
 
-## Session
+### Session
         % getAllSessions(obj)  
         % getSession(obj, id)
         % getSessionAcquisitions(obj, id)
@@ -49,7 +49,7 @@ The methods are organized into four (redundant) lists
         % uploadFileToSession(obj, id, path)
         % downloadFileFromSession(obj, id, name, path)
 
-## Acquisition
+### Acquisition
         % getAllAcquisitions(obj)
         % getAcquisition(obj, id)
         % addAcquisition(obj, acquisition)
@@ -64,7 +64,7 @@ The methods are organized into four (redundant) lists
         % uploadFileToAcquisition(obj, id, path)
         % downloadFileFromAcquisition(obj, id, name, path)
 
-## Collections
+### Collections
         % getAllCollections(obj)
         % getCollection(obj, id)
         % getCollectionSessions(obj, id)
@@ -83,7 +83,13 @@ The methods are organized into four (redundant) lists
         % uploadFileToCollection(obj, id, path)
         % downloadFileFromCollection(obj, id, name, path)
 
-## Group
+### Analysis
+        % result = getAnalysis(obj, id)
+        % downloadFileFromAnalysis(obj, id, name, path)
+        % result = addSessionAnalysisNote(obj, sessionId, analysisId, text)
+        % result = downloadFileFromAnalysis(obj, sessionId, analysisId, filename, path)
+
+### Group
         % getAllGroups(obj)
         % getGroup(obj, id)
         % addGroup(obj, group)
@@ -91,7 +97,7 @@ The methods are organized into four (redundant) lists
         % modifyGroup(obj, id, group)
         % deleteGroup(obj, id)
 
-## User information
+### User information
         % getCurrentUser(obj)
         % getAllUsers(obj)
         % getUser(obj, id)
@@ -101,11 +107,31 @@ The methods are organized into four (redundant) lists
 
 # Action
 
-## Search
+### Search
         % search(obj, search_query)
-## Add
+### Add
+        % addProject(obj, project)
+        % addProjectNote(obj, id, text)
+        % addProjectTag(obj, id, tag)
 
-## Modify
+        % addSession(obj, session)
+        % addSessionNote(obj, id, text)
+        % addSessionTag(obj, id, tag)      
+
+        % addAcquisition(obj, acquisition)
+        % addAcquisitionNote(obj, id, text)
+        % addAcquisitionTag(obj, id, tag)
+
+        % addCollection(obj, collection)
+        % addAcquisitionsToCollection(obj, id, aqids)
+        % addSessionsToCollection(obj, id, sessionids)
+        % addCollectionNote(obj, id, text)
+
+        % addGroup(obj, group)
+        % addGroupTag(obj, id, tag)
+        % addUser(obj, user)
+
+### Modify
         % modifyProject(obj, id, project)
         % modifyProjectFile(obj, id, filename, attributes)
         % modifySession(obj, id, session)
@@ -118,9 +144,13 @@ The methods are organized into four (redundant) lists
         % modifyUser(obj, id, user)
         % modifyGroup(obj, id, group)
 
-## Replace
+### Replace
+        % replaceProjectFileInfo(obj, id, filename, replace)
+        % replaceSessionFileInfo(obj, id, filename, replace)
+        % replaceAcquisitionFileInfo(obj, id, filename, replace)  
+        % replaceCollectionFileInfo(obj, id, filename, replace)  
 
-## Delete
+### Delete
         % deleteProject(obj, id)
         % deleteProjectFileInfoFields(obj, id, filename, keys)  
         % deleteSession(obj, id) 
@@ -135,28 +165,32 @@ The methods are organized into four (redundant) lists
 
         % deleteGear(obj, id)
 
-## Download
+### Download
+        % downloadFileFromProject(obj, id, name, path)
+        % downloadFileFromSession(obj, id, name, path)
+        % downloadFileFromAcquisition(obj, id, name, path)
+        % downloadFileFromCollection(obj, id, name, path)
 
-## Upload
+### Upload
 
-## Get
+### Get
 
-## Set
+### Set
 
 # Compute
 
-## Job
+### Job
         % getJob(obj, id)
         % getJobLogs(obj, id)
         % addJob(obj, job)  
         % heartbeatJob(obj, id)
 
-## Batch
+### Batch
         % getAllBatches(obj)
         % getBatch(obj, id)
         % startBatch(obj, id)
 
-## Gear
+### Gear
         % getAllGears(obj)
         % getGear(obj, id)
         % addGear(obj, gear)
