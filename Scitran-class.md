@@ -39,7 +39,7 @@ st.put - Files,
 st.update - Database values (e.g., subject code, sex ...)
 st.runFunction - Download toolboxes and run a function from a remote site
 st.deleteProject - 
-st,getdicominfo - Information about files or database objects
+st.getdicominfo - Information about files or database objects
 
 st.bidsUpload
 st.bidsDownload
