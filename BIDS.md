@@ -8,9 +8,19 @@ where dataDir is the local directory containing a BIDS formatted directory tree.
 
 Directory names in the bids object are stored relative to the home of the data directory.
 
-@bids methods include - bids (constructor), listSubjectFolders, listDataFiles, listMetaDataFiles, validate, countSessions
+## BIDS class methods
 
-### BIDS uploading to Flywheel
+```
+bids (constructor)
+listSubjectFolders
+listDataFiles 
+listMetaDataFiles
+validate
+countSessions
+
+## Examples
+
+### Uploading to Flywheel
 
 The @scitran class has a method (bidsUpload) for uploading the @bids data to Flywheel.  The following code creates a Flywheel project that contains the data and meta data from the BIDS compliant directory in bidsDir.  
 
