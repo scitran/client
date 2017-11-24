@@ -22,26 +22,23 @@ In addition, there are methods to download a project, session, acquisition, or c
 
 ## Methods
 ```
-search - 
-Find projects, sessions, acquisitions, collections, files, subjects constrained by many possible limits (file type, label, date...).  This is big.
-
-getdicominfo - Information about files or database objects
-
-downloadFile
-downloadObject - A database object (A zip file of a project, session, acquisition, or a file) is brought to your local computer ('download').
+search -  Search for projects, sessions, acquisitions, collections, files, subjects constrained by many possible limits (file type, label, date...).
+downloadFile -
 read -   Certain file types can be downloaded and read into a Matlab variable  
+downloadObject - Download a directory tree containing a database object as a tar file
 projectHierarchy - A listing of the sessions and acquisitions in a project hierarchy 
-bids download/upload - Download or upload a BIDS directory tree
-
 create - Create a project or a session or an acquistion
 put, or putAnalysis - Files, analyses, ...
 update - Database values (e.g., subject code, sex ...)
-
 runFunction - Download toolboxes and run a function from a remote site
-browser - Bring up a browser to a location
-
 deleteProject - 
 
+getdicominfo - Information about files or database objects
+
+bidsUpload
+bidsDownload
+
+browser - Bring up a browser to a location
 
 
 
