@@ -22,13 +22,16 @@ In addition, there are methods to download a project, session, acquisition, or c
 
 ## Methods
 
-Suppose 
+To create a scitran instance, we use 
 
     st = scitran('vistalab');
 
-Suppose file is a struct, say as returned by a search.
+where 'vistalab' is a Flywheel site.  Below, we assume that file is a struct, as returned by a search.
+
 
 ```
+(IN PROGRESS BUT STILL INCOMPLETE)
+
 st.search(objType,...)  -  Search for projects, sessions, acquisitions, collections, files, subjects constrained by many possible limits (file type, label, date...).
 st.downloadFile(file,...) -
 st.read(file,...)  - Certain file types can be downloaded and read into a Matlab variable  
