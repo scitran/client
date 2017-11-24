@@ -1,8 +1,14 @@
 ## Downloading and reading
 
-Flywheel objects can generally be downloaded.  This includes project, session, acquisition, file, collection or analysis objects. A project, session, acquisition, collection or analysis is downloaded as a tar file.  
+Flywheel objects (e.g., project, session, acquisition, file, collection or analysis) can be downloaded. A file is downloaded as, well, a file. The method is
 
-A file is downloaded as, well, a file.
+    outfile = scitran.downloadFile(file, ...);
+
+where file is a struct, like the one that is returned from a search.  When downloading certain files (matlab, json, obj, nifti) you can both download and return the contents of the file into a Matlab variable, as in
+
+    [data, outfile] = scitran.read(file,...);
+
+A project, session, acquisition, collection or analysis is downloaded as a tar file. And it is also possible to download a project in BIDS format.
 
 ## downloadFile
 
@@ -13,7 +19,3 @@ A file is downloaded as, well, a file.
 
 For detailed examples see the script s_stDownload.m
 
-## Analysis upload
-
-Create an analysis and upload it to an Analysis tab
-s_stGears.m line
