@@ -1,5 +1,7 @@
 **stDockerConfig.m**
 
+* [Building Gears](https://github.com/scitran/client/wiki/Building-Gears)
+
 Flywheel uses the term **Gear** to describe the process of
 
   * identifying scitran input files
