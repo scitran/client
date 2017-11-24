@@ -1,21 +1,22 @@
-The Flywheel SDK commands are grouped in various ways; the same command appears in different groups. For example, all the download<> commands are grouped and then all the <>File commands are grouped. 
+These are the Flywheel SDK commands grouped in various ways (redundantly). For example, all the download<> commands are grouped and then all the <>File commands are grouped. These methods are in the Flywheel.m class file.  The Flywheel class is created and attached to each scitran object.
 
-    Constructor
+This is the Flywheel SDK constructor
+
         function obj = Flywheel(apiKey)
             % Usage Flywheel(apiKey)
             %  apiKey - API Key assigned for each user through the Flywheel UI
             %          apiKey must be in format <domain>:<API token>
             
-     Methods (auto-generated)
+The constructor and its methods are auto-generated for several languages as part of the Flywheel SDK.
 
-Here, the methods are organized into four (redundant) lists
+Below, the methods are organized into four (redundant) lists
 
 * **object** (project, session, acquisition, file, collection, analysis, group, user) 
 * **action** (search, add modify, replace, delete, download, upload, get, set).
 * **compute** (job, batch, gear)
 * **miscellaneous** (about Flywheel)
 
-A list of the methods in Flywheel is dumped [on this page](Flywheel-methods-list).
+A list of the methods in Flywheel by running 'grep function Flywheel.m' is [on this page](Flywheel-methods-list).
 
 # Object
 
