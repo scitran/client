@@ -4,24 +4,24 @@ function idS = create(obj, group, project, varargin)
 % Syntax
 %   idS = st.create(groupL, projectL,'session',sessionLabel,'acquisition',acquisitionLabel)
 %
-% How do we deal with groups?
+% We make a series of objects, starting with project, session, and
+% acquisition.  In each case we check if the object already exists, and if
+% not, we create it. We return a struct with the Flywheel id value of the
+% objects that we create.
 %
-% Check if the project exists.  If not, create it.
-% Check if the session exists within the project.  If not, create it.
-% Check if the acq exists within the session. If not, well you get the
-% idea.
-%
-% Inputs
+% Required Inputs
 %  groupL   - Group Label
 %  projectL - Project Label
 %
-% Parameters
-%  session - Session label
+% Optional Parameters
+%  session    - Session label
 %  acquisiton - Acquisition label
 %
 % Returns:
 %   idS - Struct containiing the ids of the created objects, such as
 %     idS.project, idS.session, idS.acquisition
+%
+% See also:  delete
 %
 % RF/BW Scitran Team, 2016
 
@@ -131,25 +131,3 @@ end
 
 end
 
-
-%%
-    %id = createPrivate(obj, 'acquisitions', acquisition, 'session', sessionID, acqData);
-
-%% Private method that creates a single container
-% function id = createPrivate(obj, containerType, label, parentType, parentID, additionalContent)
-%     payload.(parentType) = parentID;
-%     payload.label = label;
-%     additionalFields = fieldnames(additionalContent);
-%     for i = 1:length(additionalFields)
-%         payload.(additionalFields{i}) = additionalContent.(additionalFields{i});
-%     end
-%     payload = jsonwrite(payload,struct('indent','  ','replacementstyle','hex'));
-%     cmd = obj.createCmd(containerType, payload);
-%     [status, result] = stCurlRun(cmd);
-%     if status
-%         error(result);
-%     end
-%     result = jsonread(result);
-%     id = result.x_id;
-%     
-% end
