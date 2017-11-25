@@ -9,13 +9,15 @@ function idS = create(obj, group, project, varargin)
 % not, we create it. We return a struct with the Flywheel id value of the
 % objects that we create.
 %
+% There is a separate function (createCollection) for collections.
+%
 % Required Inputs
 %  groupL   - Group Label
 %  projectL - Project Label
 %
 % Optional Parameters
-%  session    - Session label
-%  acquisiton - Acquisition label
+%  session     - Session label
+%  acquisition - Acquisition label
 %
 % Returns:
 %   idS - Struct containiing the ids of the created objects, such as
@@ -66,6 +68,9 @@ p.addRequired('group',@ischar);
 p.addRequired('project',@ischar);
 p.addParameter('session',[],@ischar);
 p.addParameter('acquisition',[],@ischar);
+
+% Not yet implemented.  But we may permit attaching data here to add to the
+% newly created objects.
 p.addParameter('additionalData', struct, @isstruct);
 
 p.parse(group,project,varargin{:});

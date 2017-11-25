@@ -48,7 +48,6 @@ p.addParameter('size',[],@isnumeric);
 
 p.parse(objectID,varargin{:});
 
-objectID    = p.Results.objectID;
 destination = p.Results.destination;
 size        = p.Results.size;
 
@@ -61,7 +60,7 @@ if isempty(destination)
     destination = fullfile(pwd,'Flywheel.tar');
 end
 
-disp('Not sure what Flywheel SDK will bring down the tar file.')
+disp('Not sure what Flywheel SDK call will bring down the tar file.')
 
 % fw.getAcquisition(objectID);
 
