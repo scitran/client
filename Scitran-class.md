@@ -1,9 +1,8 @@
-There are two principal classes in the client toolbox.  The **scitran** class and the **toolboxes** class.  The scitran class, described here, is designed to interact with the contents of the Flywheel database.  The toolboxes class is described in a separate page.  It is designed to help you reproduce Matlab computations with Flywheel data.
+There are two principal classes in the client toolbox.  The **scitran** class and the **toolboxes** class.  The scitran class, described here, is designed to interact with the contents of the Flywheel database.  The toolboxes class, designed to support reproducible computation with Flywheel data, is described [in a separate page](Toolboxes).
 
-The scitran object has an expanding and evolving number of methods. This page describes those methods, and we plan to update this information regularly.
+This page describes scitran methods, and we plan to update this information regularly.
 
-The scitran class includes the URL of the Flywheel database, the name of the instance, and the Flywheel SDK class that communicates with the database.  Not shown is the information that authorizes you to see your portion of the database.
-
+A scitran object is instantiated by a call that identifies which Flywheel database you wish to address. 
 ```
 >> st = scitran('vistalab')
 
@@ -15,6 +14,7 @@ st =
     instance: 'vistalab'
           fw: [1×1 Flywheel]
 ```
+The [authorization page](Authorization) describes how to create the information that permits you to interact with a Flywheel database (in this case 'vistalab').
 
 The scitran methods help you identify the contents of the database (search), get information about these objects (e.g., getfileinfo), download and read files stored in the data base.
 
