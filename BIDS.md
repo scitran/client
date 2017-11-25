@@ -1,6 +1,9 @@
 ## Brain Imaging Data Structure (BIDS)
 
-The scitran Matlab client (@scitran) includes a class definition (@bids) for BIDS (Brain Imaging Data Structure). The @bids class constructor is invoked by
+Flywheel projects can be downloaded or uploaded in [BIDS](http://bids.neuroimaging.io/) or Flywheel format.  This page describes how download a BIDS compliant directory tree.
+
+
+## Older method ... to be replaced by an API endpoint
 
     thisBIDS = bids(dataDir)
 
