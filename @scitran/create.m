@@ -1,7 +1,8 @@
-function id = create(obj, group, project, varargin)
+function idS = create(obj, group, project, varargin)
 % Create a project, session or acquisition on a Flywheel instance
 %
-%   st.create(group, project,'session',sessionLabel,'acquisition',acquisitionLabel)
+% Syntax
+%   idS = st.create(groupL, projectL,'session',sessionLabel,'acquisition',acquisitionLabel)
 %
 % How do we deal with groups?
 %
@@ -11,11 +12,16 @@ function id = create(obj, group, project, varargin)
 % idea.
 %
 % Inputs
-%  project - Required project name
-%  object-name pairs
+%  groupL   - Group Label
+%  projectL - Project Label
+%
+% Parameters
+%  session - Session label
+%  acquisiton - Acquisition label
 %
 % Returns:
-%   ID of the created object
+%   idS - Struct containiing the ids of the created objects, such as
+%     idS.project, idS.session, idS.acquisition
 %
 % RF/BW Scitran Team, 2016
 
@@ -26,24 +32,31 @@ function id = create(obj, group, project, varargin)
   %  Create a project
   gName = 'Wandell Lab';
   pLabel = 'deleteMe';
-  idP = st.create(gName, pLabel);
+  id = st.create(gName, pLabel);
+  status = st.exist('project',pLabel)
+
+  st.fw.deleteProject(id.project);
 
   % Create a session within a project
-  idS = st.create(gName, pLabel,'session',sLabel);
+  sLabel = 'deleteSession';
+  id = st.create(gName, pLabel,'session',sLabel);
+
+  st.fw.deleteSession(id.session);
+  st.fw.deleteProject(id.project);
 
   % Create an acquisition within a session within a project
-  idA = st.create(gName, pLabel,'session',sLabel,'acquisition',aLabel);
+  aLabel = 'deleteAcquisition'
+  id = st.create(gName, pLabel,'session',sLabel,'acquisition',aLabel);
 
-  % When you create an acquisition, you can use the returned idA to put a
+  st.fw.deleteAcquisition(id.acquisition);
+  st.fw.deleteSession(id.session);
+  st.fw.deleteProject(id.project);
+
+  % When you create an acquisition, you can use the returned id to put a
   % file, as in
-  st.uploadFile('file',filename,'id',idA);
+  id = st.create(gName, pLabel,'session',sLabel,'acquisition',aLabel);
+  st.uploadFile('file',filename,'id',id.acquisition);
 
-  % For example, we add an acquisition to the Logothetis_DES
-  st.create('Logothetis_DES','session','folderName','acquisition','FMRI');
-
-% or
-
-  st.create('Logothetis_DES','session','folderName','acquisition','Anatomical');
 %}
 
 %% Input arguments are the project/session/acquisition labels
@@ -63,90 +76,64 @@ session     = p.Results.session;
 acquisition = p.Results.acquisition;
 additionalData = p.Results.additionalData;
 
-% Returned value is only empty on an error
-id = [];
-
 %% Check whether the group exists
 
 % Exits on error.  You have to have a group.
-if ~obj.exist('group',group)
-    error('No group with the label %s\n',group);
+[status, groupId] = obj.exist('group',group);
+if ~status
+    error('No group found with label %s\n',group);
 end
 
 %% On to the project level
 
+% Does the project exist? 
+[status, idS.project] = obj.exist('project',project);
+if ~status
+    % If not, add it. Should we check with the user?
+    idS.project = obj.fw.addProject(struct('label',project,'group',groupId));
+end
+
+% Maybe we are adding some project data?
 if isfield(additionalData, 'project'), prjData = additionalData.project;
 else,                                  prjData = struct;
 end
 
-% Does the project exist? 
-[status, id] = obj.exist('project',project);
+% If no session is passed, then we are done and return the project ID
+if isempty(session), return; end
+
+%% Test for the session label; does it exist? If not create it
+
+[status, idS.session] = obj.exist('session', session, 'parentID', idS.project);
 if ~status
-    % If not, add it.  Not sure how it knows about the group.
-    obj.fw.addProject(project);
+    % If not, add it. Should we check with the user?
+    idS.session = obj.fw.addSession(struct('label', session, 'project', idS.project));
 end
 
-
-
-% If it does not exist, we check with the user and then create it.
-if ~status
-elseif status ~= 1
-    return
-else
-    projectID = projectID{1};
+% Maybe we are adding some session data?
+if isfield(additionalData, 'session'), sesData = additionalData.session;
+else,                                  sesData = struct;
 end
-
-% We now have a project id
 
 % If no session is passed, then we are done and return the project ID
-if isempty(session), id = projectID; return; end
+if isempty(acquisition), return; end
 
+%% Test for the acquisition label; does it exist? If not create it
 
-
-%% Test for the session label; does it exist on flywheel? If not create it
-
-
-
-%% Test for the session label; does it exist on flywheel? If not create it
-
-if isfield(additionalData, 'session')
-    sesData = additionalData.session;
-else
-    sesData = struct;
-end
-
-[status, sessionID] = obj.exist(session, 'sessions', 'parentID', projectID);
-
+[status, idS.acquisition] = obj.exist('acquisition', acquisition, 'parentID', idS.session);
 if ~status
-    sessionID = createPrivate(obj, 'sessions', session, 'project', projectID, sesData);
-elseif status ~= 1
-    return
-else
-    sessionID = sessionID{1};
+    idS.acquisition = obj.fw.addAcquisition(struct('label', acquisition,'session', idS.session));
 end
 
-%% Test for the acquisition label; does it exist on flywheel? If not create it
-[status, acquisitionID] = obj.exist(acquisition, 'acquisitions', 'parentID', sessionID);
-
-if isfield(additionalData, 'acquisition')
-    acqData = additionalData.acquisition;
-else
-    acqData = struct;
+% Maybe we are adding some acquisition data?
+if isfield(additionalData, 'acquisition'), acqData = additionalData.acquisition;
+else,                       acqData = struct;
 end
-
-if ~status
-    id = createPrivate(obj, 'acquisitions', acquisition, 'session', sessionID, acqData);
-elseif status ~= 1
-    return
-else
-    id = acquisitionID{1};
-end
-    
 
 end
 
 
 %%
+    %id = createPrivate(obj, 'acquisitions', acquisition, 'session', sessionID, acqData);
 
 %% Private method that creates a single container
 % function id = createPrivate(obj, containerType, label, parentType, parentID, additionalContent)
