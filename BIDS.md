@@ -1,4 +1,3 @@
-## Brain Imaging Data Structure (BIDS)
 
 Flywheel projects can be downloaded or uploaded in [BIDS](http://bids.neuroimaging.io/) or Flywheel format.  This page describes how download a BIDS compliant directory tree.
 
