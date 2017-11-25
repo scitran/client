@@ -8,7 +8,11 @@ where file is a struct, like the one that is returned from a search.  When downl
 
     [data, outfile] = scitran.read(file,...);
 
-A project, session, acquisition, collection or analysis is downloaded as a tar file. And it is also possible to download a project in BIDS format.
+A project, session, acquisition, collection or analysis is downloaded as a tar file. 
+
+    outfile = scitran.downloadObject(objectID, ...);
+
+And it is also possible to download a project in BIDS format.
 
 ## downloadFile
 
@@ -18,4 +22,10 @@ A project, session, acquisition, collection or analysis is downloaded as a tar f
     st.download('project',project{1}.id,'destination','tarfile name');
 
 For detailed examples see the script s_stDownload.m
+
+## downloadObject
+
+
+## read
+
 
