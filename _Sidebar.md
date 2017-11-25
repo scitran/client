@@ -10,8 +10,7 @@
    * [Create and upload](Create-and-upload)
    * [Modify and get metadata](Modify-and-get-metadata)
 * [Toolboxes class](Toolboxes-class)
-* [Gears](Gears)
-* [Analyses](Analysis-objects)
+* [Gears and analyses](Gears-and-Analyses)
 * [Scripts](Client-scripts)
 * [BIDS](BIDS)
 
