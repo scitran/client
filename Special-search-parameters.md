@@ -9,7 +9,7 @@ We have some utility parameters that do not guide the search, but that we have f
 
 ### Search string
 
-You can add a parameter 'string', which does a free form search within the other parameter constraints. For example, this is a search for acquisitions that have the string 'BOLD_EPI' somewhere in a label, name, note
+You can add a parameter 'string', which does a free form search within the other parameter constraints. For example, this is a search for acquisitions that have the string 'BOLD_EPI' somewhere in a label, name, or note.
 ```
 [acquisitions,srchCmd] = st.search('acquisition',...
     'string','BOLD_EPI',...
@@ -32,6 +32,7 @@ st.search('group','all labels');      % Groups appear to have both labels and na
 ### Partial and exact matches
 
 When searching for an object based on its label (or name), you can specify an exact match or a partial match. For example, on the vistalab site we have a project with the label 'VWFA' and several other projects that include 'VWFA' in the label.  
+A search based on 'contains' is case insensitive; 'exact' is case-sensitive.
 
 When we search for a project label exact 'VWFA'
 ```
@@ -55,10 +56,7 @@ VWFA
 VWFA FOV Hebrew
 >> 
 ```
-The exact vs. contains options are also used for labels describing session, analysis, acquisition, collection, and file **name**.
-
-**N.B.**  'contains' is case insensitive; 'exact' is case-sensitive.
 
 ### Labels and names
 
-Most objects are described by a **label**.  There is one exception, however.  When we search for files we search on the **name**, not the **label**.
+Most objects are described by a **label**.  There is one exception, however.  When we search for files we search on the **name**, not the **label**. The exact vs. contains options are used for the **label** describing session, analysis, acquisition, collection, and the file **name**.
