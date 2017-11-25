@@ -5,7 +5,7 @@ function [status, result] = deleteObject(obj, containerType, containerID, vararg
 %
 % Required inputs
 %    containerId - string that identifies the Flywheel object
-%    containerType - {'projects','sessions','acquisitions','collections'}
+%    containerType - {'project','session','acquisition','collection'}
 %
 % Optional parameters
 %    query - This applies to project deletion. If the project contains
