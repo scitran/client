@@ -16,7 +16,7 @@ st =
 ```
 The [authorization page](Authorization) describes how to create the information that permits you to interact with a Flywheel database (in this case 'vistalab').
 
-The scitran methods help you identify the contents of the database (search), get information about these objects (e.g., getfileinfo), download and read files stored in the data base.
+The scitran methods enable you to find database contents, get information about these objects, download and upload files, and modify metadata. See the [Flywheel terms](Flywheel-terms) page to learn about the conceptual organization of information in Flywheel.
 
 In addition, there are methods to download a project, session, acquisition, or collection.  A project can be downloaded in the format of a [BIDS directory](http://bids.neuroimaging.io/).
 
