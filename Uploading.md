@@ -1,11 +1,11 @@
 
-NOTES.  This should be about st.download() and st.read() methods.
+NOTES.  This should be about st.upload and st.create methods.
 
 ## Uploading
 
 ### Create a project
 
-    @scitran.create(); 
+    st.create(); 
 
 ## Analysis upload
 
