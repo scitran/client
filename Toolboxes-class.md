@@ -1,8 +1,6 @@
-The **toolboxes** class is designed to help share computational methods in Matlab.  This class assists let you in posting a Matlab function on a Flywheel site and make it simple for a colleague to execute the function. In many cases, you may be sharing the function with your future self.
+Flywheel **toolboxes** for Matlab (FTM) is a class helps you share Matlab functions reproducibly with colleagues. In many cases, you will be sharing the function with your future self. The idea is to write a Matlab function that uses **scitran** to access Flywheel data, and uses **toolboxes** to download Matlab libraries from github that are needed to run these functions.
 
-The key elements of this computation is to provide a place to store individual functions, simplify access to the Flywheel data using scitran, and to automate downloading of the github repositories that contain toolboxes needed to run the functions.
-
-Flywheel Toolboxes for Matlab (FTM) is one of two approaches they take to reproducible computing.  FTM is very useful for custom software and software development. Flywheel uses the Gears mechanism, docker containers packaged with a manifest that allows you to control the parameter setting, for executing standard tools. The Gears system also includes job control for running many jobs on elastic cloud systems, say using kubernetes (k8s).
+FTM is useful for custom software and software development. Flywheel uses the Gears concept, docker containers packaged with a manifest that allows you to control the parameter setting, for executing standard tools. The Gears system also includes job control for scheduling and logging jobs. Flywheel is well on its way towards implementing an elastic cloud system using distributed storage and kubernetes (k8s).
 
 ## TOOLBOXES class methods
 The key @toolboxes methods are install and clone.  These methods add a github repository with your project's toolbox onto your Matlab path.  The scitran method, 'runFunction', downloads and executes a function stored on the Flywheel site, typically on a project page, that relies on these toolboxes.
