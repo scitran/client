@@ -40,13 +40,9 @@ ans =
     permissions: [11×1 struct]
 ```
 
-## Search parameters
+## Search examples
 
 The search method lets you specify many different parameters.  The list is far too long to (usefully) include here.  We think the best way for you to understand search is through [examples](Search-examples) and leafing through the [search method source code](https://github.com/scitran/client/blob/master/%40scitran/search.m).
-
-The comments here provide information that might not be obvious and some general guidance.
-
-## Search examples
 
 See the searches illustrated in [s_stSearches.m](https://github.com/scitran/client/blob/master/scripts/s_stSearches.m). 
 
