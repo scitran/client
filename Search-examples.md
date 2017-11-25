@@ -1,17 +1,19 @@
+The examples here apply to the 'vistalab' Flywheel instance.  The specific labels and project names will be different on other instances.
 
 ### Projects
 ```
-% All the projects
+% All the projects you have access to
 projects = st.search('projects');
 
-% All the projects, and print the count
+% All the projects in the Flywheel instance, and print the count
 projects = st.search('project',...
     'all_data',true,...
     'summary',true);
 ```
 ### Sessions
 ```
-% Get the sessions within a project
+% The sessions within a project
+projectID = projects{1}.project.x_id;
 sessions = st.search('session',...
     'project id',projectID,...
     'summary',true);
