@@ -12,7 +12,7 @@ A project, session, acquisition, collection or analysis is downloaded as a tar f
 
     outfile = scitran.downloadObject(objectID, ...);
 
-And it is also possible to download a project in BIDS format.
+And it is also possible to download a project in [BIDS](BIDS) format.
 
 ## downloadFile
 
