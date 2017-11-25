@@ -42,9 +42,7 @@ ans =
 
 ## Search examples
 
-The search method lets you specify many different parameters.  The list is far too long to (usefully) include here.  We think the best way for you to understand search is through [examples](Search-examples) and leafing through the [search method source code](https://github.com/scitran/client/blob/master/%40scitran/search.m).
-
-See the searches illustrated in [s_stSearches.m](https://github.com/scitran/client/blob/master/scripts/s_stSearches.m). 
+The search method lets you specify many different parameters.  The list is far too long to (usefully) include here.  We think the best way for you to understand search is through the [page of search examples](Search-examples) or reading the [search method source code](https://github.com/scitran/client/blob/master/%40scitran/search.m). Also, many searches are illustrated in the [scitran script s_stSearches.m](https://github.com/scitran/client/blob/master/scripts/s_stSearches.m). 
 
 
 
