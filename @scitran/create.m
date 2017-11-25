@@ -1,5 +1,5 @@
 function id = create(obj, group, project, varargin)
-% Create a project, session or acquisition on a flywheel instance
+% Create a project, session or acquisition on a Flywheel instance
 %
 %   st.create(group, project,'session',sessionLabel,'acquisition',acquisitionLabel)
 %
@@ -17,29 +17,34 @@ function id = create(obj, group, project, varargin)
 % Returns:
 %   ID of the created object
 %
-% Examples:
-%
-%  Create a project
-%    idP = st.create(gName, pLabel);
-%
-% Create a session within a project
-%    idS = st.create(gName, pLabel,'session',sLabel);
-%
-% Create an acquisition within a session within a project
-%    idA = st.create(gName, pLabel,'session',sLabel,'acquisition',aLabel);
-%
-% When you create an acquisition, you can use the returned idA to put a
-% file, as in
-%
-%     st.put('file',filename,'id',idA);
-%
-% For example, we add an acquisition to the Logothetis_DES
-%
-%   st.create('Logothetis_DES','session','folderName','acquisition','FMRI');
-% or
-%   st.create('Logothetis_DES','session','folderName','acquisition','Anatomical');
-%
 % RF/BW Scitran Team, 2016
+
+% Examples:
+%{
+  st = scitran('vistalab');
+
+  %  Create a project
+  gName = 'Wandell Lab';
+  pLabel = 'deleteMe';
+  idP = st.create(gName, pLabel);
+
+  % Create a session within a project
+  idS = st.create(gName, pLabel,'session',sLabel);
+
+  % Create an acquisition within a session within a project
+  idA = st.create(gName, pLabel,'session',sLabel,'acquisition',aLabel);
+
+  % When you create an acquisition, you can use the returned idA to put a
+  % file, as in
+  st.uploadFile('file',filename,'id',idA);
+
+  % For example, we add an acquisition to the Logothetis_DES
+  st.create('Logothetis_DES','session','folderName','acquisition','FMRI');
+
+% or
+
+  st.create('Logothetis_DES','session','folderName','acquisition','Anatomical');
+%}
 
 %% Input arguments are the project/session/acquisition labels
 
@@ -49,7 +54,6 @@ p.addRequired('project',@ischar);
 p.addParameter('session',[],@ischar);
 p.addParameter('acquisition',[],@ischar);
 p.addParameter('additionalData', struct, @isstruct);
-
 
 p.parse(group,project,varargin{:});
 
@@ -63,21 +67,29 @@ additionalData = p.Results.additionalData;
 id = [];
 
 %% Check whether the group exists
-[status, groupID] = obj.exist(group, 'groups');
 
-
-if isfield(additionalData, 'project')
-    prjData = additionalData.project;
-else
-    prjData = struct;
+% Exits on error.  You have to have a group.
+if ~obj.exist('group',group)
+    error('No group with the label %s\n',group);
 end
 
-% If it does not exist, we check with the user and then create it.
-[status, projectID] =  obj.exist(project, 'projects', 'parentID', groupID{1});;
+%% On to the project level
+
+if isfield(additionalData, 'project'), prjData = additionalData.project;
+else,                                  prjData = struct;
+end
+
+% Does the project exist? 
+[status, id] = obj.exist('project',project);
+if ~status
+    % If not, add it.  Not sure how it knows about the group.
+    obj.fw.addProject(project);
+end
+
+
 
 % If it does not exist, we check with the user and then create it.
 if ~status
-    projectID = createPrivate(obj, 'projects', project, 'group', groupID{1}, prjData);
 elseif status ~= 1
     return
 else
@@ -137,20 +149,20 @@ end
 %%
 
 %% Private method that creates a single container
-function id = createPrivate(obj, containerType, label, parentType, parentID, additionalContent)
-    payload.(parentType) = parentID;
-    payload.label = label;
-    additionalFields = fieldnames(additionalContent);
-    for i = 1:length(additionalFields)
-        payload.(additionalFields{i}) = additionalContent.(additionalFields{i});
-    end
-    payload = jsonwrite(payload,struct('indent','  ','replacementstyle','hex'));
-    cmd = obj.createCmd(containerType, payload);
-    [status, result] = stCurlRun(cmd);
-    if status
-        error(result);
-    end
-    result = jsonread(result);
-    id = result.x_id;
-    
-end
+% function id = createPrivate(obj, containerType, label, parentType, parentID, additionalContent)
+%     payload.(parentType) = parentID;
+%     payload.label = label;
+%     additionalFields = fieldnames(additionalContent);
+%     for i = 1:length(additionalFields)
+%         payload.(additionalFields{i}) = additionalContent.(additionalFields{i});
+%     end
+%     payload = jsonwrite(payload,struct('indent','  ','replacementstyle','hex'));
+%     cmd = obj.createCmd(containerType, payload);
+%     [status, result] = stCurlRun(cmd);
+%     if status
+%         error(result);
+%     end
+%     result = jsonread(result);
+%     id = result.x_id;
+%     
+% end
