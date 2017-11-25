@@ -6,7 +6,7 @@
      * [Syntax](Search-syntax)
      * [Typical searches](Search-examples)
      * [Special searches](Special-search-parameters)
-   * [Download and read](Download and read)
+   * [Download and read](Download-and-read)
    * [Create and upload](Create-and-upload)
    * [Get info](Get-info)
    * [Database editing](Database-editing)
