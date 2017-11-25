@@ -32,32 +32,40 @@ where 'vistalab' is a Flywheel site.  Below, we assume that file is a struct, as
 ```
 (IN PROGRESS BUT STILL INCOMPLETE)
 
-st.search(objType,...)  -  Search for projects, sessions, acquisitions, collections, files, subjects constrained by many possible limits (file type, label, date...).
+st.search(objType,...)  -  Search for objects constrained by many possible limits (file type, label, date...).
+
+st.downloadObject(file,...)  - Download a directory tree containing a database object as a tar file
 st.downloadFile(file,...) -
 st.read(file,...)  - Certain file types can be downloaded and read into a Matlab variable  
-st.downloadObject(file,...)  - Download a directory tree containing a database object as a tar file
-st.projectHierarchy - A listing of the sessions and acquisitions in a project hierarchy 
+st.dwiLoad - Read a nifti file and its associated bvec/bval data
+
 st.create - Create a project or a session or an acquistion
-st.put - Files, 
-st.update - Database values (e.g., subject code, sex ...)
+st.createCollection
+
+st.upload - Files 
+
+st.modify - Modify database values (e.g., subject code, sex ...)
+
 st.runFunction - Download toolboxes and run a function from a remote site
-st.deleteProject - 
+
+st.delete - 
+
 st.getdicominfo - Information about files or database objects
 
-st.bidsUpload
-st.bidsDownload
+st.create - Create an object (project, session, acquisition)
 st.createCollection
-st.createCollectionFromSearch
 
-st.dwiLoad
-st.eraseProject
-st.exist
-st.putBids
-st.putAnalysis
+st.exist - See if a particular object exists
+st.projectHierarchy - List the sessions and acquisitions in a project hierarchy 
 
 st.browser - Bring a browser to a location
 
 st.verify
+
+% Not yet decided
+st.putAnalysis
+st.bidsUpload
+st.bidsDownload
 ```
 
 
