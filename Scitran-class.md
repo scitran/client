@@ -18,8 +18,6 @@ The [authorization page](Authorization) describes how to create the information 
 
 The scitran methods enable you to find database contents, get information about these objects, download and upload files, and modify metadata. See the [Flywheel terms](Flywheel-terms) page to learn about the conceptual organization of information in Flywheel.
 
-In addition, there are methods to download a project, session, acquisition, or collection.  A project can be downloaded in the format of a [BIDS directory](http://bids.neuroimaging.io/).
-
 ## Methods
 
 To create a scitran instance, we use 
