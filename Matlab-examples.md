@@ -4,4 +4,4 @@
 
 ### FMRI example (Logothetis)
 
-### ECoG example (Hermes)
+### SOC ECoG (Hermes)
