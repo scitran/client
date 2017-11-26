@@ -2,6 +2,8 @@ Searching a Flywheel database is very useful when you are processing data or sea
 
 There are many search parameters. To learn more about these see [search examples on this page](search-examples) and an [m-file with many examples](https://github.com/scitran/client/blob/master/scripts/s_stSearches.m).
 
+In addition to search, you may already know the ID of a project, session or acquisition and you would like to list the objects in that object.  The scitran **listObjects** method returns the list.  **N.B.**  The data returned by the listObjects method and the search method have different formats.  This [list examples page](listObjects-examples) demonstrates the usage.
+
 One way to understand the information returned in a search is to explore the values in the returned Matlab structs.  You also might want to look at the [Flywheel data model](https://github.com/scitran/core/wiki/Data-Model) to see the definition of a term.
 
 ### Brief introduction
