@@ -4,7 +4,7 @@ There are many search parameters. To learn more about these see [search examples
 
 One way to understand the information returned in a search is to explore the values in the returned Matlab structs.  You also might want to look at the [Flywheel data model](https://github.com/scitran/core/wiki/Data-Model) to see the definition of a term.
 
-### Search syntax
+### Brief introduction
 The arguments to the search method specify (a) the type of object to return and (b) parameters that define the search. For example, to search for all the projects in the database you would use
 
     projects = st.search('project');
