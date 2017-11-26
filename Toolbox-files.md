@@ -28,10 +28,10 @@ Multiple toolboxes can be combined into a single file and uploaded. In this exam
 tbx(1) = stToolbox('dtiError.json');
 tbx(2) = stToolbox('vistasoft.json');
 tbxWrite('aldit-toolboxes.json',tbx);
-% Subsequently, your could read the combined file
+% Subsequently, you can read the combined file to get the toolboxes array
 % tbx = stToolbox('aldit-toolboxes.json');
 ```
-Uploading to the project looks like this
+Uploading the file to the project looks like this
 ```
 % upload to the project page
 project = st.search('project','project label exact','ALDIT');
