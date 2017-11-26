@@ -1,4 +1,6 @@
-The **toolboxes** object contains two types of information.  One is a command that can be executed to test whether the toolbox is on the path (testcmd).  The second is a structure that contains enough information to download a git repository. Here is an example toolboxes object, tbx.
+The **toolboxes** object contains two types of information.  One is a command that can be executed to test whether the toolbox is on the path (testcmd).  The second is a structure that contains enough information to download a git repository (gitrepo). 
+
+Here is an example toolboxes object, tbx.
 ```
 disp(tbx)
   toolboxes with properties:
