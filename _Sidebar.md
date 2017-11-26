@@ -13,7 +13,6 @@
    * [Toolbox files](Toolbox-files)
    * [Matlab functions](Matlab-functions)
    * [Matlab examples](Matlab-examples)
-   * [Toolboxes class](Toolboxes-class)
 * [Gears and analyses](Gears-and-Analyses)
 * [Scripts](Client-scripts)
 * [BIDS](BIDS)
@@ -24,3 +23,4 @@
 * [Flywheel terms](Flywheel-terms)
 * [Reproducible papers](Reproducible-Research)
 * [Technical notes](Technical-notes)
+* [Toolboxes class](Toolboxes-class)
