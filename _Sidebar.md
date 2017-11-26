@@ -3,7 +3,6 @@
 * [Scitran class](Scitran-class)
    * [Authorization](Authorization)
    * [Search](Search)
-     * [Syntax](Search-syntax)
      * [Typical searches](Search-examples)
      * [Special searches](Special-search-parameters)
    * [Download and read](Download-and-read)
@@ -24,3 +23,4 @@
 * [Reproducible papers](Reproducible-Research)
 * [Technical notes](Technical-notes)
 * [Toolboxes class](Toolboxes-class)
+* [Syntax](Search-syntax)
