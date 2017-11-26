@@ -23,4 +23,4 @@
 * [Reproducible papers](Reproducible-Research)
 * [Technical notes](Technical-notes)
 * [Toolboxes class](Toolboxes-class)
-* [Syntax](Search-syntax)
+* [More search](Search-syntax)
