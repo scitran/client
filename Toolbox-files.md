@@ -15,7 +15,7 @@ The gitrepo structure contains this information
     project: 'dti-error'
      commit: 'master'
 ```
-The data directory includes several toolboxes files as well as a script s_tbxSave, that was used to write those JSON files. The code looks like this:
+The data directory in scitran includes several toolboxes files and a script, s_tbxSave, used to write those JSON files. The code looks like this:
 ```
 tbx = toolboxes('');
 tbx.testcmd     = 'dtiError';
