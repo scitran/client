@@ -1,7 +1,11 @@
 function tbx = toolbox(st,varargin)
 % Install toolboxes from github repositories.
 %
-%    tbx = st.toolbox('project',...,'file',...,'install',logical,'clone',logical,)
+% Syntax
+%    tbx = st.toolbox(file,...)
+%
+% Read a toolboxes json file from the Flywheel site.  Then either install
+% the toolbox or not, according to the parameters.
 %
 % Input parameters
 %   project:  The project label (string)
@@ -15,42 +19,45 @@ function tbx = toolbox(st,varargin)
 % Output
 %   tbx - the toolboxes object
 %
-% Example:
-%   st = scitran('scitran');
+% See also:  s_stToolboxes, s_tbxSave, scitran.toolbox
 %
-%  Retrieves toolboxes.json from this project
-%   % Default filename is toolboxes.json
-%   tbxFile = st.toolbox('project','ALDIT');  
-
-%   % Specify the filename
-%   tbxFile = st.toolbox('project','ALDIT','file','yourName.json');
-%
-%  Returns a toolboxes struct without installing
-%   tbxFile = st.search('files','project label','Diffusion Noise Analysis','filename','toolboxes.json')
-%   tbx = st.toolbox('file',tbxFile{1},'install',false);
-%
-%  You can install later using
-%   tbx.install; 
-%  Or
-%   tbx.clone;
-%
-% See also:  s_tbxSave, @toolboxes
-%
-% TODO:  If the repository is on the path as a zip download, we return that
-% the repository is installed even if the person asked for a git clone
-% download.  We should find a test of whether the download is a git clone
-% or a zip download.s
-%  
 % BW, Scitran Team, 2017
+
+% Programming TODO:  If the repository is on the path as a zip download, we
+% return that the repository is installed even if the person asked for a
+% git clone download.  We should find a test of whether the download is a
+% git clone or a zip download.
+%  
+%
+% Examples
+%{
+  st = scitran('vistalab');
+
+  % Creates the toolbox .json file from this project page
+  tbx = st.toolbox('aldit-toolboxes.json','project','ALDIT','install',false);  
+  tbx.install;
+
+  % Specify the filename
+  tbx = st.toolbox('dtiError.json','project','ALDIT','install',true);
+
+  %  Returns a toolboxes struct without installing
+  tbxFile = st.search('files','project label','Diffusion Noise Analysis','filename','toolboxes.json')
+  tbx = st.toolbox('file',tbxFile{1},'install',false);
+%}
+
 
 %%
 p = inputParser;
 
 vFunc = @(x)(isstruct(x) || ischar(x));
-p.addParameter('file','toolboxes.json',vFunc);
+p.addRequired('file',vFunc);   % Either the file struct or its name
+
+% If only a name, then we need the project label
 p.addParameter('project','', @ischar);        % Project label
+
+% Decide whether and how to install
 p.addParameter('install',true, @islogical);   % Install
-p.addParameter('clone',false, @islogical);   % Install
+p.addParameter('clone',false, @islogical);    % Zip by default, or clone
 
 p.parse(varargin{:});
 
@@ -67,8 +74,8 @@ if ischar(file)
         error('Project label required when file is a string');
     else
         %  Get the file information, which is a cell array
-        fileC = st.search('files',...
-            'project label contains',project,...
+        fileC = st.search('file',...
+            'project label exact',project,...
             'filename',file);
         if length(fileC) ~= 1
             error('Problem identifying JSON toolbox file.  Search returned %d items\n',length(fileC));
@@ -77,11 +84,15 @@ if ischar(file)
         end
     end
 else
+    % The struct was based, and that's what we want
     fileS = file;
 end
 
-tbxFile = st.get(fileS);
-tbx = tbxRead(tbxFile);
+% Download the json file containing the toolbox information.
+tbxFile = st.downloadFile(fileS);
+
+% Create the toolbox based on the file several repositories specified.
+tbx = stToolbox(tbxFile);
 
 %% Do or don't install, using the toolboxes object install method
 
@@ -96,12 +107,12 @@ tbx = tbxRead(tbxFile);
 
 nTbx = length(tbx);
 if ~install
-    % Assume testing only
+    % Testing only
     for ii=1:nTbx
-        if isempty(which(tbx(ii).testcmd))
-            fprintf('<%s> not found. (Repository <%s>)\n',tbx(ii).testcmd,tbx(ii).gitrepo.project);
-        else
-            fprintf('<%s> found.\n',tbx(ii).testcmd);
+        cmd = tbx(ii).testcmd;
+        fprintf('Testing %s (repo %s) ... ',cmd, tbx(ii).gitrepo.project);
+        if isempty(which(cmd)), fprintf('not found.\n'); 
+        else,                   fprintf('found %s.\n',which(cmd));
         end
     end
     return;

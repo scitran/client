@@ -17,12 +17,12 @@
 % BW, Scitran Team, 2017
 
 %% Open scitran
-st = scitran('scitran', 'action', 'create');
+st = scitran('vistalab');
 
 %% Set up the toolboxes
 
 project = 'ALDIT';
-st.toolbox('project',project,'file','aldit-toolboxes.json');
+st.toolbox('aldit-toolboxes.json','project',project);
 
 %% Run the function on Data Set 1
 

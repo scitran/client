@@ -55,10 +55,9 @@ classdef toolboxes < handle
     
     properties (SetAccess = public, GetAccess = public)
         
-
-        testcmd = '';      % Matlab command to test for presence on path 
+        testcmd = '';      % Matlab function to test for presence on path 
         
-        % The information we need to build the clone or zip download command
+        % The information needed to build the clone or zip download command
         % The fields should be
         %  user, project, commit {sha, or 'master'}
         gitrepo    = struct('user','','project','','commit','master');
@@ -69,70 +68,41 @@ classdef toolboxes < handle
     methods
         
         %% Constructor
-        function obj = toolboxes(varargin)
-            % toolbox({'scitran',st,'fileStruct',fileS})
-            %
-            % Constructor
-            %   Reads the JSON file specifying the toolbox either stored on
-            %   the scitran site or locally. 
-            %
-            % Example:
-            %   tbx = toolboxes('file',fullfile(stRootPath,'data','vistasoft.json'));
-            %
-            %   tbxFile = st.search('files',...
-            %       'project label contains','Diffusion Noise', ...
-            %       'file name contains','toolboxes.json');
-            %   tbx = toolboxes('scitran',st,'file',tbxFile{1});
-            %
-            % Then either
-            %   tbx.install;
-            % or
-            %   tbx.clone( ... )
+        function obj = toolboxes(file)
+            % Create a toolboxes object and initialize with local JSON file
+            % or as empty.
             %
             % BW, Scitran Team, 2017
             
-            %% A local JSON file, a scitran JSON file, or empty
+            %% file is either a local JSON file or empty
             
             p = inputParser;
-            vFunc = @(x)(isequal(class(x),'scitran'));
-            p.addParameter('scitran',[],vFunc);
+            p.addRequired('file',@(x)(isempty(x) || exist(x,'file')));
+            p.parse(file);
             
-            vFunc = @(x)(isstruct(x) || ischar(x));
-            p.addParameter('file',[],vFunc);
-            
-            p.parse(varargin{:});
-            file    = p.Results.file;
-            scitran = p.Results.scitran;
-            
-            %% Fill the object with the file information
-            if isempty(file)
-                % No file, so return an empty structure
-                return;
-            elseif isempty(scitran) && ischar(file)
-                % Read a local file and fill the entries
-                obj.read(file);
-            elseif ~isempty(scitran)
-                % file is a cell or a plink, get it and read it
-                destination = scitran.get(file);
-                obj.read(destination);
-                delete(destination);
-            end
-                        
+            %% Fill the object with the file information or return empty
+            if isempty(file),  return;
+            else,              obj.read(file);
+            end   
+
         end
         
         %% Read JSON files
         function read(obj,file)
             
-            % Read the json file and return it to a struct
-            tbxStruct = tbxRead(file);
+            % Read the json file and return it to a struct array
+            tbxStruct = jsonread(file);
+            if numel(tbxStruct) > 1
+                error('Initialize multiple toolboxes using stToolbox(file);');
+            else
+                obj.testcmd = tbxStruct.testcmd;
+                obj.gitrepo = tbxStruct.gitrepo;
+            end
             
-            % Copy the struct information into the toolbox object
-            obj.testcmd = tbxStruct.testcmd;
-            obj.gitrepo = tbxStruct.gitrepo;
-                      
         end
         
-        %% Write out the json with instructions to load the toolbox
+        %% Write json file with toolbox information
+        
         function outfile = saveinfo(obj,varargin)
             % savedir  - Default is scitran/data
             % gitrepo has 'user','project','commit' fields.

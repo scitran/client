@@ -1,26 +1,23 @@
-%% Script to save JSON toolbox files
+%% Write out JSON toolbox files and upload to Flywheel
 %
-% The examples below make individual toolbox JSON files.
+% The examples below make individual toolboxes, combine them, saves the
+% combined information, and then uploads to Flywheel.
 % 
-% To make a JSON file defining multiple toolboxes do this:
+% To read a JSON file defining one or more toolboxes use:
 %
-%   tbx = toolboxes();             % Empty object
-%   tbx.read('isetbio.json');      % Load the individual toolboxes
-%   tbx.read('jsonio.json');
-%
-%   tbx = toolboxes('file','jsonio.json');
+%   tbx = stToolbox('test.json');
 %
 % BW Scitran team, 2017
 
 %%
-tbx = toolboxes;
+tbx = toolboxes('');
 chdir(fullfile(stRootPath,'data'));
 
 %%
-tbx.testcmd      = 'dtiError';
+tbx.testcmd     = 'dtiError';
 tbx.gitrepo.user    = 'scitran-apps'; 
-tbx.gitrepo.project = 'dtiError'; 
-tbx.saveinfo;
+tbx.gitrepo.project = 'dti-error'; 
+tbxWrite('dti-error.json',tbx);
 
 %%
 tbx.testcmd     = 'vistaRootPath';
@@ -71,40 +68,58 @@ tbx.gitrepo.project = 'ecogBasicCode';
 tbx.gitrepo.commit  = 'master';
 tbx.saveinfo;
 
-%% Now, save and put an example toolbox for a project.
+%%
+st = scitran('vistalab');
+chdir(fullfile(stRootPath,'data'));
+
+%% These cases all create a couple of toolboxes and uploads to Flywheel
+
 %  The example saves multiple toolboxes in a single toolboxes.json file and
 %  then puts that file in the projects slot on a Flywheel instance.
 %
-chdir(fullfile(stRootPath,'data'));
-tbx(1) = toolboxes('file','ecogBasicCode.json');
-tbx(2) = toolboxes('file','vistasoft.json');
-tbxWrite('toolboxes.json',tbx);
+clear tbx
+tbx(1) = stToolbox('ecogBasicCode.json');
+tbx(2) = stToolbox('vistasoft.json');
+tbxWrite('SOC-ECoG-toolboxes.json',tbx);
+tbx = stToolbox('SOC-ECoG-toolboxes.json');
 
 % Put the toolboxes file into the project as an attachment
-fw = scitran('vistalab');
-project = fw.search('projects','project label contains','SOC ECoG');
-fw.put('toolboxes.json',project);
+project = st.search('projects','project label exact','SOC ECoG (Hermes)');
+st.upload('SOC-ECoG-toolboxes.json','project',project{1}.project.x_id);
 
 %% Now, save and put the paper of the future example (Rorie, 2010)
 %  This saves multiple toolboxes in a single toolboxes.json file and
 %  then puts that file in the projects slot on a Flywheel instance.
 %
-chdir(fullfile(stRootPath,'data'));
-tbx(1) = toolboxes('file','pof_Rorie2010.json');
+clear tbx
+tbx(1) = stToolbox('pof_Rorie2010.json');
 tbxWrite('rorie2010Figures.json',tbx);
+tbx = stToolbox('rorie2010Figures.json');
 
 % Put the toolboxes file into the project as an attachment
-fw = scitran('vistalab');
-project = fw.search('projects','project label contains','Rorie PLoS One 2010');
-fw.put('rorie2010Figures.json',project);
+project = st.search('projects','project label contains','Rorie PLoS One 2010');
+st.upload('rorie2010Figures.json','project',project{1}.project.x_id);
 
 %% fw_Apricot6
-chdir(fullfile(stRootPath,'data'));
-tbx(1) = toolboxes('file','isetbio.json');
+clear tbx
+tbx(1) = stToolbox('isetbio.json');
 tbxWrite('fw_Apricot6.json',tbx);
+tbx = stToolbox('fw_Apricot6.json');
 
 % Put the toolboxes file into the project as an attachment
-fw = scitran('vistalab');
-project = fw.search('projects','project label contains','EJ Apricot');
-fw.put('fw_Apricot6.json',project);
+project = st.search('projects','project label contains','EJ Apricot');
+st.upload('fw_Apricot6.json','project',project{1}.project.x_id);
 
+%% ALDIT
+
+clear tbx
+tbx(1) = stToolbox('dtiError.json');
+tbx(2) = stToolbox('vistasoft.json');
+tbxWrite('aldit-toolboxes.json',tbx);
+tbx = stToolbox('aldit-toolboxes.json');
+
+% Now upload it
+project = st.search('project','project label exact','ALDIT');
+st.upload('aldit-toolboxes.json','project',project{1}.project.x_id);
+
+%%

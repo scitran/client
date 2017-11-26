@@ -2,8 +2,8 @@ function tbx = tbxRead(filename)
 % Read JSON file specifying toolboxes into an array of toolbox objects
 %
 % Example:
-%   tbx(1) = toolboxes('file','vistasoft.json');
-%   tbx(2) = toolboxes('file','jsonio.json');
+%   tbx(1) = toolboxes('vistasoft.json');
+%   tbx(2) = toolboxes('jsonio.json');
 %   tbxWrite('test.json',tbx);
 %   tbx = tbxRead('test.json');
 %
@@ -17,15 +17,13 @@ p = inputParser;
 p.addRequired('filename',@(x)(exist(x,'file')));
 p.parse(filename);
 
-%% Write it
+%% Read the json file and fill in the struct
 
 tbxStruct = jsonread(filename);
-for ii=length(tbxStruct):-1:1
-    tbx(ii) = toolboxes;
-    tbx(ii).testcmd = tbxStruct(ii).testcmd;
-    tbx(ii).gitrepo = tbxStruct(ii).gitrepo;
-end
 
+tbx = toolboxes('');
+tbx.testcmd = tbxStruct.testcmd;
+tbx.gitrepo = tbxStruct.gitrepo;
 
 end
-%%
+
