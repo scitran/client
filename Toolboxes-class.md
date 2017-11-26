@@ -16,10 +16,4 @@ Clone a a git repository and add it to your path.  cloneDepth allowed.
 
 ### Creating and uploading a toolbox.json file
 
-## Examples
 
-### Single unit physiology (Newsome)
-
-### FMRI example (Logothetis)
-
-### ECoG example (Hermes)
