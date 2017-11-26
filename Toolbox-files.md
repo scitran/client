@@ -21,7 +21,7 @@ tbx = toolboxes('');
 tbx.testcmd     = 'dtiError';
 tbx.gitrepo.user    = 'scitran-apps'; 
 tbx.gitrepo.project = 'dti-error'; 
-tbx.saveinfo;
+tbxWrite('dti-error.json',tbx);
 ```
 Multiple toolboxes can be combined into a single file and uploaded. In this example, the stToolbox() function reads two JSON files, describing two repositories.  These are placed in an array, and written out to a new JSON file. 
 ```
