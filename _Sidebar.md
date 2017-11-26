@@ -12,6 +12,7 @@
 * [Sharing Matlab code](Sharing-Matlab-computing)
    * [Toolbox files](Toolbox-files)
    * [Matlab functions](Matlab-functions)
+   * [Matlab examples](Matlab-examples)
    * [Toolboxes class](Toolboxes-class)
 * [Gears and analyses](Gears-and-Analyses)
 * [Scripts](Client-scripts)
