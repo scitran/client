@@ -14,6 +14,4 @@ Read a toolbox.json file and get a zip archive, put it on path
 ### clone
 Clone a a git repository and add it to your path.  cloneDepth allowed.
 
-### Creating and uploading a toolbox.json file
-
 
