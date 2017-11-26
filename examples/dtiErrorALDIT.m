@@ -7,27 +7,33 @@ function nRMSE = dtiErrorALDIT(varargin)
 % something reasonable with it to assess the noise. The resulting graph can
 % be compared with data from phantom measurements on other scanners.
 %
-% Example:
-%    project = 'ALDIT';
-%    session = 'Test Site 2';
-%    dtiErrorALDIT('project',project,'session',session);
+% Examples in the source code
 %
-%    clear params; params.project = 'ALDIT';
-%    params.session = 'Test Site 2';
-%    params.wmPercentile = 80; params.nSamples = 500;
-%    params.scatter = false; params.histogram = false;
-%    dtiErrorALDIT(params);
-%
-%    project = 'ALDIT'; 
-%    clear params; params.session = 'Test Site 1';
-%    params.wmPercentile = 80; params.nSamples = 500;
-%    params.scatter = false; params.histogram = false;
-%    st = scitran('scitran');
-%    st.runFunction('dtiErrorALDIT.m','project',project,'params',params);
-%
-% TODO:  Set destination for downloads.
+% See also:  scitran.runFunction
 %
 % BW Scitran Team, 2017
+
+% Programming TODO:  Set destination for downloads.
+%
+% Example:
+%{
+    project = 'ALDIT';
+    session = 'Test Site 2';
+    dtiErrorALDIT('project',project,'session',session);
+
+    clear params; params.project = 'ALDIT';
+    params.session = 'Test Site 2';
+    params.wmPercentile = 80; params.nSamples = 500;
+    params.scatter = false; params.histogram = false;
+    dtiErrorALDIT(params);
+
+    project = 'ALDIT'; 
+    clear params; params.session = 'Test Site 1';
+    params.wmPercentile = 80; params.nSamples = 500;
+    params.scatter = false; params.histogram = false;
+    st = scitran('scitran');
+    st.runFunction('dtiErrorALDIT.m','project',project,'params',params);
+%}
 
 %% Start with initialization
 p = inputParser;
@@ -49,14 +55,14 @@ scatter      = p.Results.scatter;
 histogram    = p.Results.histogram;
 
 %% Open the Flywheel object
-st = scitran('scitran','action', 'create');
+st = scitran('vistalab');
 
 %% Search for the session and acquisition
 
 % List the Diffusion acquisitions in the first session
 acquisitions = st.search('acquisitions', ...
-    'project label contains',project, ...
-    'session label',session,...
+    'project label exact',project, ...
+    'session label contains',session,...
     'acquisition label contains','Diffusion',...
     'summary',true);
 

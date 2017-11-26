@@ -106,7 +106,7 @@ classdef scitran < handle
     methods (Static)
         
         function val = listInstances
-            % Show the instances you have saved
+            % Show the Flywheel instances that are saved in .stclient
             stDir = fullfile(getenv('HOME'), '.stclient');
             tokenFile = fullfile(stDir, 'st_tokens');
             val = jsonread(tokenFile);

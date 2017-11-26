@@ -1,0 +1,126 @@
+function result = listObjects(obj, returnType, parentID, varargin)
+% List Flywheel objects inside a parent
+%
+% Syntax
+%   result = scitran.listObjects(objectType, parentID, ...)
+%
+% The Flywheel objects are organized hierarchically as in
+%
+%    Group Name
+%     Project Name
+%      Session Name
+%       Acquisition Name
+%        file list
+%        ...
+%
+% Required Inputs
+%  objectType - project, session, acquisition, file
+%  parentID   - A Flywheel ID of the parent (group,  usually obtained from a search
+%
+% Optional Inputs
+%  summary:  - Print a brief summary of the returned objects
+%
+% Return
+%  result:  Cell array of Flywheel objects
+%
+% See also: search
+%
+% LMP/BW Vistasoft Team, 2015-16
+
+% Examples
+%{
+
+  st = scitran('vistalab');
+
+  % The struct returned from the elastic search and from an SDK get differ
+  % substantially
+  project      = st.search('project','project label exact','VWFA');
+  sessions     = st.listObjects('session',project{1}.project.x_id);
+
+  projects     = st.listObjects('project','wandell');
+  sessions     = st.listObjects('session',projects{1}.id);
+  acquisitions = st.listObjects('acquisition',sessions{3}.id); 
+  files        = st.listObjects('file',acquisitions{1}.id); 
+
+  collections  = st.search('collection','collection label contains','GearTest');
+
+  % Not working, I think. The return from search on collections is
+  % incomprehensible to me just now (BW).
+  % sessions     = st.listObjects('collectionsession',collections{1}.id); 
+
+%}
+
+%% Parse inputs
+p = inputParser;
+
+p.addRequired('returnType',@ischar);
+p.addRequired('parentID',@ischar);
+p.addParameter('summary',true,@islogical);
+
+p.parse(returnType,parentID,varargin{:});
+
+summary = p.Results.summary;
+
+% Get the Flywheel commands
+fw = obj.fw;
+
+%%  Call the relevant SDK rouinte
+switch returnType
+    case 'project'
+        % ParentID is a group label
+        data = {};
+        tmp = fw.getAllProjects;
+        cnt = 1;
+        for ii=1:numel(tmp)
+            if strcmp(tmp{ii}.group,parentID)
+                data{cnt} = tmp{ii}; %#ok<AGROW>
+                cnt = cnt + 1;
+            end
+        end
+        
+    case 'session'
+        data = fw.getProjectSessions(parentID);
+        
+    case 'acquisition'
+        % Parent is session
+        data = fw.getSessionAcquisitions(parentID);
+        
+    case 'file'
+        % ParentID is acquisition
+        acq = fw.getAcquisition(parentID);
+        data = acq.files;
+
+    case 'collectionsession'
+        % Parent is the collection
+        data = fw.getCollectionSessions(parentID);
+        
+    case 'collectionacquisition'
+        % Parent is the collection
+        data = fw.getCollectionAcquisitions(parentID);
+        
+    otherwise
+        error('Unknown object type %s\n',returnType);
+end
+
+%% Formatting data to look like search return, result
+
+% We discovered that sometimes srchResult is already a cell array, so in
+% that case we don't do the conversion.  We should ask Jen R about this.
+if ~iscell(data)
+    result = cell(numel(data),1);
+    for ii=1:numel(data)
+        result{ii} = data(ii);
+    end
+else
+    result = data;
+end
+
+%%
+
+if summary
+    fprintf('Returned %d objects (%s)\n',numel(result), returnType);
+end
+
+
+end
+
