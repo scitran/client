@@ -1,7 +1,8 @@
-In which our hero explains these functions.
+In which we explain and illustrate these functions.
 
-st = scitran('vistalab');
+Running functions from **scitran** - st.runFunction
 
-st.runFunction
+Managing the toolboxes file from **scitran** - st.toolbox
+
 
 
