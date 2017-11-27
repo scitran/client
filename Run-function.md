@@ -4,5 +4,4 @@ st = scitran('vistalab');
 
 st.runFunction
 
-st.toolbox
 
