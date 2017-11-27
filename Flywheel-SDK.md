@@ -106,7 +106,6 @@ A list of the Flywheel.m methods obtained by running 'grep function Flywheel.m' 
         % replaceSessionFileInfo(obj, id, filename, replace)  
         % deleteSessionFileInfoFields(obj, id, filename, keys)
         % setAcquisitionFileInfo(obj, id, filename, set)
-        % setAcquisitionFileInfo(obj, id, filename, set)
         % replaceAcquisitionFileInfo(obj, id, filename, replace)
         % deleteAcquisitionFileInfoFields(obj, id, filename, keys)
         % setCollectionFileInfo(obj, id, filename, set)
