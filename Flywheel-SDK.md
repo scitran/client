@@ -100,9 +100,18 @@ A list of the Flywheel.m methods obtained by running 'grep function Flywheel.m' 
 
 ### Info
         % setProjectFileInfo(obj, id, filename, set)
+        % replaceProjectFileInfo(obj, id, filename, replace)
+        % deleteProjectFileInfoFields(obj, id, filename, keys)  
         % setSessionFileInfo(obj, id, filename, set)  
+        % replaceSessionFileInfo(obj, id, filename, replace)  
+        % deleteSessionFileInfoFields(obj, id, filename, keys)
         % setAcquisitionFileInfo(obj, id, filename, set)
+        % setAcquisitionFileInfo(obj, id, filename, set)
+        % replaceAcquisitionFileInfo(obj, id, filename, replace)
+        % deleteAcquisitionFileInfoFields(obj, id, filename, keys)
         % setCollectionFileInfo(obj, id, filename, set)
+        % replaceCollectionFileInfo(obj, id, filename, replace)  
+        % deleteCollectionFileInfoFields(obj, id, filename, keys)
 
 ### Group
         % getAllGroups(obj)
