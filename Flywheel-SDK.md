@@ -98,6 +98,12 @@ A list of the Flywheel.m methods obtained by running 'grep function Flywheel.m' 
         % addSessionAnalysisNote(obj, sessionId, analysisId, text)
         % downloadFileFromAnalysis(obj, sessionId, analysisId, filename, path)
 
+### Info
+        % setProjectFileInfo(obj, id, filename, set)
+        % setSessionFileInfo(obj, id, filename, set)  
+        % setAcquisitionFileInfo(obj, id, filename, set)
+        % setCollectionFileInfo(obj, id, filename, set)
+
 ### Group
         % getAllGroups(obj)
         % getGroup(obj, id)
@@ -216,12 +222,6 @@ A list of the Flywheel.m methods obtained by running 'grep function Flywheel.m' 
 
         % getAllBatches(obj)
         % getBatch(obj, id)
-
-### Set
-        % setProjectFileInfo(obj, id, filename, set)
-        % setSessionFileInfo(obj, id, filename, set)  
-        % setAcquisitionFileInfo(obj, id, filename, set)
-        % setCollectionFileInfo(obj, id, filename, set)
 
 # Compute
 
