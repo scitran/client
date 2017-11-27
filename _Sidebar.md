@@ -2,7 +2,7 @@
 * [Installation](Installation)
 * [Scitran class](Scitran-class)
    * [Authorization](Authorization)
-   * [Search and list](Search)
+   * [Search and list](Search-and-list)
      * [Typical searches](Search-examples)
      * [Special searches](Special-search-parameters)
      * [List examples](List-examples)
