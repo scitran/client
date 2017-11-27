@@ -16,6 +16,7 @@
 * [Gears and analyses](Gears-and-Analyses)
 * [Scripts](Client-scripts)
 ***
+Notes
 * [Flywheel SDK](Flywheel-SDK)
 * [Flywheel terms](Flywheel-terms)
 * [Reproducible papers](Reproducible-Research)
