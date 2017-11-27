@@ -1,6 +1,6 @@
 The search methods get data in the structs they return.
 
-The listObjects methods also return metadata about the objects in the structs they return.
+The list method returns metadata about containers or files.
 
 The **getdicominfo** example reads file-specific metadata.
 
