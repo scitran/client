@@ -40,8 +40,8 @@ st.downloadObject(file,...)  - Download a directory tree containing a database o
 data = st.read(file,...)  - Certain file types can be downloaded and read into a Matlab variable  
 st.dwiLoad - Read a nifti file and its associated bvec/bval data
 
-st.create - Create a project or a session or an acquistion
 st.upload - File upload
+st.create - Create a project or a session or an acquistion
 st.createCollection
 st.modify - Modify database values (e.g., subject code, sex ...)
 
