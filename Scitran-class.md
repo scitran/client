@@ -28,37 +28,40 @@ where 'vistalab' is a Flywheel site.  Below, we assume that file is a struct, as
 
 
 ```
-(IN PROGRESS BUT STILL INCOMPLETE)
+(IN PROGRESS; INCOMPLETE)
 
 st.search(objType,...)  -  Search for objects constrained by many possible limits (file type, label, date...).
+st.listObjects(objType, parentID, ...) - List objects within a parent; might change to getObjects
+[p,s,a] = st.projectHierarchy - List the sessions and acquisitions in a project hierarchy 
+st.getdicominfo - Information about files or database objects
 
-st.downloadObject(file,...)  - Download a directory tree containing a database object as a tar file
 st.downloadFile(file,...) -
-st.read(file,...)  - Certain file types can be downloaded and read into a Matlab variable  
+data = st.read(file,...)  - Certain file types can be downloaded and read into a Matlab variable  
 st.dwiLoad - Read a nifti file and its associated bvec/bval data
+st.downloadObject(file,...)  - Download a directory tree containing a database object as a tar file
+
+st.upload - File upload
 
 st.create - Create a project or a session or an acquistion
 st.createCollection
-
-st.upload - Files 
-
 st.modify - Modify database values (e.g., subject code, sex ...)
 
-st.runFunction - Download toolboxes and run a function from a remote site
-
-st.delete - 
-
-st.getdicominfo - Information about files or database objects
+st.deleteFile - Delete objects
+st.deleteObject - Delete objects
 
 st.create - Create an object (project, session, acquisition)
 st.createCollection
 
+% Computational
+st.docker
+st.runFunction - Download toolboxes and run a function from a remote site
+st.runScript
+st.toolbox
+
+% Miscellaneous
 st.exist - See if a particular object exists
-st.projectHierarchy - List the sessions and acquisitions in a project hierarchy 
-
-st.browser - Bring a browser to a location
-
 st.verify
+st.browser - Bring a browser to a location
 
 % Not yet decided
 st.putAnalysis
