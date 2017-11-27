@@ -13,6 +13,11 @@ function result = listObjects(obj, returnType, parentID, varargin)
 %        file list
 %        ...
 %
+%     Group Name
+%       Collection
+%         Session
+%           Acquisition
+%
 % Required Inputs
 %  objectType - project, session, acquisition, file
 %  parentID   - A Flywheel ID of the parent (group,  usually obtained from a search
@@ -32,21 +37,25 @@ function result = listObjects(obj, returnType, parentID, varargin)
 
   st = scitran('vistalab');
 
-  % The struct returned from the elastic search and from an SDK get differ
+  % The struct returned from an elastic search and from an SDK get differ
   % substantially
   project      = st.search('project','project label exact','VWFA');
   sessions     = st.listObjects('session',project{1}.project.x_id);
 
+  % The group name (not label) is sent for the project
   projects     = st.listObjects('project','wandell');
   sessions     = st.listObjects('session',projects{1}.id);
   acquisitions = st.listObjects('acquisition',sessions{3}.id); 
   files        = st.listObjects('file',acquisitions{1}.id); 
 
-  collections  = st.search('collection','collection label contains','GearTest');
+  % The return from search on collections is incomprehensible to me (BW). I
+  % Mainly, don't see where the collection id is on the search return
+  % collections  = st.search('collection','collection label contains','GearTest');
 
-  % Not working, I think. The return from search on collections is
-  % incomprehensible to me just now (BW).
-  % sessions     = st.listObjects('collectionsession',collections{1}.id); 
+  % The collection curator is sent, rather than the group name
+  collections  = st.listObjects('collection','wandell@stanford.edu');
+  sessions     = st.listObjects('collectionsession',collections{1}.id); 
+  acquisitions = st.listObjects('collectionacquisition',collections{1}.id); 
 
 %}
 
@@ -90,6 +99,18 @@ switch returnType
         acq = fw.getAcquisition(parentID);
         data = acq.files;
 
+    case 'collection'
+        % An email address of the curator replaces the groupID/parentID
+        data = {};
+        tmp = fw.getAllCollections;
+        cnt = 1;
+        for ii=1:numel(tmp)
+            if strcmp(tmp{ii}.curator,parentID)
+                data{cnt} = tmp{ii}; %#ok<AGROW>
+                cnt = cnt + 1;
+            end
+        end
+        
     case 'collectionsession'
         % Parent is the collection
         data = fw.getCollectionSessions(parentID);
