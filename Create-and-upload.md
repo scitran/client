@@ -7,6 +7,8 @@ gName = 'Wandell Lab';
 pLabel = 'deleteMe';
 sLabel = 'deleteSession';
 aLabel = 'deleteAcquisition';
+
+% id has a project, session and acquisition slot.
 id     = st.create(gName, pLabel,'session',sLabel,'acquisition',aLabel);
 ```
 ## Upload a file
