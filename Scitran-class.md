@@ -36,21 +36,17 @@ st.listObjects(objType, parentID, ...) - List objects within a parent; might cha
 st.getdicominfo - Information about files or database objects
 
 st.downloadFile(file,...) -
+st.downloadObject(file,...)  - Download a directory tree containing a database object as a tar file
 data = st.read(file,...)  - Certain file types can be downloaded and read into a Matlab variable  
 st.dwiLoad - Read a nifti file and its associated bvec/bval data
-st.downloadObject(file,...)  - Download a directory tree containing a database object as a tar file
-
-st.upload - File upload
 
 st.create - Create a project or a session or an acquistion
+st.upload - File upload
 st.createCollection
 st.modify - Modify database values (e.g., subject code, sex ...)
 
 st.deleteFile - Delete objects
 st.deleteObject - Delete objects
-
-st.create - Create an object (project, session, acquisition)
-st.createCollection
 
 % Computational
 st.docker
