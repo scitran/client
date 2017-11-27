@@ -1,6 +1,6 @@
-The search methods get data in the structs they return.
+The list method returns metadata about containers or files when the parent container is already known.  This is similar to the search method, but in that case the containers and files do not have a single parent, or the parent is not known.
 
-The list method returns metadata about containers or files.
+The setFileInfo method edits the metadata in the Information field of a file.
 
 The **getdicominfo** example reads file-specific metadata.
 
