@@ -18,7 +18,7 @@ The constructor and its methods are auto-generated for several languages (Matlab
 Below, the methods are organized into four (redundant) lists
 
 * **object** (project, session, acquisition, file, collection, analysis, group, user) 
-* **action** (search, add modify, replace, delete, download, upload, get, set).
+* **action** (search, add, modify, replace, delete, download, upload, get, set).
 * **compute** (job, batch, gear)
 * **miscellaneous** (about Flywheel)
 
