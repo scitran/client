@@ -2,7 +2,7 @@ Searching a Flywheel database is very useful when you are processing data or sea
 
 There are many search parameters. To learn more about these see [search examples on this page](search-examples) and an [m-file with many examples](https://github.com/scitran/client/blob/master/scripts/s_stSearches.m).
 
-The scitran **listObjects** method is designed for the case when you know the ID of an object (project, session, acquisition or collection) and you want to list what is within that object. The [list examples page](listObjects-examples) demonstrates the usage. 
+The scitran **listObjects** method is designed for the case when you know the ID of an object (project, session, acquisition or collection) and you want to list what is within that object. The [list examples page](list-examples) demonstrates the usage. 
 **N.B.**  The structs returned by the **listObjects** method differs from the structs returned by the **search** method.  
 
 One way to understand the information returned in a search is to explore the values in the returned Matlab structs.  You also might want to look at the [Flywheel data model](https://github.com/scitran/core/wiki/Data-Model) to see the definition of a term.
