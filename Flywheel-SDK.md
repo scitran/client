@@ -98,7 +98,7 @@ A list of the Flywheel.m methods obtained by running 'grep function Flywheel.m' 
         % addSessionAnalysisNote(obj, sessionId, analysisId, text)
         % downloadFileFromAnalysis(obj, sessionId, analysisId, filename, path)
 
-### Info
+### File Info
         % setProjectFileInfo(obj, id, filename, set)
         % replaceProjectFileInfo(obj, id, filename, replace)
         % deleteProjectFileInfoFields(obj, id, filename, keys)  
