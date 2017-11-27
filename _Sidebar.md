@@ -15,13 +15,11 @@
    * [Run examples](Matlab-examples)
 * [Gears and analyses](Gears-and-Analyses)
 * [Scripts](Client-scripts)
-* [BIDS](BIDS)
-
 ***
-
 * [Flywheel SDK](Flywheel-SDK)
 * [Flywheel terms](Flywheel-terms)
 * [Reproducible papers](Reproducible-Research)
 * [Technical notes](Technical-notes)
 * [Toolboxes class](Toolboxes-class)
 * [More search](Search-syntax)
+* [BIDS](BIDS)
