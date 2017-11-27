@@ -8,7 +8,7 @@
      * [List examples](List-examples)
    * [Download and read](Download-and-read)
    * [Create and upload](Create-and-upload)
-* [Get and modify metadata](Get-and-modify-metadata)
+* [List and modify metadata](Get-and-modify-metadata)
 * [Sharing computations](Sharing-Matlab-computing)
    * [Toolbox files](Toolbox-files)
    * [Running functions](Run-function)
