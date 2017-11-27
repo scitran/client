@@ -11,7 +11,7 @@
 * [Get and modify metadata](Get-and-modify-metadata)
 * [Sharing computations](Sharing-Matlab-computing)
    * [Toolbox files](Toolbox-files)
-   * [Matlab functions](Matlab-functions)
+   * [Running functions](Run-function)
    * [Matlab examples](Matlab-examples)
 * [Gears and analyses](Gears-and-Analyses)
 * [Scripts](Client-scripts)
