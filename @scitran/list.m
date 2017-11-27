@@ -1,10 +1,10 @@
 function result = listObjects(obj, returnType, parentID, varargin)
-% List Flywheel objects inside a parent
+% List Flywheel containers or files inside a parent
 %
 % Syntax
-%   result = scitran.listObjects(objectType, parentID, ...)
+%   result = scitran.list(returnType, parentID, ...)
 %
-% The Flywheel objects are organized hierarchically as in
+% The Flywheel objects and files are organized hierarchically
 %
 %    Group Name
 %     Project Name
@@ -18,9 +18,11 @@ function result = listObjects(obj, returnType, parentID, varargin)
 %         Session
 %           Acquisition
 %
-% Required Inputs
-%  objectType - project, session, acquisition, file
-%  parentID   - A Flywheel ID of the parent (group,  usually obtained from a search
+% Inputs
+%  returnType - project, session, acquisition, file,
+%               collectionsession, collectionacquisition
+%  parentID   - A Flywheel ID of the parent (group, usually obtained
+%               from a search 
 %
 % Optional Inputs
 %  summary:  - Print a brief summary of the returned objects
@@ -62,7 +64,10 @@ function result = listObjects(obj, returnType, parentID, varargin)
 %% Parse inputs
 p = inputParser;
 
+% Squeeze out spaces and force lower case
+returnType = stParamFormat(returnType);
 p.addRequired('returnType',@ischar);
+
 p.addRequired('parentID',@ischar);
 p.addParameter('summary',true,@islogical);
 

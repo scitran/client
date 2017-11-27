@@ -18,6 +18,10 @@
 st = scitran('cni');
 st.verify
 
+
+%% First task is to deal with file info and QA
+% Many of the 
+
 %% List projects you can access
 
 % I guess we should sort the projects on return.
