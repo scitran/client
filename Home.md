@@ -1,4 +1,4 @@
-The **scitran matlab client** provides tools so that Matlab users can interact with a [Flywheel system](https://flywheel.io). The client searches, lists, reads and analyzes data.  It is also capable of setting up analyses. 
+The **scitran matlab client** provides tools so that Matlab users can interact with a [Flywheel system](https://flywheel.io). The client searches, lists, reads and analyzes data and metadata from a Flywheel instance.  The client can also control job scheduling. 
 
 The **scitran matlab client** can be run securely from any computer on the Internet. We have used the client extensively on Mac and Linux systems.  We have not tested extensively on Windows systems yet, but at least it seems to run.
 
