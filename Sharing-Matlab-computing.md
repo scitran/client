@@ -1,4 +1,4 @@
-Flywheel helps you share Matlab functions reproducibly with colleagues. In many cases, you will be sharing the function with your future self. 
+The **scitrian matlab client** helps you share Matlab functions reproducibly with colleagues. In many cases, you will be sharing the function with your future self. 
 
 The **toolboxes** class is an important component of reproducible sharing.  The **toolboxes** and **scitran** classes work together to implement reproducible computing.  The  **scitran** class accesses Flywheel data; the **toolboxes** class downloads Matlab functions on Flywheel and also downloads Matlab libraries on github that are needed to run these functions.
 
