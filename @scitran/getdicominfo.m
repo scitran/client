@@ -26,7 +26,7 @@ files = st.search('file',...
           'filetype','dicom',...
           'project label exact','qa');
 files = st.getdicominfo(files);
-files{1}.info.('EchoTime')
+fprintf('Echo Time %d\n',files{1}.info.('EchoTime'))
 %}
 
 %%

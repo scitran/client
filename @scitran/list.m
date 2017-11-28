@@ -1,4 +1,4 @@
-function result = listObjects(obj, returnType, parentID, varargin)
+function result = list(obj, returnType, parentID, varargin)
 % List Flywheel containers or files inside a parent
 %
 % Syntax
@@ -42,22 +42,22 @@ function result = listObjects(obj, returnType, parentID, varargin)
   % The struct returned from an elastic search and from an SDK get differ
   % substantially
   project      = st.search('project','project label exact','VWFA');
-  sessions     = st.listObjects('session',project{1}.project.x_id);
+  sessions     = st.list('session',project{1}.project.x_id);
 
   % The group name (not label) is sent for the project
-  projects     = st.listObjects('project','wandell');
-  sessions     = st.listObjects('session',projects{1}.id);
-  acquisitions = st.listObjects('acquisition',sessions{3}.id); 
-  files        = st.listObjects('file',acquisitions{1}.id); 
+  projects     = st.list('project','wandell');
+  sessions     = st.list('session',projects{1}.id);
+  acquisitions = st.list('acquisition',sessions{3}.id); 
+  files        = st.list('file',acquisitions{1}.id); 
 
   % The return from search on collections is incomprehensible to me (BW). I
   % Mainly, don't see where the collection id is on the search return
   % collections  = st.search('collection','collection label contains','GearTest');
 
   % The collection curator is sent, rather than the group name
-  collections  = st.listObjects('collection','wandell@stanford.edu');
-  sessions     = st.listObjects('collectionsession',collections{1}.id); 
-  acquisitions = st.listObjects('collectionacquisition',collections{1}.id); 
+  collections  = st.list('collection','wandell@stanford.edu');
+  sessions     = st.list('collectionsession',collections{1}.id); 
+  acquisitions = st.list('collectionacquisition',collections{1}.id); 
 
 %}
 
