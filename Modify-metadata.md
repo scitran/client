@@ -29,7 +29,7 @@ st.setFileInfo(files{1},jsonInfo);
 ```
 
 ### Dicom file info
-Dicom files are particularly important because their headers contain so much information.  That information is automatically incorporated in to the Information file for the dicom data, when they are read from the scanner.  You can read this metadata using the **getdicominfo** method.
+Dicom file headers contain a great deal of information about the MRI scan. When read from a scanner, Flywheel automatically extracts this information and incorporates in to the Information file for the dicom data. You can read this metadata using the **getdicominfo** method.
 ```
 st = scitran('cni');
 files = st.search('file',...
