@@ -1,31 +1,35 @@
-When you wish a listing of the objects in a particular project, session, acquisition, or collection you should use the scitran **listObjects** method.  This is faster than search and is more likely to return descriptions of only the data objects you want.
+When you wish a listing of the objects in a particular project, session, acquisition, or collection you should use the scitran **list** method.  This is faster than search and is more likely to return descriptions of only the data objects you want.
 
-The data returned listObjects has a different format from the data returned by search.  There is a reason - but I have no intention of defending this behavior!  I am considering what to do about this.
+The data returned by **list** has a different format from the data returned by **search**.  There is a reason - but I have no intention of defending this behavior!  I am considering what to do about this.
 
-## Example listings
+## Examples
 
 Suppose you want a list describing the sessions in a particular project.
 ```
 project      = st.search('project','project label exact','VWFA');
-sessions     = st.listObjects('session',project{1}.project.x_id);
+sessions     = st.list('session',project{1}.project.x_id);
 ```
 Or suppose you want to find the projects within a particular group
 
-    projects     = st.listObjects('project','wandell');
+    projects     = st.list('project','wandell');
 
 Be aware that the cell array returned by listObjects differs from that returned by search.  In the **listObject** case the projectID is found by projects{1}.id, rather than projects{1}.project.x_id.
 
-    sessions     = st.listObjects('session',projects{1}.id);
+    sessions     = st.list('session',projects{1}.id);
 
 Continuing down the directory tree, 
 
-    acquisitions = st.listObjects('acquisition',sessions{3}.id); 
-    files        = st.listObjects('file',acquisitions{1}.id); 
+    acquisitions = st.list('acquisition',sessions{3}.id); 
+    files        = st.list('file',acquisitions{1}.id); 
 
 To search the collections we use the curator, which is typically an email
 
-    collections  = st.listObjects('collection','wandell@stanford.edu');
-    sessions     = st.listObjects('collectionsession',collections{1}.id);
-    acquisitions = st.listObjects('collectionacquisition',collections{1}.id); 
+    collections  = st.list('collection','wandell@stanford.edu');
+    sessions     = st.list('collection session',collections{1}.id);
+    acquisitions = st.list('collection acquisition',collections{1}.id); 
+
+There are times when you want a listing of the containers and files in a particular project, session or acquisition (parent container). The scitran **list** method returns a list of the metadata within a parent container. The returned information is similar, but not exactly the same, as what is returned by the **search** method.  Search returns information about containers or files that may not have a single parent, but rather can be spread across the whole database.
+
+This list and search methods both return metadata, while the downloadFile method retrieves the file itself.  
 
 
