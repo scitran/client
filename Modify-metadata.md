@@ -1,25 +1,3 @@
-There are times when you want a listing of the containers and files in a particular project, session or acquisition (parent container). The scitran **list** method returns a list of the metadata within a parent container. The returned information is similar, but not exactly the same, as what is returned by the **search** method.  Search returns information about containers or files that may not have a single parent, but rather can be spread across the whole database.
-
-This list and search methods both return metadata, while the downloadFile method retrieves the file itself.  
-
-## list method
-```
-st = scitran('vistalab');
-
-% If you start with data from an elastic search, the parent id
-% is formatted like this
-project      = st.search('project','project label exact','VWFA');
-sessions     = st.list('session',project{1}.project.x_id);
-
-% You can also start with data from the list method.
-% In that case the group name (not label) is sent for the project
-projects     = st.list('project','wandell');
-
-% Notice that the format of the returned struct differs
-sessions     = st.list('session',projects{1}.id);
-acquisitions = st.list('acquisition',sessions{3}.id); 
-files        = st.list('file',acquisitions{1}.id); 
-```
 
 ### File info
 
