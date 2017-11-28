@@ -1,10 +1,9 @@
-
-### File info
-
 All Flywheel containers, including projects, sessions, acquisitions, files and collections, can have metadata attached to them. These are stored in Information fields attached to the container.  You can see these information containers directly in the user interface by clicking on the drawer on the right.
 
-The setFileInfo method edits the metadata in the Information field of a file.  The information is delivered in the form of a Matlab struct.  This code snippet illustrates the **setFileInfo** method.
+### File Info
+The **setFileInfo** method edits the metadata in the Information field of a file.  The information is contained in a Matlab struct.  This code snippet illustrates the **setFileInfo** method.
 ```
+% Find a json file that has data we will use for the information field
 files = st.search('file',...
     'project label exact','qa',...
     'session label exact','16542',...
@@ -17,7 +16,7 @@ files = st.search('file',...
 destination = st.downloadFile(files{1});
 qaInfo = jsonread(destination);
 
-%% Now, extract the fields we want for the json info data 
+%% Extract the fields from the json data and put them in a struct
 jsonInfoFields = {'temporalSNR_median_','medianMd','spikes',...
     'maxMd','tr','version','spikeThresh'};
 for ii=1:length(jsonInfoFields)
@@ -25,7 +24,7 @@ for ii=1:length(jsonInfoFields)
 end
 jsonInfo.numSpikes = numel(qaInfo.spikes);
 
-%% Attach it to the JSON file
+%% Call setFileInfo to attach the information to the file.
 st.setFileInfo(files{1},jsonInfo);
 ```
 
