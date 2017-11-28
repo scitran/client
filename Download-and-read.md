@@ -25,7 +25,9 @@ For detailed examples see the script s_stDownload.m
 
 ## downloadObject
 
+We are expecting to get an endpoint that downloads a tar-file of a container.
 
 ## read
 
+TBD - the read method is like downloadFile plus a read command.  To run this, however, you require certain auxiliary functions (e.g., niftiRead).  We are considering how to manage this in the distribution.
 
