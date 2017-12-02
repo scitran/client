@@ -15,7 +15,7 @@ st =
     instance: 'vistalab'
           fw: [1×1 Flywheel]
 ```
-The [authorization page](Authorization) describes how to store the information about your Flywheel database (in this example 'vistalab').
+The [authorization page](Authorization) describes how to create an instance (in this example 'vistalab') and save your Flywheel permission information.
 
 ## Methods
 
