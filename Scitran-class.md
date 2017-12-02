@@ -23,36 +23,50 @@ Extended examples of how to use these scitran methods are provided in other wiki
 ```
 (IN PROGRESS; INCOMPLETE)
 
+%% Search and list
 st.search(objType,...)  -  Search for objects constrained by many possible limits (file type, label, date...).
 st.listObjects(objType, parentID, ...) - List objects within a parent; might change to getObjects
-[p,s,a] = st.projectHierarchy - List the sessions and acquisitions in a project hierarchy 
+[p,s,a] = st.projectHierarchy - List the sessions and acquisitions in a project hierarchy
+```
+Metadata
+```
+st.setFileInfo  - Set metadata for a file
 st.getdicominfo - Information about files or database objects
-
+```
+Download and Read
+```
 st.downloadFile(file,...) -
 st.downloadObject(file,...)  - Download a directory tree containing a database object as a tar file
 data = st.read(file,...)  - Certain file types can be downloaded and read into a Matlab variable  
 st.dwiLoad - Read a nifti file and its associated bvec/bval data
-
+```
+Create, modify, upload
+```
 st.upload - File upload
-st.create - Create a project or a session or an acquistion
+st.create - Create a project or a session or an acquisition
 st.createCollection
 st.modify - Modify database values (e.g., subject code, sex ...)
-
-st.deleteFile - Delete objects
-st.deleteObject - Delete objects
-
-% Computational
+```
+Delete
+```
+st.deleteFile   - Delete a file
+st.deleteObject - Delete container objects
+```
+Computational
+```
 st.docker
 st.runFunction - Download toolboxes and run a function from a remote site
 st.runScript
 st.toolbox
-
-% Miscellaneous
+```
+Miscellaneous
+```
 st.exist - See if a particular object exists
 st.verify
 st.browser - Bring a browser to a location
-
-% Not yet decided
+```
+Not yet decided
+```
 st.putAnalysis
 st.bidsUpload
 st.bidsDownload
