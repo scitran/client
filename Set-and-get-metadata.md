@@ -1,9 +1,9 @@
-All Flywheel containers, including projects, sessions, acquisitions, files and collections, can have metadata attached to them. These are stored in Information fields attached to the container.  You can see these information containers directly in the user interface by clicking on the drawer on the right.
+All Flywheel containers (projects, sessions, acquisitions, files and collections) can have metadata. The metadata are stored in Information fields attached to the container; you can see the information fields in the user interface by clicking on the drawer on the right and selecting 'Information.' If there is no metadata, the field is gray'd out.
 
 ### File Info
-The **setFileInfo** method edits the metadata in the Information field of a file.  The information is contained in a Matlab struct.  This code snippet illustrates the **setFileInfo** method.
+The **setFileInfo** method places metadata in a file's Information.  The metadata is represented as slots in a Matlab struct.  This code snippet illustrates the **setFileInfo** method.
 ```
-% Find a json file that has data we will use for the information field
+% This is a json file that has metadata we will use for the information field
 files = st.search('file',...
     'project label exact','qa',...
     'session label exact','16542',...
