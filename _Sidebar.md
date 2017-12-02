@@ -14,6 +14,7 @@
    * [Running functions](Run-function)
    * [Run examples](Matlab-examples)
 * [Gears and analyses](Gears-and-Analyses)
+* [Utilities](Client-utilities)
 * [Scripts](Client-scripts)
 ***
 Notes
