@@ -5,7 +5,7 @@ A scitran object is instantiated by a call that identifies which Flywheel databa
 >> st = scitran('vistalab');
 ```
 
-The scitran object contains the Flywheel database url, the instance name, a pointer to the Flywheel SDK, and some hidden information about user permission.
+The scitran object contains the Flywheel database url, the instance name, a way to access the Flywheel SDK, and some hidden information about user permission.
 ```
 st = 
 
