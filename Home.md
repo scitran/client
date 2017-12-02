@@ -1,21 +1,21 @@
-The **scitran matlab client** provides tools so that Matlab users can interact with a [Flywheel system](https://flywheel.io). The client searches, lists, reads and analyzes data and metadata from a Flywheel instance.  The client can also control job scheduling. 
+The **scitran matlab client** enables Matlab users to interact with a [Flywheel system](https://flywheel.io). The client methods search, list, upload, download, read and analyze Flywheel data and metadata.  The client can control job scheduling. 
 
-The **scitran matlab client** can be run securely from any computer on the Internet. We have used the client extensively on Mac and Linux systems.  We have not tested extensively on Windows systems yet, but at least it seems to run.
+The **scitran matlab client** can be run securely from any computer on the Internet. We have used the client extensively on Mac and Linux systems.
 
-This wiki describes the software and provides examples including how to
+This wiki describes the software and explains how to
 
 * obtain authorization to interact with a Flywheel database
-* search the database for its contents
+* search the database
 * get information about the database contents
 * download or read database objects (e.g., files, sessions, projects, analyses)
 * upload files to the database (e.g., files, graphs, other attachments)
-* upload method descriptions (e.g., analyses, Gears) and programs (e.g., Matlab files) that others can run
-* paper of the future (pof) efforts
+* upload data analyses and software (e.g., Matlab files) that others can run
 
+This client is part of our vision of how to work with Flywheel to create a reproducible paper, accounting for both data and computation. 
 
 ### Related information
 
-This client is based on the [Flywheel SDK](Flywheel-SDK) that is platform independent, and written in [Golang](https://golang.org/).  The functions in the Flywheel SDK are exported into a library that is called from Matlab. You have direct access to the Flywheel SDK calls from the scitran objects.
+This client interacts with Flywheel using the [Flywheel SDK](Flywheel-SDK) a platform independent set of functions that are written in [Golang](https://golang.org/).  The Flywheel SDK functions are in a library that is called from Matlab. The scitran matlab client accesses the Flywheel SDK for many basic utilities.
 
 The same Flywheel SDK is also exported into libraries for [**a scitran python client**](https://github.com/scitran/python-client) and a **scitran** 'R' client.
 
