@@ -18,16 +18,18 @@ And it is also possible to download a project in [BIDS](BIDS) format.
 
     scitran.downloadFile(file,'destination',filename,'size',size)
 
-    project = st.search('projects','project label exact','VWFA');
-    st.download('project',project{1}.id,'destination','tarfile name');
-
 For detailed examples see the script s_stDownload.m
 
 ## downloadObject
 
-We are expecting to get an endpoint that downloads a tar-file of a container.
+We are expecting to get an endpoint that downloads a tar-file of a container.  ** NOT YET IMPLEMENTED **
+
+    project = st.search('project','project label exact','VWFA');
+    id = idGet(project{1});
+    st.download('project',id,'destination','tarfileName');
 
 ## read
 
-TBD - the read method is like downloadFile plus a read command.  To run this, however, you require certain auxiliary functions (e.g., niftiRead).  We are considering how to manage this in the distribution.
+TBD - the read method is like downloadFile plus a read command.  To run this, however, you require certain auxiliary functions (e.g., niftiRead).  We are considering how to make sure these read functions are in the distribution.
+
 
