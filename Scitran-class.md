@@ -16,7 +16,9 @@ The [authorization page](Authorization) describes how to store the information a
 
 ## Methods
 
-The scitran methods enable you to find database contents, get information about these objects, download and upload files, and modify metadata. See the [Flywheel terms](Flywheel-terms) page to learn about the conceptual organization of information in Flywheel.
+The scitran methods enable you to find database contents, get information about these objects, download and upload files, and modify metadata. See the [Flywheel terms](Flywheel-terms) page to learn about the conceptual organization of Flywheel data.
+
+Extended examples of how to use these scitran methods are provided in other wiki pages.
 
 ```
 (IN PROGRESS; INCOMPLETE)
