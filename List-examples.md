@@ -18,9 +18,9 @@ Or suppose you want to find the projects within a particular group
 
     projects     = st.list('project','wandell');
 
-Be aware that the cell array returned by listObjects differs from that returned by search.  In the **listObject** case the projectID is found by projects{1}.id, rather than projects{1}.project.x_id.
+Be aware that the cell array returned by listObjects differs from that returned by search.  In the **listObject** case the projectID is found by projects{1}.id, rather than projects{1}.project.x_id.  You can reduce your programming burden by calling the utility function idGet(...), which returns a container id for either format.
 
-    sessions     = st.list('session',projects{1}.id);
+    sessions     = st.list('session',idGet(projects{1}));
 
 Continuing down the directory tree, 
 
