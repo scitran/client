@@ -1,4 +1,4 @@
-There are two principal classes in the client toolbox.  The **scitran** class and the **toolboxes** class.  The scitran class, described here, is designed to interact with the contents of the Flywheel database.  The toolboxes class, designed to support reproducible computation with Flywheel data, is described [in a separate page](Toolboxes).
+There are two principal classes in the client toolbox.  The **scitran** class and the **toolboxes** class.  The scitran class, described here, facilitates interactions with the contents of the Flywheel database.  The toolboxes class, designed to support reproducible computation with Flywheel data, is described [in a separate page](Toolboxes).
 
 This page describes scitran methods, and we plan to update this information regularly.
 
