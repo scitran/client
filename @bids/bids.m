@@ -67,14 +67,18 @@ classdef bids < handle
             % Read the directory through and store the stuff we will need
             % for uploading
             %
+            disp('Loading participant information')
             obj.participants;
 
             % Add folder for each participant
+            disp('Adding participant folders')
             obj.subjFolders;
             
+            disp('Checking sessions')
             obj.checkSessions([]);
             
             % Add data directories and files for each subject
+            disp('Adding data directories and files for each subject')
             obj.subjData;
             
             % To see the allowable data types
@@ -82,6 +86,7 @@ classdef bids < handle
             
             % Auxiliary files in the root directory
             % JSON and TSV files
+            disp('Adding JSON and TSV files')
             obj.metaDataFiles;
 
             % We need one of these
