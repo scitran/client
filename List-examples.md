@@ -27,11 +27,8 @@ Continuing down the directory tree,
     acquisitions = st.list('acquisition',idGet(sessions{3})); 
     files        = st.list('file',idGet(acquisitions{1})); 
 
-To search the collections we use the curator, which is typically an email
+To search the collections **IN PROGRESS DOCUMENTATION**
 
-    collections  = st.list('collection','wandell@stanford.edu');
-    sessions     = st.list('collection session',collections{1}.id);
-    acquisitions = st.list('collection acquisition',collections{1}.id); 
 
 
 
