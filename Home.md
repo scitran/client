@@ -5,13 +5,12 @@ The **scitran matlab client** can be run securely from any computer on the Inter
 This wiki describes the software and explains how to
 
 * obtain authorization to interact with a Flywheel database
-* search the database
-* get information about the database contents
-* download or read database objects (e.g., files, sessions, projects, analyses)
-* upload files to the database (e.g., files, graphs, other attachments)
-* upload data analyses and software (e.g., Matlab files) that others can run
+* search the database to get information about its contents
+* download and read database objects (e.g., files, sessions, projects, analyses)
+* upload files, notes, and attachments to the database (e.g., files, graphs, metadata)
+* upload analyses and software (e.g., Matlab files) for computational sharing
 
-This client is part of our vision of how to work with Flywheel to create a reproducible paper, accounting for both data and computation. 
+This client is part of our vision of using Flywheel to create a reproducible research paper that shares both data and computations. 
 
 ### Related information
 
