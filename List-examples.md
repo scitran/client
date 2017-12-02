@@ -24,8 +24,8 @@ Be aware that the cell array returned by listObjects differs from that returned 
 
 Continuing down the directory tree, 
 
-    acquisitions = st.list('acquisition',sessions{3}.id); 
-    files        = st.list('file',acquisitions{1}.id); 
+    acquisitions = st.list('acquisition',idGet(sessions{3})); 
+    files        = st.list('file',idGet(acquisitions{1})); 
 
 To search the collections we use the curator, which is typically an email
 
