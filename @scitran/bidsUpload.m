@@ -138,13 +138,13 @@ nSessions = numel(sessions);
 for ii=1:nSessions
     for jj=1:length(sessionLabels)
         % Find a bids sessionLabel that matches
-        if strcmp(sessions(ii).label,sessionLabels{jj})
+        if strcmp(sessions{ii}.label,sessionLabels{jj})
             % Upload these files
             theseFiles = bidsData.sessionMeta{ii,jj};
-            fprintf('Uploading %d files to %s\n',length(theseFiles),sessions(ii).label);
+            fprintf('Uploading %d file(s) to %s\n',length(theseFiles),sessions{ii}.label);
             for ff = 1:length(theseFiles)
                 localName = fullfile(bidsData.directory,theseFiles{ff});
-                st.upload(localName,'session',sessions(ii).id);
+                st.upload(localName,'session',sessions{ii}.id);
             end
             break;
         end
