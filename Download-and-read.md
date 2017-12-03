@@ -20,13 +20,13 @@ And it is also possible to download a project in [BIDS](BIDS) format.
 
 For detailed examples see the script s_stDownload.m
 
-## downloadObject
+## downloadContainer
 
 We are expecting to get an endpoint that downloads a tar-file of a container.  ** NOT YET IMPLEMENTED **
 
     project = st.search('project','project label exact','VWFA');
     id = idGet(project{1});
-    st.download('project',id,'destination','tarfileName');
+    st.downloadContainer('project',id,'destination','tarfileName');
 
 ## read
 
