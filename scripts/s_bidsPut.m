@@ -77,10 +77,12 @@ for ii=1:length(b.subjectFolders)
         id = st.create(thisGroup,thisProject,'session',thisSessionLabel);
         
         % We can add more subject fields here
+        clear data
         data.subject.code = sprintf('%s',b.subjectFolders{ii});
+        data.subject.firstname = 'none';
         
         % Set the metadata about the subject for this container
-        st.update(data,'container', session{1});
+        info = st.setContainerInfo('session', id.session, data);
         
         %% STOPPED HERE
         % We need a counter for the sessions
