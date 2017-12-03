@@ -33,7 +33,7 @@ Not converted yet with to the new SDK.  Next weekend's project.
 ## Notes
 
 * We are creating API methods to validate that a Flywheel project has the necessary BIDS information and can be downloaded as a BIDS directory.
-* We already run several BIDS applications (fMRIprep and XXX) as Gears on any Flywheel site.
+* Several BIDS applications (fMRIprep and XXX) are implemented as Gears on Flywheel.
 * There is a **Python** method for uploading and downloading.  
 
 ## BIDS class methods
