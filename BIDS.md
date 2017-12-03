@@ -1,13 +1,13 @@
 
-A [BIDS](http://bids.neuroimaging.io/) directory can be uploaded to Flywheel using the scitran method bidsUpload.  A Flywheel project that has been uploaded from a BIDS directory can be downloaded using the scitran methods bidsDownload.  The **bids** class and scitran methods are described here.
+A [BIDS](http://bids.neuroimaging.io/) directory can be uploaded to Flywheel using the scitran method **bidsUpload**.  A Flywheel project created by uploading from a BIDS directory can be downloaded using the scitran methods **bidsDownload**.  The scitran methods and **bids** class are described here.
 
-## Constructing a bids object
+## Constructing a BIDS object
 
-If you have a BIDS data directory (dataDir), we you can build a description of the directory using
+If you have a BIDS data directory (bDir), we you can build a description of the directory using
 
-    thisBIDS = bids(dataDir)
+    thisBIDS = bids(bDir)
 
-We expect that dataDir is a directory on your computer that contains a BIDS formatted directory tree.  The bids() constructor scans the directory and returns a bids object that contains a listing of all the BIDS directories, meta data files and imaging data files. You can validate the BIDS compliance using
+We expect that bDir is a directory on your computer that contains a BIDS formatted directory tree.  The bids() constructor scans the directory and returns a bids object containing all the BIDS directories, metadata files and imaging data files. You can validate the BIDS compliance using
 
     thisBIDS.validate
 
@@ -18,14 +18,14 @@ You can upload the BIDS data using these Matlab commands.  The example points to
 
 ```
 data = bids(fullfile(stRootPath,'local','BIDS-examples','fw_test'));
-data.projectLabel = 'BIDSUp';
+data.projectLabel = 'BIDSUpload';
 groupLabel = 'Wandell Lab'; 
 project = st.bidsUpload(data,groupLabel);
 ```
 
 ## Downloading
 
-Not converted yet with to the new SDK.  Next weekend's project.
+This method has not yet been converted to the new SDK calls. That will be next weekend's project.
 
      projectLabel = 'The FW project label'
      bidsDir = st.bidsDownload(projectLabel,'destination',<destination directory>);
