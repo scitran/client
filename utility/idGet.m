@@ -56,6 +56,7 @@ sessions = st.list('session',projID);
 id = idGet(sessions)
 acquisitions = st.list('acquisition',id{1});
 id = idGet(acquisitions)
+id = idGet(acquisitions{1})
 
 % We need to add the collection tests when that is fixed in Flywheel
 
@@ -68,33 +69,41 @@ p.parse(data);
 %% Determine if is struct or cell array of structs
 
 if iscell(data), objType = 'cell'; 
-else             objType = 'struct';
+else,            objType = 'struct';
 end
 
 nData = numel(data);
 if nData > 1, id = cell(nData,1); end
 
-% Determine sdk or search type
-structType = 'search';
-if nData == 1
-    if isfield(data,'id'), structType = 'sdk'; end
-else   
-    if isfield(data{1},'id'), structType = 'sdk'; end
+% Determine whether a search type or a list type
+srch = true;
+if strcmp(objType,'cell')
+    if isfield(data{1},'id'), srch = false; end
+else
+    if isfield(data(1),'id'), srch = false; end
 end
 
 %% Read the id values
 switch objType
     case 'struct'
         for ii=1:nData
-            id{ii} = idSearch(data{ii});
+            if srch, id{ii} = idSearch(data(ii));
+            else,    id{ii} = data(ii).id;
+            end
         end
+
     case 'cell'
         for ii=1:nData
-            id{ii} = data{ii}.id;
+            if srch,  id{ii} = idSearch(data{ii});
+            else,     id{ii} = data{ii}.id;
+            end
         end
+
     otherwise
-        error('Unknown structType %s\n', structType);
+        error('Unknown objType %s.  Search is %s\n', objType, srch);
 end
+
+if nData == 1, id = id{1}; end
 
 end
 

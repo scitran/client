@@ -1,7 +1,7 @@
-function [status, result] = deleteObject(obj, containerType, containerID, varargin )
+function deleteContainer(obj, containerType, containerID, varargin )
 % Deletes an object from a Flywheel site.  
 % 
-%  [status, result] = st.deleteObject(obj, containerType, containerID, varargin)
+%  st.deleteContainer(obj, containerType, containerID, varargin)
 %
 % Required inputs
 %    containerId - string that identifies the Flywheel object
@@ -35,27 +35,27 @@ function [status, result] = deleteObject(obj, containerType, containerID, vararg
    % Delete the project.
    containerType = 'project';
    containerID = id.project;
-   st.deleteObject(containerType,containerID);
+   st.deleteContainer(containerType,containerID);
 
    % Delete the session and then the project
    s = st.search('session',...
           'session label exact',sLabel,...
           'project label exact',pLabel);
-   st.deleteObject('session',s{1}.session.x_id);
+   st.deleteContainer('session',s{1}.session.x_id);
    
    containerType = 'project';
    containerID = id.project;
-   st.deleteObject(containerType,containerID);
+   st.deleteContainer(containerType,containerID);
 
    % Delete the acquisition and then the project
    a = st.search('acquisition',...
           'acquisition label exact',aLabel,...
           'project label exact',pLabel);
-   st.deleteObject('acquisition',a{1}.acquisition.x_id);
+   st.deleteContainer('acquisition',a{1}.acquisition.x_id);
    
    containerType = 'project';
    containerID = id.project;
-   st.deleteObject(containerType,containerID);
+   st.deleteContainer(containerType,containerID);
 
 %}
 
