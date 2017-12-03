@@ -32,7 +32,7 @@ function deleteContainer(obj, containerType, containerID, varargin )
       'project label exact',pLabel,...
       'file name','dtiError.json');
    
-   % Delete the project.
+   % Delete a project.  Scary
    containerType = 'project';
    containerID = id.project;
    st.deleteContainer(containerType,containerID);
