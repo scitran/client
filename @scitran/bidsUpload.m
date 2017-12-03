@@ -1,24 +1,13 @@
 function project = bidsUpload(st,bidsData, groupLabel, varargin)
+%Upload a BIDS compliant directory to a Flywheel site
 %
 %   @scitran.bidsUpload
 % 
 % Example:
-%    fw = scitran('vistalab');
+%    st = scitran('vistalab');
 %    data = bids(fullfile(stRootPath,'local','BIDS-examples','fw_test'));
-%    data.projectLabel = 'fw_bids_test';
-%    project = fw.bidsUpload(data,'wandell');
-%    
-%  To delete this project you can use
-%
-%    fw.deleteProject('fw_bids_test','saveproject',true);
-%
-%  and then delete the project itself by hand, after checking that the
-%  sessions have been removed.  Or, simply use
-%
-%    fw.deleteProject('fw_bids_test');
-%
-%  However, we have been having difficulty with elastic search indexing of
-%  the deleted project.  Hopefully this will be solved shortly.
+%    % data.projectLabel = 'fw_bids_test';
+%    project = st.bidsUpload(data,'wandell');
 %
 % BW/DH Scitran Team, 2017
 
