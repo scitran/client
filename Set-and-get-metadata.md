@@ -29,7 +29,8 @@ jsonInfo.numSpikes = numel(qaInfo.spikes);
 st.setFileInfo(files{1},jsonInfo);
 ```
 We still have not implemented a **getFileInfo** method.  Will do before long.  It will look like
-    info = st.getFileInfo(files{1});
+
+     info = st.getFileInfo(files{1});
 
 ### Dicom file info
 Dicom file headers contain a great deal of information about the MRI scan. When read from a scanner, Flywheel automatically extracts this information and incorporates in to the Information file for the dicom data. You can read this metadata using the **getdicominfo** method.
