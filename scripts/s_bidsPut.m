@@ -17,7 +17,7 @@
 
 %% Here is an example bids data set
 
-thisProject = 'BIDS-Test';
+thisProject = 'BIDSTest';
 
 bidsDir = fullfile(stRootPath,'local','BIDS-Examples','ds001');
 % bidsDir = fullfile(stRootPath,'local','BIDS-Examples','7t_trt');
@@ -38,9 +38,11 @@ id = st.create(thisGroup,thisProject);
 
 % It does not exist in the elastic search database for a while!
 % st.search('project','project label exact',thisProject)
-% status = st.exist('project',thisProject)
+% projects = st.search('project','project label contains',thisProject)
+
+% [status,id] = st.exist('project',thisProject)
 % if status
-%     st.deleteObject('project',id.project);
+%     st.fw.deleteProject(id); 
 % end
 
 %% Make the sessions, acquisitions and upload the data files
