@@ -31,17 +31,17 @@ b = bids(bidsDir);
 %
 st = scitran('vistalab');
 thisGroup   = 'Wandell Lab';
-
+% st.browser
 %%
 fprintf('Create the project %s\n',thisProject);
 id = st.create(thisGroup,thisProject);
 
 % It does not exist in the elastic search database for a while!
 % st.search('project','project label exact',thisProject)
-status = st.exist('project',thisProject)
-if status
-    st.deleteObject('project',id.project);
-end
+% status = st.exist('project',thisProject)
+% if status
+%     st.deleteObject('project',id.project);
+% end
 
 %% Make the sessions, acquisitions and upload the data files
 %
