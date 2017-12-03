@@ -1,25 +1,26 @@
-function project = bidsUpload(st,bidsData, groupLabel, varargin)
+function projectID = bidsUpload(st,bidsData, groupLabel, varargin)
 %Upload a BIDS compliant directory to a Flywheel site
 %
-%   @scitran.bidsUpload
+%   projectID = @scitran.bidsUpload
 % 
 % Example:
 %    st = scitran('vistalab');
 %    data = bids(fullfile(stRootPath,'local','BIDS-examples','fw_test'));
 %    data.projectLabel = 'fw_bids_test';
-%    groupLabel = 'Wandell Lab'; project = st.bidsUpload(data,groupLabel);
+%    groupLabel = 'Wandell Lab'; projectID = st.bidsUpload(data,groupLabel);
 %
 % BW/DH Scitran Team, 2017
 
 %{
     st = scitran('vistalab');
+
+    % data = bids(fullfile(stRootPath,'local','BIDS-examples','ds003'));
     data = bids(fullfile(stRootPath,'local','BIDS-examples','fw_test'));
     data.projectLabel = 'BIDSUp';
     groupLabel = 'Wandell Lab'; project = st.bidsUpload(data,groupLabel);
 
     [s,id] = st.exist('project',data.projectLabel);
     if s, st.deleteContainer('project',id); end
-
 %}
 %% input
 
@@ -70,13 +71,9 @@ for ii=1:length(bidsData.subjectFolders)
     
     for ss = 1:nSessions
         
-        % If there is more than one session label it.  Otherwise, leave ses-XX off
-        % the label.  Maybe we should always label with ses, though.
-        if nSessions > 1
-            thisSessionLabel = sprintf('%s-ses-%d',bidsData.subjectFolders{ii},ss);  % **** save the sessionLabels
-        else
-            thisSessionLabel = sprintf('%s',bidsData.subjectFolders{ii});  % **** save the sessionLabels
-        end
+        % Even if there is only one session for the subject, label it.
+        thisSessionLabel = sprintf('%s-ses-%d',bidsData.subjectFolders{ii},ss);  % **** save the sessionLabels
+        
         sessionLabels{cntr} = thisSessionLabel; cntr = cntr+1;
         
         fprintf('Uploading session %s.\n',thisSessionLabel);
@@ -139,40 +136,26 @@ for ii=1:nSessions
     for jj=1:length(sessionLabels)
         % Find a bids sessionLabel that matches
         if strcmp(sessions{ii}.label,sessionLabels{jj})
-            % Upload these files
-            theseFiles = bidsData.sessionMeta{ii,jj};
+            labels = split(sessionLabels{jj},'-');
+            whichSubject = uint8(str2double(labels{2}));  % Skip sub-
+            whichSession = uint8(str2double(labels{4}));  % Skip ses-
+            
+            % Upload these files.  sessionMeta is participant x session.
+            % So, we have to figure out the subject from the session label.
+            theseFiles = bidsData.sessionMeta{whichSubject,whichSession};
             fprintf('Uploading %d file(s) to %s\n',length(theseFiles),sessions{ii}.label);
             for ff = 1:length(theseFiles)
                 localName = fullfile(bidsData.directory,theseFiles{ff});
                 st.upload(localName,'session',sessions{ii}.id);
             end
-            break;
+            break;  % On to the next session.
         end
     end
 end
-
-%{
-cntr = 1;
-for ii=1:length(bidsData.subjectFolders)
-    for ss = 1:bidsData.nSessions(ii)
-        
-        % Find the session ID with this session label
-        session = st.search('sessions','session label exact',sessionLabels{cntr},'project label',projectLabel);
-        
-        theseFiles = bidsData.sessionMeta{ii,ss};
-        fprintf('Uploading %d files to %s\n',length(theseFiles),session{1}.source.label);
-        for ff = 1:length(theseFiles)
-            localName = fullfile(bidsData.directory,theseFiles{ff});
-            st.upload(localName,'session',sessionID);            
-        end
-        cntr = cntr+1;
-    end
-end
-%}
 
 %% Upload the subject meta data.  
 
-% We currently attach these files to the project.  
+% We attach the subject metadata files to the project.  
 %
 % In the future, we will attach them with a slightly different name to the
 % subject slot.  That will happen when the subject becomes visible in the
@@ -189,6 +172,6 @@ for ii=1:length(bidsData.subjectMeta)
     end
 end
 
-fprintf('bids upload to %s is complete\n',projectLabel);
+fprintf('Upload of %s to %s is complete\n',bidsData.directory,projectLabel);
 
 end
