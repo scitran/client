@@ -8,7 +8,7 @@ function setFileInfo(obj,file,metadata, varargin)
 %   Information fields are attached to many Flywheel containers,
 %   including projects, sessions, acquisitions, files and collections.
 %   This method takes the data in metadata and sets it to be the
-%   information fields of one of these container types.
+%   information fields of a file in one of these container types.
 %
 % Inputs
 %   file - A file struct as returned from a search.  It must contain the

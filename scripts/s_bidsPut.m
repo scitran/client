@@ -33,8 +33,15 @@ st = scitran('vistalab');
 thisGroup   = 'Wandell Lab';
 
 %%
-fprintf('Create the BIDS project %s\n',thisProject);
-projectID = st.create(thisGroup,thisProject);
+fprintf('Create the project %s\n',thisProject);
+id = st.create(thisGroup,thisProject);
+
+% It does not exist in the elastic search database for a while!
+% st.search('project','project label exact',thisProject)
+status = st.exist('project',thisProject)
+if status
+    st.deleteObject('project',id.project);
+end
 
 %% Make the sessions, acquisitions and upload the data files
 %
@@ -64,9 +71,9 @@ for ii=1:length(b.subjectFolders)
         end
         sessionLabels{cntr} = thisSessionLabel; cntr = cntr+1;
         
-        fprintf('Uploading for session %s\n',thisSessionLabel);
+        fprintf('Uploading session %s\n',thisSessionLabel);
         id = st.create(thisGroup,thisProject,'session',thisSessionLabel);
-         
+        
         % We can add more subject fields here
         data.subject.code = sprintf('%s',b.subjectFolders{ii});
         

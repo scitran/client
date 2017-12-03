@@ -1,9 +1,9 @@
-function destination = downloadObject(obj,objectID,varargin)
+function destination = downloadContainer(obj,objectID,varargin)
 % Download a Flywheel object
 %
-%   outfile = scitran.downloadObject(objectID, ...)
+%   outfile = scitran.downloadContainer(objectID, ...)
 %
-% The Flywheel object is always downloaded as a tar file.  When it is
+% The Flywheel container will be downloaded as a tar file.  When it is
 % unpacked, the directory structure is organized as
 %
 %    Group Name
@@ -32,11 +32,18 @@ function destination = downloadObject(obj,objectID,varargin)
   st = scitran('vistalab');
   acq = st.search('acquisition','project label contains','SOC','session label exact','stimuli');
   objectID = acq{1}.acquisition.x_id; 
-  st.downloadObject(objectID);  
+  st.downloadContainer(objectID);  
   edit(fName)
   delete(fName);
 %}
 
+%%
+error('Not implemented yet');
+
+end
+
+%{
+% Use this when you are ready.
 %% Parse inputs
 p = inputParser;
 
@@ -74,4 +81,4 @@ if ~isempty(size)
 end
 
 end
-
+%}

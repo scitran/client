@@ -71,7 +71,7 @@ p.addParameter('acquisition',[],@ischar);
 
 % Not yet implemented.  But we may permit attaching data here to add to the
 % newly created objects.
-p.addParameter('additionalData', struct, @isstruct);
+% p.addParameter('additionalData', struct, @isstruct);
 
 p.parse(group,project,varargin{:});
 
@@ -79,7 +79,7 @@ group       = p.Results.group;
 project     = p.Results.project;
 session     = p.Results.session;
 acquisition = p.Results.acquisition;
-additionalData = p.Results.additionalData;
+% additionalData = p.Results.additionalData;  % NYI
 
 %% Check whether the group exists
 
@@ -99,9 +99,9 @@ if ~status
 end
 
 % Maybe we are adding some project data?
-if isfield(additionalData, 'project'), prjData = additionalData.project;
-else,                                  prjData = struct;
-end
+% if isfield(additionalData, 'project'), prjData = additionalData.project;
+% else,                                  prjData = struct;
+% end
 
 % If no session is passed, then we are done and return the project ID
 if isempty(session), return; end
@@ -115,9 +115,9 @@ if ~status
 end
 
 % Maybe we are adding some session data?
-if isfield(additionalData, 'session'), sesData = additionalData.session;
-else,                                  sesData = struct;
-end
+% if isfield(additionalData, 'session'), sesData = additionalData.session;
+% else,                                  sesData = struct;
+% end
 
 % If no session is passed, then we are done and return the project ID
 if isempty(acquisition), return; end
@@ -130,9 +130,9 @@ if ~status
 end
 
 % Maybe we are adding some acquisition data?
-if isfield(additionalData, 'acquisition'), acqData = additionalData.acquisition;
-else,                       acqData = struct;
-end
+% if isfield(additionalData, 'acquisition'), acqData = additionalData.acquisition;
+% else,                       acqData = struct;
+% end
 
 end
 

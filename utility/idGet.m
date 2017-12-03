@@ -67,8 +67,12 @@ p.parse(data);
 
 %% Determine if is struct or cell array of structs
 
-nData = 1;  % Assume a struct
-if iscell(data), nData = length(data); id = cell(nData,1); end
+if iscell(data), objType = 'cell'; 
+else             objType = 'struct';
+end
+
+nData = numel(data);
+if nData > 1, id = cell(nData,1); end
 
 % Determine sdk or search type
 structType = 'search';
@@ -79,24 +83,14 @@ else
 end
 
 %% Read the id values
-switch structType
-    case 'search'
-        if nData == 1
-            id = idSearch(data);
-            return;
-        else
-            for ii=1:nData
-                id{ii} = idSearch(data{ii});
-            end
+switch objType
+    case 'struct'
+        for ii=1:nData
+            id{ii} = idSearch(data{ii});
         end
-        
-    case 'sdk'
-        if nData == 1
-            id = data.id;
-        else
-            for ii=1:nData
-                id{ii} = data{ii}.id;
-            end
+    case 'cell'
+        for ii=1:nData
+            id{ii} = data{ii}.id;
         end
     otherwise
         error('Unknown structType %s\n', structType);
