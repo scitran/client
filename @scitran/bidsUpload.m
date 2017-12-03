@@ -6,7 +6,7 @@ function project = bidsUpload(st,bidsData, groupLabel, varargin)
 % Example:
 %    st = scitran('vistalab');
 %    data = bids(fullfile(stRootPath,'local','BIDS-examples','fw_test'));
-%    % data.projectLabel = 'fw_bids_test';
+%    data.projectLabel = 'fw_bids_test';
 %    project = st.bidsUpload(data,'wandell');
 %
 % BW/DH Scitran Team, 2017
