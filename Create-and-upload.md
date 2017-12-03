@@ -11,7 +11,7 @@ aLabel = 'deleteAcquisition';
 % id has a project, session and acquisition slot.
 id     = st.create(gName, pLabel,'session',sLabel,'acquisition',aLabel);
 ```
-## Upload a file
+### Upload a file
 Upload and then check that you can find it.  Sometimes the search takes a few seconds to update the database.
 ```
 fullFileName = fullfile(stRootPath,'data','dtiError.json');
@@ -20,7 +20,7 @@ files = st.search('file',...
       'project label exact',pLabel,...
       'file name','dtiError.json');
 ```   
-### Delete the project
+### Delete a project
 All the subcontainers are deleted, too.
 ```
 containerType = 'project';
@@ -28,12 +28,12 @@ containerID = id.project;
 st.deleteObject(containerType,containerID);
 ```
 
-## Analysis upload
+### Analysis upload
 
 Create an analysis and upload it to an Analysis tab
 s_stGears.m line
 
-## Check these examples
+### Check these examples
 
 https://github.com/vistalab/Newsome--Kiani-2014-CurrentBiology/blob/master/upload_data.m
 
