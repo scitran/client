@@ -25,7 +25,7 @@ project = st.bidsUpload(data,groupLabel);
 
 ## Downloading
 
-Not fully tested yet with the new SDK.
+Not converted yet with to the new SDK.  Next weekend's project.
 
      projectLabel = 'The FW project label'
      bidsDir = st.bidsDownload(projectLabel,'destination',<destination directory>);
