@@ -7,10 +7,20 @@ function project = bidsUpload(st,bidsData, groupLabel, varargin)
 %    st = scitran('vistalab');
 %    data = bids(fullfile(stRootPath,'local','BIDS-examples','fw_test'));
 %    data.projectLabel = 'fw_bids_test';
-%    project = st.bidsUpload(data,'wandell');
+%    groupLabel = 'Wandell Lab'; project = st.bidsUpload(data,groupLabel);
 %
 % BW/DH Scitran Team, 2017
 
+%{
+    st = scitran('vistalab');
+    data = bids(fullfile(stRootPath,'local','BIDS-examples','fw_test'));
+    data.projectLabel = 'BIDSUp';
+    groupLabel = 'Wandell Lab'; project = st.bidsUpload(data,groupLabel);
+
+    [s,id] = st.exist('project',data.projectLabel);
+    if s, st.deleteContainer('project',id); end
+
+%}
 %% input
 
 % Check the bids data structure and determine the project label.
@@ -27,16 +37,23 @@ p.parse(bidsData,groupLabel,varargin{:});
 projectLabel = p.Results.projectLabel;
 if isempty(projectLabel), projectLabel = bidsData.projectLabel; end
 
+%% Check that the group exists
+
+if ~(st.exist('group',groupLabel))
+    error('No group label %s\n',groupLabel);
+end
+
 %%  Create the project
 
 % Check if it already exists.  If it does, throw an error
 % Otherwise, create it.
-status = st.exist(projectLabel,'projects');
+[status, projectID] = st.exist('project',projectLabel);
 if ~status
-    st.create(groupLabel,projectLabel);
-    fprintf('Created project %s\n',projectLabel);
+    id = st.create(groupLabel,projectLabel);
+    projectID = id.project;
+    fprintf('Created project %s (id %s).\n',projectLabel,projectID);
 else
-    error('Project %s exists.\n');
+    error('Project %s exists (id %s).\n',projectLabel,projectID);
 end
 
 %% Make the sessions, acquisitions and upload the data files
@@ -63,18 +80,13 @@ for ii=1:length(bidsData.subjectFolders)
         sessionLabels{cntr} = thisSessionLabel; cntr = cntr+1;
         
         fprintf('Uploading session %s.\n',thisSessionLabel);
-        sessionID = st.create(groupLabel,projectLabel,'session',thisSessionLabel);
-        pause(2);   % Remove when SDK updates
-        
-        % Until we have the direct database query, we pause to allow
-        % elastic search to index.
-        session = st.search('sessions','session id',sessionID);
+        id = st.create(groupLabel,projectLabel,'session',thisSessionLabel);
         
         % We can add more subject fields here.  The update method can fill
         % in various database fields. Probably these should be filled in by
         % a separate function.
         data.subject.code = sprintf('%s',bidsData.subjectFolders{ii});
-        st.update(data,'container', session{1});
+        st.setContainerInfo('session',id.session,data);
         
         % For each subject folder find the dataFiles fields
         acqNames = fieldnames(bidsData.dataFiles(ii).session(ss));
@@ -82,63 +94,89 @@ for ii=1:length(bidsData.subjectFolders)
         for jj=1:length(acqNames)
             thisAcquisitionLabel = acqNames{jj};
             fprintf('Create acquisition %s in session %s\n',thisAcquisitionLabel,thisSessionLabel);
-            acquisitionID = st.create(groupLabel,projectLabel,...
+            id = st.create(groupLabel,projectLabel,...
                 'session',thisSessionLabel,...
                 'acquisition',thisAcquisitionLabel);
-            pause(2);   % Allow time for elastic search
             
             % Upload the data files
             nFiles = length(bidsData.dataFiles(ii).session(ss).(thisAcquisitionLabel));
-            acquisition = st.search('acquisitions','acquisition id',acquisitionID);
+            acquisitionID = idGet(st.getContainerInfo('acquisition',id.acquisition));
             
             if nFiles > 0
                 fprintf('Uploading %d files.\n',nFiles);
                 for kk=1:nFiles
                     fname = fullfile(bidsData.directory,...
                         bidsData.dataFiles(ii).session(ss).(thisAcquisitionLabel){kk});
-                    st.put(fname,acquisition);
+                    st.upload(fname,'acquisition',acquisitionID);
                 end
             end
         end
-        fprintf('Done uploading session %s.\n',session{1}.source.label);
+        fprintf('Done uploading session %s.\n',thisSessionLabel);
     end
 end
 
 %% Upload the PROJECT metadata
-
-project = st.search('projects','project label',projectLabel);
 
 % Put the meta data into the Project tab as an attachment
 fprintf('Uploading project metadata\n');
 if ~isempty(bidsData.projectMeta)
     for ii=1:length(bidsData.projectMeta)
         localName  = fullfile(bidsData.directory,bidsData.projectMeta{ii});
-        st.put(localName,project);
+        st.upload(localName,'project',projectID);
     end
 end
 
 %% Upload the SESSION meta data into the anotation tab as an attachment.
 
 fprintf('Uploading session metadata\n');
+
+% Find the sessions
+sessions = st.list('session',projectID);
+nSessions = numel(sessions);
+
+% For each session
+for ii=1:nSessions
+    for jj=1:length(sessionLabels)
+        % Find a bids sessionLabel that matches
+        if strcmp(sessions(ii).label,sessionLabels{jj})
+            % Upload these files
+            theseFiles = bidsData.sessionMeta{ii,jj};
+            fprintf('Uploading %d files to %s\n',length(theseFiles),sessions(ii).label);
+            for ff = 1:length(theseFiles)
+                localName = fullfile(bidsData.directory,theseFiles{ff});
+                st.upload(localName,'session',sessions(ii).id);
+            end
+            break;
+        end
+    end
+end
+
+%{
 cntr = 1;
 for ii=1:length(bidsData.subjectFolders)
     for ss = 1:bidsData.nSessions(ii)
-        session = st.search('sessions','session label',sessionLabels{cntr},'project label',projectLabel);
+        
+        % Find the session ID with this session label
+        session = st.search('sessions','session label exact',sessionLabels{cntr},'project label',projectLabel);
+        
         theseFiles = bidsData.sessionMeta{ii,ss};
         fprintf('Uploading %d files to %s\n',length(theseFiles),session{1}.source.label);
         for ff = 1:length(theseFiles)
             localName = fullfile(bidsData.directory,theseFiles{ff});
-            st.put(localName,session);            
+            st.upload(localName,'session',sessionID);            
         end
         cntr = cntr+1;
     end
 end
+%}
 
 %% Upload the subject meta data.  
 
-% For now, we attach these files to the project.  In the future, we will
-% attach them with a slightly different name to the subject slot.  That
-% will happen when the subject becomes visible in the UI.
+% We currently attach these files to the project.  
+%
+% In the future, we will attach them with a slightly different name to the
+% subject slot.  That will happen when the subject becomes visible in the
+% UI.
 fprintf('Uploading subject metadata\n');
 for ii=1:length(bidsData.subjectMeta)
     theseFiles = bidsData.subjectMeta{ii};
@@ -147,7 +185,7 @@ for ii=1:length(bidsData.subjectMeta)
         [~,name,ext] = fileparts(theseFiles{ff});
         remoteName = ['bids@',name,ext];
         copyfile(localName,remoteName)
-        st.put(remoteName,project);
+        st.upload(remoteName,'project',projectID);
     end
 end
 

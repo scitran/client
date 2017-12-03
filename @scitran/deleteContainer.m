@@ -80,9 +80,10 @@ switch containerType
     case 'project'
         % If the project contains sessions, or the query flag is true, we
         % ask the user.
-        if ~isempty(obj.fw.getProjectSessions(containerID)) ||  query
-            project = obj.search('project','project id',containerID);
-            prompt = sprintf('Delete project named "%s": (y/n) ',project{1}.project.label);
+        sessions = obj.fw.getProjectSessions(containerID);
+        if ~isempty(sessions) ||  query
+            project = obj.getContainerInfo('project',containerID);
+            prompt = sprintf('Delete project named "%s": (y/n) ',project.label);
             str = input(prompt,'s');
             if ~isequal(lower(str(1)),'y')
                 disp('User canceled.'); 

@@ -52,11 +52,21 @@ switch objectType
         end
     case 'project'
         projects = obj.fw.getAllProjects;
-        results = projects;
-        for ii=1:numel(projects)
-            if strcmp(projects{ii}.label,label)
+        if isempty(projects), return; end
+        
+        % We always check about conversion, see note below in acquisitions
+        if isstruct(projects)
+            results = cell(numel(projects),1);
+            for ii=1:numel(projects)
+                results{ii} = projects(ii);
+            end
+        else, results = projects;
+        end
+
+        for ii=1:numel(results)
+            if strcmp(results{ii}.label,label)
                 status = true;
-                id = projects{ii}.id;
+                id = results{ii}.id;
                 return;
             end
         end
@@ -65,13 +75,24 @@ switch objectType
         % st.exist('session',label,'parentID',projectID);
         if isempty(parentID), error('Project ID required'); end
         sessions = obj.fw.getProjectSessions(parentID);
-        results = sessions;
-        % NOTE:  This is an array of structs.  The project is a cell array.
-        % Sigh.
-        for ii=1:numel(sessions)
-            if strcmp(sessions(ii).label,label)
+        if isempty(sessions), return; end
+
+        % We  always convert the acquisitions to a cell array
+        % because of the note below.  Not sure we ever have a problem with
+        % sessions, but just in case, I put this here.  If we end up using
+        % this a lot, we should have a function structArray2CellArray
+        if isstruct(sessions)
+            results = cell(numel(sessions),1);
+            for ii=1:numel(sessions)
+                results{ii} = sessions(ii);
+            end
+        else, results = sessions;
+        end
+
+        for ii=1:numel(results)
+            if strcmp(results{ii}.label,label)
                 status = true;
-                id = sessions(ii).id;
+                id = results{ii}.id;
                 return;
             end
         end
@@ -80,18 +101,32 @@ switch objectType
         % st.exist('acquisition',label,'parentID',projectID);
         if isempty(parentID), error('Session ID required'); end
         acquisitions = obj.fw.getSessionAcquisitions(parentID);
-        results = acquisitions;
-        % NOTE:  This is an array of cells again. 
-        % To fix.
-        for ii=1:numel(acquisitions)
-            if strcmp(acquisitions{ii}.label,label)
+        if isempty(acquisitions), return; end
+           
+        % We should always convert the acquisitions to a cell array because
+        % a cell array is returned some times (not always). This happens
+        % when an acquisition has files or doesn't have files, the structs
+        % would differ, so they give us a cell.  They should probably
+        % always give us cell arrays.  To discuss.  (BW)
+        if isstruct(acquisitions)
+            results = cell(numel(acquisitions),1);
+            for ii=1:numel(acquisitions)
+                results{ii} = acquisitions(ii);
+            end
+        else, results = acquisitions;
+        end
+        
+        
+        for ii=1:numel(results) 
+            if strcmp(results{ii}.label,label)
                 status = true;
-                id = acquisitions{ii}.id;
+                id = results{ii}.id;
                 return;
             end
         end
+                   
     otherwise
-        error('Unknown object type');
+        error('Unknown object type %s',objectType);
 end
 
 end
