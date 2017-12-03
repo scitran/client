@@ -61,6 +61,8 @@ cntr = 1;
 for ii=1:length(b.subjectFolders)
     
     nSessions = b.nSessions(ii);
+    % Probably if nSessions = 0, we should set to 1.  Otherwise, how will
+    % we get into the loop?
     
     for ss = 1:nSessions
         
