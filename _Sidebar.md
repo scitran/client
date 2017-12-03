@@ -4,7 +4,7 @@
    * [Authorization](Authorization)
    * [Listing and searching](Search-and-list)
      * [List examples](List-examples)
-     * [Typical searches](Search-examples)
+     * [Search Examples](Search-examples)
      * [Special searches](Special-search-parameters)
    * [Download and read](Download-and-read)
    * [Create and upload](Create-and-upload)
