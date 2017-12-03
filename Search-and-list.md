@@ -1,13 +1,16 @@
-Searching a Flywheel database is very useful when you are processing data or searching to reuse data from many projects. The scitran **search** method returns a great deal of information about the object, but not the object itself. To get either the whole object or values from the object use one of the get<>, download<> or read<> methods.
+### Searching vs. listing
+Searching a Flywheel database is very useful when you are processing data or searching to reuse data from many projects. The scitran **search** method returns a great deal of information about the object, but not the container itself. To get either the whole object or values from the object use one of the get<>, download<> or read<> methods.
 
 There are many search parameters. To learn more about these see [search examples on this page](search-examples) and an [m-file with many examples](https://github.com/scitran/client/blob/master/scripts/s_stSearches.m).
 
-The scitran **list** method is designed for the case when you know the ID of an object (project, session, acquisition or collection) and you want to list what is within that object. The [list examples page](list-examples) demonstrates the usage. 
-**N.B.**  The structs returned by the **list** method differs from the structs returned by the **search** method.  
+The scitran **list** method is designed for the case when you know the ID of a container (project, session, acquisition or collection) and you want to list what is within it. The [list examples page](list-examples) demonstrates the usage. 
+**N.B.**  The data format returned by the **list** method differs from the data returned by the **search** method.  
 
 One way to understand the information returned in a search is to explore the values in the returned Matlab structs.  You also might want to look at the [Flywheel data model](https://github.com/scitran/core/wiki/Data-Model) to see the definition of a term.
 
-### Brief introduction
+The search method uses **elastic search**, an advanced method for searching large databases.  Elastic search methods are very powerful, but to work they must index the data base.  For this reason, there may be some delay between the time when you modify the database and when you can find the modification using search.  Typically, the time is fairly short - a few seconds or so. If you know what you want and roughly where it is, use **list**.  If you are exploring, use **search**.
+
+### Brief introduction to search
 The arguments to the search method specify (a) the type of object to return and (b) parameters that define the search. For example, to search for all the projects in the database you would use
 
     projects = st.search('project');
