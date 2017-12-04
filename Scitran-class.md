@@ -28,7 +28,7 @@ Usage of these scitran class methods are provided in other wiki pages.
 
 %% Search and list
 st.search(objType,...)  -  Search for objects constrained by many possible limits (file type, label, date...).
-st.listObjects(objType, parentID, ...) - List objects within a parent; might change to getObjects
+st.list(objType, parentID, ...) - List objects within a parent; might change to getObjects
 [p,s,a] = st.projectHierarchy - List the sessions and acquisitions in a project hierarchy
 
 % Metadata
@@ -37,19 +37,21 @@ st.getdicominfo - Information about files or database objects
 
 % Download and Read
 st.downloadFile(file,...) -
-st.downloadObject(file,...)  - Download a directory tree containing a database object as a tar file
-data = st.read(file,...)  - Certain file types can be downloaded and read into a Matlab variable  
+st.downloadContainer(file,...)  - Download a directory tree containing a database object as a tar file
 st.dwiLoad - Read a nifti file and its associated bvec/bval data
+data = st.read(file,...)  - Certain file types can be downloaded and read into a Matlab variable  
 
 % Create, modify, upload
 st.upload - File upload
 st.create - Create a project or a session or an acquisition
 st.createCollection
-st.modify - Modify database values (e.g., subject code, sex ...)
+st.setContainerInfo - Modify database values (e.g., subject code, sex ...)
+st.getContainerInfo - Modify database values (e.g., subject code, sex ...)
+st.getdicominfo   - Return dicom header information 
 
 % Delete
 st.deleteFile   - Delete a file
-st.deleteObject - Delete container objects
+st.deleteContainer - Delete container objects
 
 % Computational
 st.docker
@@ -62,10 +64,15 @@ st.exist - See if a particular object exists
 st.verify
 st.browser - Bring a browser to a location
 
-% Not yet decided
-st.putAnalysis
+% BIDS related
 st.bidsUpload
 st.bidsDownload
+
+% In development
+st.putAnalysis
+st.print
+st.help
+
 ```
 
 
