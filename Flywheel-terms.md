@@ -11,3 +11,4 @@ The database files are grouped logically into a set of basic categories.  The se
 
 * **Notes**  - Search for notes that people have added.  These can be searched just like files.
 
+See the [scitran core data model page](https://github.com/scitran/core/wiki/Data-Model) for an introduction to the Flywheel data model.
