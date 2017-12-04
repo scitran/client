@@ -12,11 +12,11 @@ This wiki describes the software and explains how to
 
 This client is part of our vision of using Flywheel to create a reproducible research paper that shares both data and computations. 
 
+See the [Stanford Project on Scientific Transparency (PoST)](http://post.stanford.edu) for an overview of our goals.
+
 ### Related information
 
 This client relies on the [Flywheel SDK](Flywheel-SDK) a platform independent set of functions that are written in [Golang](https://golang.org/).  This client calls the Flywheel SDK functions from Matlab. The same Flywheel SDK is used by [**a scitran python client**](https://github.com/scitran/python-client) and a **scitran** 'R' client.
-
-See the [Stanford [Project on Scientific Transparency (PoST)](http://post.stanford.edu) for an overview of our goals.
 
 ### Acknowledgement
 
