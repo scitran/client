@@ -2,11 +2,18 @@ function lst = print(~,d,pField,varargin)
 % Print a parameter field to the command window
 %
 % Syntax
+%   st.print(obj,searchCellArray,field,slot,...)
 %
 % Description
-%   Not really worked out yet ...
+%   Not really worked out yet ... a couple of preliminary examples.
+%   Show integrate with stPrint();
 %
+% Input
+%   d - Cell array of database objects, returned by a search
+%   pFIeld - string describing what to print
 %
+% Optional
+%   show - logical, make a table
 %
 % Printable fields for different objects (not right with new format)
 % ---------------
@@ -22,8 +29,11 @@ function lst = print(~,d,pField,varargin)
   st = scitran('vistalab');
   projects = st.search('projects');
   lst = st.print(projects,'project label');
-  lst = st.print(d,'file name');
-        st.print(d,'group name');
+  
+  sessions = st.search('session','project label exact','VWFA');
+  lst = st.print(sessions,'subjectcode');
+  lst = st.print(sessions,'subjectcode','show',true);
+
 %}
 
 %% Parse inputs
@@ -48,7 +58,7 @@ switch printLabel
     case 'subjectcode'
         % Switch through the conditions
         for ii=1:n            
-            lst{ii} = d{ii}.session.subject.code;
+            lst{ii} = d{ii}.subject.code;
         end
     case 'filename'
         for ii=1:n
