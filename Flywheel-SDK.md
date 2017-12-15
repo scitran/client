@@ -96,7 +96,6 @@ A list of the Flywheel.m methods obtained by running 'grep function Flywheel.m' 
         % getAnalysis(obj, id)
         % downloadFileFromAnalysis(obj, id, name, path)
         % addSessionAnalysisNote(obj, sessionId, analysisId, text)
-        % downloadFileFromAnalysis(obj, sessionId, analysisId, filename, path)
 
 ### File Info
         % setProjectFileInfo(obj, id, filename, set)
@@ -195,6 +194,7 @@ A list of the Flywheel.m methods obtained by running 'grep function Flywheel.m' 
         % downloadFileFromSession(obj, id, name, path)
         % downloadFileFromAcquisition(obj, id, name, path)
         % downloadFileFromCollection(obj, id, name, path)
+        % downloadFileFromAnalysis(obj, id, name, path)
 
 ### Upload
         % uploadFileToProject(obj, id, path)
