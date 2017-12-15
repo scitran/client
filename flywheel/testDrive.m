@@ -84,6 +84,9 @@ assert(strcmp(project.files.name, filename), errMsg)
 s = dir('/tmp/download.txt');
 assert(project.files.size == s.bytes, errMsg)
 
+projectDownloadUrl = fw.getProjectDownloadUrl(projectId, filename);
+assert(~strcmp(projectDownloadUrl, ''), errMsg)
+
 %% Sessions
 disp('Testing Sessions')
 
@@ -110,6 +113,9 @@ assert(strcmp(session.files.name, filename), errMsg)
 s = dir('/tmp/download2.txt');
 assert(session.files.size == s.bytes, errMsg)
 
+sessionDownloadUrl = fw.getSessionDownloadUrl(sessionId, filename);
+assert(~strcmp(sessionDownloadUrl, ''), errMsg)
+
 %% Acquisitions
 disp('Testing Acquisitions')
 
@@ -135,6 +141,9 @@ assert(strcmp(acq.notes.text, 'This is a note'), errMsg)
 assert(strcmp(acq.files.name, filename), errMsg)
 s = dir('/tmp/download3.txt');
 assert(session.files.size == s.bytes, errMsg)
+
+acqDownloadUrl = fw.getAcquisitionDownloadUrl(acqId, filename);
+assert(~strcmp(acqDownloadUrl, ''), errMsg)
 
 %% Gears
 disp('Testing Gears')
