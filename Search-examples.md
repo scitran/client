@@ -1,3 +1,5 @@
+The **search** method returns information about objects from the whole database. This contrasts with the **list** methods, which describe the contents of a specific container.
+
 The examples here apply to the 'vistalab' Flywheel instance.  The specific labels and project names will be different on other instances.
 
 ### Projects
