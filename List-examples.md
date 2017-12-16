@@ -1,6 +1,8 @@
-There are times when you want a listing of the containers and files in a particular project, session, acquisition or collection. The scitran **list** method returns a list of the metadata within a container. Search returns information about containers or files that may not have a single parent, but rather can be spread across the whole database.
+The scitran **list** method returns the metadata for a specific container (project, session, acquisition, analysis or collection) 
 
-This list and search methods both return metadata, while the downloadFile method retrieves the file itself.  The **list** method is faster than **search** and is more likely to return descriptions of only the data objects you want.
+This list method returns metadata about the container contents. The **downloadFile** and **downloadContainer** methods retrieve the data themselves.
+
+The **search** method returns containers or files from the whole database.
 
 ## Data format
 
