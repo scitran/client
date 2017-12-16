@@ -10,7 +10,7 @@ where file is a struct, like the one that is returned from a search.  When downl
 
 A project, session, acquisition, collection or analysis is downloaded as a tar file. 
 
-    outfile = scitran.downloadObject(objectID, ...);
+    outfile = scitran.downloadContainer(objectID, ...);
 
 And it is also possible to download a project in [BIDS](BIDS) format.
 
