@@ -23,7 +23,9 @@ groupLabel = 'Wandell Lab';
 project = st.bidsUpload(data,groupLabel);
 ```
 
-The metadata that are uploaded all have the string 'bids@' prepended to them.  I am not sure this is necessary, but I do it now anticipating that it will be helpful when we do the **bidsDownload** method.
+The metadata that are uploaded all have the string 'bids@' prepended to them.  I am not sure this is necessary, but I do it now anticipating that it will be helpful when we do the **bidsDownload** method. The data files do not have anything prepended.  I suppose we might just assume that all of the metadata should be downloaded.
+
+TODO - it is possible for us to extract information from the metadata files and place them in the info fields.  JR does this in the Python script, and we could do the same here.
 
 ## Downloading
 
