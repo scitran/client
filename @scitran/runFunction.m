@@ -25,14 +25,12 @@ function [localFileFull,val] = runFunction(st, mFile, varargin)
 %
 % BW, Scitran Team, 2017
 
-% Example
+% st = scitran('vistalab');
+% Example 1
 %{
-
-st = scitran('vistalab');
 mFile = 'ecog_RenderElectrodes.m';
 [s,id] = st.exist('project','SOC ECoG (Hermes)');
 st.runFunction(mFile,'container type','project','container ID',id);
-
 %}
 
 %%
