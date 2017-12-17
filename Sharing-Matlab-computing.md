@@ -1,7 +1,35 @@
-The **scitrian matlab client** helps you share Matlab functions reproducibly with colleagues. In many cases, you will be sharing the function with your future self. 
+The **scitrian matlab client** simplifies coding sharing of Matlab functions and toolboxes. In many cases, you will be sharing the function with your future self.  The **toolboxes** and **scitran** classes support this sharing and reproducible computing.  
 
-The **toolboxes** class is an important component of reproducible sharing.  The **toolboxes** and **scitran** classes work together to implement reproducible computing.  The  **scitran** class accesses Flywheel data; the **toolboxes** class downloads Matlab functions on Flywheel and also downloads Matlab libraries on github that are needed to run these functions.
+## The compute model
+You have written a Matlab toolbox for your project, myToolbox, and you keep your toolbox in a github repository. You and your collaborators write functions that access the Flywheel data and rely on the toolbox.  
 
-There are two steps in using toolboxes.  First, create an FTM file and upload it to the project page. Second, include a call to the **scitran** toolbox method that reads this toolbox file and checks that the user has the toolboxes installed on their path. If the toolboxes are not found, the **scitran** toolbox method will try to do the install.  We provide detailed examples in a subsequent wiki page.
+## The toolboxes definition
+First, you specify the github toolboxes. We do this by creating a small JSON file that is added as an attachment to the Flywheel project page.  As an example, the Wandell lab uses the vistasoft toolbox.  To specify the toolbox we identify a command that can be used to test whether the toolbox is installed on the user's path (testcmd) and we specify the user and project on the github site.  We then save this information to a file.
+```
+tbx.testcmd     = 'vistaRootPath';
+tbx.gitrepo.user    = 'vistalab';  % https://github.com/vistalab/vistasoft
+tbx.gitrepo.project = 'vistasoft'; % https://github.com/vistalab/vistasoft
+tbx.saveinfo;                      % Save the toolbox information to vistasoft.json
+```
+You can read this toolbox with the command
 
-FTM is useful for custom software and software development. Flywheel uses the Gears concept, docker containers packaged with a manifest that allows you to control the parameter setting, for executing standard tools. The Gears system also includes job control for scheduling and logging jobs. Flywheel is well on its way towards implementing an elastic cloud system using distributed storage and kubernetes (k8s).
+    tbx = stToolbox('vistasoft.json');
+
+Using a similar method, Dora Hermes wrote a toolbox, ecogBasic.json, for ECoG data that is necessary for this example. We can merge the two toolboxes into a single file
+```
+clear tbx
+tbx(1) = stToolbox('ecogBasicCode.json');
+tbx(2) = stToolbox('vistasoft.json');
+tbxWrite('SOC-ECoG-toolboxes.json',tbx);
+```
+We load multiple toolboxes using the parameters in the merged file
+
+    tbx = stToolbox('SOC-ECoG-toolboxes.json');
+
+## Is the toolbox on your path?
+
+You can test for the toolbox by running
+
+    tbx(1).test
+
+## Running the function
