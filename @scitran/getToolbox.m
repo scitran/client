@@ -12,7 +12,7 @@ function tbx = getToolbox(st, file, varargin)
 %
 % Input (optional)
 %   project name:  The project label (string)
-
+%
 % Output
 %   tbx - the toolboxes object
 %
@@ -24,7 +24,6 @@ function tbx = getToolbox(st, file, varargin)
 % Examples in code
 %
 % BW, Scitran Team, 2017
-
 
 % st = scitran('vistalab');
 % Examples
@@ -85,5 +84,3 @@ tbxFile = st.downloadFile(fileS);
 tbx = stToolbox(tbxFile);
 
 end
-
-%% 

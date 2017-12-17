@@ -21,16 +21,16 @@ function [localFileFull,val] = runFunction(st, mFile, varargin)
 %
 % See also: s_stRunFunction.m
 %
-% Example in code
+% Examples in code
 %
 % BW, Scitran Team, 2017
 
 % st = scitran('vistalab');
 % Example 1
 %{
-mFile = 'ecog_RenderElectrodes.m';
-[s,id] = st.exist('project','SOC ECoG (Hermes)');
-st.runFunction(mFile,'container type','project','container ID',id);
+ mFile = 'ecog_RenderElectrodes.m';
+ [s,id] = st.exist('project','SOC ECoG (Hermes)');
+ st.runFunction(mFile,'container type','project','container ID',id);
 %}
 
 %%
@@ -52,7 +52,7 @@ containerID    = p.Results.containerid;
 containerType  = p.Results.containertype;
 
 localDir     = p.Results.localdir;    % Local file
-params       = p.Results.params; %#ok<NASGU>
+params       = p.Results.params;
 val          = [];   % Returns from the mFile will be here
 
 %% Set up download information.  Always use string download type
@@ -69,7 +69,7 @@ else
     end
 end
 
-%% Create the local file name
+%% Create the local m-file name
 
 if ~exist(localDir,'dir'), mkdir(localDir); end
 
@@ -79,7 +79,7 @@ if ~isequal(e,'.m'), error('Only m-files are accepted'); end
 localFunction = sprintf('local_%s',n);
 localFileFull = fullfile(localDir,[localFunction,'.m']);
     
-%% Download the mFile to a local file 
+%% Download the m-File to a local file 
 
 if isstruct(mFile)
     st.downloadFile(mFile, ...
