@@ -1,33 +1,54 @@
 function [status, result, cmd] = deleteFile(obj, file, varargin )
-% Deletes a file from a container on a scitran site.  
+% Deletes a file from a container on a Flywheel site.  
 % 
+%      NOT YET IMPLEMENTED
+%
 %   [status, result, cmd] = scitran.deleteFile(obj, file, varargin)
 %
 % Required parameter
-%    file - cell with one element, struct, or string (needs optional then)
+%  file - can be either
+%         1 element cell
+%         struct
+%         string, which case we need the containerID (needs optional parameters)
 %
 % Optional parameters for string
-%    containerType - {'projects','sessions','acquisitions','collections'}
-%    containerID   - From the container struct returned by a search
+%  containerType - {'projects','sessions','acquisitions','collections'}
+%  containerID   - From the container struct returned by a search
 %    
-% Examples:
-%   fw = scitran('vistalab'); chdir(fullfile(stRootPath,'data'));
-%   project = fw.search('projects','project label contains','SOC');
+% BW 2017
+
+% Examples assume
+%   st = scitran('vistalab');
 %
-%   fw.put(fullFilename,project);
-%   file = fw.search('files',...
-%    'project label contains','SOC',...
-%    'file name','WLVernierAcuity.json');
-%   fw.deleteFile(file);
-%
-% Or 
-%   fw.deleteFile(file{1});
-%
-% Or
-%   project = fw.search('projects','project label contains','SOC');
-%   fw.deleteFile('WLVernierAcuity.json','containerType','projects','containerID',project{1}.id);   
-%
-% RF 2017
+%{
+  % Make sure we have a dummy file up there
+  % remoteFileName = 'test.json';
+  localFilename = fullfile(stRootPath,'data','test.json');
+  project = st.search('projects',...
+    'project label exact','DEMO');
+
+  st.upload(localFilename,'project',idGet(project));
+
+  % This is the delete operation based on search
+  file = st.search('file',...
+    'project label exact','DEMO',...
+    'filename','dtiError.json');
+
+  file = st.search('file',...
+    'project label exact','DEMO',...
+    'filename','test.json');
+
+  st.deleteFile(file);
+%}
+
+%{
+   st.deleteFile(file{1});
+%}
+
+%{
+ project = st.search('projects','project label contains','SOC');
+ st.deleteFile('WLVernierAcuity.json','containerType','projects','containerID',project{1}.id);   
+%}
 
 %%
 p = inputParser;
@@ -68,13 +89,24 @@ if isempty(containerType) || isempty(containerID)
     error('When file is a string, you must specify the container type and id');
 end
 
-%% Delete
+%% Delete - Egads!
 
+% We have to
+
+error('deleteFile is not implemented!')
+
+%{
+
+% If we need it sooner, then we need to resurrect these commands, 
+% deleteFileCmd and stCurlRun
+%
 cmd = obj.deleteFileCmd(containerType,containerID,filename);
 
 [status, result] = stCurlRun(cmd);
 
 % Let the user know if it worked
 if ~status, fprintf('%s sucessfully deleted.\n',filename); end
+}
+%}
 
 end

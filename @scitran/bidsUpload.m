@@ -3,26 +3,28 @@ function projectID = bidsUpload(st,bidsData, groupLabel, varargin)
 %
 %   projectID = @scitran.bidsUpload
 % 
-% Example:
-%    st = scitran('vistalab');
-%    data = bids(fullfile(stRootPath,'local','BIDS-examples','fw_test'));
-%    data.projectLabel = 'fw_bids_test';
-%    groupLabel = 'Wandell Lab'; projectID = st.bidsUpload(data,groupLabel);
+% See also: s_bidsPut.m
+%
+% Example in code
 %
 % BW/DH Scitran Team, 2017
 
+% Example
 %{
-    st = scitran('vistalab');
+ 
+ % Only works for wandell
+ st = scitran('vistalab');
+ data = bids(fullfile(stRootPath,'local','BIDS-examples','fw_test'));
+ data.projectLabel = 'BIDSUp';
+ groupLabel = 'Wandell Lab'; 
+ project = st.bidsUpload(data,groupLabel);
 
-    % data = bids(fullfile(stRootPath,'local','BIDS-examples','ds003'));
-    data = bids(fullfile(stRootPath,'local','BIDS-examples','fw_test'));
-    data.projectLabel = 'BIDSUp';
-    groupLabel = 'Wandell Lab'; project = st.bidsUpload(data,groupLabel);
-
-    [s,id] = st.exist('project',data.projectLabel);
-    if s, st.deleteContainer('project',id); end
+ % Delete upload when done testing
+ [s,id] = st.exist('project',data.projectLabel);
+ if s, st.deleteContainer('project',id); end
 %}
-%% input
+
+%% Parse inputs
 
 % Check the bids data structure and determine the project label.
 p = inputParser;
@@ -46,7 +48,7 @@ end
 
 %%  Create the project
 
-% Check if it already exists.  If it does, throw an error
+% Check if the project already exists.  If it does, throw an error
 % Otherwise, create it.
 [status, projectID] = st.exist('project',projectLabel);
 if ~status
@@ -57,7 +59,7 @@ else
     error('Project %s exists (id %s).\n',projectLabel,projectID);
 end
 
-%% Make the sessions, acquisitions and upload the data files
+%% Make the sessions, acquisitions within the project. Upload data files
 
 % Make all the sessions.  They will be labeled sub-N_ses-M
 nSessions = sum(bidsData.nSessions);   % Total number of sessions
@@ -127,14 +129,14 @@ end
 
 fprintf('Uploading session metadata\n');
 
-% Find the sessions
+% Find the sessions in this project
 sessions = st.list('session',projectID);
 nSessions = numel(sessions);
 
 % For each session
 for ii=1:nSessions
     for jj=1:length(sessionLabels)
-        % Find a bids sessionLabel that matches
+        % Find the bids sessionLabel that matches
         if strcmp(sessions{ii}.label,sessionLabels{jj})
             labels = split(sessionLabels{jj},'-');
             whichSubject = uint8(str2double(labels{2}));  % Skip sub-
@@ -164,11 +166,13 @@ fprintf('Uploading subject metadata\n');
 for ii=1:length(bidsData.subjectMeta)
     theseFiles = bidsData.subjectMeta{ii};
     for ff = 1:length(theseFiles)
+        % Build the remote name for the file
         localName = fullfile(bidsData.directory,theseFiles{ff});
         [~,name,ext] = fileparts(theseFiles{ff});
         remoteName = ['bids@',name,ext];
-        copyfile(localName,remoteName)
-        st.upload(remoteName,'project',projectID);
+        
+        % Upload
+        st.upload(localName,'project',projectID,'remote name',remoteName);
     end
 end
 
