@@ -19,11 +19,11 @@ function [localFileFull,val] = runFunction(st, mFile, varargin)
 %   localFileFull  -  Local m-file (full path)
 %   val            -  Returns from the  execution of the local m-file
 %
-% See also: s_stRunFunction.m
-%
 % Examples in code
 %
 % BW, Scitran Team, 2017
+%
+% See also: s_stRunFunction.m
 
 % st = scitran('vistalab');
 % Example 1

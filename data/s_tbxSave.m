@@ -1,13 +1,15 @@
 %% Write out JSON toolbox files and upload to Flywheel
 %
-% The examples below make individual toolboxes, combine them, saves the
-% combined information, and then uploads to Flywheel.
+% The examples below make individual toolboxes, combine them, save the
+% combined information, and then upload to Flywheel.
 % 
 % To read a JSON file defining one or more toolboxes use:
 %
 %   tbx = stToolbox('test.json');
 %
-% BW Scitran team, 2017
+% BW Vistasoft team, 2017
+%
+% See also: stToolbox, scitran.toolbox, scitran.getToolbox
 
 %%
 tbx = toolboxes('');

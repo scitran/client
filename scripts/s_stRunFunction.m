@@ -2,7 +2,12 @@
 %
 % This script illustrates how to use the scitran.runFunction() with data in
 % a Flywheel site.  To use this script, the toolbox.json file and the
-% script should be uploaded to the project (Annotation).
+% script should be uploaded to the project page.
+%
+%
+% BW, Vistasoft Team, 2017
+
+% TODO - Fix these comments and modernize the scripts.
 %
 % The active part of this script performs a dtiErrorALDIT analysis on the
 % remote diffusion data.
@@ -13,12 +18,17 @@
 %
 % The functions (dtiErrorALDIT and fw_Apricot6) are in the scitran/examples
 % directory and stored up on the Wandell lab Flywheel site.
-%
-% BW, Scitran Team, 2017
+
 
 %% Open scitran
 st = scitran('vistalab');
 
+%% ECoG from DH
+
+mFile = 'ecog_RenderElectrodes.m';
+[s,id] = st.exist('project','SOC ECoG (Hermes)');
+st.runFunction(mFile,'container type','project','container ID',id);
+ 
 %% Set up the toolboxes
 
 project = 'ALDIT';

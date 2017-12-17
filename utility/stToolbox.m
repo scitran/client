@@ -1,13 +1,28 @@
 function tbx = stToolbox(file,varargin)
-% Initialize an array of toolboxes
+% Initialize an array of toolboxes objects 
 %
-% Synatx
+% Syntax
 %   stToolbox(jsonFile)
 %
-% Read a JSON toolboxes file and initialize an array of toolboxes
+% Description
+%   The toolboxes simplify access to Matlab toolboxes stored on github. The
+%   ability to retrieve a toolbox and test for its presence on the user's
+%   path is contained in the information in a JSON toolboxes file. Each
+%   such file may contain multiple entries for toolboxes. The JSON data are
+%   read by this function, and the data are used to initialize an array of
+%   scitran toolboxes objects.
+%
+% Input (required)
+%   jsonFile - a JSON file, typically written by tbx.saveInfo, that
+%              contains the github description of the repository
+%
+% Example in code
 %
 % Wandell, Scitran, 2017
+%
+% See also: s_tbxSave
 
+% Example
 %{
  tbx = stToolbox('test.json');
 %}
