@@ -23,6 +23,8 @@ groupLabel = 'Wandell Lab';
 project = st.bidsUpload(data,groupLabel);
 ```
 
+The metadata that are uploaded all have the string 'bids@' prepended to them.  I am not sure this is necessary, but I do it now anticipating that it will be helpful when we do the **bidsDownload** method.
+
 ## Downloading
 
 This method has not yet been converted to the new SDK calls. That will be next weekend's project.
