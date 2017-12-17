@@ -9,7 +9,9 @@ function stPrint(result,slot, field)
 %  Typically these are cell arrays returned from a search, or structs
 %  returned from a list.  The slot refers to the first struct entry (e.g.,
 %  session or subject) and the field refers to the second entry (e.g.,
-%  label or code or ...).  Print out an object to see the possibilities.
+%  label or code or ...).  
+%
+%  Print out a returned object to see the possibilities.
 %
 % Example
 %   st = scitran('vistalab');
@@ -43,7 +45,7 @@ function stPrint(result,slot, field)
 
   % Print metadata
   project = st.search('project','project label exact','VWFA');
-  id = idGet(p{1});
+  id = idGet(project{1});
   info = st.getContainerInfo('project',id);
 
   sessions = st.list('session',id);   % Parent id
