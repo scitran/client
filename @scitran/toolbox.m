@@ -91,7 +91,7 @@ end
 % Download the json file containing the toolbox information.
 tbxFile = st.downloadFile(fileS);
 
-% Create the toolbox based on the file several repositories specified.
+% Create the toolbox based on the repositories specified.
 tbx = stToolbox(tbxFile);
 
 %% Do or don't install, using the toolboxes object install method
