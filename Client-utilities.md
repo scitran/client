@@ -14,8 +14,52 @@ We often store temporary files inside the scitranClient local directory.  Or som
 works on your system.
 
 ### workDirectory
+Change into a working directory, and if it does not exist create it and then change into it.
 
 ### stPrint
+The structs returned by search are hard to dig into.  This helps us print out critical fields.  For example, this is how we print out the label of all the projects returned by a search
+
+    projects = st.search('project');
+    stPrint(projects,'project','label');
+
+Or
+```
+projects = st.list('project','wandell');
+stPrint(projects,'label','')
+Returned 12 objects (project)
+
+ label 
+-----------------------------
+	1 - VWFA 
+	2 - HCP 
+	3 - Weston Havens 
+	4 - Reading Longitude: DWI 
+	5 - VWFA FOV Hebrew 
+	6 - VWFA FOV 
+	7 - Plasticity Retinal Damage 
+	8 - EJ Apricot 
+	9 - SOC ECoG (Hermes) 
+	10 - Rorie PLoS One 2010 
+	11 - Kiani Current Biology 2014 
+	12 - Brain Beats 
+```
+Or
+```
+project = st.search('project','project label exact','VWFA');
+id = idGet(project{1});
+sessions = st.list('session',id);   % Parent id
+stPrint(sessions,'subject','code')
+Returned 4 objects (session)
+
+ subject code
+-----------------------------
+	1 - ex11353 
+	2 - ex11347 
+	3 - ex11348 
+	4 - ex11352 
+
+```
+This function is in active development.  We feel the need, but we are not satisfied with the current solution.
 
 ### stParamsFormat
 We find it helpful to be able to express parameters as brief phrases, like 'Project label', rather than as strings like 'projectlabel'.  This routine takes a cell array of parameter/val pairs and converts parameter strings (odd entries) to lower case and removes the spaces.  That way the code is always written as projectlabel but the user can specify 'Project Label' or 'project label', adding some grace to life.
