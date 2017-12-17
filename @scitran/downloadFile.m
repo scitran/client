@@ -74,12 +74,14 @@ p.addRequired('file',vFunc);
 % Param/value pairs
 p.addParameter('containerType','',@ischar); % If file is string, required
 p.addParameter('containerID','',@ischar);   % If file is string, required
+p.addParameter('sessionID','',@ischar);   % If file is string, required
 p.addParameter('destination','',@ischar);
 p.addParameter('size',[],@isnumeric);
 
 p.parse(file,varargin{:});
 containerType = p.Results.containerType;
 containerID   = p.Results.containerID;
+sessionID     = p.Results.sessionID;   % Needed for analysis case
 file        = p.Results.file;
 destination = p.Results.destination;
 size        = p.Results.size;
@@ -91,11 +93,17 @@ if isstruct(file)
     containerType = file.parent.type;
     containerID   = idGet(file);
     filename      = file.file.name;
+    if strcmp(containerType,'analysis')
+        sessionID = file.session.x_id;
+    end
 else
     filename = file;
     if isempty(containerType) || isempty(containerID)
         error('If file is a string, you must specify container information');
     end
+    if strcmp(containerType,'analysis') && isempty(sessionID)
+        error('Session ID is required to download an analysis file');
+    end 
 end
 
 if isempty(destination)
@@ -113,7 +121,8 @@ switch lower(containerType)
     case 'collection'
         obj.fw.downloadFileFromCollection(containerID,filename,destination);
     case 'analysis'
-        obj.fw.downloadFileFromAnalysis(containerID,filename,destination);
+        % The arguments are a little different for this case.
+        obj.fw.downloadFileFromAnalysis(sessionID, containerID,filename,destination);
     otherwise
         error('Unknown parent type %s\n',file{1}.parent.type);
 end

@@ -106,6 +106,7 @@ end
 thisDir = pwd; chdir(localDir);
 eval(cmd);     chdir(thisDir);
 
+% edit(localFunction)
 end
 
 
