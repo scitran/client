@@ -1,73 +1,112 @@
-function [destination,val] = runFunction(st,func,varargin)
-% Search, download, and run a function stored at Flywheel
+function [localFileFull,val] = runFunction(st, mFile, varargin)
+% Download and run a function stored on a Flywheel container
 %
-%  [destination,val] = st.runFunction(func,'project',...,'destination',...,'params',...);
+%  [localFileFull,val] = st.runFunction(mFileName, ...);
 %
 % Required inputs: 
-%   func - Either a scitran struct of the function or a filename (string)
+%   mFile    - An mFileName filename (string) or 
+%              A struct as returned from a search, defining the file, its
+%              container type, and the container id
 %
 % Optional inputs
-%   project     - Project label (string)
-%   destination - Full path to the local script
-%   params      - Struct of parameters for the function
+%  When a string you must specify the container
+%     container Type - {project, session, acquisition, collection, analysis}
+%     container ID   - Could use idGet() on a returned list or search
+%   localDir         - Local directory for m-file (full path) 
+%   params           - Struct of parameters for the mFile
 %
-% Examples:
-%  see s_stRunFunction.m
+% Return:
+%   localFileFull  -  Local m-file (full path)
+%   val            -  Returns from the  execution of the local m-file
 %
-% See also: st.runScript()
+% Examples in code
 %
 % BW, Scitran Team, 2017
+%
+% See also: s_stRunFunction.m
+
+% st = scitran('vistalab');
+% Example 1
+%{
+ mFile = 'ecog_RenderElectrodes.m';
+ [s,id] = st.exist('project','SOC ECoG (Hermes)');
+ st.runFunction(mFile,'container type','project','container ID',id);
+%}
 
 %%
 p = inputParser;
 vFunc = @(x)(isstruct(x) || ischar(x));
-p.addRequired('func',vFunc);
+p.addRequired('mFile',vFunc);
+
+varargin = stParamFormat(varargin);
 
 % Specify a local directory for the script.
-p.addParameter('project',[],@ischar);
-p.addParameter('destination',pwd,@ischar);
+p.addParameter('containerid','',@ischar);
+p.addParameter('containertype','',@ischar);
+p.addParameter('localdir',pwd,@ischar);    % Directory of local file
 p.addParameter('params',[],@isstruct);
 
-p.parse(func,varargin{:});
-project     = p.Results.project;
-destination = p.Results.destination;
-params      = p.Results.params; %#ok<NASGU>
+p.parse(mFile,varargin{:});
+mFile          = p.Results.mFile;
+containerID    = p.Results.containerid;
+containerType  = p.Results.containertype;
 
-%% Download the function 
+localDir     = p.Results.localdir;    % Local file
+params       = p.Results.params;
+val          = [];   % Returns from the mFile will be here
 
-if ischar(func)
-    if isempty(project)
-        error('Project label required when func is a string');
-    else
-        funcS = st.search('files',...
-            'project label',project,...
-            'filename',func,...
-            'summary',true);
-    end
+%% Set up download information.  Always use string download type
+
+if isstruct(mFile)
+    % Set up the download variables
+    containerType = file.parent.type;
+    containerID   = idGet(mFile);
+    filename      = mFile.file.name;
 else
-    funcS = func;
+    filename = mFile;
+    if isempty(containerType) || isempty(containerID)
+        error('If file is a string, you must specify container information');
+    end
 end
 
-%% Download to localFunction and evaluate with params
+%% Create the local m-file name
 
-[~,n,e] = fileparts(func);
-localFile = sprintf('local_%s%s\n',n,e);
-destination = st.get(funcS{1},...
-    'destination',fullfile(destination,localFile));
+if ~exist(localDir,'dir'), mkdir(localDir); end
 
-execFile = sprintf('local_%s%s\n',n);
+[~,n,e] = fileparts(filename);
+if ~isequal(e,'.m'), error('Only m-files are accepted'); end
+% The user either specified the destination file name or not
+localFunction = sprintf('local_%s',n);
+localFileFull = fullfile(localDir,[localFunction,'.m']);
+    
+%% Download the m-File to a local file 
+
+if isstruct(mFile)
+    st.downloadFile(mFile, ...
+        'destination',localFileFull);
+else
+    st.downloadFile(mFile,...
+        'containerType', containerType,...
+        'containerID',   containerID, ...
+        'destination',   localFileFull);
+end
+% edit(localFileFull)
+
+%% Setup command with params
+
 % If params is empty and we send it in, varargin looks it has one entry
 % that is empty.  We don't want that.  So, we do an if/else
 if isempty(params)
-    cmd = sprintf('val = %s();',execFile);
+    cmd = sprintf('val = %s();',localFunction);
 else
-cmd = sprintf('val = %s(params);',execFile);
+    cmd = sprintf('val = %s(params);',localFunction);
 end
 
-eval(cmd);
+%% Change into directory, execute, and return
+thisDir = pwd; chdir(localDir);
+eval(cmd);     chdir(thisDir);
 
-% val = eval('localFunction(params);');
-
+% edit(localFunction)
 end
 
 

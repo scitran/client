@@ -112,7 +112,7 @@ function id = idSearch(data)
 % our way through the list.
 
 if isfield(data,'file')
-    warning('File.  Returning parent (acquisition) id.');
+    % warning('File.  Returning parent (acquisition) id.');
     id = data.parent.x_id;
 elseif isfield(data,'acquisition')
     id = data.acquisition.x_id;

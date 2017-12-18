@@ -1,25 +1,30 @@
-function tbx = toolbox(st,varargin)
-% Install toolboxes from github repositories.
+function tbx = toolbox(st,file,varargin)
+% Test for presence or install toolboxes from github
 %
 % Syntax
 %    tbx = st.toolbox(file,...)
 %
-% Read a toolboxes json file from the Flywheel site.  Then either install
-% the toolbox or not, according to the parameters.
+% Read a toolboxes json file from the Flywheel site.  
+% If install, try to install as clone or zip
+% Else test whether the toolbox repositories are on the matlab path
 %
-% Input parameters
+% Input (required)
+%  file:  A string of toolbox filename
+%           In this case, the project name must be specified
+%         A cell or struct (returned by a search) that defines the toolbox
+%           JSON file on the Flywheel site 
+%
+% Input (optional)
 %   project:  The project label (string)
-%   tbxFile:  This is either a struct defining the toolbox JSON file on the
-%             scitran site (returned by a search), or it is simply the 
-%             name of the JSON toolbox file in the project (default is
-%             'toolboxes.json'). 
 %   install:  Boolean on whether to install (default: true)
 %   clone:    Boolean (false means zip install, true means git clone)
 %
 % Output
-%   tbx - the toolboxes object
+%   tbx - an array of toolboxes objects
 %
-% See also:  s_stToolboxes, s_tbxSave, scitran.toolbox
+% See also:  s_stToolboxes, s_tbxSave, scitran.getToolbox
+%
+% Examples in code
 %
 % BW, Scitran Team, 2017
 
@@ -33,23 +38,25 @@ function tbx = toolbox(st,varargin)
 %{
   st = scitran('vistalab');
 
-  % Creates the toolbox .json file from this project page
-  tbx = st.toolbox('aldit-toolboxes.json','project','ALDIT','install',false);  
-  tbx.install;
-
-  % Specify the filename
-  tbx = st.toolbox('dtiError.json','project','ALDIT','install',true);
+  % Creates the toolbox and tests whether they are on your path
+  tbx = st.toolbox('aldit-toolboxes.json',...
+        'project','ALDIT',...
+        'install',false);  
 
   %  Returns a toolboxes struct without installing
-  tbxFile = st.search('files','project label','Diffusion Noise Analysis','filename','toolboxes.json')
-  tbx = st.toolbox('file',tbxFile{1},'install',false);
+  tbxFile = st.search('file','project label exact','DEMO','filename','dtiError.json')
+  tbx = st.toolbox(tbxFile,'install',false);
+
+  % Specify the filename.  Project label is required.
+  tbx = st.toolbox('dtiError.json','project','DEMO','install',false);
+
 %}
 
 
 %%
 p = inputParser;
 
-vFunc = @(x)(isstruct(x) || ischar(x));
+vFunc = @(x)(isstruct(x) || ischar(x) || (iscell(x) && (numel(x)==1)));
 p.addRequired('file',vFunc);   % Either the file struct or its name
 
 % If only a name, then we need the project label
@@ -59,7 +66,7 @@ p.addParameter('project','', @ischar);        % Project label
 p.addParameter('install',true, @islogical);   % Install
 p.addParameter('clone',false, @islogical);    % Zip by default, or clone
 
-p.parse(varargin{:});
+p.parse(file,varargin{:});
 
 project = p.Results.project;
 file    = p.Results.file;
@@ -70,29 +77,10 @@ clone   = p.Results.clone;
 
 % Get the struct for the toolboxes file on the scitran site
 if ischar(file)
-    if isempty(project)
-        error('Project label required when file is a string');
-    else
-        %  Get the file information, which is a cell array
-        fileC = st.search('file',...
-            'project label exact',project,...
-            'filename',file);
-        if length(fileC) ~= 1
-            error('Problem identifying JSON toolbox file.  Search returned %d items\n',length(fileC));
-        else
-            fileS = fileC{1};   % Copy the struct
-        end
-    end
+    tbx = st.getToolbox(file,'project name',project);
 else
-    % The struct was based, and that's what we want
-    fileS = file;
+    tbx = st.getToolbox(file);
 end
-
-% Download the json file containing the toolbox information.
-tbxFile = st.downloadFile(fileS);
-
-% Create the toolbox based on the file several repositories specified.
-tbx = stToolbox(tbxFile);
 
 %% Do or don't install, using the toolboxes object install method
 
@@ -108,13 +96,7 @@ tbx = stToolbox(tbxFile);
 nTbx = length(tbx);
 if ~install
     % Testing only
-    for ii=1:nTbx
-        cmd = tbx(ii).testcmd;
-        fprintf('Testing %s (repo %s) ... ',cmd, tbx(ii).gitrepo.project);
-        if isempty(which(cmd)), fprintf('not found.\n'); 
-        else,                   fprintf('found %s.\n',which(cmd));
-        end
-    end
+    st.toolboxValidate(tbx,'verbose',true);
     return;
 else
     % Either a zip install or a git clone install

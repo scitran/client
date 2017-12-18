@@ -1,35 +1,65 @@
 function destination = downloadFile(obj,file,varargin)
 % Retrieve a file from a Flywheel site
 %
-%   outfile = scitran.downloadFile(file,'destination',filename,'size',size)
+%   outfile = scitran.downloadFile(file, ...)
 %
 % We use the iFlywheel SDK to download a file.  This routine differs from
 % the other Flywheel download methods because files do not have an id.
 % They have a parent and a filename, which we use to get them.
 %
 % Required Inputs
-%  file - Struct defining the file. The struct must contain these fields
+%  file - A filename (string), or 
+%         A struct defining the file as returned by a search.  Required
+%         struct fields are 
 %           file.parent.type
 %           file.parent.x_id
 %           file.file.name
-%         The struct returned by a search has this information.
 %
 % Optional Inputs
-%  destination:  full path to file output location (default is a tempdir)
+%   When file is a string, you must also specify the container information
+%     containerType {project, session, acquisition, collection, analysis}
+%     containerID   Perhaps obtained using idGet()
+%  destination:  Full path of the local file (default is in tempdir)
 %  size:         File size in bytes; used for checking
 %
 % Return
-%  destination:  Full path to the file saved on disk
+%  destination:  Full path to the file saved locally
 %
-% See also: scitran.search, scitran.deleteFile
+% See also: scitran.deleteFile, scitran.search
+%
+% Examples in code
 %
 % LMP/BW Vistasoft Team, 2015-16
 
 % Examples
 %{
+  % Search struct form
   st = scitran('vistalab');
-  file = st.search('file','project label contains','SOC','filename','toolboxes.json');
-  fName = st.downloadFile(file{1});  
+  file = st.search('file','project label exact','DEMO','filename','dtiError.json');
+  fName = st.downloadFile(file{1});
+
+  edit(fName)
+  delete(fName);
+%}
+%{
+  % String form
+  [s,id]  = st.exist('project','DEMO');
+  if s
+    fName = st.downloadFile('dtiError.json','containerType','project','containerID',id);
+  end
+
+  edit(fName)
+  delete(fName);
+%}
+%{
+  % String form with destination file name
+  [s,id]  = st.exist('project','DEMO');
+  if s
+    fName = st.downloadFile('dtiError.json',...
+          'containerType','project','containerID',id, ...
+          'destination',fullfile(pwd,'deleteme.json'));
+  end
+
   edit(fName)
   delete(fName);
 %}
@@ -37,44 +67,62 @@ function destination = downloadFile(obj,file,varargin)
 %% Parse inputs
 p = inputParser;
 
-vFunc = @(x)(isstruct(x));
+% Either a struct or a char string
+vFunc = @(x)(isstruct(x) || ischar(x));
 p.addRequired('file',vFunc);
 
 % Param/value pairs
-p.addParameter('destination','',@ischar)
+p.addParameter('containerType','',@ischar); % If file is string, required
+p.addParameter('containerID','',@ischar);   % If file is string, required
+p.addParameter('sessionID','',@ischar);   % If file is string, required
+p.addParameter('destination','',@ischar);
 p.addParameter('size',[],@isnumeric);
 
 p.parse(file,varargin{:});
-
+containerType = p.Results.containerType;
+containerID   = p.Results.containerID;
+sessionID     = p.Results.sessionID;   % Needed for analysis case
 file        = p.Results.file;
 destination = p.Results.destination;
 size        = p.Results.size;
 
 %% Set up the Flywheel SDK call
 
-% Get the Flywheel commands
-fw = obj.fw;
+if isstruct(file)
+    % Set up the download variables
+    containerType = file.parent.type;
+    containerID   = idGet(file);
+    filename      = file.file.name;
+    if strcmp(containerType,'analysis')
+        sessionID = file.session.x_id;
+    end
+else
+    filename = file;
+    if isempty(containerType) || isempty(containerID)
+        error('If file is a string, you must specify container information');
+    end
+    if strcmp(containerType,'analysis') && isempty(sessionID)
+        error('Session ID is required to download an analysis file');
+    end 
+end
 
-% Set up the download variables
-parentType = file.parent.type;
-parentID   = file.parent.x_id;
-filename   = file.file.name;
 if isempty(destination)
     destination = fullfile(pwd,filename);
 end
 
-% Call the Flywheel SDK download method
-switch lower(parentType)
+%% Call the correct Flywheel SDK download method
+switch lower(containerType)
     case 'acquisition'
-        fw.downloadFileFromAcquisition(parentID,filename,destination);
+        obj.fw.downloadFileFromAcquisition(containerID,filename,destination);
     case 'project'
-        fw.downloadFileFromProject(parentID,filename,destination);
+        obj.fw.downloadFileFromProject(containerID,filename,destination);
     case 'session'
-        fw.downloadFileFromSession(parentID,filename,destination);  
+        obj.fw.downloadFileFromSession(containerID,filename,destination);
     case 'collection'
-        fw.downloadFileFromCollection(parentID,filename,destination);
+        obj.fw.downloadFileFromCollection(containerID,filename,destination);
     case 'analysis'
-        fw.downloadFileFromAnalysis(parentID,filename,destination);
+        % The arguments are a little different for this case.
+        obj.fw.downloadFileFromAnalysis(sessionID, containerID,filename,destination);
     otherwise
         error('Unknown parent type %s\n',file{1}.parent.type);
 end

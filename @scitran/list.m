@@ -13,26 +13,33 @@ function result = list(obj, returnType, parentID, varargin)
 %        file list
 %        ...
 %
+% Or,
+%
 %     Group Name
 %       Collection
 %         Session
 %           Acquisition
 %
-% Inputs
+% Inputs (required)
 %  returnType - project, session, acquisition, file,
 %               collectionsession, collectionacquisition
 %  parentID   - A Flywheel ID of the parent (group, usually obtained
 %               from a search 
 %
-% Optional Inputs
+% Inputs (optional)
 %  summary:  - Print a brief summary of the returned objects
 %
 % Return
 %  result:  Cell array of Flywheel objects
 %
-% See also: search
+% Example
+%  project      = st.search('project','project label exact','VWFA');
+%  sessions     = st.list('session',idGet(project));
+%  acquisitions = st.list('acquisition',idGet(sessions{1}));
 %
 % LMP/BW Vistasoft Team, 2015-16
+%
+%  See also: scitran.search
 
 % Examples
 %{
@@ -42,7 +49,7 @@ function result = list(obj, returnType, parentID, varargin)
   % The struct returned from an elastic search and from an SDK get differ
   % substantially
   project      = st.search('project','project label exact','VWFA');
-  sessions     = st.list('session',project{1}.project.x_id);
+  sessions     = st.list('session',idGet(project{1}));
 
   % The group name (not label) is sent for the project
   projects     = st.list('project','wandell');
