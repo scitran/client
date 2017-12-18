@@ -1,5 +1,5 @@
 ## The compute model
-The **scitrian** and *toolboxes** classes simplify Matlab code and Flywheel data sharing; in many cases, sharing with your future self.  The software is designed for this case.  There is one or more Matlab toolboxes for the project; these toolboxes are hosted in a github repository. Your team writes functions that access the Flywheel data and use these toolboxes.
+The **scitrian** and **toolboxes** classes simplify Matlab code and Flywheel data sharing; in many cases, sharing with your future self.  The software is designed for this case.  There is one or more Matlab toolboxes for the project; these toolboxes are hosted in a github repository. Your team writes functions that access the Flywheel data and use these toolboxes.
 
 ## Creating a toolbox file
 The **toolboxes** class comprises methods that specify the github toolboxes and facilitate downloading and installing these toolboxes.  Information about the toolboxes is stored in a small JSON file that is an attachment on the Flywheel project page.  
