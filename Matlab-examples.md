@@ -1,7 +1,9 @@
-## Examples
+Here are more examples of Matlab functions and toolboxes for different types of data.
 
-### Single unit physiology (Newsome)
+### SOC ECoG (Hermes)
 
 ### FMRI example (Logothetis)
 
-### SOC ECoG (Hermes)
+### Single unit physiology (Newsome)
+
+
