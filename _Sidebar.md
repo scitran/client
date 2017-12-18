@@ -12,7 +12,7 @@
 * [Sharing computations](Sharing-Matlab-methods)
    * [Toolbox files](Toolbox-files)
    * [Running functions](Run-function)
-   * [Run examples](Matlab-examples)
+   * [Examples](Sharing-examples)
 * [Gears and analyses](Gears-and-Analyses)
 * [Utilities](Client-utilities)
 * [Scripts](Client-scripts)
