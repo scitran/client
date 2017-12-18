@@ -15,6 +15,7 @@ Clone a a git repository and add it to your path.  cloneDepth allowed.
 
 ### github
 Open a browser on the github site
+
     tbx.github('page','wiki')
 
 
