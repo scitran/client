@@ -1,7 +1,32 @@
 M-file functions can be attached anywhere on the Flywheel site, downloaded, and executed while drawing upon the Flywheel data.  The principle interface is the **scitran** method runFunction.  This page shows the implementation of a function, introducing the key **scitran** and **toolboxes** methods.
 
+## Invoking the runFunction
+The runFunction executes an m-file attached to the Flywheel site on a local computer.  The next few lines of code first check that the necessary toolboxes are installed for the user.  Then the mFile script dtiErrorALDIT.m is run.
+```
+tbx = st.getToolbox('aldit-toolboxes.json','project name','ALDIT');
+valid = st.toolboxValidate(tbx,'verbose',true);
+if ~valid, error('Set up your toolboxes!'); end
+
+mFile = 'dtiErrorALDIT.m';
+[s,id] = st.exist('project','ALDIT');  % Make sure the project is available and get the id
+if s
+    clear params
+    params.project = 'ALDIT';
+    params.session = 'Set 1';
+    [~,RMSE1] = st.runFunction(mFile,...
+        'container type','project',...
+        'container ID',id,...
+        'params',params);
+else
+    error('Could not find project ALDIT');
+end
+disp(RMSE1)
+```
+
 ## Analyze diffusion error
-The Wandell lab participated in a nation-wide study to compare different methods for measuring diffusion-weighted images and ultimately create tractograms. This script was placed on the Flywheel site to run different analyses of the signal-to-noise of diffusion measurements from different sites using different protocols. The function header explains that one can make the call with many different types of parameter settings that govern which data are analyzed and which parameters are used for the analysis.
+The contents of the mFile are shown here.  This script was used in a study that compared diffusion-weighted images from many different sites. The data from the different sites along with this script were placed on the Flywheel site.  We walk through the script itself to illustrate how it works.
+
+The header explains that one can make the call with many different types of parameter settings that govern which data are analyzed and which parameters are used for the analysis.
 
 ```
 function nRMSE = dtiErrorALDIT(varargin)
