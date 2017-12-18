@@ -27,20 +27,41 @@ st = scitran('vistalab');
 
 mFile = 'ecog_RenderElectrodes.m';
 [s,id] = st.exist('project','SOC ECoG (Hermes)');
-st.runFunction(mFile,'container type','project','container ID',id);
+if s, st.runFunction(mFile,'container type','project','container ID',id);
+else, error('Could not find project');
+end
  
-%% Set up the toolboxes
+%% ALDIT example, also setting params
 
-project = 'ALDIT';
-st.toolbox('aldit-toolboxes.json','project',project);
+tbx = st.getToolbox('aldit-toolboxes.json','project name','ALDIT');
+for ii=1:numel(tbx)
+    if ~tbx(ii).test
+        error('Install toolbox %s.',tbx(ii).gitrepo.project);
+    end
+end
+
+mFile = 'dtiErrorALDIT.m';
+[s,id] = st.exist('project','ALDIT');
+
+if s
+    clear params
+    params.project = 'ALDIT';
+    params.session = 'Set 1';
+    [~,RMSE1] = st.runFunction(mFile,...
+        'container type','project',...
+        'container ID',id,...
+        'params',params);
+else
+    error('Could not find project ALDIT');
+end
 
 %% Run the function on Data Set 1
 
-clear params
-params.project = 'ALDIT';
-params.session = 'Test Site 1';
-
-[~,RMSE1] = st.runFunction('dtiErrorALDIT.m','project',project,'params',params);
+% clear params
+% params.project = 'ALDIT';
+% params.session = 'Test Site 1';
+% 
+% [~,RMSE1] = st.runFunction('dtiErrorALDIT.m','project',project,'params',params);
 
 %% Data set 2
 

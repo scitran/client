@@ -125,6 +125,16 @@ classdef toolboxes < handle
             % Write the struct as a JSON file
             jsonwrite(outfile,info);
         end
+        
+        % How we test the repo is on the local user's path
+        function result = test(obj)
+            fprintf('Repo %s (%s) ',obj.gitrepo.project, obj.testcmd);
+            if isempty(which(obj.testcmd))
+                result = false; fprintf('not found.\n');
+            else
+                result = true; fprintf('found.\n');
+            end
+        end
     end
     
 end

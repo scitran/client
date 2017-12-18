@@ -49,14 +49,18 @@ if ~exist(destination,'dir'), mkdir(destination); end
 bvecFile = st.search('files',...
     'acquisition id',acquisitionID,...
     'file type','bvec');
-if length(bvecFile) > 1, warning('Multiple bvec files.  Returning 1st'); end
+if length(bvecFile) ~= 1
+    error('%d bvec files found',length(bvecFile));
+end
 bvecName = fullfile(destination,bvecFile{1}.file.name);
 st.downloadFile(bvecFile{1},'destination',bvecName);
 
 bvalFile = st.search('files',...
     'acquisition id',acquisitionID,...
     'file type','bval');
-if length(bvalFile) > 1, warning('Multiple bval files.  Returning 1st'); end
+if length(bvecFile) ~= 1
+    error('%d bval files found',length(bvalFile));
+end
 bvalName = fullfile(destination,bvalFile{1}.file.name);
 st.downloadFile(bvalFile{1},'destination',bvalName);
 

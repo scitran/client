@@ -1,37 +1,51 @@
 function nRMSE = dtiErrorALDIT(varargin)
 % ALDIT data set error analysis (phantom data)
 %
-%     nRMSE = dtiErrorALDIT('project',...,'session',...'wmPercentile',...,'scatter',...'histogram',...);
+% Syntax
+%     nRMSE = dtiErrorALDIT(...);
 %
-% We find and download an acquisition containing DWI data. Then we do
-% something reasonable with it to assess the noise. The resulting graph can
-% be compared with data from phantom measurements on other scanners.
+% Description
+%  We find and download an acquisition containing DWI data. Then we assess
+%  the noise. The graph and numerical evaluations can be compared with data
+%  from phantom measurements on other scanners.
+%
+% Inputs (required)
+%
+% Inputs (optional)
+%  project - Project label
+%  session - Session label
+%  wmPercentile - White matter percentile
+%  nSamples     - Number of bootstrap samples
+%  scatter      - Boolean.  Plot scatter
+%  histogram    - Boolean.  Plot error histogram
 %
 % Examples in the source code
 %
-% See also:  scitran.runFunction
-%
 % BW Scitran Team, 2017
-
-% Programming TODO:  Set destination for downloads.
 %
+% See also:  scitran.runFunction
+
+% st = scitran('vistalab');
 % Example:
 %{
     project = 'ALDIT';
-    session = 'Test Site 2';
+    session = 'Set 2';
     dtiErrorALDIT('project',project,'session',session);
-
+%}
+%{
     clear params; params.project = 'ALDIT';
-    params.session = 'Test Site 2';
+    params.session = 'Set 2';
     params.wmPercentile = 80; params.nSamples = 500;
     params.scatter = false; params.histogram = false;
     dtiErrorALDIT(params);
-
+%}
+%{
     project = 'ALDIT'; 
     clear params; params.session = 'Test Site 1';
     params.wmPercentile = 80; params.nSamples = 500;
     params.scatter = false; params.histogram = false;
-    st = scitran('scitran');
+    
+    st = scitran('vistalab');
     st.runFunction('dtiErrorALDIT.m','project',project,'params',params);
 %}
 
@@ -76,7 +90,7 @@ for ii=1:nAcquisitions
     
     % We group the diffusion data, bvec and bval into a dwi structure as
     % per vistasoft
-    dwi = st.dwiLoad(acquisitions{ii}.id);
+    dwi = st.dwiLoad(idGet(acquisitions{ii}));
     
     % Check the download this way
     %  niftiView(dwi.nifti);
