@@ -135,12 +135,11 @@ for ii=1:nAcquisitions
     %  niftiView(dwi.nifti);
     %  mrvNewGraphWin; hist(double(dwi.nifti.data(:)),100);
     
-    %% Write out a white matter mask
+    %% Write out a white matter mask (vistasoft functions)
     wmProb = wmCreate(dwi.nifti,wmPercentile);
     niftiWrite(wmProb,'wmProb.nii.gz');
-    % niftiView(wmProb);
     
-    %% dtiError test
+    %% dtiError test (dti-error toolbox function)
     [err, ~, ~, predicted, measured] = ...
         dtiError(dwi.files.nifti,'eType','dsig','wmProb','wmProb.nii.gz','ncoords',nSamples);
        
@@ -157,7 +156,7 @@ The key variables are computed, and the remaining code generates plots and the r
 mrvNewGraphWin;
 [label,idx] = sort(label);
 b = bar3(nRMSE(idx),0.3); zlabel('Normalized RMSE');
-set(b,'FaceLighting','gouraud','EdgeColor',[1 1 1])
+set(b,'FaceLighting','gouraud','EdgeColor',[1 1 1]);
 set(gca,'YTickLabel',label);
 view([-64,23]);
 title(sessionlabel)
