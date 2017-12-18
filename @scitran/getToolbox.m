@@ -1,4 +1,4 @@
-function tbx = getToolbox(st, file, varargin)
+function [tbx, valid] = getToolbox(st, file, varargin)
 % Read the toolbox file and return the toolbox object
 %
 % Syntax
@@ -12,9 +12,11 @@ function tbx = getToolbox(st, file, varargin)
 %
 % Input (optional)
 %   project name:  The project label (string)
+%   validate:      Check that the toolboxes are installed
 %
 % Output
 %   tbx - the toolboxes object
+%   valid - True if toolboxes are validated
 %
 % See also:  s_stToolboxes, s_tbxSave, scitran.toolbox
 %
@@ -34,7 +36,6 @@ function tbx = getToolbox(st, file, varargin)
  tbx = st.getToolbox(file);
 
  url = tbx(1).github;   % This is the page on github
-
 %}
 
 
@@ -46,11 +47,13 @@ p.addRequired('file',vFunc);           % Either the file struct or its name
 
 varargin = stParamFormat(varargin);
 p.addParameter('projectname','', @ischar);  % Project label
+p.addParameter('validate',false, @islogical);  % Project label
 
 p.parse(file,varargin{:});
 
 file    = p.Results.file;
 project = p.Results.projectname;
+validate = p.Results.validate;
 
 %% Set up the toolboxes object
 
@@ -82,5 +85,7 @@ tbxFile = st.downloadFile(fileS);
 
 % Create the toolbox based on the repositories specified.
 tbx = stToolbox(tbxFile);
+
+if validate, valid = st.toolboxValidate(tbx,'verbose',true); end
 
 end

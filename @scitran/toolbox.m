@@ -96,13 +96,7 @@ end
 nTbx = length(tbx);
 if ~install
     % Testing only
-    for ii=1:nTbx
-        cmd = tbx(ii).testcmd;
-        fprintf('Testing %s (repo %s) ... ',cmd, tbx(ii).gitrepo.project);
-        if isempty(which(cmd)), fprintf('not found.\n'); 
-        else,                   fprintf('found %s.\n',which(cmd));
-        end
-    end
+    st.toolboxValidate(tbx,'verbose',true);
     return;
 else
     % Either a zip install or a git clone install
