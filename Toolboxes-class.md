@@ -18,4 +18,6 @@ Open a browser on the github site
 
     tbx.github('page','wiki')
 
+### test
+Test whether the repository already exists on the user's path
 
