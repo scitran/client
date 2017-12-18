@@ -1,39 +1,44 @@
-The **toolboxes** object contains two types of information.  One is a command that can be executed to test whether the toolbox is on the path (testcmd).  The second is a structure that contains enough information to download a git repository (gitrepo). 
+## The compute model
+The **scitran** and **toolboxes** classes simplify Matlab code and Flywheel data sharing.  The software is designed for this use case.
 
-Here is an example toolboxes object, tbx.
-```
-disp(tbx)
-  toolboxes with properties:
+* One or more Matlab toolboxes for the project, available from a github repository. 
+* Flywheel data are accessed using **scitran** and analyzed with these toolboxes.
 
-    testcmd: 'dtiError'
-    gitrepo: [1×1 struct]
+## Creating a toolbox file
+Information about the toolboxes is stored in a small JSON file that is attached to a Flywheel project page.  
+
+For example, the Wandell lab uses the vistasoft toolbox.  The **toolbox** specifies (a) a command that can be used to test whether the toolbox is installed on the user's path (testcmd), and (b) the user and project on the github site.  This information is saved in a JSON file as follows.
 ```
-The gitrepo structure contains this information
+tbx.testcmd     = 'vistaRootPath';
+tbx.gitrepo.user    = 'vistalab';  % https://github.com/vistalab/vistasoft
+tbx.gitrepo.project = 'vistasoft'; % https://github.com/vistalab/vistasoft
+tbx.saveinfo;                      % Save the toolbox information to vistasoft.json
+```
+Optionally, the JSON file can specify a specific commit or branch on github.  The gitrepo structure contains this information
 ```
 >> disp(tbx.gitrepo)
        user: 'scitran-apps'
     project: 'dti-error'
      commit: 'master'
 ```
-The data directory in scitran includes several toolboxes files and a script, s_tbxSave, used to write those JSON files. The code looks like this:
+By default, the latest commit from the master branch is assumed.
+
+A project may depend on multiple toolboxes.  For example, Dora Hermes wrote an ECoG toolbox which is specified in ecogBasic.json. To analyze data in her ECoG project we merge the two toolboxes into a single file
 ```
-tbx = toolboxes('');
-tbx.testcmd     = 'dtiError';
-tbx.gitrepo.user    = 'scitran-apps'; 
-tbx.gitrepo.project = 'dti-error'; 
-tbxWrite('dti-error.json',tbx);
-```
-Multiple toolboxes can be combined into a single file and uploaded. In this example, the stToolbox() function reads two JSON files, describing two repositories.  These are placed in an array, and written out to a new JSON file. 
-```
-tbx(1) = stToolbox('dtiError.json');
+clear tbx
+tbx(1) = stToolbox('ecogBasicCode.json');
 tbx(2) = stToolbox('vistasoft.json');
-tbxWrite('aldit-toolboxes.json',tbx);
-% Subsequently, you can read the combined file to get the toolboxes array
-% tbx = stToolbox('aldit-toolboxes.json');
+tbxWrite('SOC-ECoG-toolboxes.json',tbx);
 ```
-Uploading the file to the project looks like this
-```
-% upload to the project page
-project = st.search('project','project label exact','ALDIT');
-st.upload('aldit-toolboxes.json','project',project{1}.project.x_id);
-```
+
+## Uploading the toolbox file 
+
+The JSON file is stored on the project page with a **scitran** command 
+
+    project = st.search('projects','project label exact','SOC ECoG (Hermes)');
+    st.upload('SOC-ECoG-toolboxes.json','project',idGet(project));
+
+**scitran** functions that analyze the Flywheel data check whether the user has the Matlab toolboxes on their path and, if necessary, install these toolboxes for the user.
+
+## Example toolbox files
+The data directory in scitran includes several toolboxes files and a script, s_tbxSave, 
