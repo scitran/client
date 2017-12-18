@@ -1,9 +1,3 @@
-## The compute model
-The **scitran** and **toolboxes** classes simplify Matlab code and Flywheel data sharing.  The software is designed for this use case.
-
-* One or more Matlab toolboxes for the project, available from a github repository. 
-* Flywheel data are accessed using **scitran** and analyzed with these toolboxes.
-
 ## Creating a toolbox file
 Information about the toolboxes is stored in a small JSON file that is attached to a Flywheel project page.  
 
