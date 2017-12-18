@@ -6,12 +6,16 @@ The key **toolboxes** methods are saveinfo, install and clone.  These methods ad
 We suggest that you include the toolboxes.install or toolboxes.clone within the function you are sharing and that will be executed by scitran.runFunction. The toolboxes command first check whether the toolbox is on your path, and the function only downloads if the toolbox is not present.
 
 ### saveinfo
+Saves out a JSON toolboxes file.
+
+### read
+Reads a JSON file and returns a toolbox
 
 ### install
-Read a toolbox.json file and get a zip archive, put it on path
+Read a toolbox.json file.  Get a zip archive from github and put it on the user's path.  Commit version or branch is allowed.
 
 ### clone
-Clone a a git repository and add it to your path.  cloneDepth allowed.
+Clone a a git repository and add it to the user's path.  cloneDepth allowed.
 
 ### github
 Open a browser on the github site
