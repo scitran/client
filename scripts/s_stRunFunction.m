@@ -1,9 +1,11 @@
 %% Illustrate st.runFunction
 %
-% This script illustrates how to use the scitran.runFunction() with data in
-% a Flywheel site.  To use this script, the toolbox.json file and the
-% script should be uploaded to the project page.
+% This script uses the scitran.runFunction() with data in a Flywheel site.
+% It illustrates how we use toolboxes to interact with the github
+% repository containing Matlab toolboxes.
 %
+% These are all designed to run on the vistalab site for wandell.  They may
+% serve as a model for future developments by Flywheel.
 %
 % BW, Vistasoft Team, 2017
 
@@ -31,14 +33,10 @@ if s, st.runFunction(mFile,'container type','project','container ID',id);
 else, error('Could not find project');
 end
  
-%% ALDIT example, also setting params
+%% ALDIT example including toolbox testing and sending params
 
 tbx = st.getToolbox('aldit-toolboxes.json','project name','ALDIT');
-for ii=1:numel(tbx)
-    if ~tbx(ii).test
-        error('Install toolbox %s.',tbx(ii).gitrepo.project);
-    end
-end
+st.toolboxValidate(tbx,'verbose',true);
 
 mFile = 'dtiErrorALDIT.m';
 [s,id] = st.exist('project','ALDIT');
@@ -54,23 +52,17 @@ if s
 else
     error('Could not find project ALDIT');
 end
+disp(RMSE1)
 
 %% Run the function on Data Set 1
 
-% clear params
-% params.project = 'ALDIT';
-% params.session = 'Test Site 1';
-% 
-% [~,RMSE1] = st.runFunction('dtiErrorALDIT.m','project',project,'params',params);
+params.session = 'Set 2';
 
-%% Data set 2
-
-% Set additional parameters
-params.session = 'Test Site 2';
-params.wmPercentile = 80; params.nSamples = 500;
-params.scatter = false; params.histogram = true;
-
-[~,RMSE2] = st.runFunction('dtiErrorALDIT.m','project',project,'params',params);
+[~,RMSE2] = st.runFunction(mFile,...
+    'container type','project',...
+    'container ID',id,...
+    'params',params);
+disp(RMSE2)
 
 %%
 
