@@ -7,11 +7,14 @@ We suggest that you include the toolboxes.install or toolboxes.clone within the 
 
 ### saveinfo
 
-
 ### install
 Read a toolbox.json file and get a zip archive, put it on path
 
 ### clone
 Clone a a git repository and add it to your path.  cloneDepth allowed.
+
+### github
+Open a browser on the github site
+    tbx.github('page','wiki')
 
 
