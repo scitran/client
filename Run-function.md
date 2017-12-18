@@ -8,7 +8,8 @@ valid = st.toolboxValidate(tbx,'verbose',true);
 if ~valid, error('Set up your toolboxes!'); end
 
 mFile = 'dtiErrorALDIT.m';
-[s,id] = st.exist('project','ALDIT');  % Make sure the project is available and get the id
+% Make sure the project is available and get the id
+[s,id] = st.exist('project','ALDIT');  
 if s
     clear params
     params.project = 'ALDIT';
