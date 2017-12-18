@@ -87,7 +87,7 @@ tbx = stToolbox('SOC-ECoG-toolboxes.json');
 
 % Put the toolboxes file into the project as an attachment
 project = st.search('projects','project label exact','SOC ECoG (Hermes)');
-st.upload('SOC-ECoG-toolboxes.json','project',project{1}.project.x_id);
+st.upload('SOC-ECoG-toolboxes.json','project',idGet(project));
 
 %% Now, save and put the paper of the future example (Rorie, 2010)
 %  This saves multiple toolboxes in a single toolboxes.json file and
@@ -100,7 +100,7 @@ tbx = stToolbox('rorie2010Figures.json');
 
 % Put the toolboxes file into the project as an attachment
 project = st.search('projects','project label contains','Rorie PLoS One 2010');
-st.upload('rorie2010Figures.json','project',project{1}.project.x_id);
+st.upload('rorie2010Figures.json','project',idGet(project));
 
 %% fw_Apricot6
 clear tbx
@@ -110,7 +110,7 @@ tbx = stToolbox('fw_Apricot6.json');
 
 % Put the toolboxes file into the project as an attachment
 project = st.search('projects','project label contains','EJ Apricot');
-st.upload('fw_Apricot6.json','project',project{1}.project.x_id);
+st.upload('fw_Apricot6.json','project',idGet(project));
 
 %% ALDIT
 
