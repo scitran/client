@@ -1,4 +1,6 @@
-M-file functions can be attached anywhere on the Flywheel site, downloaded, and executed while drawing upon the Flywheel data.  The principle interface is the **scitran** method runFunction.  This page shows the implementation of a function, introducing the key **scitran** and **toolboxes** methods.
+There is no absolute need to share functions and scripts through the Flywheel site; they can be shared via the usual github mechanisms.  
+
+Nonetheless, in many cases we find it useful to specify an M-file function and attach it to a session or project on the Flywheel site.  The **scitran** method runFunction downloads such a file and runs it. This page illustrates such a function, and how it uses various **scitran** calls to validate the toolbox and retrieve data. 
 
 ## Invoking the runFunction
 The runFunction executes an m-file attached to the Flywheel site on a local computer.  The next few lines of code first check that the necessary toolboxes are installed for the user.  Then the mFile script dtiErrorALDIT.m is run.
