@@ -126,12 +126,9 @@ end
 
 %% File management
 
-% If the name of the destination file is not returned, and save is false,
-% we delete the downloaded file.
-if ~save
-    disp('Deleting local file');
-    delete(dname);
-end
+% If the destination file name is not returned, and save is false,
+% delete the downloaded file.
+if ~save, delete(dname); end
 
 end
 

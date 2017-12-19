@@ -13,8 +13,10 @@ function tbx = stToolbox(file,varargin)
 %   initialize an array of scitran toolboxes objects.
 %
 % Input (required)
-%   jsonFile - a JSON file, typically written by tbx.saveInfo, that
-%              contains the github description of the repository
+%   jsonFile - name of a JSON file, typically written by tbx.saveInfo, that
+%              contains the github description of the repository, 
+%           OR 
+%              the struct returned by reading an appropriate JSON file
 %
 % Input (optional)
 %   None
@@ -32,15 +34,22 @@ function tbx = stToolbox(file,varargin)
 %{
  tbx = stToolbox('test.json');
 %}
+%{
+ s = jsonread('test.json');
+ tbx = stToolbox(s);
+%}
 
 %% 
 p = inputParser;
-p.addRequired('file',@(x)(exist(x,'file') && isequal(x(end-4:end),'.json')));
+vFunc = @(x)(isstruct(x) || exist(x,'file') && isequal(x(end-4:end),'.json'));
+p.addRequired('file',vFunc);
 p.parse(file,varargin{:});
 
 %% Read the file and create the toolboxes
 
-tbxStruct = jsonread(file);
+if ischar(file),  tbxStruct = jsonread(file);
+else,             tbxStruct = file;
+end
 
 for ii=1:numel(tbxStruct)
    tbx(ii) = toolboxes(''); %#ok<*AGROW>

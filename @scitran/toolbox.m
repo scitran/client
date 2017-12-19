@@ -5,7 +5,7 @@ function tbx = toolbox(st,file,varargin)
 %    tbx = st.toolbox(file,...)
 %
 % Read a toolboxes json file from the Flywheel site.  
-% If install, try to install as clone or zip
+% If install is true, then install the toolbox as clone or zip
 % Else test whether the toolbox repositories are on the matlab path
 %
 % Input (required)

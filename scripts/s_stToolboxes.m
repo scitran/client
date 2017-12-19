@@ -20,19 +20,18 @@
 % Open a scitran object
 st = scitran('vistalab');
 
-%% 
+% Read the toolboxes
+tbx = st.getToolbox('aldit-toolboxes.json',...
+    'project','ALDIT');
 
-% Checks for the toolboxes and installs if necessary.
-tbx = st.toolbox('aldit-toolboxes.json',...
-    'project','ALDIT',...
-    'install',false);
+%% See if it is in place
+
+st.toolboxValidate(tbx)
 
 %% Alternatively, install
 
 % Test and install.  Default method is zip download.
-tbx = st.toolbox('aldit-toolboxes.json',...
-    'project','ALDIT',...
-    'install',true);
+tbx = st.toolboxInstall(tbx);
 
 %% This is for a different project
 

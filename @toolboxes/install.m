@@ -1,29 +1,50 @@
-function install(tbx,varargin)
+function repoDirectory = install(tbx,varargin)
 % Install a  github toolbox repository as a zip file.
 %
-% The tbx.install command brings the github repository as a zip file. 
-% The tbx.clone command clones the whole repository (history, everything)
+% Syntax
+%  repoDirectory = toolboxes.install(tbx,...)
 %
-% Example:
-%   tbx = toolboxes;
-%   tbx.testcmd         = 'wlvRootPath';
-%   tbx.gitrepo.user    = 'isetbio';
-%   tbx.gitrepo.project = 'WLVernierAcuity';
+% Description
+%  Download a zip file from a github repository, unzip it, and install it
+%  on the user's path.
 %
-% Or use a commit sha for a particular commit
-%   tbx.gitrepo.commit = 'fa1f7b0b4349d8be4620c29ca002bcf8620952dd';
+% Input (required)
+%   None
+%
+% Input (optional)
+%   destination - Directory that will contain the repo directory.
+%
+% Return
+%   repoDirectory - full path to the repository
 %
 % BW, Scitran Team, 2017
+%
+% See also toolboxes.clone, scitran.toolboxInstall
+
+% Example:
+%{
+   tbx = toolboxes('WLVernierAcuity.json');
+   tbx.install('destination',pwd);
+%}
+%{
+   % Use a commit sha for a particular commit
+   tbx = toolboxes('WLVernierAcuity.json');
+   tbx.gitrepo.commit = 'fa1f7b0b4349d8be4620c29ca002bcf8620952dd';
+   tbx.install;
+%}
 
 %% Read installation directory, if passed.
 
 p = inputParser;
-destination = userpath;
-p.addParameter('destination',destination,@(x)(exist(x,'dir')));
+
+p.addParameter('destination',userpath,@(x)(exist(x,'dir')));
+
 p.parse(varargin{:});
+
 installDirectory = p.Results.destination;
 
 if ~exist(installDirectory,'dir')
+    % Should never happen, I think.
     fprintf('Creating directory %s\n',installDirectory);
     mkdir(installDirectory); 
 end
@@ -86,6 +107,13 @@ end
 
 
 %% Add repository to the path
+
+% The zip file comes down with an extra -master or some info.  We are going
+% to change the directory name to match name in the toolbox.
+[p,~] = fileparts(repoDirectory);
+movefile(repoDirectory,fullfile(p,tbx.gitrepo.project));
+repoDirectory = fullfile(p,tbx.gitrepo.project);
+
 chdir(repoDirectory);
 addpath(genpath(pwd));
 chdir(startDirectory);

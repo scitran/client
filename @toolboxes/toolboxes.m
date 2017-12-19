@@ -91,6 +91,8 @@ classdef toolboxes < handle
         function read(obj,file)
             
             % Read the json file and return it to a struct array
+            if ~exist(file,'file'), error('%s not found.\n',file); end
+            
             tbxStruct = jsonread(file);
             if numel(tbxStruct) > 1
                 error('Initialize multiple toolboxes using stToolbox(file);');

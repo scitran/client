@@ -55,7 +55,7 @@ file    = p.Results.file;
 project = p.Results.projectname;
 validate = p.Results.validate;
 
-%% Set up the toolboxes object
+%% Set up the struct defining the JSON toolbox on Flywheel
 
 % Get the struct from the cell array.
 if iscell(file), file = file{1}; end
@@ -70,21 +70,22 @@ if ischar(file)
             'project label exact',project,...
             'filename',file);
         if length(fileC) ~= 1
-            error('Problem identifying JSON toolbox file.  Search returned %d items\n',length(fileC));
+            error('Problem - search returned %d items\n',length(fileC));
         else
             fileS = fileC{1};   % Copy the struct
         end
     end
 else
-    % The struct was based, and that's what we want
+    % The struct was passed in
     fileS = file;
 end
 
-% Download the json file containing the toolbox information.
-tbxFile = st.downloadFile(fileS);
+%% Read the JSON data and create the toolbox
 
-% Create the toolbox based on the repositories specified.
-tbx = stToolbox(tbxFile);
+s   = st.read(fileS);  % Returns the JSON data as a struct
+tbx = stToolbox(s);    % Creates the toolbox
+
+%% May validate that they exist on the path
 
 if validate, valid = st.toolboxValidate(tbx,'verbose',true); end
 
