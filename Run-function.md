@@ -1,6 +1,6 @@
-There is no absolute need to share functions and scripts through the Flywheel site; they can be shared via the usual github mechanisms.  
+There are cases when it is useful to provide a Matlab function for a session or project on the Flywheel site.  This functionality is particularly useful when you want a record of how data were analyzed and publication figures were created. 
 
-Nonetheless, in many cases we find it useful to specify an M-file function and attach it to a session or project on the Flywheel site.  The **scitran** method runFunction downloads such a file and runs it. This page illustrates such a function, and how it uses various **scitran** calls to validate the toolbox and retrieve data. 
+The **scitran** method runFunction downloads an Matlab function and runs it. We illustrate the runFunction method an example that relies on **scitran** calls that validate the toolbox installation, retrieve data, analyze the data, and create figures.
 
 ## Invoking the runFunction
 The runFunction executes an m-file attached to the Flywheel site on a local computer.  The next few lines of code first check that the necessary toolboxes are installed for the user.  Then the mFile script dtiErrorALDIT.m is run.
