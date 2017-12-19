@@ -111,6 +111,10 @@ end
 % The zip file comes down with an extra -master or some info.  We are going
 % to change the directory name to match name in the toolbox.
 [p,~] = fileparts(repoDirectory);
+
+% If the repo exists, then the master is moved inside it.  That's not so
+% good.  We should do something here.   But I am going to watch the
+% Warriors.
 movefile(repoDirectory,fullfile(p,tbx.gitrepo.project));
 repoDirectory = fullfile(p,tbx.gitrepo.project);
 
