@@ -12,22 +12,22 @@ tbx = st.toolboxGet('aldit-toolboxes.json','project name','ALDIT');
 valid = st.toolboxValidate(tbx,'verbose',true);
 if ~valid, error('Set up your toolboxes!'); end
 ```
-If the toolboxes are not installed, the user would call the function
+If the toolboxes are not installed, the user can call the method
 ```
-% The install method is zip download.  Use toolboxClone if you want to clone the repository.
+% The install method uses a zip download.  Use toolboxClone if you want to clone the repository.
+% The tbx information can specify a specific commit.
 tbx = st.toolboxInstall(tbx);
 ```
 ### Running the function
-Then the Matlab function dtiErrorALDIT.m is run.  Notice that you can send in parameters to the function to choose data sets or set parameter values.
+The Matlab function dtiErrorALDIT.m analyzes Flywheel data. The function accepts parameters that choose data or set parameter values.
 ```
-mFile = 'dtiErrorALDIT.m';
 % Make sure the project is available and get the id
-[s,id] = st.exist('project','ALDIT');  
-if s
+[valid,id] = st.exist('project','ALDIT');  
+if valid
     clear params
     params.project = 'ALDIT';
     params.session = 'Set 1';
-    [~,RMSE1] = st.runFunction(mFile,...
+    [~,RMSE1] = st.runFunction('dtiErrorALDIT.m',...
         'container type','project',...
         'container ID',id,...
         'params',params);
@@ -38,9 +38,9 @@ disp(RMSE1)
 ```
 
 ### Analyze diffusion error
-The contents of the dtiErrorALDIT.m are shown here.  This script was used in a study that compared diffusion-weighted images from many different sites. The data from the different sites along with this script were placed on the Flywheel site.  We walk through the script itself to illustrate how it works.
+The dtiErrorALDIT.m function was used in a project that compares diffusion-weighted images from many different sites. The data from the different sites along with this script were placed on the Flywheel site.  We explain the function.
 
-The header explains that one can make the call with many different types of parameter settings that govern which data are analyzed and which parameters are used for the analysis.
+The header explains the parameter options that govern which data are analyzed and which parameters are used for the analysis.
 
 ```
 function nRMSE = dtiErrorALDIT(varargin)
@@ -96,16 +96,16 @@ sessionlabel = p.Results.session;
 wmPercentile = p.Results.wmPercentile;
 nSamples     = p.Results.nSamples;
 ```
-Now, the interactions with Flywheel begin.  First, we open a scitran instance to communicate.  The user must have the **scitran** client and access to the site.
+Now, the interactions with Flywheel begin.  First, we open a scitran instance to communicate with the Flywheel site ('vistalab' instance).  The user must have the **scitran** client and access to this site.
 ```
 %% Open the Flywheel object
 st = scitran('vistalab');
 ```
-The function reads the data and performs the analysis.  This is done on the local compute device (either on premise or on a machine in the cloud).  These are managed by standard **scitran** methods and methods from the toolboxes.
+The function reads the data from a particular acquisition. The data are searched and downloaded using **scitran** methods.
 ```
 %% Search for the session and acquisition
 
-% List the Diffusion acquisitions in the first session
+% List the acquisitions containing the label 'Diffusion' that are in this session
 acquisitions = st.search('acquisition', ...
     'project label exact',projectlabel, ...
     'session label exact',sessionlabel,...
@@ -117,8 +117,7 @@ if isempty(acquisitions)
     return;
 end
 
-%% Pull down the nii.gz, bvec and bval from the first acquisition
-
+% Initialize some parameters
 nAcquisitions = length(acquisitions);
 nRMSE = zeros(1,nAcquisitions);
 label = cell(1,nAcquisitions);
@@ -126,14 +125,12 @@ label = cell(1,nAcquisitions);
 for ii=1:nAcquisitions
     
     % We group the diffusion data, bvec and bval into a dwi structure as
-    % per vistasoft
+    % per vistasoft. This method downloads the nii.gz, bvec and bval files 
+    % from the acquisition
     dwi = st.dwiLoad(idGet(acquisitions{ii}));
     
-    % Check the download this way
-    %  niftiView(dwi.nifti);
-    %  mrvNewGraphWin; hist(double(dwi.nifti.data(:)),100);
     
-    %% Write out a white matter mask (vistasoft functions)
+    %% Create and write out a white matter mask (vistasoft functions)
     wmProb = wmCreate(dwi.nifti,wmPercentile);
     niftiWrite(wmProb,'wmProb.nii.gz');
     
@@ -141,12 +138,12 @@ for ii=1:nAcquisitions
     [err, ~, ~, predicted, measured] = ...
         dtiError(dwi.files.nifti,'eType','dsig','wmProb','wmProb.nii.gz','ncoords',nSamples);
        
-    % Normalized RMSE
+    % Calculated the Normalized RMSE
     nRMSE(ii) = sqrt(mean((predicted(:)-measured(:)).^2))/mean(measured(:));
     
 end
 ```
-The key variables are computed, and the remaining code generates plots and the return variables.
+The remaining code generates plots and the return variables.
 ```
 %% Always plot the bar graph.
 
