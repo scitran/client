@@ -3,12 +3,14 @@ There are cases when it is useful to provide a Matlab function for a session or 
 The **scitran** method runFunction downloads an Matlab function and runs it. We illustrate the runFunction method an example that relies on **scitran** calls that validate the toolbox installation, retrieve data, analyze the data, and create figures.
 
 ## Invoking the runFunction
-The runFunction executes an m-file attached to the Flywheel site on a local computer.  The next few lines of code first check that the necessary toolboxes are installed for the user.  Then the mFile script dtiErrorALDIT.m is run.
+The runFunction locally executes an m-file attached to the Flywheel site.  The next few lines of code first check that the necessary toolboxes are installed for the user.  
 ```
 tbx = st.getToolbox('aldit-toolboxes.json','project name','ALDIT');
 valid = st.toolboxValidate(tbx,'verbose',true);
 if ~valid, error('Set up your toolboxes!'); end
-
+```
+Then the mFile script dtiErrorALDIT.m is run.
+```
 mFile = 'dtiErrorALDIT.m';
 % Make sure the project is available and get the id
 [s,id] = st.exist('project','ALDIT');  
