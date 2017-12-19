@@ -135,7 +135,7 @@ for ii=1:nAcquisitions
     [err, ~, ~, predicted, measured] = ...
         dtiError(dwi.files.nifti,'eType','dsig','wmProb','wmProb.nii.gz','ncoords',nSamples);
        
-    % Calculated the Normalized RMSE
+    % Calculate the Normalized RMSE
     nRMSE(ii) = sqrt(mean((predicted(:)-measured(:)).^2))/mean(measured(:));
     
 end
