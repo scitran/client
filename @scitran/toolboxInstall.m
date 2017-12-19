@@ -18,13 +18,13 @@ function destination = toolboxInstall(st,tbx,varargin)
 % Output
 %   tbx - an array of toolboxes objects
 %
-% See also:  s_stToolboxes, s_tbxSave, scitran.getToolbox
+% See also:  s_stToolboxes, s_tbxSave, scitran.toolboxGet
 %
 % Examples in code
 %
 % BW, Scitran Team, 2017
 %
-% See also toolboxes.clone, scitran.getToolbox
+% See also toolboxes.clone, scitran.toolboxGet
 
 % st = scitran('vistalab');
 % Examples

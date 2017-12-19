@@ -35,7 +35,7 @@ end
  
 %% ALDIT example including toolbox testing and sending params
 
-tbx = st.getToolbox('aldit-toolboxes.json','project name','ALDIT');
+tbx = st.toolboxGet('aldit-toolboxes.json','project name','ALDIT');
 st.toolboxValidate(tbx,'verbose',true);
 
 mFile = 'dtiErrorALDIT.m';

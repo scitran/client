@@ -21,15 +21,15 @@ function [valid, lst] = toolboxValidate(~,tbx,varargin)
 % st = scitran('vistalab');
 % Example
 %{
- tbx = st.getToolbox('dti-error.json','project name','DEMO');
+ tbx = st.toolboxGet('dti-error.json','project name','DEMO');
  [v,l] = st.toolboxValidate(tbx)
 %}
 %{
- tbx = st.getToolbox('aldit-toolboxes.json','project name','ALDIT');
+ tbx = st.toolboxGet('aldit-toolboxes.json','project name','ALDIT');
  [v,l] = st.toolboxValidate(tbx)
 %}
 %{
- tbx = st.getToolbox('toolboxes.json','project name','SOC ECoG (Hermes)');
+ tbx = st.toolboxGet('toolboxes.json','project name','SOC ECoG (Hermes)');
  [v,l] = st.toolboxValidate(tbx,'verbose',true);
 %}
 

@@ -9,7 +9,7 @@
 %
 % BW Vistasoft team, 2017
 %
-% See also: stToolbox, scitran.toolbox, scitran.getToolbox
+% See also: stToolbox, scitran.toolbox, scitran.toolboxGet
 
 %%
 tbx = toolboxes('');

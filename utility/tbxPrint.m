@@ -20,7 +20,7 @@ function tbxPrint(tbx)
 % See also:  tbxRead, tbxWrite, scitran.toolboxValidate
 
 %{
-tbx = st.getToolbox('aldit-toolboxes.json',...
+tbx = st.toolboxGet('aldit-toolboxes.json',...
     'project','ALDIT');
 tbxPrint(tbx);
 %}

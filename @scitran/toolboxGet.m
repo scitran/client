@@ -1,8 +1,8 @@
-function [tbx, valid] = getToolbox(st, file, varargin)
+function [tbx, valid] = toolboxGet(st, file, varargin)
 % Read the toolbox file and return the toolbox object
 %
 % Syntax
-%    tbx = st.getToolbox(file,...)
+%    tbx = st.toolboxGet(file,...)
 %
 % Read a toolboxes json file from the Flywheel site.  Return the toolboxes
 % object.
@@ -21,7 +21,7 @@ function [tbx, valid] = getToolbox(st, file, varargin)
 % See also:  s_stToolboxes, s_tbxSave, scitran.toolbox
 %
 % Examples
-%   tbx = st.getToolbox('dtiError.json','project name','DEMO');
+%   tbx = st.toolboxGet('dtiError.json','project name','DEMO');
 %
 % Examples in code
 %
@@ -33,7 +33,7 @@ function [tbx, valid] = getToolbox(st, file, varargin)
  file = st.search('file',...
     'filename','dtiError.json',...
     'project label exact','DEMO');
- tbx = st.getToolbox(file);
+ tbx = st.toolboxGet(file);
 
  url = tbx(1).github;   % This is the page on github
 %}

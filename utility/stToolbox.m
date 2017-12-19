@@ -28,7 +28,7 @@ function tbx = stToolbox(file,varargin)
 %
 % Wandell, Scitran, 2017
 %
-% See also: scitran.toolbox, scitran.getToolbox, scitran.toolboxValidate, s_tbxSave
+% See also: scitran.toolbox, scitran.toolboxGet, scitran.toolboxValidate, s_tbxSave
 
 % Example
 %{

@@ -21,7 +21,7 @@ function destination = toolboxClone(st,tbx,varargin)
 %
 % BW, Scitran Team, 2017
 %
-% See also toolboxes.install, scitran.getToolbox
+% See also toolboxes.install, scitran.toolboxGet
 
 % st = scitran('vistalab');
 % Examples
