@@ -25,6 +25,8 @@ tbx = st.toolboxInstall(tbx);
 ``` 
 tbx = st.toolboxInstall(tbx);
 ```
+
+## About Toolboxes
 ### Printing toolbox info
 ```
 tbxPrint(tbx);
@@ -47,9 +49,7 @@ Repository url:  https://github.com/vistalab/vistasoft
 -------------
  vistaRootPath is on your current path in directory /Users/wandell/Documents/MATLAB/vistasoft.
 ```
-## About Toolboxes
-
-### Creating the JSON file
+### Creating the JSON toolbox file
 Information about the toolboxes is stored in a small JSON file that is attached to a Flywheel project page.  
 
 For example, the Wandell lab uses the vistasoft toolbox.  The **toolbox** specifies (a) a command that can be used to test whether the toolbox is installed on the user's path (testcmd), and (b) the user and project on the github site.  This information is saved in a JSON file as follows.
@@ -76,7 +76,7 @@ tbx(2) = stToolbox('vistasoft.json');
 tbxWrite('SOC-ECoG-toolboxes.json',tbx);
 ```
 
-### Uploading the JSON file
+### Uploading the JSON toolbox file
 
 The JSON file is stored on the project page with a **scitran** command 
 
@@ -85,5 +85,5 @@ The JSON file is stored on the project page with a **scitran** command
 
 **scitran** functions that analyze the Flywheel data check whether the user has the Matlab toolboxes on their path and, if necessary, install these toolboxes for the user.
 
-### Examples
+### Example files
 The data directory in scitran includes several toolboxes files and a script, s_tbxSave, 
