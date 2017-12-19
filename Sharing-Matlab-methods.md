@@ -1,11 +1,14 @@
 ## The compute model
-The **scitran** and **toolboxes** classes simplify Matlab code and Flywheel data sharing.  The software is designed for this use case.
+The **scitran** and **toolboxes** classes simplify Matlab code and Flywheel data sharing with a particular goal of helping create reproducible processes in support of publication. The image we have is that users will develop scripts and functions that are the basis of their research paper.  As the project closes down, they will examine what Matlab toolboxes and functions they used for their analyses, and they will want a record that can be shared and retrieved. 
+
+This leads to the following model for the typical use case:
 
 * One or more Matlab toolboxes for the project, available from a github repository. 
-* Flywheel data are accessed using **scitran** and analyzed with functions based on these toolboxes.
+* Flywheel data are analyzed with functions the user creates that use these toolboxes, but may not be in the repository
+* Flywheel data are accessed using **scitran** methods
 
 ## scitran toolbox methods
-The **scitran** class has methods that gets a toolbox file (getToolbox), tests whether the Matlab toolbox is installed (toolboxValidate), and downloads and installs the toolbox placing on the user's path (toolbox).  The install can be either based on downloading a zip file or cloning the github repository.
+To help manage the Matlab toolboxes on github, **scitran** methods can get a github toolbox (toolboxGet), test whether the Matlab toolbox is installed (toolboxValidate), and install the toolbox locally, (toolboxInstall or toolboxClone).  
+The methods can place a toolbox on the user's path.
 
-## toolboxes class
-The **toolboxes** methods simplify installing (either zip or clone) github repositories.  The methods also test whether a toolbox is already on the user's path.  Most people do not use these methods directly, but use them via methods in the **scitran** class.
+There are also specific **toolboxes** methods, but usually the user invokes this via the higher-level **scitran** methods
