@@ -2,6 +2,31 @@
 
 ### Specifying a toolbox
 
+Toolbox specifications for a project can be stored anywhere, but often on the project page.  Here is how to read the toolboxes required for a project in the vistlab Flywheel instance.  This project relies on two toolboxes.
+```
+st = scitran('vistalab');
+tbx = st.getToolbox('aldit-toolboxes.json','project','ALDIT');
+tbxPrint(tbx)
+
+Toolbox 1
+-------------
+Toolbox project name dti-error
+User account: scitran-apps
+Commit:  master
+Repository url:  https://github.com/scitran-apps/dti-error
+-------------
+ dtiError is on your current path in directory /Users/wandell/Documents/MATLAB/dti-error/src.
+
+Toolbox 2
+-------------
+Toolbox project name vistasoft
+User account: vistalab
+Commit:  master
+Repository url:  https://github.com/vistalab/vistasoft
+-------------
+ vistaRootPath is on your current path in directory /Users/wandell/Documents/MATLAB/vistasoft.
+
+```
 ### Validating a toolbox
 
 ### Installing or cloning a toolbox
