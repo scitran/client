@@ -6,7 +6,7 @@ We assume that there are project-specific toolboxes stored on github.  These fun
 Toolbox specifications for a project can be stored anywhere on Flywheel, but we often use the project page.  This code reads the JSON toolbox file for a project in the vistlab Flywheel instance.  
 ```
 st = scitran('vistalab');
-tbx = st.getToolbox('aldit-toolboxes.json','project','ALDIT');
+tbx = st.toolboxGet('aldit-toolboxes.json','project','ALDIT');
 ```
 
 ### Validating a toolbox
