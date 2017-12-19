@@ -8,16 +8,14 @@ This page illustrates the runFunction.  The example first uses **scitran** metho
 ### Checking the toolboxes
 The runFunction locally executes an m-file attached to the Flywheel site.  The next few lines of code first check that the necessary toolboxes are installed for the user.  
 ```
-tbx = st.getToolbox('aldit-toolboxes.json','project name','ALDIT');
+tbx = st.toolboxGet('aldit-toolboxes.json','project name','ALDIT');
 valid = st.toolboxValidate(tbx,'verbose',true);
 if ~valid, error('Set up your toolboxes!'); end
 ```
 If the toolboxes are not installed, the user would call the function
 ```
-% Test and install.  Default method is zip download.
-tbx = st.toolbox('aldit-toolboxes.json',...
-    'project','ALDIT',...
-    'install',true);
+% The install method is zip download.  Use toolboxClone if you want to clone the repository.
+tbx = st.toolboxInstall(tbx);
 ```
 ### Running the function
 Then the Matlab function dtiErrorALDIT.m is run.  Notice that you can send in parameters to the function to choose data sets or set parameter values.
