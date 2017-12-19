@@ -28,7 +28,12 @@ Repository url:  https://github.com/vistalab/vistasoft
 
 ```
 ### Validating a toolbox
-
+A less noisy way to check whether a toolbox is on your path is to simply call
+```
+>> st.toolboxValidate(tbx);
+Repo dti-error (dtiError) found.
+Repo vistasoft (vistaRootPath) found.
+```
 ### Installing or cloning a toolbox
 
 ## About Toolboxes
