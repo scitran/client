@@ -1,23 +1,30 @@
 ## scitran toolbox functions
+We assume that there are project-specific toolboxes stored on github.  These functions help check that the toolboxes (from a specific commit and branch) are installed on the user's path. They also help do an install or clone.
 
-### Specifying a toolbox
+### Project toolbox
 
-Toolbox specifications for a project can be stored anywhere on Flywheel, but we often yse the project page.  Here is how to read the toolboxes required for a project in the vistlab Flywheel instance.  
+Toolbox specifications for a project can be stored anywhere on Flywheel, but we often use the project page.  This code reads the JSON toolbox file for a project in the vistlab Flywheel instance.  
 ```
 st = scitran('vistalab');
 tbx = st.getToolbox('aldit-toolboxes.json','project','ALDIT');
 ```
 
-```
 ### Validating a toolbox
-A less noisy way to check whether a toolbox is on your path is to simply call
+You can validate whether a toolbox is on your path this way
 ```
 >> st.toolboxValidate(tbx);
 Repo dti-error (dtiError) found.
 Repo vistasoft (vistaRootPath) found.
 ```
 ### Installing or cloning a toolbox
-
+If the toolboxes are not on your path, you can install them this way
+```
+tbx = st.toolboxInstall(tbx);
+```
+(or clone them)
+``` 
+tbx = st.toolboxInstall(tbx);
+```
 ### Printing toolbox info
 ```
 tbxPrint(tbx);
