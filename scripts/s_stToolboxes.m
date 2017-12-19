@@ -23,10 +23,11 @@ st = scitran('vistalab');
 % Read the toolboxes
 tbx = st.getToolbox('aldit-toolboxes.json',...
     'project','ALDIT');
+tbxPrint(tbx)
 
 %% See if it is in place
 
-st.toolboxValidate(tbx)
+st.toolboxValidate(tbx);
 
 %% Alternatively, install
 
