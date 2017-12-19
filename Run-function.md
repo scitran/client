@@ -96,21 +96,12 @@ sessionlabel = p.Results.session;
 wmPercentile = p.Results.wmPercentile;
 nSamples     = p.Results.nSamples;
 ```
-Now, the interactions with Flywheel begin.  First, we open a scitran instance to communicate.  We then get the toolbox file for the project and check whether the user has the necessary toolboxes installed.
+Now, the interactions with Flywheel begin.  First, we open a scitran instance to communicate.  The user must have the **scitran** client and access to the site.
 ```
 %% Open the Flywheel object
 st = scitran('vistalab');
-
-% Check that the required toolboxes are on the path
-[~,valid] = st.getToolbox('aldit-toolboxes.json',...
-    'project name','ALDIT',...
-    'validate',true);
-
-if ~valid
-    error('Please install aldit-toolboxes.json toolboxes on your path'); 
-end
 ```
-The function itself reads the data and performs the analysis.  This is done on the local compute device (either on premise or on a machine in the cloud).  These are managed by standard **scitran** methods and methods from the toolboxes.
+The function reads the data and performs the analysis.  This is done on the local compute device (either on premise or on a machine in the cloud).  These are managed by standard **scitran** methods and methods from the toolboxes.
 ```
 %% Search for the session and acquisition
 
