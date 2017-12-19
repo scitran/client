@@ -37,8 +37,8 @@ end
 disp(RMSE1)
 ```
 
-## Analyze diffusion error
-The contents of the mFile are shown here.  This script was used in a study that compared diffusion-weighted images from many different sites. The data from the different sites along with this script were placed on the Flywheel site.  We walk through the script itself to illustrate how it works.
+### Analyze diffusion error
+The contents of the dtiErrorALDIT.m are shown here.  This script was used in a study that compared diffusion-weighted images from many different sites. The data from the different sites along with this script were placed on the Flywheel site.  We walk through the script itself to illustrate how it works.
 
 The header explains that one can make the call with many different types of parameter settings that govern which data are analyzed and which parameters are used for the analysis.
 
