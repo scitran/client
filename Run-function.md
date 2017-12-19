@@ -1,6 +1,8 @@
-There are cases when it is useful to provide a Matlab function for a session or project on the Flywheel site.  This functionality is particularly useful when you want a record of how data were analyzed and publication figures were created. 
+There are cases when it is useful to provide a Matlab function for a session or project on the Flywheel site.  For example, suppose you write a script to analyze Flywheel data.  You may want to associate this script with the Flywheel data by attaching it to the project or session. 
 
-The **scitran** method runFunction downloads an Matlab function and runs it. We illustrate the runFunction method an example that relies on **scitran** calls that validate the toolbox installation, retrieve data, analyze the data, and create figures.
+The **scitran** method runFunction downloads a Matlab function from a Flywheel site and runs it. The script can be downloaded and run by anyone who is given permission to access the project.  
+
+This page illustrates the runFunction.  The example first uses **scitran** methods to validate the toolbox installation. Then, the script is explained.
 
 ## Invoking the runFunction
 ### Checking the toolboxes
