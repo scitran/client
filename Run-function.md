@@ -18,7 +18,7 @@ tbx = st.toolbox('aldit-toolboxes.json',...
     'install',true);
 ```
 ### Running the function
-Then the Matlab function dtiErrorALDIT.m is run.
+Then the Matlab function dtiErrorALDIT.m is run.  Notice that you can send in parameters to the function to choose data sets or set parameter values.
 ```
 mFile = 'dtiErrorALDIT.m';
 % Make sure the project is available and get the id
