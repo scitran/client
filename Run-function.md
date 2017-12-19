@@ -87,8 +87,6 @@ p.addParameter('project','ALDIT',@ischar);
 p.addParameter('session','Set 1',@ischar);
 p.addParameter('wmPercentile',95,@isnumeric);
 p.addParameter('nSamples',250,@isnumeric);
-p.addParameter('scatter',false,@islogical);
-p.addParameter('histogram',false,@islogical);
 
 p.parse(varargin{:});
 
@@ -125,11 +123,9 @@ label = cell(1,nAcquisitions);
 
 for ii=1:nAcquisitions
     
-    % We group the diffusion data, bvec and bval into a dwi structure as
-    % per vistasoft. This method downloads the nii.gz, bvec and bval files 
-    % from the acquisition
+    % This scitran method downloads the nii.gz, bvec and bval files 
+    % from a diffusion acquisition
     dwi = st.dwiLoad(idGet(acquisitions{ii}));
-    
     
     %% Create and write out a white matter mask (vistasoft functions)
     wmProb = wmCreate(dwi.nifti,wmPercentile);
@@ -146,9 +142,7 @@ end
 ```
 The remaining code generates plots and the return variables.
 ```
-%% Always plot the bar graph.
-
-% A reasonable bar graph summary of the normalized RMSE
+% A bar graph summary of the normalized RMSE
 mrvNewGraphWin;
 [label,idx] = sort(label);
 b = bar3(nRMSE(idx),0.3); zlabel('Normalized RMSE');
