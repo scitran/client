@@ -14,7 +14,8 @@ if ~valid, error('Set up your toolboxes!'); end
 ```
 If the toolboxes are not installed, the user can call the method
 ```
-% The install method uses a zip download.  Use toolboxClone if you want to clone the repository.
+% The install method uses a zip download.  
+% Use toolboxClone if you want to clone the repository.
 % The tbx information can specify a specific commit.
 tbx = st.toolboxInstall(tbx);
 ```
