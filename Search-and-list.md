@@ -44,7 +44,7 @@ project = st.search(...
              'project',
              'project label contains','vwfa');
 ```
-There are a great many possible parameters for the **search** method. See the [search examples page}(Search-examples).
+There are a great many possible parameters for the **search** method. See the [search examples page](Search-examples).
 
 ## Search scope
 
