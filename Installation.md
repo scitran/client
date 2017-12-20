@@ -10,7 +10,4 @@ This will create two directories, client and JSONio.  We suggest renaming the 'c
     chdir(<scitran client directory>); addpath(genpath(pwd));
     chdir(<JSONio directory>); addpath(genpath(pwd));
 
-## Installing from Matlab (alternative)
-
-Here is a [script we use to install from the Matlab command line.](https://github.com/scitran/client/blob/master/utility/installScitran.m).
 
