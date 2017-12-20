@@ -28,8 +28,8 @@ st = scitran('vistalab');
 %% ECoG from DH
 
 mFile = 'ecog_RenderElectrodes.m';
-[s,id] = st.exist('project','SOC ECoG (Hermes)');
-if s, st.runFunction(mFile,'container type','project','container ID',id);
+[valid,id] = st.exist('project','SOC ECoG (Hermes)');
+if valid, st.runFunction(mFile,'container type','project','container ID',id);
 else, error('Could not find project');
 end
  

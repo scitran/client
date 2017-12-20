@@ -69,19 +69,16 @@ st.verify
 % All the projects you are part of
 projects = st.search('project',...
     'summary',true);
+stPrint(projects,'project','label')
+assert(length(projects) >= 35);
 
-for ii=1:length(projects)
-    disp(projects{ii}.project.label)
-end
 
 %% All the projects, not just the ones you are part of
 projects = st.search('project',...
     'all_data',true,...
     'summary',true);
-
-for ii=1:length(projects)
-    disp(projects{ii}.project.label)
-end
+stPrint(projects,'project','label')
+assert(length(projects) >= 62);
 
 %% Exact and contains matches
 
@@ -94,7 +91,7 @@ end
     'project label contains','vwfa');
 
 % Save this project information
-projectID    = projects{end}.project.x_id;
+projectID    = idGet(projects{end});
 projectLabel = projects{end}.project.label;
 
 %% You can also set up a struct with search parameters and run that
@@ -115,6 +112,7 @@ sessions = st.search('session',...
 [sessions, srchCmd] = st.search('session',...
     'collection label contains','Anatomy Male 45-55',...
     'summary',true);
+assert(length(sessions) >= 596);
 
 %% Get the sessions within a project
 sessions = st.search('session',...
@@ -122,7 +120,7 @@ sessions = st.search('session',...
     'summary',true);
 
 % Save this session information
-sessionID = sessions{1}.session.x_id;
+sessionID = idGet(sessions{1});
 sessionLabel = sessions{1}.session.label;
 
 %% Get the session with this particular sessionID
@@ -130,23 +128,20 @@ sessions = st.search('session',...
     'session id',sessionID,...
     'summary',true);
 
-%% Get the acquisitions inside a session
+%% Get the acquisitions inside a session using the ID
 
 acquisitions = st.search('acquisition',...
     'session id',sessionID,...
     'summary',true);
+assert(length(acquisitions) == 5);
 
-%% Find files in the session using an ID
+%% Find acquisitions in the project containing a string
 
 [acquisitions,srchCmd] = st.search('acquisition',...
     'string','BOLD_EPI',...
     'project label exact','ALDIT', ...
     'summary',true);
-
-% Notice that this has BOLD<space>EPI as well.
-for ii=1:length(acquisitions)
-    acquisitions{ii}.acquisition.label
-end
+stPrint(acquisitions,'acquisition','label');
 
 %%
 [projects,srchCmd] = st.search('project',...
@@ -158,10 +153,7 @@ end
 [projects,srchCmd] = st.search('project',...
     'string','BOLD_EPI',...
     'summary',true);
-    
-for ii=1:length(projects)
-    projects{ii}.project.label
-end
+stPrint(projects,'project','label');
 
 %% Sessions that have the string somewhere
 
@@ -169,9 +161,8 @@ end
     'string','BOLD_EPI',...
     'summary',true);
 
-for ii=1:length(sessions)
-    sessions{ii}.project.label
-end
+% What is the project label of each session?
+stPrint(sessions,'project','label');
 
 %% Restrict to one project
 thisProject = 'ALDIT';
@@ -183,7 +174,7 @@ thisProject = 'ALDIT';
 %% Finding files in various ways
 
 [files,srchCmd] = st.search('file',...
-    'acquisition id',acquisitions{1}.acquisition.x_id,...
+    'acquisition id',idGet(acquisitions{1}),...
     'summary',true);
 
 %%
@@ -220,10 +211,11 @@ thisProject = st.search('project',...
 sessions = st.search('session',...
     'collection label exact','GearTest',...
     'summary',true);
+assert(length(sessions) == 3);
 
 %% Analyses that are part of this session
 analyses = st.search('analysis',...
-    'session id',sessions{3}.session.x_id,...
+    'session id',idGet(sessions{3}),...
     'summary',true);
 
 %% The analysis is part of the session, not the  collection.
@@ -234,7 +226,7 @@ analyses = st.search('analysis',...
 analyses = cell(length(sessions),1);
 for ii=1:length(sessions)
     analyses{ii} = st.search('analysis',...
-        'session id',sessions{ii}.session.x_id,...
+        'session id',idGet(sessions{ii}),...
         'summary',true);
 end
 

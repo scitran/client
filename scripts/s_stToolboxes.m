@@ -31,8 +31,11 @@ st.toolboxValidate(tbx);
 
 %% Alternatively, install
 
-% Test and install.  Default method is zip download.
-tbx = st.toolboxInstall(tbx);
+%
+tbx = toolboxes('WLVernierAcuity.json');
+st.toolboxInstall(tbx,'destination',pwd);
+
+st.toolboxClone(tbx,'destination',pwd);
 
 %% This is for a different project
 
@@ -45,3 +48,4 @@ tbxFile = st.search('file', ...
 st.toolbox(tbxFile{1},'install',false);
 
 %%
+
