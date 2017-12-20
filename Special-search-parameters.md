@@ -38,7 +38,7 @@ A search based on 'contains' is case insensitive; 'exact' is case-sensitive.
 
 When we search for a project label exact 'VWFA'
 ```
->> projects = st.search('project',...
+projects = st.search('project',...
     'summary',true,...
     'project label exact','VWFA');
 Found 1 (project)
@@ -47,16 +47,18 @@ Found 1 (project)
 It is possible to find all the projects that contain the string 'VWFA' as well.
 
 ```
->> projects = st.search('project',...
+projects = st.search('project',...
     'summary',true,...
     'project label contains','vwfa');
 Found 3 (project)
+stPrint(projects,'project','label')
 
->> for ii=1:length(projects), disp(projects{ii}.project.label); end
-VWFA FOV
-VWFA
-VWFA FOV Hebrew
->> 
+ project label
+-----------------------------
+	1 - VWFA FOV 
+	2 - VWFA 
+	3 - VWFA FOV Hebrew 
+
 ```
 
 ### Labels and names
