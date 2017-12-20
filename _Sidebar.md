@@ -10,7 +10,7 @@
    * [Create and upload](Create-and-upload)
 * [Set and get metadata](Set-and-get-metadata)
 * [Reproducible computations](Reproducible-Matlab)
-   * [Toolbox files](Toolbox-files)
+   * [Toolbox files](Toolbox-methods)
    * [Running functions](Run-function)
    * [Examples](Sharing-examples)
 * [Gears and analyses](Gears-and-Analyses)
