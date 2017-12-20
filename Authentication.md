@@ -4,8 +4,6 @@ We create a Matlab scitran object to interact with the database
 
 The first time you run scitran for a site name, you will be queried for the site URL and the API Key.  This information will be stored on your computer for future reference.
 
-The URL for the vistalab site is https://flywheel.scitran.stanford.edu.  You can find an API Key for your account on your site within the user profile tab on the user profile page.  
-
 ### An example
 
 If you want to create a new instance, you can the name of the instance, as in
