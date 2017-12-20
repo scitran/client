@@ -9,7 +9,7 @@
    * [Download and read](Download-and-read)
    * [Create and upload](Create-and-upload)
 * [Set and get metadata](Set-and-get-metadata)
-* [Sharing computations](Sharing-Matlab-methods)
+* [Reproducible computations](Reproducible-Matlab)
    * [Toolbox files](Toolbox-files)
    * [Running functions](Run-function)
    * [Examples](Sharing-examples)
