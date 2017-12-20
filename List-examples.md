@@ -27,8 +27,6 @@ Continuing down the directory tree,
     acquisitions = st.list('acquisition',idGet(sessions{3})); 
     files        = st.list('file',idGet(acquisitions{1})); 
 
-To search the collections **IN PROGRESS DOCUMENTATION**
-
 
 
 
