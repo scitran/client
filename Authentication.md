@@ -18,14 +18,13 @@ Copy and paste from API key in your user profile - it is the long string that lo
 
 ![](https://github.com/scitran/client/wiki/images/userAPI.png)
 
-
-
-### Usage examples 
+### Examples 
 
 If you already have the client configured, you can simply type
 
     st = scitran('vistalab');
 
+### List instances
 To list the sites you have stored, you can type
 
     st.listInstances;
@@ -38,7 +37,8 @@ To list the sites you have stored, you can type
          cni: [1×1 struct]
      newSite: [1×1 struct]
 ```
-To remove a site 
+
+### Remove instances
 
     st = scitran('vistalab','action','remove');
 
@@ -46,7 +46,7 @@ To refresh the API Key, obtain the new key on the site and then run
 
     st = scitran('vistalab','action','refresh');
 
-### Verifying
+### Verify the autentication
 
 Use this method to verify that the scitran object is correctly connecting to your site
 
