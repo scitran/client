@@ -1,13 +1,9 @@
-## scitran toolbox functions
-We assume that there are project-specific toolboxes stored on github.  These functions help check that the toolboxes (from a specific commit and branch) are installed on the user's path. They also help do an install or clone.
-
-### Project toolbox
-
-Toolbox specifications for a project can be stored anywhere on Flywheel, but we often use the project page.  This code reads the JSON toolbox file for a project in the vistlab Flywheel instance.  
+Toolbox files specify the github repository and a command for testing for the presence of the repository. The specification is stored on Flywheel, often on the project page.  The specification is a JSON file.  This code snippet reads a file stored on the Flywheel site
 ```
 st = scitran('vistalab');
 tbx = st.toolboxGet('aldit-toolboxes.json','project','ALDIT');
 ```
+The tbx return is a toolboxes object that contains the critical information about the github repositories containing the toolboxes.
 
 ### Validating a toolbox
 You can validate whether a toolbox is on your path this way
