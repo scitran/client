@@ -1,12 +1,20 @@
 ## The compute model
-The **scitran** and **toolboxes** classes simplify  sharing Matlab-code and Flywheel-data. A particular goal is to help create reproducible methods for publication. We imagine that users develop scripts and functions that are the basis of their research paper.  These scripts use Matlab toolboxes and functions, and they want to store a record of the processing that can be shared and retrieved. 
+The **scitran** and **toolboxes** classes simplify sharing Matlab-code that uses Flywheel-data. A main goal is to suppport reproducible methods for publication. We want to provide simple tools to help users store a record of the processing that can be shared and retrieved. 
 
-Hence, we model the typical use case:
+Flywheel already incorporates Gears and Analyses to help with reproducibility.  The Flywheel Matlab client fills a different nice. This client models the case in which you are preparing analyses and figures for a paper.  This work uses
 
 * One or more Matlab toolboxes for the project, available from a github repository. 
-* Flywheel data are analyzed with user functions that use the toolboxes, but are not necessarily in them
+* Your own project-specific Matlab functions that use these toolboxes
 * Flywheel data are accessed using **scitran** methods
 
 ## scitran toolbox methods
-**scitran** methods can get a github toolbox (toolboxGet), test whether the Matlab toolbox is installed (toolboxValidate), and install (toolboxInstall) or clone (toolboxClone) the toolbox from github locally. During installation, the methods place the toolbox on the user's path.
+
+**scitran** toolbox methods help with the following tasks
+
+* **toolboxGet**      - get a specification of the toolboxes used in the project
+* **toolboxValidate** - test whether the toolboxes are installed on your path
+* **toolboxInstall**  - download a zip record of the toolboxes
+* **toolboxClone**    - git clone the toolboxes to your computer
+
+During installation or cloning, the toolboxes are added to the user's path.
 
