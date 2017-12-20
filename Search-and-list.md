@@ -40,8 +40,7 @@ vwfaSessions = st.search('session',...
 ```
 To find partial label matches (case insensitive) use
 ```
-project = st.search(...
-             'project',
+project = st.search('project',
              'project label contains','vwfa');
 ```
 There are a great many possible parameters for the **search** method. See the [search examples page](Search-examples).
@@ -54,7 +53,7 @@ By default, you search only the projects you have access to.  To search the enti
 
 You only have permission to view or download a subset of these, but you can learn about what is in the database from an 'all_data' search.
 
-## Technical points
+## Technical notes
 
 ### Search implementation
 The search method uses **elastic search**, an advanced method for searching large databases.  Elastic search is constantly indexing the data base, and the search is based on this index. For this reason, there may be some delay between the time when you modify the MongoDB itself, and when you can find the modification using elastic search. Typically, the time is fairly short - a few seconds or so. 
