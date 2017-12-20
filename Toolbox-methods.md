@@ -3,24 +3,25 @@ Toolbox files specify the github repository and a command for testing for the pr
 st = scitran('vistalab');
 tbx = st.toolboxGet('aldit-toolboxes.json','project','ALDIT');
 ```
-The tbx return is a toolboxes object that contains the critical information about the github repositories containing the toolboxes.
+tbx is a toolboxes object that contains information about the github repositories where the toolboxes can be found.
 
 ### Validating a toolbox
-You can validate whether a toolbox is on your path this way
+Validate whether a toolbox is on your path this way
 ```
 >> st.toolboxValidate(tbx);
 Repo dti-error (dtiError) found.
 Repo vistasoft (vistaRootPath) found.
 ```
 ### Installing or cloning a toolbox
-If the toolboxes are not on your path, you can install them this way
+If the toolboxes are not on your path, install them using install or clone methods. The install version download a zip file from the github site.
 ```
 tbx = st.toolboxInstall(tbx);
 ```
-(or clone them)
+The clone method calls 'git clone' on the github site.  
 ``` 
-tbx = st.toolboxInstall(tbx);
+tbx = st.toolboxClone(tbx);
 ```
+Both of these methods can be used with flags that specify a commit or branch or clone depth.
 
 ## About Toolboxes
 ### Printing toolbox info
@@ -74,12 +75,10 @@ tbxWrite('SOC-ECoG-toolboxes.json',tbx);
 
 ### Uploading the JSON toolbox file
 
-The JSON file is stored on the project page with a **scitran** command 
+The JSON file defining the toolboxes is stored on the project page with a **scitran** command 
 
     project = st.search('projects','project label exact','SOC ECoG (Hermes)');
     st.upload('SOC-ECoG-toolboxes.json','project',idGet(project));
-
-**scitran** functions that analyze the Flywheel data check whether the user has the Matlab toolboxes on their path and, if necessary, install these toolboxes for the user.
 
 ### Example files
 The data directory in scitran includes several toolboxes files and a script, s_tbxSave, 
