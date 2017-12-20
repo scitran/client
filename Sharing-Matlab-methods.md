@@ -1,5 +1,5 @@
 ## The compute model
-The **scitran** and **toolboxes** classes simplify sharing Matlab-code that uses Flywheel-data. A main goal is to support reproducible methods for publication. Flywheel already incorporates Gears and Analyses to help with reproducibility.   These Flywheel Matlab client fills a different niche in which you are preparing analyses and figures for a paper.  
+The **scitran** and **toolboxes** classes simplify sharing Matlab-code that uses Flywheel-data. A main goal is to support reproducible methods for publication. Flywheel already incorporates Gears and Analyses to help with reproducibility. The Flywheel Matlab client supports a different niche; you are preparing analyses and figures for a paper.  
 
 In general, we suppose that:
 
