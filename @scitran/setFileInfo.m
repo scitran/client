@@ -10,19 +10,20 @@ function setFileInfo(obj,file,metadata, varargin)
 %   This method takes the data in metadata and sets it to be the
 %   information fields of a file in one of these container types.
 %
-% Inputs
+% Inputs (required)
 %   file - A file struct as returned from a search.  It must contain the
 %          fields file.file.name and file.parent.x_id
 %   metadata - A struct containing the metadata
 %
-% Optional parameter/val
-%
-% See also: s_stInfoCreate.m
+% Inputs (optional)
 %
 % LMP/BW Vistalab 2017
+%
+% See also: s_stInfoCreate.m
 
 % Example
 %{
+See scitran/clien wiki page
 %}
 
 %%

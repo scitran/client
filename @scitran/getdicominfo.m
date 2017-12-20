@@ -4,19 +4,20 @@ function files = getdicominfo(st,files)
 % Syntax
 %    files = scitran.getdicominfo(files, ...)
 %
-% Dicom header information describes critical parameters about the file and
-% is stored in Flywheel in an info object.  We return the info object for a
-% cell array of dicom files here.
+% Description
+%  Dicom header information describes critical parameters about the file
+%  and is stored in Flywheel in an info object.  We return the info object
+%  for a cell array of dicom files here.
 %
 % Inputs
-%   files - Cell array of file structs, as returned by a search
+%  files - Cell array of file structs, as returned by a search
 %
 % Returns
 %  info -  Cell array of info structs for each file.  If none, empty.
 %
-% See also:  scitran.search
-%
 % LMP/BW Scitran Team, 2017
+%
+% See also:  scitran.search
 
 % Example
 %{

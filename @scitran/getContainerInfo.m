@@ -10,7 +10,7 @@ function info = getContainerInfo(st,containerType, containerID)
 % Inputs
 %   containerType:  project, session, acquisition, or collection.  There is
 %                   a separate method for File Info. 
-%   containerID:    The idea, typically returned by a search or list
+%   containerID:    The ID, typically returned by a search or list
 %                   operation.
 %
 % Return:
@@ -21,13 +21,15 @@ function info = getContainerInfo(st,containerType, containerID)
 %  info = st.getContainerInfo('project',idGet(p{1}));
 %
 % BW, Vistasoft, 2017
+%
+% See also:
 
 % Example
 %{
   st = scitran('vistalab');
 
   project = st.search('project','project label exact','VWFA');
-  id = idGet(p{1});
+  id = idGet(project{1});
   info = st.getContainerInfo('project',id);
 
   sessions = st.list('session',id);   % Parent id
