@@ -6,11 +6,11 @@ The first time you run scitran for a site name, you will be queried for the site
 
 ### An example
 
-If you want to create a new instance, you can the name of the instance, as in
+If you want to authenticate for a new instance, you name the instance, as in
 
     st = scitran('newSite');
 
-You will then be asked to enter your API key.  
+You will be asked to enter your API key.  
 
     Please enter the API key: 
 
