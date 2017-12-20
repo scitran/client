@@ -10,5 +10,4 @@ There are other ways to humanize interactions with the files in a database. In a
 
 ## Installing from Matlab (alternative)
 
-Just a reminder for us - probably not important This is [script we once used to install from the Matlab command line.]
-(https://github.com/scitran/client/blob/master/utility/installScitran.m).
+Just a reminder for us - probably not important This is [script we once used to install from the Matlab command line](https://github.com/scitran/client/blob/master/utility/installScitran.m).
