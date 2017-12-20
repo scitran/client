@@ -12,7 +12,7 @@
 * [Reproducible computations](Reproducible-Matlab)
    * [Toolbox methods](Toolbox-methods)
    * [Running functions](Run-function)
-   * [Examples](Sharing-examples)
+   * [More examples](Sharing-examples)
 * [Gears and analyses](Gears-and-Analyses)
 * [Utilities](Client-utilities)
 * [Scripts](Client-scripts)
