@@ -2,7 +2,7 @@ All Flywheel containers (projects, sessions, acquisitions, files and collections
 
 ### getFileInfo and setFileInfo
 
-The **setFileInfo** method places metadata in a file's Information.  The metadata is represented as slots in a Matlab struct.  This code snippet illustrates the **setFileInfo** method.
+The **setFileInfo** method places metadata in a file's Information.  The metadata is represented as slots in a Matlab struct.  This code snippet, which was run on the CNI site, illustrates the **setFileInfo** method.
 ```
 % This is a json file that has metadata we will use for the information field
 files = st.search('file',...
@@ -14,8 +14,7 @@ files = st.search('file',...
     'summary',true);
 
 %% Download the json file
-destination = st.downloadFile(files{1});
-qaInfo = jsonread(destination);
+qaInfo = st.read(files{1})
 
 %% Extract the fields from the json data and put them in a struct
 jsonInfoFields = {'temporalSNR_median_','medianMd','spikes',...
