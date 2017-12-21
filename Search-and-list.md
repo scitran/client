@@ -6,7 +6,7 @@ The scitran **search** method is useful when you are planning to find and analyz
 
 If you know what you want and where it is, use **list**.  If you are exploring, use **search**.
 
-## Brief introduction to list
+## About: list
 The list method specifies two arguments.  The first is the type of object you would like to return; the second specifies the id of the container to list.  Listing is much like using 'dir' or 'ls' on a file system.
 
 Continuing down the directory tree from group, project, session, acquisition, files
@@ -18,7 +18,7 @@ Continuing down the directory tree from group, project, session, acquisition, fi
 
 **N.B.** The format of the structures in the list cell array differ from the structures returned by search.  We are producing helper functions to minimize the burden.  In this example, we use the utility function idGet(...), which returns the container id for either the list or search structs.
 
-### Brief introduction to search
+### About: search
 The arguments to the search method specify (a) the type of object to return and (b) parameters that define the search. For example, to search for all the projects in the database you would use
 
     projects = st.search('project');
@@ -53,7 +53,7 @@ By default, you search only the projects you have access to.  To search the enti
 
 You only have permission to view or download a subset of these, but you can learn about what is in the database from an 'all_data' search.
 
-## Technical notes
+## Details
 
 ### Search implementation
 The search method uses **elastic search**, an advanced method for searching large databases.  Elastic search is constantly indexing the data base, and the search is based on this index. For this reason, there may be some delay between the time when you modify the MongoDB itself, and when you can find the modification using elastic search. Typically, the time is fairly short - a few seconds or so. 
