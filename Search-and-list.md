@@ -45,7 +45,7 @@ project = st.search('project',
 ```
 There are a great many possible parameters for the **search** method. See the [search examples page](Search-examples).
 
-## Search scope
+### Search scope
 
 By default, you search only the projects you have access to.  To search the entire database use argument
 
