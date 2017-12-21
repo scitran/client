@@ -61,7 +61,5 @@ The search method uses **elastic search**, an advanced method for searching larg
 ### Formats
 The data format returned by the **list** method differs from the data returned by the **search** method.  A great deal more metadata is returned by search.
 
-### Get, Download, Read
-To download a container or a file use a **download**<> method. To get metadata about a file or container, use a **get**<> method. The **read** method downloads a file and calls a function to load/read the data, and then deletes the file.
 
 
