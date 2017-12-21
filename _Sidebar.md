@@ -1,7 +1,7 @@
 * [Introduction](Home)
 * [Installation](Installation)
+* [Authentication](Authentication)
 * [Data management](Scitran-class)
-   * [Authentication](Authentication)
    * [Listing and searching](Search-and-list)
      * [List examples](List-examples)
      * [Search examples](Search-examples)
