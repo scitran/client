@@ -1,5 +1,4 @@
-## Download, Get, and Read
-To download a container or a file use a **download**<> method. To get metadata about a file or container, use a **get**<> method. The **read** method downloads a file and calls a function to load/read the data, and then deletes the file.
+To download a container or a file use a **download**<> method. To get metadata about a file or container, The **read** method downloads a file and calls a function to load/read the data, and then deletes the file.
 
 ### File download
 Flywheel objects (e.g., project, session, acquisition, file, collection or analysis) can be downloaded. A file is downloaded as, well, a file. The method is
