@@ -15,7 +15,6 @@
    * [More examples](Sharing-examples)
    * [Gears and analyses](Gears-and-Analyses)
 * [Utilities](Client-utilities)
-* [Scripts](Client-scripts)
 ***
 Notes
 * [Flywheel SDK](Flywheel-SDK)
@@ -24,4 +23,5 @@ Notes
 * [Technical notes](Technical-notes)
 * [Toolboxes class](Toolboxes-class)
 * [More search](Search-syntax)
+* [Scripts](Client-scripts)
 * [BIDS](BIDS)
