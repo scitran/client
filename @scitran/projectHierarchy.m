@@ -17,10 +17,7 @@ function [project, sessions, acquisitions] = projectHierarchy(obj, projectLabel,
 %   [project, sessions, acquisitions] = st.projectHierarchy('VWFA');
 %   [project, sessions, acquisitions] = st.projectHierarchy('VWFA FOV');
 %
-% this will return the project labeled 'foo', its sessions and its
-% acquisitions.
-%
-% RF 2016, Scitran Team
+% BW 2016, Scitran Team
 
 % Example
 %{

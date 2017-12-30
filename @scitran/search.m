@@ -271,7 +271,7 @@ if ischar(srch)
             case {'projectlabelexact'}
                 % Note the cell here, which is not used in the
                 % contains case.
-                if ~isfield(srch,'projects')
+                if ~isfield(srch,'filters')
                     srch.filters{1}.terms.project0x2Elabel = {val};
                 else
                     srch.filters{end+1}.terms.project0x2Elabel = {val};
@@ -300,7 +300,7 @@ if ischar(srch)
                 end
             case {'sessionlabelexact','sessionlabel'}
                 % st.search('session','session label exact',STRING);
-                if ~isfield(srch,'projects')
+                if ~isfield(srch,'filters')
                     srch.filters{1}.terms.session0x2Elabel = {val};
                 else
                     srch.filters{end+1}.terms.session0x2Elabel = {val};
@@ -391,7 +391,7 @@ if ischar(srch)
                     srch.filters{end+1}.match.acquisition0x2Elabel = val;
                 end                
             case {'acquisitionlabelexact'}
-                if ~isfield(srch,'projects')
+                if ~isfield(srch,'filters')
                     srch.filters{1}.terms.acquisition0x2Elabel = {val};
                 else
                     srch.filters{end+1}.terms.acquisition0x2Elabel = {val};
