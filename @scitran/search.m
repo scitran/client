@@ -423,7 +423,7 @@ if ischar(srch)
                     srch.filters{end+1}.match.collection0x2E_id = val;
                 end
                 
-            % FILES
+            % FILES AND DATA
             case {'filenamecontains'}
                 % NEEDS CHECKING
                 if ~isfield(srch,'filters')
@@ -437,7 +437,8 @@ if ischar(srch)
                 else
                     srch.filters{end+1}.terms.file0x2Ename = {val};
                 end
-                % We don't think there is an id for a file
+                % There is not yet an id for a file.  When that comes,
+                % uncomment this.
                 %             case {'fileid'}
                 %                 % Not tested.
                 %                 if ~isfield(srch,'filters')
@@ -447,15 +448,27 @@ if ischar(srch)
                 %                 end
             case {'filetype'}
                 % Nifti, dicom, bvec, bval,montage ...
-                % struct('term', struct('file0x2Etype', 'nifti'))}});
+                % 
+                v = stValid('file type');
+                if ~ismember(val,v)
+                    fprintf('Valid file types are\n');
+                    stValid('file type');
+                    error('Invalid file type'); 
+                end
                 if ~isfield(srch,'filters')
                     srch.filters{1}.term.file0x2Etype = val;
                 else
                     srch.filters{end+1}.term.file0x2Etype = val;
                 end
-            case {'filemeasurement', 'measurement'}
+            case {'datatype','classification','measurement'} % 'filemeasurement'
                 % Localizer, Anatomy_t1w, Calibration, High_order_shim,
                 % Functional, Anatomy_inplane, Diffusion
+                v = stValid('data type');
+                if ~ismember(val,v)
+                    fprintf('Valid data types are\n');
+                    stValid('file type');
+                    error('Invalid file type'); 
+                end
                 if ~isfield(srch,'filters')
                     srch.filters{1}.term.measurements = val;
                 else
