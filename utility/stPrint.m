@@ -1,8 +1,8 @@
-function stPrint(result,slot, field)
-% Print the fields from a result to the command window
+function val = stPrint(result,slot, field)
+% Print and return the fields from a search or list result 
 %
 % Syntax
-%  stPrint(containerStruct, slot, field)
+%  val = stPrint(containerStruct, slot, field)
 %
 % Description
 %  Print out a list of the values in a cell array or a struct array.
@@ -22,23 +22,24 @@ function stPrint(result,slot, field)
 %
 % BW, Vistasoft Team, 2017
 
-% Example
+% Examples
+%
+% st = scitran('vistalab');
 %{
-
-  st = scitran('vistalab');
-
   % All project labels
   projects = st.search('project');
-  stPrint(projects,'project','label');
-
+  val = stPrint(projects,'project','label');
+%}
+%{
   % Limited to make the example short.
   sessions = st.search('session',...
       'project id',idGet(projects{1}), ...
       'limit',10);
-  stPrint(sessions,'session','label');
+  val = stPrint(sessions,'session','label');
 
   stPrint(sessions,'subject','code');
-
+%}
+%{
   % List example, no slot 
   projects = st.list('project','wandell');
   stPrint(projects,'label','')
@@ -50,7 +51,6 @@ function stPrint(result,slot, field)
 
   sessions = st.list('session',id);   % Parent id
   stPrint(sessions,'subject','code')
-
 %}
 
 %% Parse
@@ -61,19 +61,24 @@ p.addRequired('field',@ischar);
 
 p.parse(result,slot,field);
 
+% Return the values we print out
+val = cell(length(result),1);
+
 %%
 if isempty(field)
     if iscell(result)
         % Typically from a search
         fprintf('\n %s %s\n-----------------------------\n',slot,field);
         for ii=1:length(result)
-            fprintf('\t%d - %s \n',ii,result{ii}.(slot));
+            val{ii} = result{ii}.(slot);
+            fprintf('\t%d - %s \n',ii,val{ii} );
         end
         
     elseif isstruct(result)
         % Typically from a list
         for ii=1:length(result)
-            fprintf('\t%d - %s \n',ii,result(ii).(slot));
+            val{ii} = result(ii).(slot);
+            fprintf('\t%d - %s \n',ii,val{ii});
         end
     end
 else
@@ -81,13 +86,15 @@ else
         % Typically from a search
         fprintf('\n %s %s\n-----------------------------\n',slot,field);
         for ii=1:length(result)
-            fprintf('\t%d - %s \n',ii,result{ii}.(slot).(field));
+            val{ii} = result{ii}.(slot).(field);
+            fprintf('\t%d - %s \n',ii,val{ii});
         end
         
     elseif isstruct(result)
         % Typically from a list
         for ii=1:length(result)
-            fprintf('\t%d - %s \n',ii,result(ii).(slot).(field));
+            val{ii} = result(ii).(slot).(field);
+            fprintf('\t%d - %s \n',ii, val{ii});
         end
     end
 
