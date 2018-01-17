@@ -1,7 +1,7 @@
-To download a container or a file use a **download**<> method. To get metadata about a file or container, The **read** method downloads a file and calls a function to load/read the data, and then deletes the file.
+To download a container (e.g., project, session, acquisition,  collection or analysis) or a file use a **download**<> method. To get metadata about a file or container, The **read** method downloads a file and calls a function to load/read the data, and then deletes the file.
 
 ## File download
-Flywheel objects (e.g., project, session, acquisition, file, collection or analysis) can be downloaded. A file is downloaded as, well, a file. At present, the downloadFile method requires that you know the container type and the container ID of the file.  This is because files can be attached to many containers (projects, sessions, acquisitions, analyses) and the files themselves do not have IDs.  
+A file is downloaded as, well, a file. At present, the downloadFile method requires that you know the container type and the container ID of the file.  This is because files can be attached to many containers (projects, sessions, acquisitions, analyses) and the files themselves do not have IDs.  
 
 ### Download from search 
 
@@ -9,7 +9,7 @@ Flywheel objects (e.g., project, session, acquisition, file, collection or analy
      file = st.search('file','project label exact','DEMO','filename','dtiError.json');
      fName = st.downloadFile(file{1});
 
-In this case file{1} is a struct, like the one that is returned from a search. At a minimum the struct must contain the fields file.parent.type and file.parent.x_id.
+Note that file{1} is a struct, like the one that is returned from a search. At a minimum the struct must contain the fields file.file.name, file.parent.type and file.parent.x_id.
 
 ### Container type and id known
 
