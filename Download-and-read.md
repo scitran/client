@@ -9,7 +9,7 @@ A file is downloaded as, well, a file. At present, the downloadFile method requi
      file = st.search('file','project label exact','DEMO','filename','dtiError.json');
      fName = st.downloadFile(file{1});
 
-Note that file{1} is a struct, like the one that is returned from a search. At a minimum the struct must contain the fields file{1}.file.name, file{1}.parent.type and file{1}.parent.x_id.
+Note that file{1} is a struct, like the one that is returned from a search. At a minimum the struct must contain the fields `file{1}.file.name, file{1}.parent.type and file{1}.parent.x_id`.
 
 ### Container type and id known
 
