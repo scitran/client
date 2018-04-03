@@ -40,7 +40,7 @@ vwfaSessions = st.search('session',...
 ```
 To find partial label matches (case insensitive) use
 ```
-project = st.search('project',
+project = st.search('project',...
              'project label contains','vwfa');
 ```
 There are a great many possible parameters for the **search** method. See the [search examples page](Search-examples).
