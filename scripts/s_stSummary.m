@@ -8,6 +8,10 @@
 %
 % BW, Scitran Team, 2016
 
+%% 
+% NEEDS TO BE UPDATED FOR MODERN SEARCH
+%%
+
 %% Authorization
 
 % The auth returns a token and the url of the flywheel instance

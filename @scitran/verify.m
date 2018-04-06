@@ -14,7 +14,8 @@ function status = verify(obj)
 % BW Scitran team, 2017
 
 try
-    status = obj.fw.testBridge('world!');
+    status = obj.fw.getCurrentUser;
+    if isempty(status), status = 0; end
     %     searchStruct.return_type = 'project';
     %     results = obj.search(searchStruct);
     %     if ~isempty(results), status = 1; end

@@ -526,7 +526,7 @@ end
 %% Perform the search
 
 % To limit the searches to the top 100, use this
-srch.limit = limit;
+% srch.limit = limit;
 srchResult = obj.fw.search(srch); %.results;
 
 if isfield(srchResult,'message')

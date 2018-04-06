@@ -67,8 +67,7 @@ st.verify
 %% List all projects
 
 % All the projects you are part of
-projects = st.search('project',...
-    'summary',true);
+projects = st.search('project','summary',true);
 stPrint(projects,'project','label')
 assert(length(projects) >= 35);
 

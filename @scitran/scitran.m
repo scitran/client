@@ -89,7 +89,7 @@ classdef scitran < handle
             % Create the Flywheel SDK object
             % We do this for create or refresh, but not for remove.
             if strcmp(action,'create') || strcmp(action,'refresh')
-                obj.fw = Flywheel(obj.showToken);
+                obj.fw = flywheel.Flywheel(obj.showToken);
             end
             
         end
