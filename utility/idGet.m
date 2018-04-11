@@ -63,7 +63,7 @@ id = idGet(acquisitions{1})
 %}
 %%
 p = inputParser;
-p.addRequired('data',@(x)(isstruct(x) || iscell(x)));
+p.addRequired('acmps',@(x)(isstruct(x) || iscell(x)));
 p.parse(data);
 
 %% Determine if is struct or cell array of structs

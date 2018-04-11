@@ -31,7 +31,7 @@ function [result, srch] = search(obj,srch,varargin)
 %            'group', 'collection','analysis'}
 %
 %      If a struct, the fields that define the search parameters must
-%      include srch.return_type and other parameters.
+%      include srch.returnType and other parameters.
 %
 % Optional inputs
 %   Many parameter/value pairs are possible to define the search.  For 
@@ -39,7 +39,7 @@ function [result, srch] = search(obj,srch,varargin)
 %
 %   In addition to the search parameters, there are two special parameters
 %
-%     'all_data'   - sets whether to search the entire database, including
+%     'allData'   - sets whether to search the entire database, including
 %                    projects that you do not have access to (boolean,
 %                    default false} 
 %     'summary'    - print out a summary of the number of search items
@@ -115,7 +115,7 @@ p.KeepUnmatched = true;
 p.addRequired('srch');  
 
 % Not sure what this means yet
-p.addParameter('all_data',false,@islogical);
+p.addParameter('allData',false,@islogical);
 p.addParameter('summary',false,@islogical);
 p.addParameter('sortlabel',[],@ischar);
 
@@ -151,7 +151,7 @@ p.parse(srch,varargin{:});
 srch      = p.Results.srch;
 summary   = p.Results.summary;
 sortlabel = p.Results.sortlabel;
-all_data  = p.Results.all_data;
+allData   = p.Results.allData;
 limit     = p.Results.limit;
 
 %% If srch is a char array, we build a srch structure
@@ -210,7 +210,7 @@ if ischar(srch)
     % Force to lower and singular.  Also check that it is a permissible type.
     searchType = formatSearchType(srch); 
     clear srch
-    srch.return_type = searchType;
+    srch.returnType = searchType;
   
     % Build the search structure from the param/val pairs
     n = length(varargin);
@@ -221,14 +221,14 @@ if ischar(srch)
         switch stParamFormat(varargin{ii})
             
             % GENERAL SEARCH PARAMETERS
-            case {'all_data'}
+            case {'alldata'}
                 % Search all of the data.  
                 % By default you search only your own data.
                 % Force to be logical
-                if all_data, val = true; 
+                if allData, val = true; 
                 else, val = false; 
                 end
-                srch.all_data = val;
+                srch.allData = val;
             case {'sortlabel'}
                 % Ignore - We manage this at the end.
             case {'summary'}
@@ -277,7 +277,7 @@ if ischar(srch)
                     srch.filters{end+1}.terms.project0x2Elabel = {val};
                 end
                 %{
-                 searchStruct = struct('return_type', 'project', ...
+                 searchStruct = struct('returnType', 'project', ...
                     'filters', {{struct('term', struct('project0x2Elabel', 'vwfa'))}});
                  results = fw.search(searchStruct);
                 %}
@@ -505,12 +505,12 @@ if ischar(srch)
                 end
                 
                 
-            % SEARCH_STRING
+            % searchString
             case {'string'}
                 % Not sure what this does yet. But it appears to
-                % search anywhere in the properties of the return_type
+                % search anywhere in the properties of the returnType
                 % that has this string.
-                srch.search_string = val;
+                srch.searchString = val;
                        
             otherwise
                 error('Unknown search parameter: %s\n',varargin{ii});
@@ -519,7 +519,7 @@ if ischar(srch)
     end
 else
     % The srch term was a struct.  So we need to get searchType
-    searchType = srch.return_type;
+    searchType = srch.returnType;
 end
 
 
