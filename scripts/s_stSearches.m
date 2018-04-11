@@ -88,20 +88,20 @@ projectLabel = projects{end}.project.label;
 [projects,srchCmd] = st.search('project',...
     'summary',true,...
     'project label exact','VWFA');
+projects{1}.project.label
 
+%% You can also set up a struct with search parameters and run that
+projects = st.search(srchCmd,'summary',true);
+projects{1}.project.label
+
+%%
 [projects,srchCmd] = st.search('project',...
     'summary',true,...
     'project label contains','vwfa');
 
 % Save this project information
-projectID    = idGet(projects{end});
+projectID    = idGet(projects{end},'data type','project');
 projectLabel = projects{end}.project.label;
-
-%% You can also set up a struct with search parameters and run that
-projects = st.search(srchCmd);
-
-% These match
-fprintf('%s matches %s\n',projects{end}.project.label,projectLabel);
 
 %% Get a sessions within a specific collection with a subject code
 
@@ -123,7 +123,7 @@ sessions = st.search('session',...
     'summary',true);
 
 % Save this session information
-sessionID = idGet(sessions{1});
+sessionID = idGet(sessions{1},'data type','session');
 sessionLabel = sessions{1}.session.label;
 
 %% Get the session with this particular sessionID
