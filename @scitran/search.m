@@ -31,7 +31,7 @@ function [result, srch] = search(obj,srch,varargin)
 %            'group', 'collection','analysis'}
 %
 %      If a struct, the fields that define the search parameters must
-%      include srch.return_type and other parameters.
+%      include srch.returnType and other parameters.
 %
 % Optional inputs
 %   Many parameter/value pairs are possible to define the search.  For 
@@ -39,12 +39,12 @@ function [result, srch] = search(obj,srch,varargin)
 %
 %   In addition to the search parameters, there are two special parameters
 %
-%     'all_data'   - sets whether to search the entire database, including
+%     'allData'   - sets whether to search the entire database, including
 %                    projects that you do not have access to (boolean,
 %                    default false} 
 %     'summary'    - print out a summary of the number of search items
 %                    returned (boolean, default false}
-%
+%     'limit'      - upper limit on the number of returned objects
 %
 % Returns:
 %  result:  A cell array of data structs that match the search parameters
@@ -115,7 +115,7 @@ p.KeepUnmatched = true;
 p.addRequired('srch');  
 
 % Not sure what this means yet
-p.addParameter('all_data',false,@islogical);
+p.addParameter('alldata',false,@islogical);
 p.addParameter('summary',false,@islogical);
 p.addParameter('sortlabel',[],@ischar);
 
@@ -133,8 +133,10 @@ if ~isempty(varargin) && isstruct(varargin{1})
         varargin{ii+1} = fieldvals{ii};
     end
 else
-    % Remove the spaces from the varargin because the parser complains.  Why
-    % does it do that?
+    % Remove the spaces from the varargin because the parser
+    % complains.  Why does it do that?  Also, I think there is an
+    % updated version of this routine that should come over from
+    % ISETBIO/ISETCAM land.
     for ii=1:2:length(varargin)
         varargin{ii} = stParamFormat(varargin{ii});
     end
@@ -151,7 +153,7 @@ p.parse(srch,varargin{:});
 srch      = p.Results.srch;
 summary   = p.Results.summary;
 sortlabel = p.Results.sortlabel;
-all_data  = p.Results.all_data;
+allData   = p.Results.alldata;
 limit     = p.Results.limit;
 
 %% If srch is a char array, we build a srch structure
@@ -192,7 +194,7 @@ if ischar(srch)
                 g = obj.fw.getGroup(varargin{2});
                 result = cell(numel(g.permissions),1);
                 for ii=1:numel(g.permissions)
-                    result{ii} = g.permissions(ii).x_id;
+                    result{ii} = g.permissions{ii}.id;
                 end
             otherwise
                 error('Unknown group search term: %s',varargin{1});
@@ -210,7 +212,7 @@ if ischar(srch)
     % Force to lower and singular.  Also check that it is a permissible type.
     searchType = formatSearchType(srch); 
     clear srch
-    srch.return_type = searchType;
+    srch.returnType = searchType;
   
     % Build the search structure from the param/val pairs
     n = length(varargin);
@@ -221,22 +223,23 @@ if ischar(srch)
         switch stParamFormat(varargin{ii})
             
             % GENERAL SEARCH PARAMETERS
-            case {'all_data'}
+            case {'alldata'}
                 % Search all of the data.  
                 % By default you search only your own data.
                 % Force to be logical
-                if all_data, val = true; 
+                if allData, val = true; 
                 else, val = false; 
                 end
-                srch.all_data = val;
+                srch.allData = val;
             case {'sortlabel'}
                 % Ignore - We manage this at the end.
             case {'summary'}
                 % Logical - Printout a summary description of the return cell array
                 summary = val;
             case {'limit'}
-                % We manage a limit on the number of returns at the end.
-                
+                % We manage an upper limit on the number of returns
+                % at the end. 
+                limit = val;
             % GROUP
             case{'group'}
                 % Exact match to group name
@@ -277,7 +280,7 @@ if ischar(srch)
                     srch.filters{end+1}.terms.project0x2Elabel = {val};
                 end
                 %{
-                 searchStruct = struct('return_type', 'project', ...
+                 searchStruct = struct('returnType', 'project', ...
                     'filters', {{struct('term', struct('project0x2Elabel', 'vwfa'))}});
                  results = fw.search(searchStruct);
                 %}
@@ -505,12 +508,12 @@ if ischar(srch)
                 end
                 
                 
-            % SEARCH_STRING
+            % searchString
             case {'string'}
                 % Not sure what this does yet. But it appears to
-                % search anywhere in the properties of the return_type
+                % search anywhere in the properties of the returnType
                 % that has this string.
-                srch.search_string = val;
+                srch.searchString = val;
                        
             otherwise
                 error('Unknown search parameter: %s\n',varargin{ii});
@@ -519,15 +522,14 @@ if ischar(srch)
     end
 else
     % The srch term was a struct.  So we need to get searchType
-    searchType = srch.return_type;
+    searchType = srch.returnType;
 end
 
 
 %% Perform the search
 
 % To limit the searches to the top 100, use this
-srch.limit = limit;
-srchResult = obj.fw.search(srch); %.results;
+srchResult = obj.fw.search(srch,'size',num2str(limit)); %.results;
 
 if isfield(srchResult,'message')
     fprintf('Search error\n');
@@ -552,7 +554,6 @@ if ~iscell(srchResult)
 else
     result = srchResult;
 end
-
 
 %% Deal with sortlab or summary flag
 

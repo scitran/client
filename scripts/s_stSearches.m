@@ -67,25 +67,34 @@ st.verify
 %% List all projects
 
 % All the projects you are part of
-projects = st.search('project',...
-    'summary',true);
+projects = st.search('project','summary',true);
 stPrint(projects,'project','label')
 assert(length(projects) >= 35);
 
 
 %% All the projects, not just the ones you are part of
 projects = st.search('project',...
-    'all_data',true,...
+    'all data',true,...
     'summary',true);
 stPrint(projects,'project','label')
 assert(length(projects) >= 62);
 
+projectID = idGet(projects{end});
+projectLabel = projects{end}.project.label;
+
 %% Exact and contains matches
 
+% Not working yet
 [projects,srchCmd] = st.search('project',...
     'summary',true,...
     'project label exact','VWFA');
+projects{1}.project.label
 
+%% You can also set up a struct with search parameters and run that
+projects = st.search(srchCmd,'summary',true);
+projects{1}.project.label
+
+%%
 [projects,srchCmd] = st.search('project',...
     'summary',true,...
     'project label contains','vwfa');
@@ -93,12 +102,6 @@ assert(length(projects) >= 62);
 % Save this project information
 projectID    = idGet(projects{end});
 projectLabel = projects{end}.project.label;
-
-%% You can also set up a struct with search parameters and run that
-projects = st.search(srchCmd);
-
-% These match
-fprintf('%s matches %s\n',projects{end}.project.label,projectLabel);
 
 %% Get a sessions within a specific collection with a subject code
 
@@ -120,7 +123,7 @@ sessions = st.search('session',...
     'summary',true);
 
 % Save this session information
-sessionID = idGet(sessions{1});
+sessionID = idGet(sessions{1},'data type','session');
 sessionLabel = sessions{1}.session.label;
 
 %% Get the session with this particular sessionID
@@ -133,7 +136,6 @@ sessions = st.search('session',...
 acquisitions = st.search('acquisition',...
     'session id',sessionID,...
     'summary',true);
-assert(length(acquisitions) == 7);
 
 %% Find acquisitions in the project containing a string
 
@@ -185,7 +187,7 @@ thisProject = 'ALDIT';
 %% A lot of files in a project
 
 [files,srchCmd] = st.search('file',...
-    'project id',files{1}.project.x_id,...
+    'project id',files{1}.project.id,...
     'filetype','nifti',...
     'summary',true);
     
@@ -211,7 +213,8 @@ thisProject = st.search('project',...
 sessions = st.search('session',...
     'collection label exact','GearTest',...
     'summary',true);
-assert(length(sessions) == 3);
+
+stPrint(sessions,'session','label');
 
 %% Analyses that are part of this session
 analyses = st.search('analysis',...
@@ -240,7 +243,7 @@ sessions = st.search('session',...
 
 sessions = st.search('session',...
     'subject code','ex4842',...
-    'all_data',true,...
+    'allData',true,...
     'summary',true);
 
 %% Get sessions in which the subject age is within a range
@@ -308,17 +311,17 @@ files = st.search('file',...
     'project label exact','UMN', ...
     'analysis label contains', 'AFQ', ...
     'subject code','4279',...
-    'all_data',true,'summary',true); %#ok<*ASGLU>
+    'allData',true,'summary',true); %#ok<*ASGLU>
 
 [projects,srchCmd] = st.search('project',...
     'analysis label contains', 'AFQ', ...
     'subject code','4279',...
-    'all_data',true,'summary',true);
+    'allData',true,'summary',true);
 
 [projects,srchCmd] = st.search('project',...
     'analysis label contains', 'AFQ', ...
     'subject code','4279',...
-    'all_data',true,'summary',true);
+    'allData',true,'summary',true);
 
 
 %%  Find the number of projects owned by a specific group, by label
@@ -360,7 +363,7 @@ disp(groups{1})
 labels = st.search('group','alllabels');
 disp(labels)
 
-% The users for a particular group
+% The users for a particular group - NOT WORKING
 users = st.search('group','users','wandell');
 disp(users)
 
