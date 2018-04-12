@@ -4,7 +4,7 @@ The Matlab scitran client is designed to be a clear interface to the Flywheel SD
 
 We download the SDK2 as a matlab toolbox in a special format. Here is a link.
 
-https://storage.googleapis.com/flywheel-dist/sdk/alphas/flywheel-sdk-2.1.1-rc.4.mltbx
+https://storage.googleapis.com/flywheel-dist/sdk/alphas/flywheel-sdk-2.1.2-rc.3.mltbx
 
 Installation instructions for Linux
 https://www.mathworks.com/help/matlab/ref/matlab.addons.toolbox.installtoolbox.html
