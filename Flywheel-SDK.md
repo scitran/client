@@ -6,10 +6,11 @@ We download the SDK2 as a matlab toolbox in a special format. Here is a link.
 
 https://storage.googleapis.com/flywheel-dist/sdk/alphas/flywheel-sdk-2.1.2-rc.3.mltbx
 
-Installation instructions for Linux
-https://www.mathworks.com/help/matlab/ref/matlab.addons.toolbox.installtoolbox.html
-
 On Mac and Windows (probably) just click on the file.
+
+[Installation for Linux](https://www.mathworks.com/help/matlab/ref/matlab.addons.toolbox.installtoolbox.html)
+
+    installedToolbox = matlab.addons.toolbox.installToolbox(toolboxFile)
 
 ## Programming
 This page lists the Flywheel SDK commands, grouped redundantly in two organizations. First, there is a list in terms of the objects, and then there is a list in terms of the actions.
