@@ -44,7 +44,7 @@ function [result, srch] = search(obj,srch,varargin)
 %                    default false} 
 %     'summary'    - print out a summary of the number of search items
 %                    returned (boolean, default false}
-%
+%     'limit'      - upper limit on the number of returned objects
 %
 % Returns:
 %  result:  A cell array of data structs that match the search parameters
@@ -115,7 +115,7 @@ p.KeepUnmatched = true;
 p.addRequired('srch');  
 
 % Not sure what this means yet
-p.addParameter('allData',false,@islogical);
+p.addParameter('alldata',false,@islogical);
 p.addParameter('summary',false,@islogical);
 p.addParameter('sortlabel',[],@ischar);
 
@@ -133,8 +133,10 @@ if ~isempty(varargin) && isstruct(varargin{1})
         varargin{ii+1} = fieldvals{ii};
     end
 else
-    % Remove the spaces from the varargin because the parser complains.  Why
-    % does it do that?
+    % Remove the spaces from the varargin because the parser
+    % complains.  Why does it do that?  Also, I think there is an
+    % updated version of this routine that should come over from
+    % ISETBIO/ISETCAM land.
     for ii=1:2:length(varargin)
         varargin{ii} = stParamFormat(varargin{ii});
     end
@@ -151,7 +153,7 @@ p.parse(srch,varargin{:});
 srch      = p.Results.srch;
 summary   = p.Results.summary;
 sortlabel = p.Results.sortlabel;
-allData   = p.Results.allData;
+allData   = p.Results.alldata;
 limit     = p.Results.limit;
 
 %% If srch is a char array, we build a srch structure
@@ -192,7 +194,7 @@ if ischar(srch)
                 g = obj.fw.getGroup(varargin{2});
                 result = cell(numel(g.permissions),1);
                 for ii=1:numel(g.permissions)
-                    result{ii} = g.permissions(ii).x_id;
+                    result{ii} = g.permissions{ii}.id;
                 end
             otherwise
                 error('Unknown group search term: %s',varargin{1});
@@ -235,8 +237,9 @@ if ischar(srch)
                 % Logical - Printout a summary description of the return cell array
                 summary = val;
             case {'limit'}
-                % We manage a limit on the number of returns at the end.
-                
+                % We manage an upper limit on the number of returns
+                % at the end. 
+                limit = val;
             % GROUP
             case{'group'}
                 % Exact match to group name
@@ -526,8 +529,7 @@ end
 %% Perform the search
 
 % To limit the searches to the top 100, use this
-% srch.limit = limit;
-srchResult = obj.fw.search(srch); %.results;
+srchResult = obj.fw.search(srch,'size',num2str(limit)); %.results;
 
 if isfield(srchResult,'message')
     fprintf('Search error\n');
@@ -552,7 +554,6 @@ if ~iscell(srchResult)
 else
     result = srchResult;
 end
-
 
 %% Deal with sortlab or summary flag
 

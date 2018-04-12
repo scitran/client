@@ -1,4 +1,4 @@
-function val = stPrint(result,slot, field)
+function val = stPrint(result, slot, field)
 % Print and return the fields from a search or list result 
 %
 % Syntax

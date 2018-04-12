@@ -79,7 +79,7 @@ projects = st.search('project',...
 stPrint(projects,'project','label')
 assert(length(projects) >= 62);
 
-projectID = projects{end}.project.id;
+projectID = idGet(projects{end});
 projectLabel = projects{end}.project.label;
 
 %% Exact and contains matches
@@ -100,7 +100,7 @@ projects{1}.project.label
     'project label contains','vwfa');
 
 % Save this project information
-projectID    = idGet(projects{end},'data type','project');
+projectID    = idGet(projects{end});
 projectLabel = projects{end}.project.label;
 
 %% Get a sessions within a specific collection with a subject code
@@ -136,7 +136,6 @@ sessions = st.search('session',...
 acquisitions = st.search('acquisition',...
     'session id',sessionID,...
     'summary',true);
-assert(length(acquisitions) == 7);
 
 %% Find acquisitions in the project containing a string
 
@@ -188,7 +187,7 @@ thisProject = 'ALDIT';
 %% A lot of files in a project
 
 [files,srchCmd] = st.search('file',...
-    'project id',files{1}.project.x_id,...
+    'project id',files{1}.project.id,...
     'filetype','nifti',...
     'summary',true);
     
@@ -214,7 +213,8 @@ thisProject = st.search('project',...
 sessions = st.search('session',...
     'collection label exact','GearTest',...
     'summary',true);
-assert(length(sessions) == 3);
+
+stPrint(sessions,'session','label');
 
 %% Analyses that are part of this session
 analyses = st.search('analysis',...
@@ -363,7 +363,7 @@ disp(groups{1})
 labels = st.search('group','alllabels');
 disp(labels)
 
-% The users for a particular group
+% The users for a particular group - NOT WORKING
 users = st.search('group','users','wandell');
 disp(users)
 
