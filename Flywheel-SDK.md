@@ -12,7 +12,7 @@ On Mac and Windows (probably) just click on the file.
 
 ## Linux
 
-[Instructions for Linux](https://www.mathworks.com/help/matlab/ref/matlab.addons.toolbox.installtoolbox.html)
+[Mathworks instructions for Linux](https://www.mathworks.com/help/matlab/ref/matlab.addons.toolbox.installtoolbox.html)
 
     tbxFile = 'flywheel-sdk-2.1.2-rc.3.mltbx';
     tbx = matlab.addons.toolbox.installToolbox(tbxFile)
