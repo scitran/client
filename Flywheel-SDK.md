@@ -2,7 +2,7 @@ The Matlab scitran client is designed to be a clear interface to the Flywheel SD
 
 ## Installing the SDK2 (modern stuff)
 
-We download the SDK2 as a matlab toolbox in a special format. Here is a link.
+We download the SDK2 as a matlab toolbox that will be installed in the Add-Ons directory. As of April 12, 2018, Here is a link.  This might be updated over time, and we need a more automated procedure for doing the install for updates.
 
 https://storage.googleapis.com/flywheel-dist/sdk/alphas/flywheel-sdk-2.1.2-rc.3.mltbx
 
