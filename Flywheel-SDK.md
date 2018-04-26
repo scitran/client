@@ -10,6 +10,10 @@ Here are the api calls
 
 https://flywheel-io.github.io/core/branches/master/matlab/flywheel.api.html
 
+And the base wiki
+
+https://flywheel-io.github.io/core/
+
 ## Mac/Windows
 
 On Mac and Windows (probably) just click on the file.
