@@ -8,7 +8,7 @@ function tbx = tbxRead(filename)
 %   tbx = tbxRead('test.json');
 %
 % Write the toolbox to a project annotation
-%   fw = scitran('vistalab');
+%   fw = scitran('stanfordlabs');
 %
 % 
 %% Parse and check

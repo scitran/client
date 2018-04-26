@@ -26,7 +26,7 @@ function destination = toolboxInstall(st,tbx,varargin)
 %
 % See also toolboxes.clone, scitran.toolboxGet
 
-% st = scitran('vistalab');
+% st = scitran('stanfordlabs');
 % Examples
 %{
   % Installs from a zip file

@@ -18,7 +18,7 @@ function [valid, lst] = toolboxValidate(~,tbx,varargin)
 %
 % See also scitran.toolbox
 
-% st = scitran('vistalab');
+% st = scitran('stanfordlabs');
 % Example
 %{
  tbx = st.toolboxGet('dti-error.json','project name','DEMO');

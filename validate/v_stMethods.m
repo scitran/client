@@ -3,7 +3,7 @@
 %  BW, SCITRAN Team, 2017
 
 %%
-st = scitran('vistalab');
+st = scitran('stanfordlabs');
 
 %% Browse the site
 st.browser;

@@ -7,7 +7,7 @@
 
 %% Two channels are better than one
 
-fwVista = scitran('vistalab');   % Where I tucked the ROIs
+fwVista = scitran('stanfordlabs');   % Where I tucked the ROIs
 fwCNI   = scitran('cni');        % Where ENGAGE lives
 
 % Local space

@@ -9,7 +9,7 @@
 % LMP/BW Scitran Team, 2017
 
 %%
-fw = scitran('vistalab');
+fw = scitran('stanfordlabs');
 chdir(fullfile(stRootPath,'data'));
 
 %% Simple way to put a file into a project

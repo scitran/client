@@ -21,7 +21,7 @@ function [project, sessions, acquisitions] = projectHierarchy(obj, projectLabel,
 
 % Example
 %{
- st = scitran('vistalab');
+ st = scitran('stanfordlabs');
  [p,s,a]= st.projectHierarchy('VWFA','print',true);
 %}
 

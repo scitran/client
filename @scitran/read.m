@@ -23,7 +23,7 @@ function [data, dname] = read(st,fileInfo,varargin)
 % Examples:
 %{
   % Read a JSON file
-  st = scitran('vistalab');
+  st = scitran('stanfordlabs');
   file = st.search('file','project label contains','SOC','filename','toolboxes.json');
   data = st.read(file{1});  
   edit(fName)
@@ -31,7 +31,7 @@ function [data, dname] = read(st,fileInfo,varargin)
 %}
 %{
   % Read a nifti file.
-  st = scitran('vistalab');
+  st = scitran('stanfordlabs');
   file = st.search('file',...
                    'project label exact','ADNI: T1',...
                    'subject code',4256,...

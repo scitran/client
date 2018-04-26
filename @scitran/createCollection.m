@@ -11,7 +11,7 @@ function id = createCollection(obj, groupID, label, varargin)
 
 %{
  % Example:
- st = scitran('vistalab');
+ st = scitran('stanfordlabs');
  id = st.createCollection('Wandell Lab','deleteCollection');
  st.deleteObject(id.collection);
 

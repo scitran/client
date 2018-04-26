@@ -18,7 +18,7 @@ function [status, result, cmd] = deleteFile(obj, file, varargin )
 % BW 2017
 
 % Examples assume
-%   st = scitran('vistalab');
+%   st = scitran('stanfordlabs');
 %
 %{
   % Make sure we have a dummy file up there

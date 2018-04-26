@@ -41,7 +41,7 @@
 %%  Authorization 
 
 % Get authorization to read from the Flywheel database
-fw = scitran('vistalab');
+fw = scitran('stanfordlabs');
 
 % A place for temporary files.
 chdir(fullfile(stRootPath,'local'));

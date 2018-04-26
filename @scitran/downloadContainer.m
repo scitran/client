@@ -29,7 +29,7 @@ function destination = downloadContainer(obj,objectID,varargin)
 
 % Examples
 %{
-  st = scitran('vistalab');
+  st = scitran('stanfordlabs');
   acq = st.search('acquisition','project label contains','SOC','session label exact','stimuli');
   objectID = acq{1}.acquisition.x_id; 
   st.downloadContainer(objectID);  

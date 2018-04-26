@@ -470,7 +470,7 @@ if ischar(srch)
                 if ~ismember(val,v)
                     fprintf('Valid data types are\n');
                     stValid('file type');
-                    error('Invalid file type'); 
+                    error('Invalid file type: %s',val); 
                 end
                 if ~isfield(srch,'filters')
                     srch.filters{1}.term.measurements = val;

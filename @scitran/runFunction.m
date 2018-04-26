@@ -25,7 +25,7 @@ function [localFileFull,val] = runFunction(st, mFile, varargin)
 %
 % See also: s_stRunFunction.m
 
-% st = scitran('vistalab');
+% st = scitran('stanfordlabs');
 % Example 1
 %{
  mFile = 'ecog_RenderElectrodes.m';

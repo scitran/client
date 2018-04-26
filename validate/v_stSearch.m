@@ -4,7 +4,7 @@
 %
 
 %%
-st = scitran('vistalab');
+st = scitran('stanfordlabs');
 
 % In this example, we use the structure 'srch' to store the search parameters.
 % When we are satisfied with the parameters, we attach srch to the mean search

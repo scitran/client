@@ -26,7 +26,7 @@ function lst = print(~,d,pField,varargin)
 
 %{
  % Example
-  st = scitran('vistalab');
+  st = scitran('stanfordlabs');
   projects = st.search('projects');
   lst = st.print(projects,'project label');
   

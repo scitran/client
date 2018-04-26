@@ -44,7 +44,7 @@ function result = list(obj, returnType, parentID, varargin)
 % Examples
 %{
 
-  st = scitran('vistalab');
+  st = scitran('stanfordlabs');
 
   % The struct returned from an elastic search and from an SDK get differ
   % substantially

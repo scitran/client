@@ -26,7 +26,7 @@ function info = getFileInfo(st,file,varargin)
 %
 % See also:  scitran.setFileInfo, scitran.setInfo, scitran.getFileInfo
 
-% st = scitran('vistalab');
+% st = scitran('stanfordlabs');
 % Example
 %{
   % List the files

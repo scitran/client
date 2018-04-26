@@ -35,7 +35,7 @@ project = 'EJ Apricot';
 
 %% Get the data files and toolbox.
 
-st = scitran('vistalab');
+st = scitran('stanfordlabs');
 
 if ischar(fileSpikes)
     fileSpikes = st.search('files',...

@@ -27,7 +27,7 @@ function status = upload(obj,filename,containerType,containerId,varargin)
 %
 % LMP/BW Vistasoft Team, 2015-16
 
-% st = scitran('vistalab');
+% st = scitran('stanfordlabs');
 %
 % Example 1
 %{

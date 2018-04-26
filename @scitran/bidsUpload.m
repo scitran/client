@@ -31,7 +31,7 @@ function projectID = bidsUpload(st,bidsData, groupLabel, varargin)
 % Example
 %{
  % Works for wandell arrangement.
- st = scitran('vistalab');
+ st = scitran('stanfordlabs');
  data = bids(fullfile(stRootPath,'local','BIDS-examples','fw_test'));
  groupLabel = 'Wandell Lab'; 
 

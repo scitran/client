@@ -34,7 +34,7 @@ function destination = downloadFile(obj,file,varargin)
 % Examples
 %{
   % Search struct form
-  st = scitran('vistalab');
+  st = scitran('stanfordlabs');
   file = st.search('file','project label exact','DEMO','filename','dtiError.json');
   fName = st.downloadFile(file{1});
 

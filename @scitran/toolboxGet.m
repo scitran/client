@@ -27,7 +27,7 @@ function [tbx, valid] = toolboxGet(st, file, varargin)
 %
 % BW, Scitran Team, 2017
 
-% st = scitran('vistalab');
+% st = scitran('stanfordlabs');
 % Examples
 %{
  file = st.search('file',...

@@ -18,7 +18,7 @@
 %% Illustrates use of the @scitran toolbox method
 
 % Open a scitran object
-st = scitran('vistalab');
+st = scitran('stanfordlabs');
 
 % Read the toolboxes
 tbx = st.toolboxGet('aldit-toolboxes.json',...

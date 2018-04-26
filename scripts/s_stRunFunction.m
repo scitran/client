@@ -4,7 +4,7 @@
 % It illustrates how we use toolboxes to interact with the github
 % repository containing Matlab toolboxes.
 %
-% These are all designed to run on the vistalab site for wandell.  They may
+% These are all designed to run on the stanfordlabs site for wandell.  They may
 % serve as a model for future developments by Flywheel.
 %
 % BW, Vistasoft Team, 2017
@@ -23,7 +23,7 @@
 
 
 %% Open scitran
-st = scitran('vistalab');
+st = scitran('stanfordlabs');
 
 %% ECoG from DH
 

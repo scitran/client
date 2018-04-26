@@ -1,12 +1,12 @@
 %% Matlab SDK - validation tests based on testDrive
 %
-% These are for vistalab site
+% These are for stanfordlabs site
 %
 % BW, Scitran Team, 2017
 
 
 %%
-fw = scitran('vistalab');
+fw = scitran('stanfordlabs');
 fw.verify
 
 %% List projects

@@ -5,7 +5,7 @@
 %
 
 %%
-fw = scitran('vistalab');
+fw = scitran('stanfordlabs');
 
 %%  Find acquisitions from SVIP Release with dti 30 direction data
 

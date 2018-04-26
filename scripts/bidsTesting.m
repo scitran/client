@@ -8,7 +8,7 @@
 %
 % The goal is to be able to run
 %
-%   fw = scitran('vistalab');
+%   fw = scitran('stanfordlabs');
 %   thisBids = bids('bids directory');  % Reads and validates.
 %   fw.putBids(thisBids);
 %  

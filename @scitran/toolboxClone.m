@@ -23,7 +23,7 @@ function destination = toolboxClone(st,tbx,varargin)
 %
 % See also toolboxes.install, scitran.toolboxGet
 
-% st = scitran('vistalab');
+% st = scitran('stanfordlabs');
 % Examples
 %{
   tbx = toolboxes('WLVernierAcuity.json');

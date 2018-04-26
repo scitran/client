@@ -29,7 +29,7 @@ function idS = create(obj, group, project, varargin)
 
 % Examples:
 %{
-  st = scitran('vistalab');
+  st = scitran('stanfordlabs');
 
   %  Create a project
   gName = 'Wandell Lab';

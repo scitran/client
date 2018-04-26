@@ -5,7 +5,7 @@ function status = verify(obj)
 %
 % Examples:
 %
-%   st = scitran('vistalab');
+%   st = scitran('stanfordlabs');
 %   if ~st.verify,  error('Bad scitran key, or no projects.'); end
 %   
 % % Returns a 1 if verified, 0 otherwise.

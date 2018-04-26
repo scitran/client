@@ -14,7 +14,7 @@ function val = stPrint(result, slot, field)
 %  Print out a returned object to see the possibilities.
 %
 % Example
-%   st = scitran('vistalab');
+%   st = scitran('stanfordlabs');
 %   projects = st.search('project');
 %   stPrint(projects,'project','label');
 %
@@ -24,7 +24,7 @@ function val = stPrint(result, slot, field)
 
 % Examples
 %
-% st = scitran('vistalab');
+% st = scitran('stanfordlabs');
 %{
   % All project labels
   projects = st.search('project');

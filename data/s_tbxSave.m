@@ -71,7 +71,7 @@ tbx.gitrepo.commit  = 'master';
 tbx.saveinfo;
 
 %%
-st = scitran('vistalab');
+st = scitran('stanfordlabs');
 chdir(fullfile(stRootPath,'data'));
 
 %% These cases all create a couple of toolboxes and uploads to Flywheel

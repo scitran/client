@@ -53,9 +53,9 @@
 % You will be queried for the apiKey on the Flywheel User Profile page.
 %
 
-% At Stanford, we have a vistalab site.  You will have to replace
-% 'vistalab' with the name for your site.
-st = scitran('vistalab');
+% At Stanford, we have a stanfordlabs site.  You will have to replace
+% 'stanfordlabs' with the name for your site.
+st = scitran('stanfordlabs');
 st.verify
 
 % The Flywheel SDK object is part of the scitran object.  If you want to
@@ -239,7 +239,7 @@ sessions = st.search('session',...
     'session after time','now-16w',...
     'summary',true);
 
-%% Get sessions with this subject code (vistalab)
+%% Get sessions with this subject code (stanfordlabs)
 
 sessions = st.search('session',...
     'subject code','ex4842',...
@@ -387,12 +387,12 @@ analyses = st.search('analysis',...
     'project label contains','VWFA FOV',...
     'summary',true);
 
-% Freesurfer analyses in the whole vistalab database
+% Freesurfer analyses in the whole stanfordlabs database
 analyses = st.search('analysis',...
     'analysis label contains','freesurfer-recon-all',...
     'summary',true);
 
-% Wow, lots of AFQ in the vistalab database
+% Wow, lots of AFQ in the stanfordlabs database
 analyses = st.search('analysis',...
     'analysis label contains','AFQ',...
     'summary',true);

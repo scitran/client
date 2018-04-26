@@ -19,7 +19,7 @@ function deleteContainer(obj, containerType, containerID, varargin )
    % Examples
 
    % Create a project hierarcy and upload a file.  Try various deletions.
-   st = scitran('vistalab'); 
+   st = scitran('stanfordlabs'); 
    gName = 'Wandell Lab';
    pLabel = 'deleteMe';
    sLabel = 'deleteSession';

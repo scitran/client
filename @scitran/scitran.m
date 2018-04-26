@@ -16,8 +16,8 @@ classdef scitran < handle
     %
     % Examples:
     %
-    %    scitran('vistalab','action','refresh')
-    %    scitran('vistalab','verify',true);
+    %    scitran('stanfordlabs','action','refresh')
+    %    scitran('stanfordlabs','verify',true);
     %
     % LMP/BW Scitran Team, 2016
     
@@ -56,7 +56,7 @@ classdef scitran < handle
             %
             % Examples:
             %
-            %   st = scitran('vistalab','action','create');
+            %   st = scitran('stanfordlabs','action','create');
             %   st = scitran('cni','action','refresh');
             %   st = scitran('cni','action','remove');
             %

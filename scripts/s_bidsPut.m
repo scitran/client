@@ -6,7 +6,7 @@
 
 %% Open up the scitran client
 
-st = scitran('vistalab');
+st = scitran('stanfordlabs');
 
 %% Here are example bids data sets.  Pick one.
 

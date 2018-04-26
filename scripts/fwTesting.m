@@ -8,7 +8,7 @@
 %%
 
 chdir(fullfile(stRootPath,'local','BIDS-fw'));
-st = scitran('vistalab');
+st = scitran('stanfordlabs');
 
 %% Sessions in SOC ECoG (Hermes)
 [project, sessions, acquisitions] = st.projectHierarchy('SOC ECoG (Hermes)');

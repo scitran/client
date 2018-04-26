@@ -9,7 +9,7 @@
 
 %% Open the scitran client
 
-st = scitran('vistalab');
+st = scitran('stanfordlabs');
 
 %%  Get an example nifti file from the VWFA project
 files = st.search('file', ...

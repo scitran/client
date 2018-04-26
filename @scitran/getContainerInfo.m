@@ -26,7 +26,7 @@ function info = getContainerInfo(st,containerType, containerID)
 
 % Example
 %{
-  st = scitran('vistalab');
+  st = scitran('stanfordlabs');
 
   project = st.search('project','project label exact','VWFA');
   id = idGet(project{1});

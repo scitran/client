@@ -19,7 +19,7 @@ classdef toolboxes < handle
     %  
     % Set up the toolboxes object from a file on a scitran site
     %
-    %   st = scitran('vistalab');
+    %   st = scitran('stanfordlabs');
     %   tbxFile = st.search('files','project label','SOC ECoG (Hermes)','filename','toolboxes.json');
     %   tbx = toolboxes('scitran',st,'file',tbxFile{1});
     % 
