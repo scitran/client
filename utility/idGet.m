@@ -99,21 +99,18 @@ if strcmp(dataType,'none')
     end
 end
 
-% % Determine whether a search type or a list type
-% srch = true;
-% if strcmp(objType,'cell')
-%     if isfield(data{1},'id'), srch = false; end
-% else
-%     if isfield(data(1),'id'), srch = false; end
-% end
 
 %% Read the id values
 
-if nData == 1
-    id = data.(dataType).id;
-else
-    for ii=1:nData
-        id{ii} = data(ii).(dataType).id;
+if isequal(dataType,'file')
+    error('Files do not have an id.  Think about what you are doing');
+else   
+    if nData == 1
+        id = data.(dataType).id;
+    else
+        for ii=1:nData
+            id{ii} = data(ii).(dataType).id;
+        end
     end
 end
 

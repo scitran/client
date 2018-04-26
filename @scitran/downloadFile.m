@@ -68,7 +68,7 @@ function destination = downloadFile(obj,file,varargin)
 p = inputParser;
 
 % Either a struct or a char string
-vFunc = @(x)(isstruct(x) || ischar(x));
+vFunc = @(x)(isa(x,'flywheel.model.SearchResponse') || ischar(x));
 p.addRequired('file',vFunc);
 
 % Param/value pairs
@@ -82,28 +82,28 @@ p.parse(file,varargin{:});
 containerType = p.Results.containerType;
 containerID   = p.Results.containerID;
 sessionID     = p.Results.sessionID;   % Needed for analysis case
-file        = p.Results.file;
-destination = p.Results.destination;
-size        = p.Results.size;
+file          = p.Results.file;
+destination   = p.Results.destination;
+size          = p.Results.size;
 
 %% Set up the Flywheel SDK call
 
-if isstruct(file)
+if ischar(file)
     % Set up the download variables
-    containerType = file.parent.type;
-    containerID   = idGet(file);
-    filename      = file.file.name;
-    if strcmp(containerType,'analysis')
-        sessionID = file.session.x_id;
-    end
-else
     filename = file;
     if isempty(containerType) || isempty(containerID)
         error('If file is a string, you must specify container information');
     end
     if strcmp(containerType,'analysis') && isempty(sessionID)
         error('Session ID is required to download an analysis file');
-    end 
+    end
+else
+    containerType = file.parent.type;
+    containerID   = file.parent.id;
+    filename      = file.file.name;
+    if strcmp(containerType,'analysis')
+        sessionID = file.session.x_id;
+    end
 end
 
 if isempty(destination)
@@ -120,9 +120,11 @@ switch lower(containerType)
         obj.fw.downloadFileFromSession(containerID,filename,destination);
     case 'collection'
         obj.fw.downloadFileFromCollection(containerID,filename,destination);
-    case 'analysis'
-        % The arguments are a little different for this case.
-        obj.fw.downloadFileFromAnalysis(sessionID, containerID,filename,destination);
+        %     case 'analysis'
+        % We are going to handle analysis interactions differently
+        % with a separate method.
+        %         % The arguments are a little different for this case.
+        %         obj.fw.downloadFileFromAnalysis(sessionID, containerID,filename,destination);
     otherwise
         error('Unknown parent type %s\n',file{1}.parent.type);
 end
