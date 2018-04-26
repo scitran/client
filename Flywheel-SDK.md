@@ -4,8 +4,6 @@ The Matlab scitran client is designed to be a clear interface to the Flywheel SD
 
 We download the SDK2 as a matlab toolbox that will be installed in the Add-Ons directory. As of April 12, 2018, Here is a link.  This might be updated over time, and we need a more automated procedure for doing the install for updates.
 
-https://storage.googleapis.com/flywheel-dist/sdk/alphas/flywheel-sdk-2.1.2-rc.3.mltbx
-
 https://storage.googleapis.com/flywheel-dist/sdk/alphas/flywheel-sdk-2.1.2-rc.5.mltbx
 
 Here are the api calls
@@ -24,7 +22,7 @@ On Mac and Windows (probably) just click on the file.
 
 [Mathworks instructions for Linux](https://www.mathworks.com/help/matlab/ref/matlab.addons.toolbox.installtoolbox.html).  Basically, do this.
 
-    tbxFile = 'flywheel-sdk-2.1.2-rc.3.mltbx';
+    tbxFile = 'flywheel-sdk-2.1.2-rc.5.mltbx';
     tbx = matlab.addons.toolbox.installToolbox(tbxFile)
 
 If this is the first time you are installing on Linux, a directory 'Add-Ons' will be created in your userpath directory.  You should make sure that Add-Ons is included in your path, such as
