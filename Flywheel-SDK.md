@@ -6,6 +6,8 @@ We download the SDK2 as a matlab toolbox that will be installed in the Add-Ons d
 
 https://storage.googleapis.com/flywheel-dist/sdk/alphas/flywheel-sdk-2.1.2-rc.3.mltbx
 
+https://storage.googleapis.com/flywheel-dist/sdk/alphas/flywheel-sdk-2.1.2-rc.5.mltbx
+
 Here are the api calls
 
 https://flywheel-io.github.io/core/branches/master/matlab/flywheel.api.html
