@@ -79,16 +79,19 @@ if exist
         for ii=1:numel(tbx)
             if isequal(tbx(ii).Name,'flywheel-sdk')
                 % flywheelTbx = tbx(ii);
-                status = true;
-                return;
+                try
+                    % This would be preferred, but doesn't run on
+                    % 2017a.  It does on 2017b.
+                    status = matlab.addons.isAddonEnabled(flywheelTbx.Guid);
+                catch
+                    % Just set it true because it exists
+                    status = true;
+                end
             end
         end
     else, status = false;
     end
-    
-    % This doesn't run in 2017a
-    % So far now I deleted it.
-    % status = matlab.addons.isAddonEnabled(flywheelTbx.Guid);
+   
 
 elseif install
     % Download from Flywheel and install
