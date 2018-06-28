@@ -1,8 +1,10 @@
 %% Download a diffusion set (dwi, bvec, bval)
 %
-%  Find a diffusion data set in an acquisition and return the dwi, bvec,
-%  and bval files
+%  Illustrate downloading a diffusion data set in an acquisition and return
+%  the dwi, bvec, and bval files.  The nice thing about this example is it
+%  calls dwiLoad to get all of the data in one call.
 %
+% BW, Vistasoft team, 2018
 
 %%
 st = scitran('stanfordlabs');
@@ -21,9 +23,8 @@ fprintf('Found %d acquisitions\n',length(acq));
 % dwi is a structure with the data and the filenames
 dwi = st.dwiLoad(idGet(acq{1}));
 
-%% Try another one
-
-dwi = st.dwiLoad(idGet(acq{5}));
+%% Show the user the story
+disp(dwi)
 
 %%
     
