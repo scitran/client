@@ -17,6 +17,8 @@ You will also need to have the Flywheel Add-Ons library installed.  This is done
 
     stFlywheelAddons('install',true);
 
-You can verify that the install is there using, `status = stFlywheelAddons('exist',true)` or uninstall using
-`status = stFlywheelAddons('uninstall',true)`
+You can verify or uninstall using
+
+    status = stFlywheelAddons('exist',true)
+    status = stFlywheelAddons('uninstall',true)
 
