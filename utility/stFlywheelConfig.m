@@ -74,9 +74,17 @@ tbxFile = 'flywheel-sdk-2.1.4.mltbx';
 
 if exist
     % Checks that the flywheel-sdk is installed in the Add-Ons    
-    tblAddons = matlab.addons.installedAddons;
-    identifier = tblAddons.Identifier(tblAddons.Name == 'flywheel-sdk');
-    status = matlab.addons.isAddonEnabled(identifier);
+    tbx = matlab.addons.toolbox.installedToolboxes;
+    if numel(tbx) > 1
+        for ii=1:numel(tbx)
+            if isequal(tbx(ii).Name,'flywheel-sdk')
+                flywheelTbx = tbx(ii);
+                break;
+            end
+        end
+    else, flywheelTbx = tbx;
+    end
+    status = matlab.addons.isAddonEnabled(flywheelTbx.Guid);
 
 elseif install
     % Download from Flywheel and install
