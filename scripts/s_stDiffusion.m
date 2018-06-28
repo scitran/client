@@ -5,11 +5,11 @@
 %
 
 %%
-fw = scitran('stanfordlabs');
+st = scitran('stanfordlabs');
 
 %%  Find acquisitions from SVIP Release with dti 30 direction data
 
-acq = fw.search('acquisitions',...
+acq = st.search('acquisitions',...
     'project label contains','SVIP Released',...
     'acquisition label exact','DTI_30dir',...
     'summary',true);
@@ -19,11 +19,11 @@ fprintf('Found %d acquisitions\n',length(acq));
 %%  Run the dwiLoad on one of the acquistions
 
 % dwi is a structure with the data and the filenames
-dwi = fw.dwiLoad(acq{1}.acquisition.x_id);
+dwi = st.dwiLoad(idGet(acq{1}));
 
 %% Try another one
 
-dwi = fw.dwiLoad(acq{5}.acquisition.x_id);
+dwi = st.dwiLoad(idGet(acq{5}));
 
 %% Find the list of session labels for these acquisitions
 

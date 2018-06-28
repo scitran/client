@@ -11,14 +11,20 @@ function [dwi,destination] = dwiLoad(st,acquisitionID,varargin)
 % Required inputs
 %  acquistionID:  Flywheel acquisition id
 % 
-% Optional inputs:
+% Optional key/value pairs
+%  verbose:       Logical
 %  destination:   Directory for saving the nii, bvec, and bval files.  If
 %                 no directory is specified, they are written into
 %                 scitranClient/local. 
 %
-% See also: s_stDiffusion.m, s_stALDIT.m
+% Return
+%  dwi:  A struct containg the data
+%  destination:  Location on local disk where the data are stored
 %
 % BW Scitran Team, 2017
+%
+% See also:
+% s_stDiffusion.m, s_stALDIT.m
 
 %{
  % Example:
@@ -28,7 +34,7 @@ function [dwi,destination] = dwiLoad(st,acquisitionID,varargin)
             'project label exact',project,...
             'session label exact',session,...
             'acquisition label contains','1000');
- dwi = st.dwiLoad(acquisitions{1}.acquisition.x_id);
+ dwi = st.dwiLoad(idGet(acquisitions{1}),'verbose',true);
 %}
 
 
@@ -36,9 +42,11 @@ function [dwi,destination] = dwiLoad(st,acquisitionID,varargin)
 p = inputParser;
 p.addRequired('acquisitionID',@ischar);
 p.addParameter('destination',fullfile(stRootPath,'local'),@ischar);
+p.addParameter('verbose',false,@islogical);
 
 p.parse(acquisitionID,varargin{:});
 
+verbose = p.Results.verbose;
 destination = p.Results.destination;
 if ~exist(destination,'dir'), mkdir(destination); end
 
@@ -53,6 +61,7 @@ if length(bvecFile) ~= 1
     error('%d bvec files found',length(bvecFile));
 end
 bvecName = fullfile(destination,bvecFile{1}.file.name);
+if verbose, disp('bvec download'); end
 st.downloadFile(bvecFile{1},'destination',bvecName);
 
 bvalFile = st.search('files',...
@@ -61,6 +70,7 @@ bvalFile = st.search('files',...
 if length(bvecFile) ~= 1
     error('%d bval files found',length(bvalFile));
 end
+if verbose, disp('bval download'); end
 bvalName = fullfile(destination,bvalFile{1}.file.name);
 st.downloadFile(bvalFile{1},'destination',bvalName);
 
@@ -69,6 +79,8 @@ niiFile = st.search('files',...
     'file type','nifti');
 if length(niiFile) > 1, warning('Multiple nii files.  Returning 1st'); end
 niiName = fullfile(destination,niiFile{1}.file.name);
+
+if verbose, disp('nifti download'); end
 st.downloadFile(niiFile{1},'destination',niiName);
 
 %% Read and return
