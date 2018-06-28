@@ -13,7 +13,7 @@ This will create two directories, client and JSONio.  We suggest renaming the 'c
 
 ### Flywheel Add-Ons
 
-You will also need to have the Flywheel Add-Ons library installed.  This is done once using
+You will also need to have the Flywheel Add-On installed.  This is done once using
 
     stFlywheelAddons('install',true);
 
