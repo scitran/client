@@ -25,28 +25,5 @@ dwi = st.dwiLoad(idGet(acq{1}));
 
 dwi = st.dwiLoad(idGet(acq{5}));
 
-%% Find the list of session labels for these acquisitions
-
-sessionlabels = cell(length(acq),1);
-for ii=1:length(acq)
-    sessionlabels{ii} = acq{ii}.session.label;
-end
-
-% Find the unique session labels.  ListB contains an index into the
-% session that contains each of the acquisitions.
-[uniqueLabels,ListA,ListB] = unique(sessionlabels);
-
-% These are the acquisitions that are in session idx.  Out of the first
-% 100, we have one example of two acquisitions.  Not sure why.
-for jj=1:length(uniqueLabels)
-    idx = find(ListB == jj);
-    if length(idx) > 1
-        fprintf('Session %s subject code %s has %d DTI_30dir acquistions\n',acq{idx(1)}.session.label,acq{idx(1)}.subject.code,length(idx));
-        %     for ii=1:length(idx)
-        %         acq{idx(ii)}.session.label
-        %     end
-    end
-end
-
 %%
     
