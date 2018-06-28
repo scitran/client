@@ -1,4 +1,4 @@
-## Installing from the terminal
+## Installing
 
 ### Github repositories
 You can install this scitranClient and another essential toolbox, Guillaume Flandin's code to read and write JSON files (JSONio) by 
