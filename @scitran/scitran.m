@@ -101,6 +101,18 @@ classdef scitran < handle
             % changed. 
             val = obj.token;
         end
+        
+        function API(obj,varargin)
+            % Open up a web browser to the Flywheel API calls.
+            p = inputParser;
+            p.addRequired('obj',@(x)isa(x,'scitran'));
+            p.addParameter('url',...
+                'https://flywheel-io.github.io/core/branches/master/matlab/flywheel.api.html',...
+                @ischar);
+            p.parse(obj,varargin{:});
+            urlapi = p.Results.url;
+            web(urlapi,'-browser');
+        end
     end
     
     methods (Static)
