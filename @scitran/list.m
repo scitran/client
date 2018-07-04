@@ -89,6 +89,9 @@ fw = obj.fw;
 switch returnType
     case 'project'
         % ParentID is a group label
+        % projects     = st.list('project','wandell');
+        % stPrint(projects,'label','');
+        %
         data = {};
         tmp = fw.getAllProjects;
         cnt = 1;

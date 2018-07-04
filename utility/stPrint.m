@@ -2,27 +2,41 @@ function val = stPrint(result, slot, field)
 % Print and return the fields from a search or list result 
 %
 % Syntax
-%  val = stPrint(containerStruct, slot, field)
+%  val = stPrint(result, slot, field)
 %
 % Description
-%  Print out a list of the values in a cell array or a struct array.
-%  Typically these are cell arrays returned from a search, or structs
-%  returned from a list.  The slot refers to the first struct entry (e.g.,
-%  session or subject) and the field refers to the second entry (e.g.,
-%  label or code or ...).  
+%  Print out a list of the values from a cell array that is returned by a
+%  scitran.search or a scitran.list method.
 %
-%  Print out a returned object to see the possibilities.
+%  The slot and field refers to the first and second struct entries.
+%  So, what is printed is a loop over ii for
+%
+%     result{ii}.slot.field
+%
+% Inputs:
+%   result -  A cell array returned from the search or list method
+%   slot   -  Main slot
+%   field  -  Field within the slot
+%
+% Optional Key/vals
+%   None
+%
+% Return
+%   val - The printed strings
+%
+% HINT:  Print out one of the returned objects to see the
+%        possibilities for that object. 
 %
 % Example
 %   st = scitran('stanfordlabs');
 %   projects = st.search('project');
 %   stPrint(projects,'project','label');
 %
-% See more examples in the source code
+% See examples in the source code
 %
 % BW, Vistasoft Team, 2017
 
-% Examples
+% Examples:
 %
 % st = scitran('stanfordlabs');
 %{
@@ -32,15 +46,19 @@ function val = stPrint(result, slot, field)
 %}
 %{
   % Limited to make the example short.
+  projects = st.search('project');
   sessions = st.search('session',...
       'project id',idGet(projects{1}), ...
       'limit',10);
+
   val = stPrint(sessions,'session','label');
 
   stPrint(sessions,'subject','code');
 %}
 %{
   % List example, no slot 
+  % Notice the unfortunate difference in the returned object and thus
+  % the stPrint arguments 
   projects = st.list('project','wandell');
   stPrint(projects,'label','')
 
@@ -55,47 +73,30 @@ function val = stPrint(result, slot, field)
 
 %% Parse
 p = inputParser;
-p.addRequired('result',@(x)(iscell(x) || isstruct(x)));
-p.addRequired('slot',@ischar);
-p.addRequired('field',@ischar);
+p.addRequired('result',@iscell);
+p.addRequired('slot',  @ischar);
+p.addRequired('field', @ischar);
 
 p.parse(result,slot,field);
 
 % Return the values we print out
 val = cell(length(result),1);
 
-%%
-if isempty(field)
-    if iscell(result)
-        % Typically from a search
-        fprintf('\n %s %s\n-----------------------------\n',slot,field);
-        for ii=1:length(result)
-            val{ii} = result{ii}.(slot);
-            fprintf('\t%d - %s \n',ii,val{ii} );
-        end
+%% Start printing
+
+fprintf('\n %s %s\n-----------------------------\n',slot,field);
         
-    elseif isstruct(result)
-        % Typically from a list
-        for ii=1:length(result)
-            val{ii} = result(ii).(slot);
-            fprintf('\t%d - %s \n',ii,val{ii});
-        end
+if isempty(field)
+    for ii=1:length(result)
+        val{ii} = result{ii}.(slot);
+        fprintf('\t%d - %s \n',ii,val{ii} );
     end
 else
-    if iscell(result)
-        % Typically from a search
-        fprintf('\n %s %s\n-----------------------------\n',slot,field);
-        for ii=1:length(result)
-            val{ii} = result{ii}.(slot).(field);
-            fprintf('\t%d - %s \n',ii,val{ii});
-        end
-        
-    elseif isstruct(result)
-        % Typically from a list
-        for ii=1:length(result)
-            val{ii} = result(ii).(slot).(field);
-            fprintf('\t%d - %s \n',ii, val{ii});
-        end
+    for ii=1:length(result)
+        val{ii} = result{ii}.(slot).(field);
+        fprintf('\t%d - %s \n',ii,val{ii});
     end
-
 end
+        
+end
+
