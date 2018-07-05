@@ -19,7 +19,6 @@ function destination = downloadContainer(obj,containertype, containerid,varargin
 %
 % Optional Inputs
 %  destination:  full path to file output location (default is a tempdir)
-%  size:         File size in bytes; used for checking
 %
 % Return
 %  destination:  Full path to the file object on disk
@@ -32,13 +31,14 @@ function destination = downloadContainer(obj,containertype, containerid,varargin
 % Examples
 %{
   st = scitran('stanfordlabs');
-  acq = st.search('acquisition','project label contains','SOC','session label exact','stimuli');
-  objectID = acq{1}.acquisition.x_id; 
-  st.downloadContainer(objectID);  
+  acq = st.search('acquisition',...
+    'project label contains','SOC',...
+    'session label exact','stimuli');
+  id = idGet(acq{1});
+  st.downloadContainer('acquisition',id);  
   edit(fName)
   delete(fName);
 %}
-
 
 %% Parse inputs
 varargin = stParamFormat(varargin);
@@ -49,44 +49,57 @@ p.addRequired('containerid',@ischar);
 
 % Param/value pairs
 p.addParameter('destination','',@ischar)
-p.addParameter('size',[],@isnumeric);
 
 p.parse(containertype,containerid,varargin{:});
 
 containerType = p.Results.containertype;
 id            = p.Results.containerid;
-destination = p.Results.destination;
-sz          = p.Results.size;
+destination   = p.Results.destination;
 
 if isempty(destination)
-    destination = fullfile(pwd,'Flywheel.tar');
+    destination = fullfile(pwd,sprintf('Flywheel-%s-%s.tar',containerType,id));
 end
 
 %% Make the flywheel sdk call
 
+% Sets up the parameters for creating a ticket and doing the download
+% as a tar file.
 switch(containerType)
     case 'project'
     case 'session'
-        destination = obj.fw.downloadSession(id);
-    case 'acquisition'
+        % Download a session as a tar file
+        params = struct('optional', false, ...
+            'nodes', ...
+            { struct('level', 'session', 'id', id) });
+        
+    case 'acquisition'        
+        params = struct('optional', false, ...
+            'nodes', ...
+            { struct('level', 'acquisition', 'id', id) });
         
     case 'analysissession'
     case 'analysisacquisition'
     case 'analysiscollection'
         
     case 'collection'
+        
     otherwise
         error('Unknown container type %s \n',containerType);
 end
 
+% Get the ticket and then do the download
+summary = obj.fw.createDownloadTicket(params);
+obj.fw.downloadTicket(summary.ticket, destination);
+
 
 %% Verify file size
-if ~isempty(sz)
-    dlf = dir(destination);
-    if ~isequal(dlf.bytes, sz)
-        error('File size mismatch: %d (file) %d (expected).\n',dlf.bytes,sz);
-    end
-end
+% We used to allow this.  But I don't really know the size.
+% if ~isempty(sz)
+%     dlf = dir(destination);
+%     if ~isequal(dlf.bytes, sz)
+%         error('File size mismatch: %d (file) %d (expected).\n',dlf.bytes,sz);
+%     end
+% end
 
 end
 
