@@ -1,4 +1,4 @@
-function destination = downloadContainer(obj,objectID,varargin)
+function destination = downloadContainer(obj,containertype, containerid,varargin)
 % Download a Flywheel object
 %
 %   outfile = scitran.downloadContainer(objectID, ...)
@@ -14,7 +14,8 @@ function destination = downloadContainer(obj,objectID,varargin)
 %        ...
 %
 % Required Inputs
-%  objectID - The Flywheel object ID, usually obtained from a search
+%  containertype  - The Flywheel container type (project,session,acquisition ...)
+%  containerid    - The Flywheel container ID, usually obtained from a search
 %
 % Optional Inputs
 %  destination:  full path to file output location (default is a tempdir)
@@ -23,9 +24,10 @@ function destination = downloadContainer(obj,objectID,varargin)
 % Return
 %  destination:  Full path to the file object on disk
 %
-% See also: search, deleteFile, downloadFile
-%
 % LMP/BW Vistasoft Team, 2015-16
+%
+% See also: 
+%   scitran.search, scitran.deleteFile, scitran.sdownloadFile
 
 % Examples
 %{
@@ -37,48 +39,54 @@ function destination = downloadContainer(obj,objectID,varargin)
   delete(fName);
 %}
 
-%%
-error('Not implemented yet');
 
-end
-
-%{
-% Use this when you are ready.
 %% Parse inputs
-p = inputParser;
+varargin = stParamFormat(varargin);
 
-p.addRequired('objectID',@ischar);
+p = inputParser;
+p.addRequired('containertype',@ischar);
+p.addRequired('containerid',@ischar);
 
 % Param/value pairs
 p.addParameter('destination','',@ischar)
 p.addParameter('size',[],@isnumeric);
 
-p.parse(objectID,varargin{:});
+p.parse(containertype,containerid,varargin{:});
 
+containerType = p.Results.containertype;
+id            = p.Results.containerid;
 destination = p.Results.destination;
-size        = p.Results.size;
-
-%%
-
-% Get the Flywheel commands
-fw = obj.fw;
+sz          = p.Results.size;
 
 if isempty(destination)
     destination = fullfile(pwd,'Flywheel.tar');
 end
 
-disp('Not sure what Flywheel SDK call will bring down the tar file.')
+%% Make the flywheel sdk call
 
-% fw.getAcquisition(objectID);
+switch(containerType)
+    case 'project'
+    case 'session'
+        destination = obj.fw.downloadSession(id);
+    case 'acquisition'
+        
+    case 'analysissession'
+    case 'analysisacquisition'
+    case 'analysiscollection'
+        
+    case 'collection'
+    otherwise
+        error('Unknown container type %s \n',containerType);
+end
 
 
 %% Verify file size
-if ~isempty(size)
+if ~isempty(sz)
     dlf = dir(destination);
-    if ~isequal(dlf.bytes, size)
-        error('File size mismatch: %d (file) %d (expected).\n',dlf.bytes,size);
+    if ~isequal(dlf.bytes, sz)
+        error('File size mismatch: %d (file) %d (expected).\n',dlf.bytes,sz);
     end
 end
 
 end
-%}
+

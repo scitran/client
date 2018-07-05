@@ -114,6 +114,11 @@ switch returnType
         acq = fw.getAcquisition(parentID);
         data = acq.files;
 
+    case 'analysisfile'
+        % I think these are the output files
+        thisAnalysis = fw.getAnalysis(parentID);
+        data = thisAnalysis.files;
+        
     case 'collection'
         % An email address of the curator replaces the groupID/parentID
         data = {};

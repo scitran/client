@@ -16,14 +16,14 @@ function destination = downloadFile(obj,file,varargin)
 %           file.file.name
 %
 % Optional Inputs
-%   When file is a string, you must also specify the container information
-%     containerType {project, session, acquisition, collection, analysis}
-%     containerID   Perhaps obtained using idGet()
-%  destination:  Full path of the local file (default is in tempdir)
-%  size:         File size in bytes; used for checking
+%  When file is a string, you must specify the container information
+%   containerType {'project', 'session', 'acquisition', 'collection', 'analysis'}
+%   containerID   You can use idGet() for most objects
+%  destination:   Full path to the local file (default is in tempdir)
+%  size:          File size in bytes; used for checking
 %
 % Return
-%  destination:  Full path to the file saved locally
+%  destination:  Full path to the local file
 %
 % See also: scitran.deleteFile, scitran.search
 %
@@ -35,7 +35,9 @@ function destination = downloadFile(obj,file,varargin)
 %{
   % Search struct form
   st = scitran('stanfordlabs');
-  file = st.search('file','project label exact','DEMO','filename','dtiError.json');
+  file = st.search('file',...
+         'project label exact','DEMO',...
+         'filename','dtiError.json');
   fName = st.downloadFile(file{1});
 
   edit(fName)

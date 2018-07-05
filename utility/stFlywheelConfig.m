@@ -1,20 +1,30 @@
-function status = stFlywheelConfig(varargin)
-% Check the status, install, or uninstall the Flywheel Addon
+function [status, url] = stFlywheelConfig(varargin)
+% Check the status, install, or uninstall the Flywheel Add-On toolbox
 %
 % Syntax
-%   status = stFlywheelConfig( ...)
+%   [status, url] = stFlywheelConfig( ...)
 %
 % Description
-%   Manage the Flywheel Add-Ons toolbox on the user's
-%   path.  This toolbox is necessary for scitran to run.  The toolbox is
-%   placed in the user's 'Add-Ons' directory, usually inside of
-%   fullfile(userpath,'Add-Ons');
+%   The Flywheel Add-Ons toolbox is necessary for scitran to run.  %
+%   This function manages installation and uninstallation of the
+%   toolbox.
 %
+%   The toolbox is placed in the user's 'Add-Ons' directory, usually
+%   inside of fullfile(userpath,'Add-Ons');
+%
+%   The sdkVersion is used to identify the Add-On download release
+%   from github.  Here is the link:
+%   https://github.com/flywheel-io/core/releases 
+%   
+%
+% Input
+%   None required.  Defaults to 'exist'
 %
 % Optional Key/values
-%   exist:  Default
-%   install:
-%   uninstall
+%   'exist':     Checks if the Add-On is there.  (Default)
+%   'install'    Install a new Add-On toolbox
+%   'uninstall'  Unstall an existing Add-On toolbox
+%   'sdkVersion' Current is 2.4.3
 %
 % Returns
 %   status:  true or false depending on request
@@ -40,7 +50,8 @@ function status = stFlywheelConfig(varargin)
   status = stFlywheelConfig;
 %}
 %{
-  stFlywheelConfig('install',true);
+  stFlywheelConfig('install',true,'sdkVersion','2.4.3');
+  
 %}
 %{
   stFlywheelConfig('uninstall',true);
@@ -48,15 +59,18 @@ function status = stFlywheelConfig(varargin)
 
 %%
 p = inputParser;
+varargin = stParamFormat(varargin);
 p.addParameter('install',false,@islogical);
 p.addParameter('uninstall',false,@islogical);
 p.addParameter('exist',false,@islogical);
+p.addParameter('sdkversion','2.4.3',@ischar);
 p.parse(varargin{:});
 
 % Check for logical constancy.
-install   = p.Results.install;
-uninstall = p.Results.uninstall;
-exist     = p.Results.exist;
+install    = p.Results.install;
+uninstall  = p.Results.uninstall;
+exist      = p.Results.exist;
+sdkVersion = p.Results.sdkversion;
 
 % Only one of these can be set.  If none is set, we check for the existence
 % on the path.
@@ -70,7 +84,8 @@ end
 %% Do the selected task
 
 % This is the most recent toolbox file
-tbxFile = 'flywheel-sdk-2.1.4.mltbx';
+tbxFile = sprintf('flywheel-sdk-%s.mltbx',sdkVersion);
+url = sprintf('https://github.com/flywheel-io/core/releases/download/%s/flywheel-sdk-%s.mltbx',sdkVersion,sdkVersion);
 
 if exist
     % Checks that the flywheel-sdk is installed in the Add-Ons    
@@ -97,7 +112,9 @@ elseif install
     % Download from Flywheel and install
     fprintf('Installing the Flywheel Add-Ons toolbox: %s\n',tbxFile);
     cd(fullfile(stRootPath,'local'));
-    websave(tbxFile,'https://github.com/flywheel-io/core/releases/download/2.1.4/flywheel-sdk-2.1.4.mltbx');
+    % websave(tbxFile,'https://github.com/flywheel-io/core/releases/download/2.1.4/flywheel-sdk-2.1.4.mltbx');
+    websave(tbxFile,'https://github.com/flywheel-io/core/releases/download/2.4.3/flywheel-sdk-2.4.3.mltbx');
+
     matlab.addons.toolbox.installToolbox(tbxFile);
     
     % We might decide to verify here
@@ -111,9 +128,17 @@ elseif install
     delete(tbxFile);
 
 elseif uninstall
-    % Should we check?  What if there are multiple?
-    matlab.addons.toolbox.uninstallToolbox('flywheel-sdk');
-
+    try
+        matlab.addons.toolbox.uninstallToolbox('flywheel-sdk');
+    catch
+        toolboxes = matlab.addons.toolbox.installedToolboxes;
+        for ii=1:length(toolboxes)
+            if toolboxes(ii).Name == 'flywheel-sdk'
+                matlab.addons.toolbox.uninstallToolbox(toolboxes(ii));
+                break;
+            end
+        end
+    end
 end
 
 end
