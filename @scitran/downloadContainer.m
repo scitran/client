@@ -39,14 +39,7 @@ function destination = downloadContainer(obj,containertype, containerid,varargin
   fName = st.downloadContainer('acquisition',id);  
   delete(fName);
 %}
-%{
-  st = scitran('stanfordlabs');
-  acq = st.search('analysis',...
-    'project label contains','SOC',...
-    'session label exact','stimuli');
-  id = idGet(acq{1});
-  fName = st.downloadContainer('acquisition',id);  
-%}
+
 
 %% Parse inputs
 varargin = stParamFormat(varargin);
@@ -86,13 +79,7 @@ switch(containerType)
         params = struct('optional', false, ...
             'nodes', ...
             { struct('level', 'acquisition', 'id', id) });
-        
-    case {'analysis','analysissession'}
-        % Default is an analysis attached to a session
-        params = struct('optional', false, ...
-            'nodes', ...
-            { struct('level', 'analysis', 'id', id) });
-        
+                
     % Some of these might be implemented.  But ...
     case 'collection'
         disp('NYI')
