@@ -2,7 +2,7 @@ There are two principal classes in the client toolbox.  The **scitran** class an
 
 A scitran object is instantiated by a call that identifies which Flywheel database you wish to address. 
 ```
-st = scitran('vistalab');
+st = scitran('stanfordlabs');
 ```
 
 The scitran object contains the Flywheel database url, the instance name, a way to access the Flywheel SDK, and some hidden information about user permission.
