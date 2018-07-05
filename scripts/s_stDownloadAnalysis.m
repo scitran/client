@@ -1,6 +1,6 @@
 %% s_stDownloadAnalysis
 %
-%
+%  IN PROGRESS.  Not sure what the correct SDK calls are.
 %
 % See also
 %  s_stDownloadContainer
@@ -18,3 +18,5 @@ analysis = st.search('analysis',...
 id = idGet(analysis{1});
 
 tarFileName2 = st.downloadContainer('analysis',id);
+
+%%
