@@ -1,10 +1,11 @@
 function destination = downloadContainer(obj,containertype, containerid,varargin)
 % Download a Flywheel object
 %
-%   outfile = scitran.downloadContainer(objectID, ...)
+%   tarFile = scitran.downloadContainer(objectID, ...)
 %
 % The Flywheel container will be downloaded as a tar file.  When it is
-% unpacked, the directory structure is organized as
+% unpacked, the directory structure reflects the Flywheel
+% organization.  Attachments at different levels show up as files.  
 %
 %    Group Name
 %     Project Name
@@ -26,7 +27,7 @@ function destination = downloadContainer(obj,containertype, containerid,varargin
 % LMP/BW Vistasoft Team, 2015-16
 %
 % See also: 
-%   scitran.search, scitran.deleteFile, scitran.sdownloadFile
+%   s_stDownloadContainer, scitran.search, scitran.deleteFile, scitran.sdownloadFile
 
 % Examples
 %{
@@ -35,9 +36,16 @@ function destination = downloadContainer(obj,containertype, containerid,varargin
     'project label contains','SOC',...
     'session label exact','stimuli');
   id = idGet(acq{1});
-  st.downloadContainer('acquisition',id);  
-  edit(fName)
+  fName = st.downloadContainer('acquisition',id);  
   delete(fName);
+%}
+%{
+  st = scitran('stanfordlabs');
+  acq = st.search('analysis',...
+    'project label contains','SOC',...
+    'session label exact','stimuli');
+  id = idGet(acq{1});
+  fName = st.downloadContainer('acquisition',id);  
 %}
 
 %% Parse inputs
@@ -66,31 +74,40 @@ end
 % as a tar file.
 switch(containerType)
     case 'project'
+        disp('NYI.  Should ask carefully before bringing one of these down');s
     case 'session'
         % Download a session as a tar file
         params = struct('optional', false, ...
             'nodes', ...
             { struct('level', 'session', 'id', id) });
         
-    case 'acquisition'        
+    case 'acquisition'
+        % An acquisition within a session
         params = struct('optional', false, ...
             'nodes', ...
             { struct('level', 'acquisition', 'id', id) });
         
-    case 'analysissession'
-    case 'analysisacquisition'
-    case 'analysiscollection'
+    case {'analysis','analysissession'}
+        % Default is an analysis attached to a session
+        params = struct('optional', false, ...
+            'nodes', ...
+            { struct('level', 'analysis', 'id', id) });
         
+    % Some of these might be implemented.  But ...
     case 'collection'
-        
+        disp('NYI')
+    case 'analysisacquisition'
+        disp('NYI')
+    case 'analysiscollection'
+        disp('NYI')
+
     otherwise
-        error('Unknown container type %s \n',containerType);
+        error('Unknown container download type %s \n',containerType);
 end
 
 % Get the ticket and then do the download
 summary = obj.fw.createDownloadTicket(params);
 obj.fw.downloadTicket(summary.ticket, destination);
-
 
 %% Verify file size
 % We used to allow this.  But I don't really know the size.
