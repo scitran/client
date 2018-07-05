@@ -1,8 +1,8 @@
-function [status, url] = stFlywheelConfig(varargin)
+function [status, url, toolboxTable] = stFlywheelConfig(varargin)
 % Check the status, install, or uninstall the Flywheel Add-On toolbox
 %
 % Syntax
-%   [status, url] = stFlywheelConfig( ...)
+%   [status, url, toolboxTable] = stFlywheelConfig( ...)
 %
 % Description
 %   The Flywheel Add-Ons toolbox is necessary for scitran to run.  %
@@ -25,9 +25,12 @@ function [status, url] = stFlywheelConfig(varargin)
 %   'install'    Install a new Add-On toolbox
 %   'uninstall'  Unstall an existing Add-On toolbox
 %   'sdkVersion' Current is 2.4.3
+%   'summary'    Print out a summary of the installed toolboxes
 %
 % Returns
 %   status:  true or false depending on request
+%   url:     URL to github of the mtlbx
+%   toolboxTables - Table list of the installed Add-Ons toolboxes
 %
 % Installation instructions are here on the scitran wiki
 %
@@ -50,8 +53,7 @@ function [status, url] = stFlywheelConfig(varargin)
   status = stFlywheelConfig;
 %}
 %{
-  stFlywheelConfig('install',true,'sdkVersion','2.4.3');
-  
+  [s,u,tbl] = stFlywheelConfig('install',true,'sdkVersion','2.4.3');
 %}
 %{
   stFlywheelConfig('uninstall',true);
@@ -64,6 +66,8 @@ p.addParameter('install',false,@islogical);
 p.addParameter('uninstall',false,@islogical);
 p.addParameter('exist',false,@islogical);
 p.addParameter('sdkversion','2.4.3',@ischar);
+p.addParameter('summary',true,@islogical);
+
 p.parse(varargin{:});
 
 % Check for logical constancy.
@@ -71,6 +75,7 @@ install    = p.Results.install;
 uninstall  = p.Results.uninstall;
 exist      = p.Results.exist;
 sdkVersion = p.Results.sdkversion;
+summary    = p.Results.summary;
 
 % Only one of these can be set.  If none is set, we check for the existence
 % on the path.
@@ -106,7 +111,6 @@ if exist
         end
     else, status = false;
     end
-   
 
 elseif install
     % Download from Flywheel and install
@@ -138,6 +142,17 @@ elseif uninstall
                 break;
             end
         end
+    end
+end
+
+if summary
+    toolboxes = matlab.addons.toolbox.installedToolboxes;
+    if isempty(toolboxes)
+        fprintf('No Add-On toolboxes\n');
+    elseif isfield(toolboxes(1),'Name')
+        toolboxTable = struct2table(toolboxes);
+    else
+        disp(toolboxes(1));
     end
 end
 
