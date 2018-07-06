@@ -1,8 +1,8 @@
-function id = createCollection(obj, groupID, label, varargin)
+function id = collectionCreate(obj, groupID, label, varargin)
 % Create a collection
 %
 % Syntax
-%   id = createCollection(obj, groupID, label, varargin{:})
+%   id = collectionCreate(obj, groupID, label, varargin{:})
 %
 % Create a collection with a specific label.  The acquisitions parameter
 % will add a list (cell array) of acquisitions to the collection.

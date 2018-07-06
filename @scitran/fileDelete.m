@@ -1,9 +1,9 @@
-function [status, result, cmd] = deleteFile(obj, file, varargin )
+function [status, result, cmd] = fileDelete(obj, file, varargin )
 % Deletes a file from a container on a Flywheel site.  
 % 
 %      NOT YET IMPLEMENTED
 %
-%   [status, result, cmd] = scitran.deleteFile(obj, file, varargin)
+%  [status, result, cmd] = scitran.fileDelete(obj, file, varargin)
 %
 % Required parameter
 %  file - can be either

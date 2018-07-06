@@ -1,7 +1,7 @@
-function destination = downloadFile(obj,file,varargin)
+function destination = fileDownload(obj,file,varargin)
 % Retrieve a file from a Flywheel site
 %
-%   outfile = scitran.downloadFile(file, ...)
+%   outfile = scitran.fileDownload(file, ...)
 %
 % We use the iFlywheel SDK to download a file.  This routine differs from
 % the other Flywheel download methods because files do not have an id.

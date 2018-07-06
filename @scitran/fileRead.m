@@ -1,7 +1,7 @@
-function [data, dname] = read(st,fileInfo,varargin)
+function [data, dname] = fileRead(st,fileInfo,varargin)
 % Read scitran data from a file into a Matlab variable
 %
-%   [data, destinationFile] = st.read(file, ...);
+%   [data, destinationFile] = st.fileRead(file, ...);
 %
 % Inputs:
 %    file - a file struct returned by a search

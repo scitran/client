@@ -1,8 +1,8 @@
-function status = upload(obj,filename,containerType,containerId,varargin)
+function status = fileUpload(obj,filename,containerType,containerId,varargin)
 % Upload a file to a Flywheel site.
 %
 % Syntax
-%   status = upload(obj,filename,containerType,containerId,varargin)
+%   status = st.fileUpload(obj,filename,containerType,containerId,varargin)
 %
 % Description
 %  Upload a file to one of several types of containers on a Flywheel

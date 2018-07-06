@@ -1,8 +1,8 @@
-function [dwi,destination] = dwiLoad(st,acquisitionID,varargin)
+function [dwi,destination] = dwiDownload(st,acquisitionID,varargin)
 % Load nifti, bvec, and bval from a Flywheel acquisition
 %
 % Syntax
-%   dwi = st.dwiLoad(acquisitionID,varargin);
+%   dwi = st.dwiDownload(acquisitionID,varargin);
 %
 % There must be one nifti, bval, and bvec file in the acquisition. These
 % three files are downloaded and their values are returned as a dwi struct

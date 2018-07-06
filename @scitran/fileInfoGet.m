@@ -1,10 +1,10 @@
-function info = getFileInfo(st,file,varargin)
+function info = fileInfoGet(st,file,varargin)
 % Get the info associated with a specific file
 %
 %   NOT YET IMPLEMENTED - WORKING ON HOW TO HANDLE DIFFERENT CONTAINERS
 %
 % Syntax
-%    st.getFileInfo(file,...)
+%    st.fileInfoGet(file,...)
 %
 % Description
 %  Some files have an associated info object that describes critical

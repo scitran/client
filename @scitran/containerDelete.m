@@ -1,7 +1,7 @@
-function deleteContainer(obj, containerType, containerID, varargin )
+function containerDelete(obj, containerType, containerID, varargin )
 % Deletes an object from a Flywheel site.  
 % 
-%  st.deleteContainer(obj, containerType, containerID, varargin)
+%  st.containerDelete(obj, containerType, containerID, varargin)
 %
 % Required inputs
 %    containerId - string that identifies the Flywheel object

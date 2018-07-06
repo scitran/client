@@ -1,8 +1,8 @@
-function info = setContainerInfo(st,containerType,containerID,data)
+function info = containerInfoSet(st,containerType,containerID,data)
 % Modify the database info from a Flywheel container
 %
 % Syntax
-%   info = st.setContainerInfo(containerType,containerID,data)
+%   info = st.containerInfoSet(containerType,containerID,data)
 %
 % Description
 %   Modify the info fields of a container.  You are permitted to modify

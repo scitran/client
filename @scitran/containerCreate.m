@@ -1,8 +1,8 @@
-function idS = create(obj, group, project, varargin)
+function idS = containerCreate(obj, group, project, varargin)
 % Create a project, session or acquisition on a Flywheel instance
 %
 % Syntax
-%   idS = st.create(groupL, projectL,'session',sessionLabel,'acquisition',acquisitionLabel)
+%   idS = st.containerCreate(groupL, projectL,'session',sessionLabel,'acquisition',acquisitionLabel)
 %
 % We make a series of objects, starting with project, session, and
 % acquisition.  In each case we check if the object already exists, and if

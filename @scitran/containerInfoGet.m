@@ -1,8 +1,8 @@
-function info = getContainerInfo(st,containerType, containerID)
+function info = containerInfoGet(st,containerType, containerID)
 % Read info from a Flywheel container
 %
 % Syntax
-%   info = st.getContainerInfo(containerType, containerID)
+%   info = st.containerInfoGet(containerType, containerID)
 %
 % Description
 %   Return a struct with the container information.

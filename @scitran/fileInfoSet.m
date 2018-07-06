@@ -1,8 +1,8 @@
-function setFileInfo(obj,file,metadata, varargin)
+function fileInfoSet(obj,file,metadata, varargin)
 % Set the information field of a file
 %
 % Syntax
-%  scitran.setFileInfo(file,metadata,varargin)
+%  scitran.fileInfoSet(file,metadata,varargin)
 %
 % Description
 %   Information fields are attached to many Flywheel containers,

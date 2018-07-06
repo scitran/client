@@ -1,7 +1,7 @@
-function destination = downloadContainer(obj,containertype, containerid,varargin)
+function destination = containerDownload(obj,containertype, containerid,varargin)
 % Download a Flywheel object
 %
-%   tarFile = scitran.downloadContainer(objectID, ...)
+%   tarFile = scitran.containerDownload(objectID, ...)
 %
 % The Flywheel container will be downloaded as a tar file.  When it is
 % unpacked, the directory structure reflects the Flywheel
