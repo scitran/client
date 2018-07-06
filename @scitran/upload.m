@@ -5,9 +5,10 @@ function status = upload(obj,filename,containerType,containerId,varargin)
 %   status = upload(obj,filename,containerType,containerId,varargin)
 %
 % Description
-%  Upload a file to one of several types of containers on a Flywheel site.
-%  Typically the file name is preserved.  You can use the 'remote name'
-%  parameter to change the file name on the Flywheel site.
+%  Upload a file to one of several types of containers on a Flywheel
+%  site. Typically the file name is preserved.  You can use the
+%  optional 'remote name' parameter (below) to set the file name on
+%  the Flywheel site.
 % 
 % Inputs (required):
 %   filename      - A full path to a local file
@@ -15,17 +16,19 @@ function status = upload(obj,filename,containerType,containerId,varargin)
 %                   collection 
 %   containerID   - You can use idGet() to find the id
 %
-% Inputs (optional):
+% Optional key/value parameters:
 %  remoteName     - File name as it should appear on the Flywheel site
 %
 % Outputs:
 %  status:  Boolean indicating success (0) or failure (~=0)
 %
-% See also:  downloadFile, create
 %
 % Examples in the code
 %
 % LMP/BW Vistasoft Team, 2015-16
+%
+% See also:  
+%  downloadFile, create
 
 % st = scitran('stanfordlabs');
 %
