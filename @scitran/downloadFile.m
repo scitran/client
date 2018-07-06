@@ -78,7 +78,6 @@ p.addRequired('file',vFunc);
 % Param/value pairs
 p.addParameter('containertype','',@ischar); % If file is string, required
 p.addParameter('containerid','',@ischar);   % If file is string, required
-% p.addParameter('sessionid','',@ischar);     % If file is string, required
 p.addParameter('destination','',@ischar);
 p.addParameter('size',[],@isnumeric);
 

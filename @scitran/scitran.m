@@ -12,7 +12,7 @@ classdef scitran < handle
     % Parameter/Value
     %  'action'  - {'create', 'refresh', 'remove'}
     %
-    % See https://github.com/scitran/client/wiki
+    % See https://github.com/vistasoft/scitran/wiki
     %
     % Examples:
     %
