@@ -77,7 +77,7 @@ returnType = stParamFormat(returnType);
 p.addRequired('returnType',@ischar);
 
 p.addRequired('parentID',@ischar);
-p.addParameter('summary',true,@islogical);
+p.addParameter('summary',false,@islogical);
 
 p.parse(returnType,parentID,varargin{:});
 
@@ -85,6 +85,8 @@ summary = p.Results.summary;
 
 % Get the Flywheel commands
 fw = obj.fw;
+
+returnType = formatSearchType(returnType);
 
 %%  Call the relevant SDK rouinte
 switch returnType
