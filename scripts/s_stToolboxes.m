@@ -31,10 +31,10 @@ st.toolboxValidate(tbx);
 
 %% Alternatively, install
 
-%
 tbx = toolboxes('WLVernierAcuity.json');
 st.toolboxInstall(tbx,'destination',pwd);
 
+%% Clone test
 st.toolboxClone(tbx,'destination',pwd);
 
 %% This is for a different project
@@ -44,8 +44,9 @@ tbxFile = st.search('file', ...
     'filename','fw_Apricot6.json',...
     'project label contains','EJ Apricot');
 
-% Checks for the toolboxes and installs if necessary.
-st.toolbox(tbxFile{1},'install',false);
+% Checks for the toolbox requirements and validates whether or not they are
+% on the path
+[tbx, valid] = st.toolboxGet(tbxFile,'validate',true);
 
 %%
 

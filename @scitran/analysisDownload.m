@@ -2,20 +2,20 @@ function destination = analysisDownload(obj,id,fname,varargin)
 % Return an output file from a Flywheel analysis
 %
 % Syntax
-%   destination = scitran.analysisDownload(id, ...)
+%   destination = scitran.analysisDownload(id, fname, ...)
 %
 % Description
 %  Words about analyses
 %
 % Required Inputs
-%  id  - The Flywheel analysis ID
+%  id    - The Flywheel analysis ID
 %  fname - Name of the analysis output file
 %
 % Optional key/value parameters
-%  destination:  full path to file output location
+%  destination - full path to file output location
 %
 % Return
-%  thisAnalysis:  Full path to the file object on disk
+%  destination:  Full path to the file object on disk
 %
 % LMP/BW Vistasoft Team, 2015-16
 %
@@ -30,28 +30,32 @@ function destination = analysisDownload(obj,id,fname,varargin)
    'session label exact','20180319_1232');
   id = idGet(analysis{1},'analysis');
   d = st.analysisDownload(id,'rh.white.obj');
+  fprintf('Downloaded %s\n',d);
 %}
 
 %%
 %{
-
-% I think there is a bug.
+% This bug worries me.
 
 % This session has an analysis.  But it is not returned in the search info
 session = st.search('session',...
    'project label exact','Brain Beats',...
    'session label exact','20180319_1232');
 
-% Here is the analysis as a search response.
-% Its session matches the id above
+% The analysis slot is empty
+session{1}.analysis
 
+% This is the session id
+idGet(session{1},'session')
 
-analysisID = idGet(analysis{1},'analysis')
+% Yet, this session has an analysis which we find when we do a search.
+analysis = st.search('analysis',...
+   'project label exact','Brain Beats',...
+   'session label exact','20180319_1232');
 
-analysisOutput = st.fw.getAnalysis(analysisID);
-
-% How do w
-fname = analysisOutput.files{1}.name
+% Notice that the analysis is attached to the right session id
+analysis{1}.session.id
+session{1}.session.id
 %}
 %{
 

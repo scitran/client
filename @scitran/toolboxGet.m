@@ -82,11 +82,11 @@ end
 
 %% Read the JSON data and create the toolbox
 
-s   = st.read(fileS);  % Returns the JSON data as a struct
+s   = st.fileRead(fileS);  % Returns the JSON data as a struct
 tbx = stToolbox(s);    % Creates the toolbox
 
 %% May validate that they exist on the path
-
+valid = [];
 if validate, valid = st.toolboxValidate(tbx,'verbose',true); end
 
 end
