@@ -28,7 +28,7 @@ function destination = analysisDownload(obj,id,fname,varargin)
   analysis = st.search('analysis',...
    'project label exact','Brain Beats',...
    'session label exact','20180319_1232');
-  id = idGet(analysis{1},'data type','analysis');
+  id = idGet(analysis{1},'analysis');
   d = st.analysisDownload(id,'rh.white.obj');
 %}
 
@@ -46,7 +46,7 @@ session = st.search('session',...
 % Its session matches the id above
 
 
-analysisID = idGet(analysis{1},'data type','analysis')
+analysisID = idGet(analysis{1},'analysis')
 
 analysisOutput = st.fw.getAnalysis(analysisID);
 

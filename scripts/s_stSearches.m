@@ -79,7 +79,7 @@ projects = st.search('project',...
 stPrint(projects,'project','label')
 assert(length(projects) >= 62);
 
-projectID = idGet(projects{end});
+projectID = idGet(projects{end},'project');
 projectLabel = projects{end}.project.label;
 
 %% Exact and contains matches
@@ -100,7 +100,7 @@ projects{1}.project.label
     'project label contains','vwfa');
 
 % Save this project information
-projectID    = idGet(projects{end});
+projectID    = idGet(projects{end},'project');
 projectLabel = projects{end}.project.label;
 
 %% Get a sessions within a specific collection with a subject code
@@ -123,7 +123,7 @@ sessions = st.search('session',...
     'summary',true);
 
 % Save this session information
-sessionID = idGet(sessions{1},'data type','session');
+sessionID = idGet(sessions{1},'session');
 sessionLabel = sessions{1}.session.label;
 
 %% Get the session with this particular sessionID
@@ -176,7 +176,7 @@ thisProject = 'ALDIT';
 %% Finding files in various ways
 
 [files,srchCmd] = st.search('file',...
-    'acquisition id',idGet(acquisitions{1}),...
+    'acquisition id',idGet(acquisitions{1},'acquisition'),...
     'summary',true);
 
 %%
@@ -218,7 +218,7 @@ stPrint(sessions,'session','label');
 
 %% Analyses that are part of this session
 analyses = st.search('analysis',...
-    'session id',idGet(sessions{3}),...
+    'session id',idGet(sessions{3},'session'),...
     'summary',true);
 
 %% The analysis is part of the session, not the  collection.
@@ -229,7 +229,7 @@ analyses = st.search('analysis',...
 analyses = cell(length(sessions),1);
 for ii=1:length(sessions)
     analyses{ii} = st.search('analysis',...
-        'session id',idGet(sessions{ii}),...
+        'session id',idGet(sessions{ii},'session'),...
         'summary',true);
 end
 

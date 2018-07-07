@@ -52,13 +52,13 @@ function status = fileUpload(obj,filename,containerType,containerId,varargin)
  % If the project already exists, search and do the upload
  project = st.search('project','project label exact','DEMO');
  fullFilename = fullfile(stRootPath,'data','dtiError.json');
- st.upload(fullFilename,'project',idGet(project));
+ st.upload(fullFilename,'project',idGet(project,'project'));
 %}
 % Example 3
 %{
  project = st.search('project','project label exact','DEMO');
  fullFilename = fullfile(stRootPath,'data','dtiError.json');
- st.upload(fullFilename,'project',idGet(project),'remote name','namechange.json');
+ st.upload(fullFilename,'project',idGet(project,'project'),'remote name','namechange.json');
 %}
 
 %% Parse input parameters

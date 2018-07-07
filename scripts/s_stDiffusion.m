@@ -21,7 +21,7 @@ fprintf('Found %d acquisitions\n',length(acq));
 %%  Run the dwiLoad on one of the acquistions
 
 % dwi is a structure with the data and the filenames
-dwi = st.dwiLoad(idGet(acq{1}));
+dwi = st.dwiDownload(idGet(acq{1},'acquisition'));
 
 %% Show the user the story
 disp(dwi)

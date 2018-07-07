@@ -30,7 +30,7 @@ chdir(fullfile(stRootPath,'local'));
  project = st.search('project',...
     'project label exact', 'Brain Beats',...
     'summary',true);
- st.containerDownload('project',idGet(project{1}))
+ st.containerDownload('project',idGet(project{1},'project'))
 %}
 
 %% Download a session
@@ -43,7 +43,7 @@ session = st.search('session',...
 stPrint(session,'session','label');
 
 % Readable way to get the analysis is
-id = idGet(session{1},'data type','session');
+id = idGet(session{1},'session');
 
 tarFileName1 = st.containerDownload('session',id);
 untar(tarFileName1);
@@ -53,7 +53,7 @@ untar(tarFileName1);
 acquisition = st.search('acquisition',...
     'project label contains','SOC',...
     'session label exact','stimuli');
-id = idGet(acquisition{1});
+id = idGet(acquisition{1},'acquisition');
 tarFileName2 = st.containerDownload('acquisition',id);
 untar(tarFileName2);
 

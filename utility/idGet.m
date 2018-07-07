@@ -1,4 +1,4 @@
-function [id, dataType] = idGet(data,varargin)
+function [id, dataType] = idGet(data,datatype,varargin)
 % Return the id of a Flywheel data object
 %
 % Syntax
@@ -62,7 +62,8 @@ id = idGet(sessions)
 acquisitions = st.list('acquisition',id{1});
 id = idGet(acquisitions)
 id = idGet(acquisitions{1})
-
+%}
+%{
 % We need to add the collection tests when that is fixed in Flywheel
 %}
 %%
@@ -71,23 +72,16 @@ varargin = stParamFormat(varargin);
 
 p.addRequired('data',@(x)(isa(x,'flywheel.model.SearchResponse')));
 validTypes = {'project','session','acquisition','file','collection','analysis'};
-p.addParameter('datatype','none',@(x)(ismember(x,validTypes)));
+p.addRequired('datatype',@(x)(ismember(x,validTypes)));
 
-p.parse(data,varargin{:});
+p.parse(data,datatype,varargin{:});
 dataType = p.Results.datatype;
 
 %% Determine if is struct or cell array of structs
 
-% if iscell(data), objType = 'cell'; 
-% else,            objType = 'struct';
-% end
-
 nData = numel(data);
 if nData > 1, id = cell(nData,1); end
 
-% This does not work.  We need Justin to change the swagger code.
-% Or we need to get him to put a slot that always identifies the type
-% of object that is returned by the search (i.e., return type).
 if strcmp(dataType,'none')
     % We find the finest resolution in the list and return the id for
     % that dataType
@@ -107,7 +101,7 @@ end
 %% Read the id values
 
 if isequal(dataType,'file')
-    error('Files do not have an id.  Think about what you are doing');
+    error('Files do not have an id. They have a parentID and a name.');
 else   
     if nData == 1
         id = data.(dataType).id;

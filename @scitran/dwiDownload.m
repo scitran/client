@@ -34,7 +34,7 @@ function [dwi,destination] = dwiDownload(st,acquisitionID,varargin)
             'project label exact',project,...
             'session label exact',session,...
             'acquisition label contains','1000');
- dwi = st.dwiLoad(idGet(acquisitions{1}),'verbose',true);
+ dwi = st.dwiDownload(idGet(acquisitions{1}),'verbose',true);
 %}
 
 
@@ -46,7 +46,7 @@ p.addParameter('verbose',false,@islogical);
 
 p.parse(acquisitionID,varargin{:});
 
-verbose = p.Results.verbose;
+verbose     = p.Results.verbose;
 destination = p.Results.destination;
 if ~exist(destination,'dir'), mkdir(destination); end
 
@@ -62,7 +62,7 @@ if length(bvecFile) ~= 1
 end
 bvecName = fullfile(destination,bvecFile{1}.file.name);
 if verbose, disp('bvec download'); end
-st.downloadFile(bvecFile{1},'destination',bvecName);
+st.fileDownload(bvecFile{1},'destination',bvecName);
 
 bvalFile = st.search('files',...
     'acquisition id',acquisitionID,...
@@ -72,7 +72,7 @@ if length(bvecFile) ~= 1
 end
 if verbose, disp('bval download'); end
 bvalName = fullfile(destination,bvalFile{1}.file.name);
-st.downloadFile(bvalFile{1},'destination',bvalName);
+st.fileDownload(bvalFile{1},'destination',bvalName);
 
 niiFile = st.search('files',...
     'acquisition id',acquisitionID,...
@@ -81,7 +81,7 @@ if length(niiFile) > 1, warning('Multiple nii files.  Returning 1st'); end
 niiName = fullfile(destination,niiFile{1}.file.name);
 
 if verbose, disp('nifti download'); end
-st.downloadFile(niiFile{1},'destination',niiName);
+st.fileDownload(niiFile{1},'destination',niiName);
 
 %% Read and return
 

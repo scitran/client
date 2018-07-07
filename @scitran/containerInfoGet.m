@@ -29,12 +29,12 @@ function info = containerInfoGet(st,containerType, containerID)
   st = scitran('stanfordlabs');
 
   project = st.search('project','project label exact','VWFA');
-  id = idGet(project{1});
+  id = idGet(project{1},'project');
   info = st.getContainerInfo('project',id);
 
   sessions = st.list('session',id);   % Parent id
   stPrint(sessions,'subject','code')
-  info = st.getContainerInfo('session',idGet(sessions{1}));
+  info = st.getContainerInfo('session',idGet(sessions{1},'session'));
 %}
 
 %% Parse

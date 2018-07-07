@@ -23,8 +23,9 @@ function result = list(obj, returnType, parentID, varargin)
 % Inputs (required)
 %  returnType - project, session, acquisition, file,
 %               collectionsession, collectionacquisition
-%  parentID   - A Flywheel ID of the parent (group, usually obtained
-%               from a search 
+%  parentID   - A Flywheel ID of the parent container.
+%               If the search is for a project, then parentID is the group
+%               label, or the string 'all' or '' to indicate all groups.
 %
 % Inputs (optional)
 %  summary:  - Print a brief summary of the returned objects
@@ -34,8 +35,8 @@ function result = list(obj, returnType, parentID, varargin)
 %
 % Example
 %  project      = st.search('project','project label exact','VWFA');
-%  sessions     = st.list('session',idGet(project));
-%  acquisitions = st.list('acquisition',idGet(sessions{1}));
+%  sessions     = st.list('session',idGet(project,'project'));
+%  acquisitions = st.list('acquisition',idGet(sessions{1},'session'));
 %
 % LMP/BW Vistasoft Team, 2015-16
 %
@@ -49,7 +50,7 @@ function result = list(obj, returnType, parentID, varargin)
   % The struct returned from an elastic search and from an SDK get differ
   % substantially
   project      = st.search('project','project label exact','VWFA');
-  sessions     = st.list('session',idGet(project{1}));
+  sessions     = st.list('session',idGet(project{1},'project'));
 
   % The group name (not label) is sent for the project
   projects     = st.list('project','wandell');
@@ -89,17 +90,19 @@ fw = obj.fw;
 switch returnType
     case 'project'
         % ParentID is a group label
-        % projects     = st.list('project','wandell');
-        % stPrint(projects,'label','');
+        %  projects     = st.list('project','wandell');
+        %  stPrint(projects,'label','');
         %
-        data = {};
-        tmp = fw.getAllProjects;
-        cnt = 1;
-        for ii=1:numel(tmp)
-            if strcmp(tmp{ii}.group,parentID)
-                data{cnt} = tmp{ii}; %#ok<AGROW>
-                cnt = cnt + 1;
-            end
+        % If ParentID is empty or the string 'all' then all projects, not
+        % just for one group, are returned.
+        
+        allProjects = fw.getAllProjects;
+        if isempty(parentID) || strcmp(parentID,'all')
+            data = allProjects;
+        else
+            allGroups = cellfun(@(x)(x.group),allProjects,'UniformOutput',false);
+            lst = strcmp(allGroups,parentID);
+            data = allProjects(lst);
         end
         
     case 'session'

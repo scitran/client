@@ -27,7 +27,7 @@ function [status, result, cmd] = fileDelete(obj, file, varargin )
   project = st.search('projects',...
     'project label exact','DEMO');
 
-  st.upload(localFilename,'project',idGet(project));
+  st.upload(localFilename,'project',idGet(project,'project'));
 
   % This is the delete operation based on search
   file = st.search('file',...

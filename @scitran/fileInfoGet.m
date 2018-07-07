@@ -38,27 +38,9 @@ function info = fileInfoGet(st,file,varargin)
 %}
 
 %%  How do we handle different types of containers?
-return;
-%{
-p = inputParser;
-p.addRequired('file',@(x)(isstruct(x) || ischar(x)));
+disp('Not yet implemented')
 
-varargin = stParamFormat(varargin);
-p.addParameter('parentid','',@ischar);
-
-p.parse(file,varargin{:});
-
-parentid = p.Results.parentid;
-info = [];
-if isstruct(file)
-    parentid = idGet(file);
-elseif ischar(file) && isempty(parentid)
-    error('When file is a string, you must include parent id');
 end
 
-thisAcq = st.search('acquisition',parentid);
-
-thisFile = st.search('file','acquisition id',parentid)
-%}
 
 %%
