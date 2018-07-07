@@ -90,6 +90,13 @@ returnType = formatSearchType(returnType);
 
 %%  Call the relevant SDK rouinte
 switch returnType
+    case 'group'
+        % Not sure which subset of gruops is returned by this call.
+        % It does not seem to be all of the groups in the instance, just
+        % the groups that the user is part of.  Could that be?
+        allGroups = fw.getAllGroups;
+        data = cellfun(@(x)(x.label),allGroups,'UniformOutput',false);
+
     case 'project'
         % ParentID is a group label
         %  projects     = st.list('project','wandell');
