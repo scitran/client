@@ -1,18 +1,21 @@
-function id = idGet(data,varargin)
+function [id, dataType] = idGet(data,varargin)
 % Return the id of a Flywheel data object
 %
 % Syntax
-%   idGet(data, ...)
+%   [id, dataType] = idGet(data, ...)
 %
 % Brief desription
-%   Different Flywheel objects 
+%   Return the id from different Flywheel container and object types.
+%   This routine needs to be handle non-search cell arrays, say the
+%   stuff we get back from a scitran.list.
 %
 % Input
 %   data: A struct with Flywheel information either in search or SDK
-%         format; possibly a cell array of such structs
+%         format
 %
 % Optional key/value inputs
-%   
+%   "data type" - One of the possible data types
+%s
 % Return:
 %   id:   If data is a single struct, the return is a string.  
 %         If data is a cell array of data, id is a cell array of strings.
@@ -95,8 +98,9 @@ if strcmp(dataType,'none')
     elseif ~isempty(data.collection), dataType  = 'collection';
     elseif ~isempty(data.analysis), dataType    = 'analysis';
     else
-        error('Cannot identify dataType');
+        error('Cannot identify dataType.  Use "data type" key/value parameter.');
     end
+    fprintf('Inferring data type "%s"\n',dataType);
 end
 
 

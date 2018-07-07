@@ -1,14 +1,13 @@
-function destination = downloadAnalysis(obj,id,varargin)
+function destination = analysisDownload(obj,id,varargin)
 % Download a Flywheel object
 %
-%   tarFile = scitran.downloadAnalysis(id, ...)
+%   tarFile = scitran.analysisDownload(id, ...)
 %
 %
 % Required Inputs
-%  containertype  - The Flywheel container type (project,session,acquisition ...)
-%  containerid    - The Flywheel container ID, usually obtained from a search
+%  id  - The Flywheel analysis ID
 %
-% Optional Inputs
+% Optional key/value parameters
 %  destination:  full path to file output location (default is a tempdir)
 %
 % Return
@@ -22,11 +21,11 @@ function destination = downloadAnalysis(obj,id,varargin)
 % Examples
 %{
   st = scitran('stanfordlabs');
-  acq = st.search('analysis',...
+  analysis = st.search('analysis',...
     'project label contains','SOC',...
     'session label exact','stimuli');
-  id = idGet(acq{1});
-  fName = st.downloadAnalysis('acquisition',id);  
+  id = idGet(analysis{1},'data type','analysis');
+  fName = st.analysisDownload(id);  
 %}
 
 
@@ -50,12 +49,12 @@ if isempty(destination)
     destination = fullfile(pwd,sprintf('Flywheel-analysis-%s.tar',id));
 end
 
+%% Make the flywheel sdk call
 % Guessing about the parameters
 params = struct('optional', false, ...
     'nodes', ...
     { struct('level', 'analysis', 'id', id) });
         
-%% Make the flywheel sdk call
 summary = obj.fw.getAnalysisOutputDownloadTicket(id);
 
 end

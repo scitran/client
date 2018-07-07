@@ -27,7 +27,7 @@ function [status, userInfo] = verify(obj,varargin)
 %%
 p = inputParser;
 p.addRequired('obj',@(x)(isa(x,'scitran')));
-p.addParameter('verbose',false,@islogical);
+p.addParameter('verbose',true,@islogical);
 p.parse(obj,varargin{:});
 verbose = p.Results.verbose;
 
@@ -38,8 +38,8 @@ try
     else,                 status = 1;
     end
     
-    if verbose && status == 1, fprintf('Verified\n');
-    elseif verbose,            fprintf('Not verified\n');
+    if verbose && status == 1, fprintf('Connection verified\n');
+    elseif verbose,            fprintf('Connection NOT verified\n');
     end
 
 catch ME

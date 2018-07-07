@@ -12,14 +12,14 @@
 %% Open up the scitran object
 
 st = scitran('stanfordlabs');
-% st.verify
+st.verify;
 
 %% Download and read a small JSON file
 
 file  = st.search('file',...
     'project label exact','DEMO',...
     'filename','dtiError.json');
-fName = st.downloadFile(file{1});
+fName = st.fileDownload(file{1});
 s = jsonread(fName);
 disp(s)
 
@@ -44,11 +44,14 @@ analysisFiles = st.list('analysis file',id);
 stPrint(analysisFiles,'name','');
 
 % Apparently, we need to have a destination for the file.
-fName = fullfile(pwd,'lh.pial.obj');
-st.downloadFile('lh.pial.obj',...
+fName = fullfile(stRootPath,'local','lh.pial.obj');
+st.fileDownload('lh.pial.obj',...
     'container id',id,...
     'container type','analysis', ...
     'destination',fName);
-% exist(fName,'file')
+
+if exist(fName,'file'), fprintf('File downloaded to %s\n',fName); end
+
+pause(1); fprintf('Deleting\n'), delete(fName);
 
 %%

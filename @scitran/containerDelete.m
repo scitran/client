@@ -82,7 +82,7 @@ switch containerType
         % ask the user.
         sessions = obj.fw.getProjectSessions(containerID);
         if ~isempty(sessions) ||  query
-            project = obj.getContainerInfo('project',containerID);
+            project = obj.containerInfoGet('project',containerID);
             prompt = sprintf('Delete project named "%s": (y/n) ',project.label);
             str = input(prompt,'s');
             if ~isequal(lower(str(1)),'y')

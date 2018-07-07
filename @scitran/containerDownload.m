@@ -1,11 +1,11 @@
-function destination = containerDownload(obj,containertype, containerid,varargin)
-% Download a Flywheel object
+function destination = containerDownload(obj,containertype,containerid,varargin)
+% Download a Flywheel container to a local tar-file
 %
-%   tarFile = scitran.containerDownload(objectID, ...)
+%  tarFile = scitran.containerDownload(containerType, containerID, varargin)
 %
-% The Flywheel container will be downloaded as a tar file.  When it is
-% unpacked, the directory structure reflects the Flywheel
-% organization.  Attachments at different levels show up as files.  
+% When the tar-file is unpacked, the directory structure reflects the
+% Flywheel organization.  The top directory is the group name, then
+% container directories.  Files are within the appropriate container.
 %
 %    Group Name
 %     Project Name
@@ -14,32 +14,32 @@ function destination = containerDownload(obj,containertype, containerid,varargin
 %        file list
 %        ...
 %
-% Required Inputs
+% Inputs
 %  containertype  - The Flywheel container type (project,session,acquisition ...)
 %  containerid    - The Flywheel container ID, usually obtained from a search
 %
-% Optional Inputs
-%  destination:  full path to file output location (default is a tempdir)
+% Optional Key/Val parameters
+%  destination:  full path to tarfile location. THe default is
+%      fullfile(pwd,sprintf('Flywheel-%s-%s.tar',containerType,id));
 %
 % Return
-%  destination:  Full path to the file object on disk
+%  tarFile:  Full path to the file object on disk
 %
 % LMP/BW Vistasoft Team, 2015-16
 %
 % See also: 
-%   s_stDownloadContainer, scitran.search, scitran.deleteFile, scitran.sdownloadFile
+%   s_stFileDownload, scitran.fileDelete, scitran.fileDownload
 
-% Examples
+% Examples:
 %{
   st = scitran('stanfordlabs');
   acq = st.search('acquisition',...
     'project label contains','SOC',...
     'session label exact','stimuli');
   id = idGet(acq{1});
-  fName = st.downloadContainer('acquisition',id);  
+  fName = st.containerDownload('acquisition',id);  
   delete(fName);
 %}
-
 
 %% Parse inputs
 varargin = stParamFormat(varargin);
@@ -67,7 +67,9 @@ end
 % as a tar file.
 switch(containerType)
     case 'project'
-        disp('NYI.  Should ask carefully before bringing one of these down');s
+        params = struct('optional', false, ...
+            'nodes', ...
+            { struct('level', 'project', 'id', id) });
     case 'session'
         % Download a session as a tar file
         params = struct('optional', false, ...
@@ -82,12 +84,11 @@ switch(containerType)
                 
     % Some of these might be implemented.  But ...
     case 'collection'
-        disp('NYI')
+        disp('collection NYI')
     case 'analysisacquisition'
-        disp('NYI')
+        disp('analysisacquisition NYI')
     case 'analysiscollection'
-        disp('NYI')
-
+        disp('analysiscollection NYI')
     otherwise
         error('Unknown container download type %s \n',containerType);
 end
@@ -95,15 +96,6 @@ end
 % Get the ticket and then do the download
 summary = obj.fw.createDownloadTicket(params);
 obj.fw.downloadTicket(summary.ticket, destination);
-
-%% Verify file size
-% We used to allow this.  But I don't really know the size.
-% if ~isempty(sz)
-%     dlf = dir(destination);
-%     if ~isequal(dlf.bytes, sz)
-%         error('File size mismatch: %d (file) %d (expected).\n',dlf.bytes,sz);
-%     end
-% end
 
 end
 
