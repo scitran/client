@@ -4,7 +4,7 @@ function [data, dname] = fileRead(st,fileInfo,varargin)
 %   [data, destinationFile] = st.fileRead(file, ...);
 %
 % Inputs:
-%    file - a file struct returned by a search
+%    fileInfo - An object returned by a search
 %
 % Parameter
 %    'destination'  - Full path to file destination
@@ -24,10 +24,12 @@ function [data, dname] = fileRead(st,fileInfo,varargin)
 %{
   % Read a JSON file
   st = scitran('stanfordlabs');
-  file = st.search('file','project label contains','SOC','filename','toolboxes.json');
-  data = st.read(file{1});  
-  edit(fName)
-  delete(fName);
+  file = st.search('file',...
+      'project label contains','SOC', ...
+      'filename','SOC-ECoG-toolboxes.json',...
+      'summary',true);
+  data = st.fileRead(file{1});
+  disp(data)
 %}
 %{
   % Read a nifti file.
@@ -35,8 +37,9 @@ function [data, dname] = fileRead(st,fileInfo,varargin)
   file = st.search('file',...
                    'project label exact','ADNI: T1',...
                    'subject code',4256,...
-                   'filetype','nifti');
-  data = st.read(file{1});
+                   'filetype','nifti',...
+                   'summary',true);
+  data = st.fileRead(file{1});
 %}
 
 %% Parse input parameters
@@ -44,7 +47,7 @@ function [data, dname] = fileRead(st,fileInfo,varargin)
 p = inputParser;
 
 p.addRequired('st',@(x)(isa(x,'scitran')));
-p.addRequired('fileInfo',@isstruct);
+p.addRequired('fileInfo',@(x)(isa(x,'flywheel.model.SearchResponse')));
 
 p.addParameter('destination',[],@ischar);
 p.addParameter('save',false,@islogical);
@@ -64,37 +67,32 @@ else,                               dname = destination;
 end
 
 % When we read the file, it should be one of these file types
-if isfield(fileInfo.file,'type')
-    fileType = stParamFormat(fileInfo.file.type);
-else
-    fileType = '';
-end
 
 % Not all file types are coordinated with Flywheel.  They label json as
 % sourcecode and they ignore obj.
-fileTypes = {'matlabdata','nifti','json','csv'};
-if ~contains(fileType,fileTypes)
-    [~,~,ext] = fileparts(fname);
+fileTypes = {'matlabdata','nifti','json','source code','obj'};
+fileType = fileInfo.file.type;
+try
+    validatestring(fileType,fileTypes)
+catch
+    [~,~,ext] = fileparts(fileInfo.file.name);
     switch ext
-        case '.json'
-            fileType = 'json';
         case '.obj'
             fileType = 'obj';
         otherwise
-            warning('unrecognized file type %s\n',fileType);
+            error('Unknown file type %s\n',fileInfo.file.type);
     end
 end
 
 %% Download the file
 
-st.downloadFile(fileInfo,'destination',dname);
+st.fileDownload(fileInfo,'destination',dname);
 
 %% Load the file data
 
 % This code depends on having certain
 switch fileType
-    case {'matlabdata'}
-        
+    case {'matlabdata'}        
         data   = load(dname);
         
         % If there is only a single variable loaded, we set data to that
@@ -105,23 +103,22 @@ switch fileType
     case 'nifti'
         data = niftiRead(dname);
         
-    case 'mniobj'
-        %
-        disp('mniobj NYI');
-        
     case 'obj'
         % Not sure what to do.  This is a text file, I think.
         data = objRead(dname);
         
-    case 'csv'
+        % case 'csv'
         % Read as text
-        
-    case 'json'
+        % Could be a csv file.
+        % fprintf('CSV read Not yet implemented %s\n',fileType);
+        % fprintf('Download name %s\n',dname);
+        % data = textscan(dname);
+    case {'json','source code'}
         % Use JSONio stuff
         data = jsonread(dname);
         
     otherwise
-        error('Unknown file type %s\n',fileType);
+        error('Unknown file type %s\n,  Download name %s\n',fileType,dname);
 end
 
 %% File management
