@@ -114,8 +114,7 @@ switch returnType
         if isempty(parentID) || strcmp(parentID,'all')
             data = fw.getAllProjects;
         else
-            % parentID = 'wandell';
-            data = st.fw.getGroupProjects(parentID);
+            data = fw.getGroupProjects(parentID);
             
             % Another much longer way to do it.
             %{

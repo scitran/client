@@ -1,13 +1,11 @@
-function [id, dataType] = idGet(data,datatype,varargin)
+function [id, dataType] = idGet(data,varargin)
 % Return the id of a Flywheel data object
 %
 % Syntax
 %   [id, dataType] = idGet(data, ...)
 %
-% Brief desription
+% Desription
 %   Return the id from different Flywheel container and object types.
-%   This routine needs to be handle non-search cell arrays, say the
-%   stuff we get back from a scitran.list.
 %
 % Input
 %   data: A struct with Flywheel information either in search or SDK
@@ -70,49 +68,75 @@ id = idGet(acquisitions{1})
 p = inputParser;
 varargin = stParamFormat(varargin);
 
-p.addRequired('data',@(x)(isa(x,'flywheel.model.SearchResponse')));
-validTypes = {'project','session','acquisition','file','collection','analysis'};
-p.addRequired('datatype',@(x)(ismember(x,validTypes)));
+vFunc = @(x)(strncmp(class(x),'flywheel.model',14) || ...
+            (iscell(x) && strncmp(class(x{1}),'flywheel.model',14)));
+p.addRequired('data',vFunc);
+p.addParameter('datatype','',@ischar);
 
-p.parse(data,datatype,varargin{:});
-dataType = p.Results.datatype;
+p.parse(data,varargin{:});
+
+% dataType = p.Results.datatype;
 
 %% Determine if is struct or cell array of structs
 
-nData = numel(data);
-if nData > 1, id = cell(nData,1); end
-
-if strcmp(dataType,'none')
-    % We find the finest resolution in the list and return the id for
-    % that dataType
-    if     ~isempty(data.file), dataType        = 'file';
-    elseif ~isempty(data.acquisition), dataType = 'acquisition';
-    elseif ~isempty(data.session), dataType     = 'session';
-    elseif ~isempty(data.project), dataType     = 'project';
-    elseif ~isempty(data.collection), dataType  = 'collection';
-    elseif ~isempty(data.analysis), dataType    = 'analysis';
-    else
-        error('Cannot identify dataType.  Use "data type" key/value parameter.');
-    end
-    fprintf('Inferring data type "%s"\n',dataType);
+nData = numel(data);  
+if nData > 1
+    % Cell array of inputs, so cell array of outputs
+    % But every cell should be the same type!
+    dataType = stModel(data{1});
+else
+    dataType = stModel(data);
 end
-
-
-%% Read the id values
 
 if isequal(dataType,'file')
     error('Files do not have an id. They have a parentID and a name.');
-else   
-    if nData == 1
-        id = data.(dataType).id;
-    else
-        for ii=1:nData
-            id{ii} = data(ii).(dataType).id;
-        end
+end
+
+%% See if we are dealing with a search response
+
+% In this case, we need to have the user tell us what type of model we
+% are dealing with.
+
+srch = false;
+if isequal(dataType,'searchresponse')
+    srch = true;
+    dataType = p.Results.datatype;
+    if isempty(dataType)
+        error('You must specify the data type for a search response');
     end
 end
 
+%% Read the id values according to the type of data
+
+if srch
+    if nData == 1, id = data.(dataType).id;
+    else,          id = cellfun(@(x)(x.(dataType).id),data);
+    end
+else
+    if nData == 1, id = data.id;
+    else,          id = cellfun(@(x)(x.id),data,'UniformOutput',false);
+    end
+end
 
 end
 
+%         for ii=1:nData
+%             id{ii} = data(ii).(dataType).id;
+%         end
 
+
+
+% if strcmp(dataType,'none')
+%     % We find the finest resolution in the list and return the id for
+%     % that dataType
+%     if     ~isempty(data.file), dataType        = 'file';
+%     elseif ~isempty(data.acquisition), dataType = 'acquisition';
+%     elseif ~isempty(data.session), dataType     = 'session';
+%     elseif ~isempty(data.project), dataType     = 'project';
+%     elseif ~isempty(data.collection), dataType  = 'collection';
+%     elseif ~isempty(data.analysis), dataType    = 'analysis';
+%     else
+%         error('Cannot identify dataType.  Use "data type" key/value parameter.');
+%     end
+%     fprintf('Inferring data type "%s"\n',dataType);
+% end

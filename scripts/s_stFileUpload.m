@@ -23,8 +23,6 @@ stPrint(files,'name','');
 
 %% Delete the file from the project
 
-pause(1);  % Needed to allow elastic search to index the new file
-
 file = fw.search('files',...
     'project label contains','SOC',...
     'file name','WLVernierAcuity.json');

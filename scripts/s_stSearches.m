@@ -68,6 +68,9 @@ st.verify
 
 % All the projects you are part of
 projects = st.search('project','summary',true);
+% id = idGet(projects,'data type','project');
+% id = idGet(projects{1});
+
 stPrint(projects,'project','label')
 assert(length(projects) >= 35);
 
