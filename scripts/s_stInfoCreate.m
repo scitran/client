@@ -13,15 +13,8 @@
 
 %% Authorization
 
-% You may need to create a local token for your site.  You can do this
-% using
-%    scitran('cni','action','create');
-%
-% You will be queried for the apiKey on the Flywheel User Profile page.
-%
-
-%%
-st = scitran('cni');
+st = scitran('stanfordlabs');
+st.verify;
 
 %% The qa project has many acquisitions with a type files in them
 

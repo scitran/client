@@ -105,13 +105,19 @@ switch returnType
         % If ParentID is empty or the string 'all' then all projects, not
         % just for one group, are returned.
         
-        allProjects = fw.getAllProjects;
         if isempty(parentID) || strcmp(parentID,'all')
-            data = allProjects;
+            data = fw.getAllProjects;
         else
-            allGroups = cellfun(@(x)(x.group),allProjects,'UniformOutput',false);
-            lst = strcmp(allGroups,parentID);
-            data = allProjects(lst);
+            % parentID = 'wandell';
+            data = st.fw.getGroupProjects(parentID);
+            
+            % Another much longer way to do it.
+            %{
+             allProjects = fw.getAllProjects;
+             allGroups = cellfun(@(x)(x.group),allProjects,'UniformOutput',false);
+             lst = strcmp(allGroups,parentID);
+             data = allProjects(lst);
+            %}
         end
         
     case 'session'
