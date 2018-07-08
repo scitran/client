@@ -22,21 +22,21 @@ function info = containerInfoSet(st,containerType,containerID,data)
   %   st.fw.modifyProject(projectId, struct('label','testdrive'));
 
   project = st.search('project','project label exact','VWFA');
-  info = st.getContainerInfo('project',idGet(project,'project'));
+  info = st.getContainerInfo('project',idGet(project,'data type','project'));
 
   % Set up and modify the field
   data = struct('description','Visual word form area in adult.');
-  modInfo = st.setContainerInfo('project',idGet(project,'project'),data);
+  modInfo = st.setContainerInfo('project',idGet(project,'data type','project'),data);
 
-  sessions = st.list('session',idGet(project,'project'));
-  info = st.getContainerInfo('session',idGet(sessions{1},'session'));
+  sessions = st.list('session',idGet(project,'data type','project'));
+  info = st.getContainerInfo('session',idGet(sessions{1},'data type','session'));
   data.subject.firstname = 'Annette2';
-  modInfo = st.setContainerInfo('session',idGet(sessions{1},'session'),data);
+  modInfo = st.setContainerInfo('session',idGet(sessions{1},'data type','session'),data);
   modInfo.subject.firstname
 
   % Put it back
   data.subject.firstname = 'Annette';
-  modInfo = st.setContainerInfo('session',idGet(sessions{1},'session'),data);
+  modInfo = st.setContainerInfo('session',idGet(sessions{1},'data type','session'),data);
   modInfo.subject.firstname
 
 %}

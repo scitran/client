@@ -22,7 +22,7 @@ function id = collectionCreate(obj, label, varargin)
 %{
  collection = st.search('collection',...
                         'collection label exact','deleteCollection');
- id = idGet(collection{1},'collection');
+ id = idGet(collection{1},'data type','collection');
  st.fw.deleteCollection(id);
 %}
 

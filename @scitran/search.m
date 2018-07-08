@@ -122,6 +122,12 @@ p.addParameter('sortlabel',[],@ischar);
 % -1 is unlimited.  But it turns out Flywheel has a limit
 p.addParameter('limit',10000,@isscalar);   % Max allowed by flywheel
 
+% This enables doing a search for a group for 
+%  st.search('group','all'); or st.search('group','all labels');
+% without adding the additional logical - st.search('group','all',true);
+%
+if (strcmp(srch,'group') && length(varargin) == 1), varargin{2} = true; end
+
 % Configure the varargin for different search cases, starting either with a
 % struct or the parameter/value cases
 if ~isempty(varargin) && isstruct(varargin{1})
@@ -135,12 +141,6 @@ if ~isempty(varargin) && isstruct(varargin{1})
 else
     varargin = stParamFormat(varargin);    
 end
-
-% This enables doing a search for a group for 
-%  st.search('group','all'); or st.search('group','all labels');
-% without adding the additional logical - st.search('group','all',true);
-%
-if (strcmp(srch,'group') && length(varargin) == 1), varargin{2} = true; end
 
 p.parse(srch,varargin{:});
 

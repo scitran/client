@@ -60,7 +60,7 @@ val          = [];   % Returns from the mFile will be here
 if isstruct(mFile)
     % Set up the download variables
     containerType = file.parent.type;
-    containerID   = idGet(mFile,containerType); % Not tested.
+    containerID   = idGet(mFile,'data type',containerType); % Not tested.
     filename      = mFile.file.name;
 else
     filename = mFile;

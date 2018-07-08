@@ -34,7 +34,7 @@ function [dwi,destination] = dwiDownload(st,acquisitionID,varargin)
             'project label exact',project,...
             'session label exact',session,...
             'acquisition label contains','1000');
- dwi = st.dwiDownload(idGet(acquisitions{1}),'verbose',true);
+ dwi = st.dwiDownload(idGet(acquisitions{1},'data type','acquisition'),'verbose',true);
 %}
 
 

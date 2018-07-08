@@ -35,8 +35,8 @@ function result = list(obj, returnType, parentID, varargin)
 %
 % Example
 %  project      = st.search('project','project label exact','VWFA');
-%  sessions     = st.list('session',idGet(project,'project'));
-%  acquisitions = st.list('acquisition',idGet(sessions{1},'session'));
+%  sessions     = st.list('session',idGet(project,'data type','project'));
+%  acquisitions = st.list('acquisition',idGet(sessions{1},'data type','session'));
 %
 % LMP/BW Vistasoft Team, 2015-16
 %
@@ -50,7 +50,7 @@ function result = list(obj, returnType, parentID, varargin)
   % The struct returned from an elastic search and from an SDK get differ
   % substantially
   project      = st.search('project','project label exact','VWFA');
-  sessions     = st.list('session',idGet(project{1},'project'));
+  sessions     = st.list('session',idGet(project{1},'data type','project'));
 
   % The group name (not label) is sent for the project
   projects     = st.list('project','wandell');

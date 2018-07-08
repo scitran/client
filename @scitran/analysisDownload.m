@@ -28,7 +28,7 @@ function destination = analysisDownload(obj,id,fname,varargin)
   analysis = st.search('analysis',...
    'project label exact','Brain Beats',...
    'session label exact','20180319_1232');
-  id = idGet(analysis{1},'analysis');
+  id = idGet(analysis{1},'data type','analysis');
   d = st.analysisDownload(id,'rh.white.obj');
   fprintf('Downloaded %s\n',d);
 %}
@@ -46,7 +46,7 @@ session = st.search('session',...
 session{1}.analysis
 
 % This is the session id
-idGet(session{1},'session')
+idGet(session{1},'data type','session')
 
 % Yet, this session has an analysis which we find when we do a search.
 analysis = st.search('analysis',...

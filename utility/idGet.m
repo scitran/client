@@ -5,17 +5,21 @@ function [id, dataType] = idGet(data,varargin)
 %   [id, dataType] = idGet(data, ...)
 %
 % Desription
-%   Return the id from different Flywheel container and object types.
+%   Return the id from different Flywheel container and object types. When
+%   the input is from a search response, we need to ahve the data type
+%   returned.  BW asked JE if he could add that slot to the search
+%   response, so then we wouldn't need the 'data type' parameter.
 %
 % Input
 %   data: A struct with Flywheel information either in search or SDK
 %         format
 %
 % Optional key/value inputs
-%   "data type" - One of the possible data types
+%   "data type" - One of the possible data types.  Needed for search, but
+%   not when the data are returned by scitran.list.s
 %s
 % Return:
-%   id:   If data is a single struct, the return is a string.  
+%   id:   If data is a single object, the return is a string.  
 %         If data is a cell array of data, id is a cell array of strings.
 %
 % BW, Vistalab 2017
@@ -27,20 +31,20 @@ group = 'wandell';
 projects = st.search('project',...
     'group name',group,...
     'summary',true);
-idGet(projects{1})
-idGet(projects)
+idGet(projects{1},'data type','project')
+idGet(projects,'data type','project')
 %}
 %{
 sessions = st.search('session','project label exact','VWFA');
-idGet(sessions{1})
-idGet(sessions)
+idGet(sessions{1},'data type','session')
+idGet(sessions,'data type','session')
 %}
 %{
 acquisitions = st.search('acquisition',...
    'project label exact','VWFA',...
    'session label exact',sessions{1}.session.label);
 idGet(acquisitions{1})
-idGet(acquisitions)
+idGet(acquisitions,'data type','acquisition')
 %}
 %{
 files = st.search('file',...
@@ -52,6 +56,7 @@ idGet(files)
 %}
 %{
 % Checking for the SDK type containers
+% Notice that no data type is required for the idGet in this case.
 projects = st.list('project','wandell');
 projID = idGet(projects{1});
 idGet(projects)
@@ -119,24 +124,3 @@ else
 end
 
 end
-
-%         for ii=1:nData
-%             id{ii} = data(ii).(dataType).id;
-%         end
-
-
-
-% if strcmp(dataType,'none')
-%     % We find the finest resolution in the list and return the id for
-%     % that dataType
-%     if     ~isempty(data.file), dataType        = 'file';
-%     elseif ~isempty(data.acquisition), dataType = 'acquisition';
-%     elseif ~isempty(data.session), dataType     = 'session';
-%     elseif ~isempty(data.project), dataType     = 'project';
-%     elseif ~isempty(data.collection), dataType  = 'collection';
-%     elseif ~isempty(data.analysis), dataType    = 'analysis';
-%     else
-%         error('Cannot identify dataType.  Use "data type" key/value parameter.');
-%     end
-%     fprintf('Inferring data type "%s"\n',dataType);
-% end

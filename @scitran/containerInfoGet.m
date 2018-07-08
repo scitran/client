@@ -18,7 +18,7 @@ function info = containerInfoGet(st,containerType, containerID)
 %
 % Example
 %  p = st.search('project','project label exact','VWFA')
-%  info = st.getContainerInfo('project',idGet(p{1}));
+%  info = st.getContainerInfo('project',idGet(p{1},'data type','project'));
 %
 % BW, Vistasoft, 2017
 %
@@ -29,12 +29,12 @@ function info = containerInfoGet(st,containerType, containerID)
   st = scitran('stanfordlabs');
 
   project = st.search('project','project label exact','VWFA');
-  id = idGet(project{1},'project');
+  id = idGet(project{1},'data type','project');
   info = st.getContainerInfo('project',id);
 
   sessions = st.list('session',id);   % Parent id
   stPrint(sessions,'subject','code')
-  info = st.getContainerInfo('session',idGet(sessions{1},'session'));
+  info = st.getContainerInfo('session',idGet(sessions{1},'data type','session'));
 %}
 
 %% Parse

@@ -36,7 +36,7 @@ function destination = containerDownload(obj,containertype,containerid,varargin)
   acq = st.search('acquisition',...
     'project label contains','SOC',...
     'session label exact','stimuli');
-  id = idGet(acq{1});
+  id = idGet(acq{1}'data type','acquisition');
   fName = st.containerDownload('acquisition',id);  
   delete(fName);
 %}
