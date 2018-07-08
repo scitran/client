@@ -68,9 +68,6 @@ st.verify
 
 % All the projects you are part of
 projects = st.search('project','summary',true);
-% id = idGet(projects,'data type','project');
-% id = idGet(projects{1});
-
 stPrint(projects,'project','label')
 assert(length(projects) >= 35);
 
@@ -82,7 +79,7 @@ projects = st.search('project',...
 stPrint(projects,'project','label')
 assert(length(projects) >= 62);
 
-projectID = idGet(projects{end},'project');
+projectID = idGet(projects{end},'data type','project');
 projectLabel = projects{end}.project.label;
 
 %% Exact and contains matches
@@ -103,7 +100,7 @@ projects{1}.project.label
     'project label contains','vwfa');
 
 % Save this project information
-projectID    = idGet(projects{end},'project');
+projectID    = idGet(projects{end},'data type','project');
 projectLabel = projects{end}.project.label;
 
 %% Get a sessions within a specific collection with a subject code
@@ -126,7 +123,7 @@ sessions = st.search('session',...
     'summary',true);
 
 % Save this session information
-sessionID = idGet(sessions{1},'session');
+sessionID = idGet(sessions{1},'data type','session');
 sessionLabel = sessions{1}.session.label;
 
 %% Get the session with this particular sessionID
