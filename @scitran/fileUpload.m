@@ -30,10 +30,11 @@ function status = fileUpload(obj,filename,containerType,containerId,varargin)
 % See also:  
 %  downloadFile, create
 
-% st = scitran('stanfordlabs');
 %
 % Example 1
 %{
+ st = scitran('stanfordlabs');
+
  % Upload a file to a dummy project
  fullFilename = fullfile(stRootPath,'data','test.json');
  gName = 'Wandell Lab';  % Group name (or label?)
@@ -46,7 +47,7 @@ function status = fileUpload(obj,filename,containerType,containerId,varargin)
  % Delete the dummy project
  st.deleteContainer('project',id.project); 
 %}
-
+%
 % Example 2
 %{
  % If the project already exists, search and do the upload
@@ -81,8 +82,7 @@ remoteName    = p.Results.remotename;
 
 %% If we want to change the name as it appears on the Flywheel site.
 
-% Would be nice if this were an option.  Maybe I can use the setInfo
-% methods to change rather than copying?
+% Maybe I can use the setInfo methods to change rather than copying?
 remoteFlag = false;
 if ~isempty(remoteName)
     remoteName = fullfile(tempdir,remoteName);

@@ -74,14 +74,20 @@ p = inputParser;
 
 % Squeeze out spaces and force lower case
 returnType = stParamFormat(returnType);
-p.addRequired('returnType',@ischar);
+varargin   = stParamFormat(varargin);
 
+p.addRequired('returnType',@ischar);
 p.addRequired('parentID',@ischar);
+
+validStrings = {'project','session','acquisition','collection'};
+vFunc = @(x)(contains(x,validStrings));
+p.addParameter('containertype','acquisition',vFunc);
 p.addParameter('summary',false,@islogical);
 
 p.parse(returnType,parentID,varargin{:});
 
 summary = p.Results.summary;
+containerType = p.Results.containertype;
 
 % Get the Flywheel commands
 fw = obj.fw;
@@ -128,10 +134,17 @@ switch returnType
         data = fw.getSessionAcquisitions(parentID);
         
     case 'file'
-        % ParentID is acquisition
-        acq = fw.getAcquisition(parentID);
-        data = acq.files;
-
+        % ParentID could be one of many different types
+        switch containerType
+            case 'acquisiton'
+                info = fw.getAcquisition(parentID);
+            case 'project'
+                info = fw.getProject(parentID);
+            otherwise
+                error('Unknown container type %s\n',containerType);
+        end
+        data = info.files;
+        
     case 'analysisfile'
         % I think these are the output files
         thisAnalysis = fw.getAnalysis(parentID);
@@ -174,7 +187,7 @@ else
     result = data;
 end
 
-%%
+%% If requested, then summarize
 
 if summary
     fprintf('Returned %d objects (%s)\n',numel(result), returnType);
