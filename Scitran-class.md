@@ -20,45 +20,53 @@ The [authentication page](Authorization) describes how to create an instance (in
 ## Methods
 Scitran methods enable you to find database contents, get information about these objects, download and upload files, and modify metadata. See the [Flywheel terms](Flywheel-terms) page to learn about the conceptual organization of Flywheel data.
 
-Usage of these scitran class methods are provided in other wiki pages.  When the architecture of the input parameters stabilizes, we will put more information in the wiki.  Because the code is still under development, for now we encourage you to type
+Usage details of these methods are provided in other wiki pages.   Because the code is still under development, for now we encourage you to type help or doc to bring up the current information in the method, say
 
-    doc scitran.METHODNAME
+    doc scitran.MethodName
 
-This will bring up the current information in the method.
+As the methods input and return parameters stabilize, we will put more information in the wiki.  
 
 ```
 (IN PROGRESS; INCOMPLETE)
 
 %% Search and list
-st.search()  -  Search for objects constrained by many possible limits (file type, label, date...).
-st.list()    - List objects within a parent; might change to getObjects
-st.projectHierarchy() - Create a struct summarizing the project, sessions and acquisitions
+st.search  -  Search for objects constrained by many possible limits (file type, label, date...).
+st.list    - List objects within a parent; might change to getObjects
+st.projectHierarchy - Create a struct summarizing the project, sessions and acquisitions
+st.projectID - Return the id of the project
 
-% Download and Read
-st.fileDelete()   - Delete remote file
-st.fileDownload() - Write file to disk
-st.fileRead()     - Certain file types can be downloaded and read into a Matlab variable  
-st.fileInfoGet()
-st.fileInfoSet()
-st.fileUpload()
-
+% File
+st.fileDelete   - Delete remote file
+st.fileDownload - Write file to disk
+st.fileRead     - Certain file types can be downloaded and read into a Matlab variable  
+st.fileInfoGet
+st.fileInfoSet
+st.fileUpload
 
 % Container methods (project, session, acquisition)
-st.containerUpload()   - Not sure this is real
-st.containerDownload() - Download a directory tree containing a database object as a tar file
-st.containerCreate()   - Create a project or a session or an acquisition
-st.containerDelete() - Delete container objects
-st.containerInfoSet()  - Set database values (e.g., subject code, sex ...)
-st.containerInfoGet()  - Get database values (e.g., subject code, sex ...)
+st.containerUpload   - Not sure this is real
+st.containerDownload - Download a directory tree containing a database object as a tar file
+st.containerCreate   - Create a project or a session or an acquisition
+st.containerDelete - Delete container objects
+st.containerInfoSet  - Set database values (e.g., subject code, sex ...)
+st.containerInfoGet  - Get database values (e.g., subject code, sex ...)
+
+% Analysis
+st. analysisAddNote
+st.analysisCreate
+st.analysisDownload
+st.analysisInfoGet
+st.analysisInfoSet
+st.analysisUpload
+
+% Not sure why this isn't grouped with container, but probably a good reason
+st.collectionCreate
+st.collectionDelete
 
 % MRI utilities
 st.dwiDownload - Read a nifti file and its associated bvec/bval data
 st.dicomInfoGet   - Information about files or database objects
 st.vistaDownload* - Create a local vistasoft data structure
-
-% Not sure why this isn't grouped with container, but probably a good reason
-st.collectionCreate()
-st.collectionDelete()
 
 % Computational
 st.docker*
