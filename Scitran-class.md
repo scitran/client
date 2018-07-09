@@ -27,8 +27,6 @@ Usage details of these methods are provided in other wiki pages.   Because the c
 As the methods input and return parameters stabilize, we will put more information in the wiki.  
 
 ```
-(IN PROGRESS; INCOMPLETE)
-
 %% Search and list
 st.search  -  Search for objects constrained by many possible limits (file type, label, date...).
 st.list    - List objects within a parent; might change to getObjects
