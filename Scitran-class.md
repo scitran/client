@@ -18,61 +18,75 @@ st =
 The [authentication page](Authorization) describes how to create an instance (in this example 'vistalab') and save your Flywheel permission information.
 
 ## Methods
+Scitran methods enable you to find database contents, get information about these objects, download and upload files, and modify metadata. See the [Flywheel terms](Flywheel-terms) page to learn about the conceptual organization of Flywheel data.
 
-The scitran methods enable you to find database contents, get information about these objects, download and upload files, and modify metadata. See the [Flywheel terms](Flywheel-terms) page to learn about the conceptual organization of Flywheel data.
+Usage of these scitran class methods are provided in other wiki pages.  When the architecture of the input parameters stabilizes, we will put more information in the wiki.  Because the code is still under development, for now we encourage you to type
 
-Usage of these scitran class methods are provided in other wiki pages.
+    doc scitran.METHODNAME
+
+This will bring up the current information in the method.
 
 ```
 (IN PROGRESS; INCOMPLETE)
 
 %% Search and list
-st.search(objType,...)  -  Search for objects constrained by many possible limits (file type, label, date...).
-st.list(objType, parentID, ...) - List objects within a parent; might change to getObjects
-[p,s,a] = st.projectHierarchy - List the sessions and acquisitions in a project hierarchy
-
-% Metadata
-st.setFileInfo  - Set metadata for a file
-st.getdicominfo - Information about files or database objects
+st.search()  -  Search for objects constrained by many possible limits (file type, label, date...).
+st.list()    - List objects within a parent; might change to getObjects
+st.projectHierarchy() - Create a struct summarizing the project, sessions and acquisitions
 
 % Download and Read
-st.downloadFile(file,...) -
-st.downloadContainer(file,...)  - Download a directory tree containing a database object as a tar file
-st.dwiLoad - Read a nifti file and its associated bvec/bval data
-data = st.read(file,...)  - Certain file types can be downloaded and read into a Matlab variable  
+st.fileDelete()   - Delete remote file
+st.fileDownload() - Write file to disk
+st.fileRead()     - Certain file types can be downloaded and read into a Matlab variable  
+st.fileInfoGet()
+st.fileInfoSet()
+st.fileUpload()
 
-% Create, modify, upload
-st.upload - File upload
-st.create - Create a project or a session or an acquisition
-st.createCollection
-st.setContainerInfo - Modify database values (e.g., subject code, sex ...)
-st.getContainerInfo - Modify database values (e.g., subject code, sex ...)
-st.getdicominfo   - Return dicom header information 
 
-% Delete
-st.deleteFile   - Delete a file
-st.deleteContainer - Delete container objects
+% Container methods (project, session, acquisition)
+st.containerUpload()   - Not sure this is real
+st.containerDownload() - Download a directory tree containing a database object as a tar file
+st.containerCreate()   - Create a project or a session or an acquisition
+st.containerDelete() - Delete container objects
+st.containerInfoSet()  - Set database values (e.g., subject code, sex ...)
+st.containerInfoGet()  - Get database values (e.g., subject code, sex ...)
+
+% MRI utilities
+st.dwiDownload - Read a nifti file and its associated bvec/bval data
+st.dicomInfoGet   - Information about files or database objects
+st.vistaDownload* - Create a local vistasoft data structure
+
+% Not sure why this isn't grouped with container, but probably a good reason
+st.collectionCreate()
+st.collectionDelete()
 
 % Computational
-st.docker
-st.runFunction - Download toolboxes and run a function from a remote site
-st.runScript
-st.toolbox
+st.docker*
+st.runFunction* - Download toolboxes and run a function from a remote site
+st.toolboxClone()
+st.toolboxGet()
+st.toolboxInstall()
+st.toolboxValidate()
 
 % Miscellaneous
-st.exist - See if a particular object exists
-st.verify
+st.exist   - See if a container with a particular label exists
+st.verify  - Test that the connection was made
 st.browser - Bring a browser to a location
+st.listInstances
+st.showToken
+
+% Also miscellaneous 
+st.authAPIKey
+st.print*
+st.help*
+st.API;
+st.siteConfig()
 
 % BIDS related
-st.bidsUpload
-st.bidsDownload
+st.bidsUpload*
+st.bidsDownload*
 
-% In development
-st.putAnalysis
-st.print
-st.help
-
+*Early in development
 ```
 
 
