@@ -1,15 +1,11 @@
-function [status, result, cmd] = fileDelete(obj, file, varargin )
+function status = fileDelete(st, file, containerid, varargin )
 % Deletes a file from a container on a Flywheel site.  
 % 
-%      NOT YET IMPLEMENTED
-%
-%  [status, result, cmd] = scitran.fileDelete(obj, file, varargin)
+%  status = scitran.fileDelete(obj, file, containerid, varargin)
 %
 % Required parameter
-%  file - can be either
-%         1 element cell
-%         struct
-%         string, which case we need the containerID (needs optional parameters)
+%  file - string or flywheel.model.FileEntry
+%    if a string, we need the containerID and type, see below.
 %
 % Optional parameters for string
 %  containerType - {'projects','sessions','acquisitions','collections'}
@@ -52,49 +48,46 @@ function [status, result, cmd] = fileDelete(obj, file, varargin )
 
 %%
 p = inputParser;
-p.addRequired('file',@(x)(iscell(x) || isstruct(x) || ischar(x)));
 
-% Set up default container values based on the struct
-if iscell(file)
-    fileStruct = file{1};
-    if length(file) > 1
-        warning('Multiple cells sent in.  Using 1st only');
-    end
-elseif isstruct(file),  fileStruct = file;
-elseif ischar(file),    fileStruct = [];
-end
+varargin = stParamFormat(varargin);
 
-if ~isempty(fileStruct)
-    containerType = fileStruct.source.container_name;
-    % Annoying that this is project, not projects
-    containerID   = fileStruct.source.(containerType(1:end-1)).x_id;
-    filename      = fileStruct.source.name;
-else
-    containerID   = '';
-    containerType = '';
-    filename      = file;
-end
+% We should be able to deal with a cell array of FileEntry types.
+% And maybe a cell array of filenames.
+p.addRequired('st',@(x)(isa(x,'scitran')));
 
-p.addParameter('containerType',containerType,@ischar);
-p.addParameter('containerID',containerID,@ischar);
+% Either a flywheel model file or just the file id
+p.addRequired('file',@(x)( isa(x,'flywheel.model.FileEntry') || ischar(x)));
+p.addRequired('containertype',@ischar);
 
 % Parse and sort
-p.parse(file,varargin{:});
+p.parse(st,file,containertype,varargin{:});
 
-containerType  = p.Results.containerType;
-containerID    = p.Results.containerID;
-
-% Final check
-if isempty(containerType) || isempty(containerID)
-    error('When file is a string, you must specify the container type and id');
+if isa(file,'flywheel.model.FileEntry')
+    containerType = p.Results.containertype;
+    id            = p.Results.file.id;
+else
+    % User sent in the id, not the file
+    containerType  = p.Results.containertype;
+    id             = p.Results.file;
 end
 
-%% Delete - Egads!
+%% Delete
 
-% We have to
+% Delete a file from one of these types of containers
+switch containerType
+    case 'project'
+        status = st.fw.deleteProjectFile(id);
+    case 'acquisition'
+        status = st.fw.deleteAcquisitionFile(id);
+    case 'session'
+        status = st.fw.deleteSessionFile(id);
+    case 'collection'
+        status = st.fw.deleteCollectionFile(id);
+    otherwise  
+      error('deleteFile is not implemented for container type %s\n',containerType)
+end
 
-error('deleteFile is not implemented!')
-
+end
 %{
 
 % If we need it sooner, then we need to resurrect these commands, 
@@ -108,5 +101,3 @@ cmd = obj.deleteFileCmd(containerType,containerID,filename);
 if ~status, fprintf('%s sucessfully deleted.\n',filename); end
 }
 %}
-
-end

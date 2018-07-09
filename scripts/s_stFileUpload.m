@@ -21,26 +21,9 @@ st.fileUpload('test.json',containerType,containerID);
 files = st.list('file',containerID, 'container type','project');
 stPrint(files,'name','');
 
-%% Delete the file from the project
+%% Delete the file
 
-file = fw.search('files',...
-    'project label contains','SOC',...
-    'file name','WLVernierAcuity.json');
-% This should run
-fw.deleteFile(file{1});
-
-%% This should work when there is only one cell
-fw.put(fullFilename,project);
-pause(1);  % Needed to allow elastic search to index the new file
-
-fw.deleteFile(file);
-
-%% This alternative delete method should run, too.
-
-fw.put(fullFilename,project);
-pause(1);  % Needed to allow elastic search to index the new file
-
-fw.deleteFile('WLVernierAcuity.json','containerType','projects','containerID',project{1}.id);
+s = st.fileDelete(files{1},'project');
 
 %% Now, try this with sessions and acquisitions
 
