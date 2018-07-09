@@ -1,8 +1,8 @@
-function [status, url, toolboxTable] = stFlywheelConfig(varargin)
+function [status, url, toolboxTable] = stFlywheelConfig(action,varargin)
 % Check the status, install, or uninstall the Flywheel Add-On toolbox
 %
 % Syntax
-%   [status, url, toolboxTable] = stFlywheelConfig( ...)
+%   [status, url, toolboxTable] = stFlywheelConfig(action, ...)
 %
 % Description
 %   The Flywheel Add-Ons toolbox is necessary for scitran to run.  %
@@ -18,12 +18,9 @@ function [status, url, toolboxTable] = stFlywheelConfig(varargin)
 %   
 %
 % Input
-%   None required.  Defaults to 'exist'
+%   'action'  - install, uninstall or exist. Defaults to 'exist'
 %
 % Optional Key/values
-%   'exist':     Checks if the Add-On is there.  (Default)
-%   'install'    Install a new Add-On toolbox
-%   'uninstall'  Unstall an existing Add-On toolbox
 %   'sdkVersion' Current is 2.4.3
 %   'summary'    Print out a summary of the installed toolboxes
 %
@@ -62,29 +59,15 @@ function [status, url, toolboxTable] = stFlywheelConfig(varargin)
 %%
 p = inputParser;
 varargin = stParamFormat(varargin);
-p.addParameter('install',false,@islogical);
-p.addParameter('uninstall',false,@islogical);
-p.addParameter('exist',false,@islogical);
+p.addRequired('action',@ischar);
 p.addParameter('sdkversion','2.4.3',@ischar);
 p.addParameter('summary',true,@islogical);
 
-p.parse(varargin{:});
+p.parse(action,varargin{:});
 
-% Check for logical constancy.
-install    = p.Results.install;
-uninstall  = p.Results.uninstall;
-exist      = p.Results.exist;
+action     = p.Results.action;
 sdkVersion = p.Results.sdkversion;
 summary    = p.Results.summary;
-
-% Only one of these can be set.  If none is set, we check for the existence
-% on the path.
-if (install + uninstall + exist) == 0
-    exist = true;
-elseif (install + uninstall + exist ) ~= 1
-    error('Choose only one of the options.  exist (%d), uninstall (%d) install (%d)',...
-        exist,uninstall,install);
-end
 
 %% Do the selected task
 
@@ -92,57 +75,58 @@ end
 tbxFile = sprintf('flywheel-sdk-%s.mltbx',sdkVersion);
 url = sprintf('https://github.com/flywheel-io/core/releases/download/%s/flywheel-sdk-%s.mltbx',sdkVersion,sdkVersion);
 
-if exist
-    % Checks that the flywheel-sdk is installed in the Add-Ons    
-    tbx = matlab.addons.toolbox.installedToolboxes;
-    if numel(tbx) >= 1
-        for ii=1:numel(tbx)
-            if isequal(tbx(ii).Name,'flywheel-sdk')
-                % flywheelTbx = tbx(ii);
-                try
-                    % This would be preferred, but doesn't run on
-                    % 2017a.  It does on 2017b.
-                    status = matlab.addons.isAddonEnabled(flywheelTbx.Guid);
-                catch
-                    % Just set it true because it exists
-                    status = true;
+switch action
+    case {'verify','exist'}
+        % Checks that the flywheel-sdk is installed in the Add-Ons
+        tbx = matlab.addons.toolbox.installedToolboxes;
+        if numel(tbx) >= 1
+            for ii=1:numel(tbx)
+                if isequal(tbx(ii).Name,'flywheel-sdk')
+                    % flywheelTbx = tbx(ii);
+                    try
+                        % This would be preferred, but doesn't run on
+                        % 2017a.  It does on 2017b.
+                        status = matlab.addons.isAddonEnabled(flywheelTbx.Guid);
+                    catch
+                        % Just set it true because it exists
+                        status = true;
+                    end
+                end
+            end
+        else, status = false;
+        end
+        
+    case 'install'
+        % Download from Flywheel and install
+        fprintf('Installing the Flywheel Add-Ons toolbox: %s\n',tbxFile);
+        cd(fullfile(stRootPath,'local'));
+        % websave(tbxFile,'https://github.com/flywheel-io/core/releases/download/2.1.4/flywheel-sdk-2.1.4.mltbx');
+        websave(tbxFile,'https://github.com/flywheel-io/core/releases/download/2.4.3/flywheel-sdk-2.4.3.mltbx');
+        
+        matlab.addons.toolbox.installToolbox(tbxFile);
+        
+        % We might decide to verify here
+        status = stFlywheelConfig('exist',true);
+        if ~status
+            warning('Installation problem');
+            return;
+        end
+        
+        % Then delete the downloaded file
+        delete(tbxFile);
+        
+    case 'uninstall'
+        try
+            matlab.addons.toolbox.uninstallToolbox('flywheel-sdk');
+        catch
+            toolboxes = matlab.addons.toolbox.installedToolboxes;
+            for ii=1:length(toolboxes)
+                if toolboxes(ii).Name == 'flywheel-sdk'
+                    matlab.addons.toolbox.uninstallToolbox(toolboxes(ii));
+                    break;
                 end
             end
         end
-    else, status = false;
-    end
-
-elseif install
-    % Download from Flywheel and install
-    fprintf('Installing the Flywheel Add-Ons toolbox: %s\n',tbxFile);
-    cd(fullfile(stRootPath,'local'));
-    % websave(tbxFile,'https://github.com/flywheel-io/core/releases/download/2.1.4/flywheel-sdk-2.1.4.mltbx');
-    websave(tbxFile,'https://github.com/flywheel-io/core/releases/download/2.4.3/flywheel-sdk-2.4.3.mltbx');
-
-    matlab.addons.toolbox.installToolbox(tbxFile);
-    
-    % We might decide to verify here
-    status = stFlywheelConfig('exist',true);
-    if ~status
-        warning('Installation problem');
-        return;
-    end
-    
-    % Then delete the downloaded file
-    delete(tbxFile);
-
-elseif uninstall
-    try
-        matlab.addons.toolbox.uninstallToolbox('flywheel-sdk');
-    catch
-        toolboxes = matlab.addons.toolbox.installedToolboxes;
-        for ii=1:length(toolboxes)
-            if toolboxes(ii).Name == 'flywheel-sdk'
-                matlab.addons.toolbox.uninstallToolbox(toolboxes(ii));
-                break;
-            end
-        end
-    end
 end
 
 if summary
@@ -151,7 +135,6 @@ if summary
         fprintf('No Add-On toolboxes\n');
     elseif isfield(toolboxes(1),'Name')
         toolboxTable = struct2table(toolboxes);
-    else
         disp(toolboxes(1));
     end
 end
