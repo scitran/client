@@ -40,8 +40,8 @@ fprintf('** Analysis:\nlabel: %s\nid: %s\n', ...
 id = idGet(analysis{1},'data type','analysis');
 
 % This gets the information container of the analysis
-analysisFiles = st.list('analysis file',id);
-stPrint(analysisFiles,'name','');
+analysis = st.list('analysis',id);
+stPrint(analysis,'label','');
 
 % Apparently, we need to have a destination for the file.
 fName = fullfile(stRootPath,'local','lh.pial.obj');

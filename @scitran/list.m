@@ -144,6 +144,9 @@ switch returnType
         end
         data = info.files;
         
+    case 'analysis'
+        data = fw.getAnalysis(parentID);
+
     case 'analysisfile'
         % I think these are the output files
         thisAnalysis = fw.getAnalysis(parentID);
@@ -178,9 +181,13 @@ end
 % We discovered that sometimes srchResult is already a cell array, so in
 % that case we don't do the conversion.  We should ask Jen R about this.
 if ~iscell(data)
-    result = cell(numel(data),1);
-    for ii=1:numel(data)
-        result{ii} = data(ii);
+    if numel(data) == 1
+        result{1} = data;
+    else
+        result = cell(numel(data),1);
+        for ii=1:numel(data)
+            result{ii} = data(ii);
+        end
     end
 else
     result = data;

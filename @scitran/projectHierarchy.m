@@ -1,28 +1,52 @@
-function [project, sessions, acquisitions] = projectHierarchy(obj, projectLabel, varargin)
-% PROJECTHIERARCHY -  Returns the project hierarchy (sessions and
-% acquisitions) 
+function hierarchy = projectHierarchy(obj, projectLabel, varargin)
+% Returns the hierarchy (project, sessions and acquisitions) in a struct
 %
+% Syntax
 %   scitran.projectHierarchy(projectLabel)
+%
+% Description
+%   A project includes sessions and and session includes acquisitions.
+%   The information about the project hierarchy is returned to be stored in
+%   a convenient place.  You can address the sessions or acquisitions from
+%   this structure without multiple calls to search or list.
 %
 % Input:
 %   projectLabel: value of the project label used in the search.  The
 %                 search is for 'project label exact'
 %
+% Optional key/value
+%   print - Print a list of the session and acquisition labels
+%
 % Output:
-%   project:      the project retrieved by the search
-%   sessions:     all the sessions contained in the project
-%   acquisitions: all the acquisitions contained in the project
+%   A struct is returned with these slots
+%    h.project:      the project 
+%    h.sessions:     the sessions contained in the project
+%    h.acquisitions: the acquisitions contained in each session
+%  h.project   -   a flywheel.model.project (not a cell array)
+%  h.sessions  -   a N x 1 cell array of flywheel.model.Session
+%  h.acquisition - N cell arrays, one for each session.
+%                  Each cell array is length M for the number of
+%                  acquisitions. 
 %
 % Example:
-%   [project, sessions, acquisitions] = st.projectHierarchy('VWFA');
-%   [project, sessions, acquisitions] = st.projectHierarchy('VWFA FOV');
+%   h = st.projectHierarchy('VWFA','print',true);
+%   h = st.projectHierarchy('VWFA FOV');
 %
 % BW 2016, Scitran Team
 
 % Example
 %{
+ % A listing for a pretty small project
  st = scitran('stanfordlabs');
- [p,s,a]= st.projectHierarchy('VWFA','print',true);
+ hierarchy = st.projectHierarchy('VWFA','print',true);
+%}
+%{
+ % A bigger project
+ hierarchy = st.projectHierarchy('VWFA FOV');
+ nAcquisitions = 0;
+ for ii=1:length(hierarchy.sessions)
+    nAcquisitions = nAcquisitions + length(hierarchy.acquisitions{ii});
+ end
 %}
 
 %% Read parameters
@@ -44,27 +68,32 @@ elseif isempty(project)
 end
 
 % Good to go
-projectID = project{1}.project.x_id;
-projectLabel = project{1}.project.label;
+projectID = idGet(project{1},'data type','project'); 
 
+% Get the project object.
+project   = obj.fw.getProject(projectID);
 %% Get the project sessions
 
 sessions = obj.fw.getProjectSessions(projectID);
-% sessions = obj.search('sessions','project id',projectID);
-if length(sessions) < 1
+nSessions = numel(sessions);
+if nSessions < 1
     error('No sessions for project %s found',projectLabel);
 end
 
 %% for each session search its acquisitions
 acquisitions = cell(1,length(sessions));
+nAcquisitions = 0;
 for ii = 1:length(sessions)
-    acquisitions{ii} = obj.fw.getSessionAcquisitions(sessions{ii}.id); 
+    acquisitions{ii} = obj.fw.getSessionAcquisitions(sessions{ii}.id);
+    nAcquisitions = nAcquisitions + length(acquisitions{ii});
 end
+
+hierarchy.project = project;
+hierarchy.sessions = sessions;
+hierarchy.acquisitions = acquisitions;
 
 %% Print flag
 if p.Results.print
-    nSessions = numel(sessions);
-    nAcquisitions = numel(acquisitions);
     fprintf('\n--------\n');
     fprintf('Project: %s (%d sessions and %d acquisitions)', ...
         projectLabel,nSessions,nAcquisitions);
@@ -75,4 +104,6 @@ if p.Results.print
             fprintf('\t\t%s\n',acquisitions{ss}{aa}.label);
         end
     end
+end
+
 end

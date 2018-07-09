@@ -23,13 +23,11 @@ st.verify;
 
 chdir(fullfile(stRootPath,'local'));
 
-%% Projects can be annoyingly big.  Be careful if youi want to test that
+%% Projects can be annoyingly big.  Be careful if you want to test that
 
 %{
  % This runs, but it is big.  So I commented it out.
- project = st.search('project',...
-    'project label exact', 'Brain Beats',...
-    'summary',true);
+ id = st.projectID('VWFA');
  st.containerDownload('project',idGet(project{1},'data type','project'))
 %}
 

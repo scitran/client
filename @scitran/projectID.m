@@ -22,6 +22,16 @@ p.addRequired('st',@(x)(isa(x,'scitran')));
 p.addRequired('label',@ischar);
 p.parse(st,label)
 
+%% Alternative code.
+%{
+% This is faster, but we would need to get the group (wandell) and the
+% label (VWFA) sent in.  One thought is that the scitran class should always
+% have the user's group attached to it (st.group).  At create time.
+  tic
+  tmp = st.fw.resolve('wandell/VWFA');
+  id = tmp.path{2}.id
+  toc
+%}
 %% Get all the project labels
 
 allProjects = st.fw.getAllProjects;
@@ -41,6 +51,5 @@ elseif nFound == 0
 else
     error('More than one project found.\n');
 end
-
 
 end

@@ -29,7 +29,32 @@ function destination = fileDownload(obj,file,varargin)
 % See also: 
 %  scitran.deleteFile, scitran.search
 
-% Examples
+% BUG:
+%{
+% This bug worries me.
+
+% This session has an analysis.  But it is not returned in the search info
+session = st.search('session',...
+   'project label exact','Brain Beats',...
+   'session label exact','20180319_1232');
+
+% The analysis slot is empty
+session{1}.analysis
+
+% This is the session id
+idGet(session{1},'data type','session')
+
+% Yet, this session has an analysis which we find when we do a search.
+analysis = st.search('analysis',...
+   'project label exact','Brain Beats',...
+   'session label exact','20180319_1232');
+
+% Notice that the analysis is attached to the right session id
+analysis{1}.session.id
+session{1}.session.id
+%}
+
+% Examples:
 %{
   % Search struct form
   st = scitran('stanfordlabs');
@@ -81,10 +106,8 @@ p.addParameter('size',[],@isnumeric);
 p.parse(file,varargin{:});
 containerType = p.Results.containertype;
 containerID   = p.Results.containerid;
-% sessionID     = p.Results.sessionid;   % Needed for analysis case
 file          = p.Results.file;
 destination   = p.Results.destination;
-size          = p.Results.size;
 
 %% Set up the Flywheel SDK call
 
@@ -119,7 +142,9 @@ switch lower(containerType)
         
     case 'collection'
         obj.fw.downloadFileFromCollection(containerID,filename,destination);
-        
+    case 'analysis'
+        obj.fw.downloadOutputFromAnalysis(containerID, filename, destination);
+
     otherwise
         error('No fileDownload for container type %s\n',containerType);
 end

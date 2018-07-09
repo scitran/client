@@ -1,11 +1,12 @@
-function destination = analysisDownload(obj,id,fname,varargin)
-% Return an output file from a Flywheel analysis
+function [destination, thisAnalysis] = analysisDownload(obj,id,varargin)
+% Return the flywheel.model.Analysis container
 %
 % Syntax
-%   destination = scitran.analysisDownload(id, fname, ...)
+%   thisAnalysis = scitran.analysisDownload(id, ...)
 %
 % Description
-%  Words about analyses
+%  Not sure whether there is a way to get the whole analysis down with a
+%  ticket or what.
 %
 % Required Inputs
 %  id    - The Flywheel analysis ID
@@ -34,29 +35,7 @@ function destination = analysisDownload(obj,id,fname,varargin)
 %}
 
 %%
-%{
-% This bug worries me.
 
-% This session has an analysis.  But it is not returned in the search info
-session = st.search('session',...
-   'project label exact','Brain Beats',...
-   'session label exact','20180319_1232');
-
-% The analysis slot is empty
-session{1}.analysis
-
-% This is the session id
-idGet(session{1},'data type','session')
-
-% Yet, this session has an analysis which we find when we do a search.
-analysis = st.search('analysis',...
-   'project label exact','Brain Beats',...
-   'session label exact','20180319_1232');
-
-% Notice that the analysis is attached to the right session id
-analysis{1}.session.id
-session{1}.session.id
-%}
 %{
 
 % From FlywheelExample.m
@@ -74,25 +53,33 @@ session{1}.session.id
 % FlywheelExamples.m
 
 %% Parse inputs
-varargin = stParamFormat(varargin);
-
 p = inputParser;
 p.addRequired('id',@ischar);
+
+% This is what needs to come on down.  Not sure whether there is an API for
+% this or we need to loop.
+thisAnalysis = obj.fw.getAnalysis(id);
+thisAnalysis.inputs
+thisAnalysis.files
+
+% destination = fullfile(stRootPath,'local',fname);
+
+disp('analysis download NYI')
+
+end
+
+
+%{
+varargin = stParamFormat(varargin);
+
+
 p.addRequired('fname',@ischar);
 p.parse(id,fname,varargin{:});
 
 %% Download a file from analysis
 
-destination = fullfile(stRootPath,'local',fname);
 destination = obj.fw.downloadOutputFromAnalysis(id, fname, destination);
 
 end
-
-%{
-
-%% Make the flywheel sdk call
-
-thisAnalysis = obj.fw.getAnalysis(id);
-
-end
 %}
+

@@ -1,11 +1,13 @@
 function destination = containerDownload(obj,containertype,containerid,varargin)
 % Download a Flywheel container to a local tar-file
 %
+% Syntax
 %  tarFile = scitran.containerDownload(containerType, containerID, varargin)
 %
-% When the tar-file is unpacked, the directory structure reflects the
-% Flywheel organization.  The top directory is the group name, then
-% container directories.  Files are within the appropriate container.
+% Description
+%  When the tar-file is unpacked, the directory structure reflects the
+%  Flywheel organization.  The top directory is the group name, then
+%  container directories.  Files are within the appropriate container.
 %
 %    Group Name
 %     Project Name
@@ -25,6 +27,10 @@ function destination = containerDownload(obj,containertype,containerid,varargin)
 % Return
 %  tarFile:  Full path to the file object on disk
 %
+% TODO - Ask JE about the struct for analysis and collection params for
+% download. We need examples for analysis-acquisition, analysis-collection,
+% stuff like that.
+%
 % LMP/BW Vistasoft Team, 2015-16
 %
 % See also: 
@@ -36,7 +42,7 @@ function destination = containerDownload(obj,containertype,containerid,varargin)
   acq = st.search('acquisition',...
     'project label contains','SOC',...
     'session label exact','stimuli');
-  id = idGet(acq{1}'data type','acquisition');
+  id = idGet(acq{1},'data type','acquisition');
   fName = st.containerDownload('acquisition',id);  
   delete(fName);
 %}
@@ -82,7 +88,7 @@ switch(containerType)
             'nodes', ...
             { struct('level', 'acquisition', 'id', id) });
                 
-    % Some of these might be implemented.  But ...
+    % These might be implemented.  But ...
     case 'collection'
         disp('collection NYI')
     case 'analysisacquisition'
@@ -94,8 +100,10 @@ switch(containerType)
 end
 
 % Get the ticket and then do the download
-summary = obj.fw.createDownloadTicket(params);
-obj.fw.downloadTicket(summary.ticket, destination);
+summary     = obj.fw.createDownloadTicket(params);
+destination = obj.fw.downloadTicket(summary.ticket, destination);
+
+if isempty(destination), error('Download error'); end
 
 end
 
