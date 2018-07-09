@@ -1,7 +1,7 @@
-function status = fileDelete(st, file, containerid, varargin )
+function status = fileDelete(st, filename, containertype, containerid )
 % Deletes a file from a container on a Flywheel site.  
 % 
-%  status = scitran.fileDelete(obj, file, containerid, varargin)
+%  status = scitran.fileDelete(obj, file, containerid, containertype)
 %
 % Required parameter
 %  file - string or flywheel.model.FileEntry
@@ -49,40 +49,30 @@ function status = fileDelete(st, file, containerid, varargin )
 %%
 p = inputParser;
 
-varargin = stParamFormat(varargin);
+% varargin = stParamFormat(varargin);
 
 % We should be able to deal with a cell array of FileEntry types.
 % And maybe a cell array of filenames.
 p.addRequired('st',@(x)(isa(x,'scitran')));
-
-% Either a flywheel model file or just the file id
-p.addRequired('file',@(x)( isa(x,'flywheel.model.FileEntry') || ischar(x)));
+p.addRequired('filename',@ischar);
 p.addRequired('containertype',@ischar);
+p.addRequired('containerid',@ischar);
 
 % Parse and sort
-p.parse(st,file,containertype,varargin{:});
-
-if isa(file,'flywheel.model.FileEntry')
-    containerType = p.Results.containertype;
-    id            = p.Results.file.id;
-else
-    % User sent in the id, not the file
-    containerType  = p.Results.containertype;
-    id             = p.Results.file;
-end
+p.parse(st,filename,containertype,containerid);
 
 %% Delete
 
 % Delete a file from one of these types of containers
-switch containerType
+switch containertype
     case 'project'
-        status = st.fw.deleteProjectFile(id);
+        status = st.fw.deleteProjectFile(containerid,filename);
     case 'acquisition'
-        status = st.fw.deleteAcquisitionFile(id);
+        status = st.fw.deleteAcquisitionFile(containerid,filename);
     case 'session'
-        status = st.fw.deleteSessionFile(id);
+        status = st.fw.deleteSessionFile(containerid,filename);
     case 'collection'
-        status = st.fw.deleteCollectionFile(id);
+        status = st.fw.deleteCollectionFile(containerid,filename);
     otherwise  
       error('deleteFile is not implemented for container type %s\n',containerType)
 end

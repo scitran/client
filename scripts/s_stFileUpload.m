@@ -23,7 +23,9 @@ stPrint(files,'name','');
 
 %% Delete the file
 
-s = st.fileDelete(files{1},'project');
+% QUESTION SENT TO JUSTIN.  I want to avoid having to
+% send in the container type along with the container id all the time.
+s = st.fileDelete(files{1}.name,'project',containerID);
 
 %% Now, try this with sessions and acquisitions
 
