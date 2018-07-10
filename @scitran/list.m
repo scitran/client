@@ -10,7 +10,6 @@ function result = list(obj, returnType, parentID, varargin)
 %     Project Name
 %      Session Name
 %       Acquisition Name
-%        file list
 %        ...
 %
 % Or,
@@ -28,7 +27,8 @@ function result = list(obj, returnType, parentID, varargin)
 %               label, or the string 'all' or '' to indicate all groups.
 %
 % Inputs (optional)
-%  summary:  - Print a brief summary of the returned objects
+%  containerType - Used for retrieving files
+%  summary:      - Print a brief summary of the returned objects
 %
 % Return
 %  result:  Cell array of Flywheel objects
@@ -133,25 +133,37 @@ switch returnType
         data = fw.getSessionAcquisitions(parentID);
         
     case 'file'
-        % ParentID could be one of many different types
+        % ParentID for the file container can be one of many different
+        % types. We get the container and pull out the files from the
+        % return.
+        
+        % This isn't working now.  All the
+        thisID = parentID;  % In this case, the id is at the same level
         switch containerType
-            case 'acquisiton'
-                info = fw.getAcquisition(parentID);
             case 'project'
-                info = fw.getProject(parentID);
+                % The parentID is an project ID.
+                % This seems to work
+                this = fw.getProject(thisID);
+            case 'session'
+                % The parentID is an session ID.
+                % This is not working for BW in the VWFA project
+                this = fw.getSession(thisID);
+            case 'acquisition'
+                % The parentID is an acquisition ID.
+                % This is not working for BW in the VWFA project
+                this = fw.getAcquisition(thisID);
+            case 'analysis'
+                % Not tested
+                this = fw.getAnalysis(thisID);
             otherwise
                 error('Unknown container type %s\n',containerType);
         end
-        data = info.files;
-        
+        data = this.files;
+
+    
     case 'analysis'
         data = fw.getAnalysis(parentID);
-
-    case 'analysisfile'
-        % I think these are the output files
-        thisAnalysis = fw.getAnalysis(parentID);
-        data = thisAnalysis.files;
-        
+    
     case 'collection'
         % An email address of the curator replaces the groupID/parentID
         data = {};

@@ -42,4 +42,11 @@ fprintf('There are %d sessions in the project %s\n',length(sessions),projects{1}
 acquisitions = st.list('acquisitions',idGet(sessions{1}));
 fprintf('There are %d acquisitions in the first session.\n',length(acquisitions));
 
+%% From wiki
+
+projects     = st.list('project','wandell');
+sessions     = st.list('session',idGet(projects{1}));
+acquisitions = st.list('acquisition',idGet(sessions{1})); 
+files        = st.list('file',idGet(acquisitions{2})); 
+
 %%
