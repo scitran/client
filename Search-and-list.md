@@ -12,8 +12,9 @@ The list method specifies two arguments.  The first is the type of object you wo
 Continuing down the directory tree from group, project, session, acquisition, files
 
     projects     = st.list('project','wandell');
-    sessions     = st.list('session',idGet(projects{1}));
+    sessions     = st.list('session',idGet(projects{5}));     % Pick one ....
     acquisitions = st.list('acquisition',idGet(sessions{1})); 
+    files        = st.list('file',idGet(acquisitions{1})); 
 
 **N.B.** The format of the structures in the list cell array differ from the structures returned by search.  We are producing helper functions to minimize the burden.  In this example, we use the utility function idGet(...), which returns the container id for either the list or search structs. We are hoping that Flywheel writes a function that will make it unnecessary to use idGet() in the near future.
 
