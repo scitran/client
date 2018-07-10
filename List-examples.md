@@ -11,7 +11,7 @@ The data returned by **list** has a different format from the data returned by *
 Suppose you want a list describing the sessions in a particular project.
 ```
 project      = st.search('project','project label exact','VWFA');
-projectID    = idGet(project{1});
+projectID    = idGet(project{1}, 'data type','project');
 sessions     = st.list('session',projectID);
 ```
 Or suppose you want to find the projects within a particular group
