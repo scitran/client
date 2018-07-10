@@ -15,7 +15,7 @@ Continuing down the directory tree from group, project, session, acquisition, fi
     sessions     = st.list('session',idGet(projects{1}));
     acquisitions = st.list('acquisition',idGet(sessions{1})); 
 
-**N.B.** The format of the structures in the list cell array differ from the structures returned by search.  We are producing helper functions to minimize the burden.  In this example, we use the utility function idGet(...), which returns the container id for either the list or search structs.
+**N.B.** The format of the structures in the list cell array differ from the structures returned by search.  We are producing helper functions to minimize the burden.  In this example, we use the utility function idGet(...), which returns the container id for either the list or search structs. We are hoping that Flywheel writes a function that will make it unnecessary to use idGet() in the near future.
 
 ### About: search
 The arguments to the search method specify (a) the type of object to return and (b) parameters that define the search. For example, to search for all the projects in the database you would use
