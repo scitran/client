@@ -52,23 +52,29 @@ function hierarchy = projectHierarchy(obj, projectLabel, varargin)
 %% Read parameters
 
 p = inputParser;
+varargin = stParamFormat(varargin);
+
 p.addRequired('projectLabel',@ischar);
 p.addParameter('print',false,@islogical);
+p.addParameter('projectid','',@ischar);
 
 p.parse(projectLabel,varargin{:});
 
 %% Find the project 
-project = obj.search('projects','project label exact',projectLabel);
 
-% Check that there is exactly one project returned
-if length(project) > 1
-    error('More than one project with label %s returned',projectLabel)
-elseif isempty(project)
-    error('No project found with label %s\n',projectLabel);
+projectID = p.Results.projectid;
+
+if isempty(projectID)
+    project = obj.search('projects','project label exact',projectLabel);
+    
+    % Check that there is exactly one project returned
+    if length(project) > 1
+        error('More than one project with label %s returned',projectLabel)
+    elseif isempty(project)
+        error('No project found with label %s\n',projectLabel);
+    end
+    projectID = idGet(project{1},'data type','project');
 end
-
-% Good to go
-projectID = idGet(project{1},'data type','project'); 
 
 % Get the project object.
 project   = obj.fw.getProject(projectID);
