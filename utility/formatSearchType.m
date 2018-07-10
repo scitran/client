@@ -10,7 +10,9 @@ function srch = formatSearchType(srch)
 %   scitran.search, scitran.list
 
 srch = lower(srch);
-if ismember(srch,{'file','session','acquisition','project','collection','analysis','group'})    
+valid = {'file','session','acquisition','project','analysis','group', ...
+    'collection','collectionsession','collectionacquisition'};
+if ismember(srch,valid)    
     return;
 end
 
@@ -22,7 +24,10 @@ elseif strcmp(srch,'projects'),      srch = 'project';     return;
 elseif strcmp(srch,'collections'),   srch = 'collection';  return;
 elseif strcmp(srch,'analyses'),      srch = 'analysis';    return;
 elseif strcmp(srch,'groups'),        srch = 'group';       return;
-
+elseif strcmp(srch,'collectionsessions')
+    srch = 'collectionsession';
+elseif strcmp(srch,'collectionacquisitions')
+    srch = 'collectionacquisition';
 else
     % Not fine and not plural.  Complain.
     error('Unknown srch string %s\n',srch);

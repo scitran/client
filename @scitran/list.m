@@ -1,10 +1,11 @@
 function result = list(obj, returnType, parentID, varargin)
-% List Flywheel containers or files inside a parent
+% List Flywheel containers or files
 %
 % Syntax
 %   result = scitran.list(returnType, parentID, ...)
 %
-% The Flywheel objects and files are organized hierarchically
+% Description
+%  The Flywheel objects and files are organized hierarchically
 %
 %    Group Name
 %     Project Name
@@ -14,13 +15,17 @@ function result = list(obj, returnType, parentID, varargin)
 %
 % Or,
 %
-%     Group Name
+%     Curator Name
 %       Collection
 %         Session
 %           Acquisition
 %
+% The list function takes the id of a parent, say a project, and then
+% lists the sessions in that parent.  Or the parent might be a session
+% and the acquisitions are listed.
+%
 % Inputs (required)
-%  returnType - project, session, acquisition, file,
+%  returnType - project, session, acquisition, file, collection,
 %               collectionsession, collectionacquisition
 %  parentID   - A Flywheel ID of the parent container.
 %               If the search is for a project, then parentID is the group
@@ -31,18 +36,20 @@ function result = list(obj, returnType, parentID, varargin)
 %  summary:      - Print a brief summary of the returned objects
 %
 % Return
-%  result:  Cell array of Flywheel objects
+%  result:  Cell array of flywheel.model objects
 %
-% Example
-%  project      = st.search('project','project label exact','VWFA');
-%  sessions     = st.list('session',idGet(project,'data type','project'));
-%  acquisitions = st.list('acquisition',idGet(sessions{1},'data type','session'));
+% Example on Wiki
+%  projects     = st.list('project','wandell');
+%  sessions     = st.list('session',idGet(projects{5}));     % Pick one ....
+%  acquisitions = st.list('acquisition',idGet(sessions{1})); 
+%  files        = st.list('file',idGet(acquisitions{1})); 
 %
 % LMP/BW Vistasoft Team, 2015-16
 %
-%  See also: scitran.search
+% See also: 
+%     scitran.search
 
-% Examples
+% Examples:
 %{
 
   st = scitran('stanfordlabs');
@@ -54,20 +61,25 @@ function result = list(obj, returnType, parentID, varargin)
 
   % The group name (not label) is sent for the project
   projects     = st.list('project','wandell');
-  sessions     = st.list('session',projects{1}.id);
-  acquisitions = st.list('acquisition',sessions{3}.id); 
-  files        = st.list('file',acquisitions{1}.id); 
-
-  % The return from search on collections is incomprehensible to me (BW). I
-  % Mainly, don't see where the collection id is on the search return
-  % collections  = st.search('collection','collection label contains','GearTest');
-
-  % The collection curator is sent, rather than the group name
-  collections  = st.list('collection','wandell@stanford.edu');
-  sessions     = st.list('collectionsession',collections{1}.id); 
-  acquisitions = st.list('collectionacquisition',collections{1}.id); 
-
+  sessions     = st.list('session',projects{5}.id);
+  acquisitions = st.list('acquisition',sessions{1}.id); 
+  files        = st.list('file',acquisitions{1}.id);  
+  stPrint(files,'name','');
 %}
+%{ 
+  % For collection, the curator is sent, rather than the group name
+  collections  = st.list('collection','wandell@stanford.edu');
+  sessions     = st.list('collection session',collections{1}.id); 
+  acquisitions = st.list('collection acquisition',collections{1}.id); 
+%}
+
+%% Programming todo
+%
+% N.B. Acquisition id '56e9d386ddea7f915e81f705' (stanfordlabs ) had a
+% problem because it has a field name with a very long string. Matlab
+% has a longest permission field name (63), set in namelengthmax.  We
+% can't adjust that.  So we need JE to catch this on his end.
+
 
 %% Parse inputs
 p = inputParser;
@@ -137,7 +149,8 @@ switch returnType
         % types. We get the container and pull out the files from the
         % return.
         
-        % This isn't working now.  All the
+        % We had one case where the file info field contained __ and
+        % that broke something.  Maybe jsonread.  
         thisID = parentID;  % In this case, the id is at the same level
         switch containerType
             case 'project'
