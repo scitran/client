@@ -14,12 +14,11 @@ project      = st.search('project','project label exact','VWFA');
 projectID    = idGet(project{1}, 'data type','project');
 sessions     = st.list('session',projectID);
 ```
-Or suppose you want to find the projects within a particular group
+The search method returns a cell array of objects called flywheel.model.SearchResponse. These objects do not indicate whether the search was for a project or session or other container.  So, when we run the idGet() command, we had to tell the function that we are looking for the 'project' id.
+
+This differs from the 'list' method.  In that case, the cell array that is returned has objects called flywheel.model.Project, or flywheel.model.Session.  In that case, you can call the simpler version of idget().
 
     projects     = st.list('project','wandell');
-
-Be aware that the cell array returned by listObjects differs from that returned by search.  In the **listObject** case the projectID is found by projects{1}.id, rather than projects{1}.project.x_id.  You can reduce your programming burden by calling the utility function idGet(...), which returns a container id for either format.
-
     sessions     = st.list('session',idGet(projects{1}));
 
 Continuing down the directory tree, 
@@ -27,6 +26,6 @@ Continuing down the directory tree,
     acquisitions = st.list('acquisition',idGet(sessions{3})); 
     files        = st.list('file',idGet(acquisitions{1})); 
 
-
+We expect that this difference will go away in a few weeks.  We have asked the flywheel folks to attach a 'searchType' parameter to the SearchResponse, so we will not have to specify the data type for search responses.
 
 
