@@ -4,6 +4,8 @@ This **list** method returns metadata about the container contents. The **downlo
 
 ## Examples
 
+### Containers
+
 Suppose you want a list describing the sessions in a particular project.
 ```
 project      = st.search('project','project label exact','VWFA');
@@ -16,12 +18,13 @@ This differs from the 'list' method.  In that case, the cell array that is retur
 
     projects     = st.list('project','wandell');
     sessions     = st.list('session',idGet(projects{1}));
-
-Continuing down the directory tree, 
-
     acquisitions = st.list('acquisition',idGet(sessions{3})); 
     files        = st.list('file',idGet(acquisitions{1})); 
 
-We expect that this difference will go away in a few weeks.  We have asked the flywheel folks to attach a 'searchType' parameter to the SearchResponse, so we will not have to specify the data type for search responses.
+We expect that the idGet() difference will be changed in a few weeks.  We have asked the Flywheel folks to attach a 'searchType' parameter to the SearchResponse, and that way we will not have to specify the data type for the idGet() on a SearchResponse.
+
+### The projectHierarchy method
+
+
 
 
