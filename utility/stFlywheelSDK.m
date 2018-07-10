@@ -1,8 +1,8 @@
-function [status, url, toolboxTable] = stFlywheelConfig(action,varargin)
+function [status, url, toolboxTable] = stFlywheelSDK(action,varargin)
 % Check the status, install, or uninstall the Flywheel Add-On toolbox
 %
 % Syntax
-%   [status, url, toolboxTable] = stFlywheelConfig(action, ...)
+%   [status, url, toolboxTable] = stFlywheelSDK(action, ...)
 %
 % Description
 %   The Flywheel Add-Ons toolbox is necessary for scitran to run.  %
@@ -34,26 +34,26 @@ function [status, url, toolboxTable] = stFlywheelConfig(action,varargin)
 %   https://github.com/scitran/client/wiki/Flywheel-SDK
 %
 % Simple examples
-%    status = stFlywheelConfig;   % Test if add-on is installed
-%    status = stFlywheelConfg('exist',true);  % Equivalent
+%    status = stFlywheelSDK;   % Test if add-on is installed
+%    status = stFlywheelSDK('exist',true);  % Equivalent
 %
-%    status = stFlywheelConfig('uninstall',true);  % Uninstall
-%    status = stFlywheelConfig('install',true);    % Download and install
+%    status = stFlywheelSDK('uninstall',true);  % Uninstall
+%    status = stFlywheelSDK('install',true);    % Download and install
 %
 % BW, Vistasoft, 2018
 
 %Examples:
 %{
-  status = stFlywheelConfig('exist',true);
+  status = stFlywheelSDK('exist',true);
 %}
 %{
-  status = stFlywheelConfig;
+  status = stFlywheelSDK;
 %}
 %{
-  [s,u,tbl] = stFlywheelConfig('install',true,'sdkVersion','2.4.3');
+  [s,u,tbl] = stFlywheelSDK('install',true,'sdkVersion','2.4.3');
 %}
 %{
-  stFlywheelConfig('uninstall',true);
+  stFlywheelSDK('uninstall',true);
 %}
 
 %%
@@ -106,7 +106,7 @@ switch action
         matlab.addons.toolbox.installToolbox(tbxFile);
         
         % We might decide to verify here
-        status = stFlywheelConfig('exist',true);
+        status = stFlywheelSDK('exist',true);
         if ~status
             warning('Installation problem');
             return;
