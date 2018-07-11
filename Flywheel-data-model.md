@@ -1,4 +1,4 @@
-The database is organized into a set of basic categories that they call the [data model](https://flywheel-io.github.io/core/branches/master/matlab/data_model.html)  The search queries are structured around these categories.
+The database is organized into a set of basic categories, the Flywheel [data model](https://flywheel-io.github.io/core/branches/master/matlab/data_model.html)  The search queries are structured around these categories.
 
 * **Projects** - data from multiple sessions; a project belongs to a research *group* 
 * **Sessions** - complete set of files acquired in a visit to the scanner.  A session usually contains many data and auxiliary files
@@ -11,4 +11,4 @@ The database is organized into a set of basic categories that they call the [dat
 
 * **Notes**  - Search for notes that people have added.  These can be searched just like files.
 
-See the [scitran core data model page](https://github.com/scitran/core/wiki/Data-Model) for an introduction to the Flywheel data model.
+
