@@ -29,13 +29,14 @@ If you are upgrading we suggest you uninstall, restart matlab, and then install.
     stFlywheelSDK('install');
 
 ### SDK methods
-The scitran methods (st.<TAB>) are a kinder, gentler interface to the SDK methods. If you want to use the SDK methods directly, the scitran object, st = scitran('stanfordlabs') makes them available through the fw slot. You can see the full list of methods by typing 
+The scitran methods are a kinder, gentler interface to the Flywheel SDK methods. If you want to use the SDK methods directly, the scitran object makes them available through the fw slot. You can see the full list of methods by typing 
 
+    st = scitran('stanfordlabs');
     st.fw.<TAB>
 
 The list of SDK commands will show up as optional Matlab completions. 
 
-This document tersely describes the [SDK methods](https://flywheel-io.github.io/core/branches/master/matlab/flywheel.api.html). The base wiki for [the SDK is here](https://flywheel-io.github.io/core/) 
+[This api web page](https://flywheel-io.github.io/core/branches/master/matlab/flywheel.api.html) tersely describes the SDK methods. [This wiki web page](https://flywheel-io.github.io/core/) is describes the SDK
 
 The SDK is auto-generated into several different languages (Matlab, Python, and R).
 
