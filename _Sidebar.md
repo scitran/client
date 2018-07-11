@@ -18,7 +18,7 @@
 ***
 Notes
 * [Flywheel SDK](Flywheel-SDK)
-* [Flywheel terms](Flywheel-terms)
+* [Flywheel names](Flywheel-terms)
 * [Reproducible papers](Reproducible-Research)
 * [Technical notes](Technical-notes)
 * [Toolboxes class](Toolboxes-class)
