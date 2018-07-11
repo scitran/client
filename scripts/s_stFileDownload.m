@@ -1,13 +1,11 @@
-%% s_stDownloadFile
+%% s_stFileDownload
 %
 % Download examples:
 %    JSON file from a projects
 %    Analysis output file
-% 
-% TODO:  file from an acquisition
 %
-%
-% See also - s_stDownloadFile
+% See also
+%  
 
 %% Open up the scitran object
 
