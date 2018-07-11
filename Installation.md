@@ -37,7 +37,7 @@ The scitran methods are a kinder, gentler interface to the Flywheel SDK methods.
 The list of SDK commands will show up as optional Matlab completions. 
 
 * [This api web page](https://flywheel-io.github.io/core/branches/master/matlab/flywheel.api.html) tersely describes the SDK methods. It also includes some chatty description and examples. 
-* [This wiki web page](https://flywheel-io.github.io/core/) is describes the SDK
+* [This wiki web page](https://flywheel-io.github.io/core/) has the core documentation.
 
 The SDK is auto-generated into several different languages (Matlab, Python, and R).
 
