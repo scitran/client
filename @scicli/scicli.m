@@ -1,7 +1,7 @@
-classdef scitran < handle
-    % Scitran object to interact with the Flywheel instance via the SDK
+classdef scicli < handle
+    % Scitran object to interact with the Flywheel instance via the CLI
     %
-    %   st = scitran(instance,'action',...)
+    %   cli = scicli(instance,'action',...)
     %
     % Required
     %  'instance' -  String denoting the site to look up in your
@@ -16,31 +16,29 @@ classdef scitran < handle
     %
     % Examples:
     %
-    %    scitran('stanfordlabs','action','refresh')
-    %    scitran('stanfordlabs','verify',true);
+    %    cli = scicli('stanfordlabs'); % Return CLI object
+    %    scicli('stanfordlabs','action','refresh');  % Update CLI key
     %
-    % LMP/BW Vistasoft Team, 2016
+    % LMP/BW Scitran Team, 2016
     
-    properties (SetAccess = private, GetAccess = public)  
-
-    url = '';              % URL to the website
-    instance = 'scitran';  % Name of the instance
-    
-    % We are storing the Flywheel object within the scitran object.
-    fw = [];    % A flywheel SDK class.
-    
+    properties (SetAccess = private, GetAccess = public)
+        
+        url      = 'stanfordlabs.flywheel.io';  % Base url of the system
+        instance = 'stanfordlabs';              % Name of the system
+        cli      = '/usr/local/bin/fw';         % System cli command
+        
     end    % Data stuff (public)
 
     properties (SetAccess = private, GetAccess = private)
-        % Don't let people see the API token
+        % This is the private token that is used to login on start
         token = '';
     end    
 
     % Methods (public)
     methods
         
-        function obj = scitran(instance,varargin)
-            % Enables Matlab command line interactions with a Flywheel instance.
+        function obj = scicli(instance,varargin)
+            % Command line interactions with a Flywheel instance.
             %
             % This constructor creates the scitran object and authorizes
             % secure interactions with the Flywheel instance. The url of
@@ -49,23 +47,20 @@ classdef scitran < handle
             %
             % The constructor can be invoked using
             %
-            %      st = scitran('instanceName');
+            %      st = scicli('instanceName');
             %
             % See https://github.com/scitran/client/wiki for installation
             % and usage
             %
             % Examples:
             %
-            %   st = scitran('stanfordlabs','action','create');
-            %   st = scitran('cni','action','refresh');
-            %   st = scitran('cni','action','remove');
-            %
-            % % There is a special case for just listing the entries
-            % % of your local scitran database.  Set instance to list.
+            %   st = scicli('stanfordlabs','action','create');
+            %   st = scicli('cni','action','refresh');
+            %   st = scicli('cni','action','remove');
             %
             %   scitran('list');    % Lists the instances in your database
             % 
-            % BW Copyright Scitran Team, 2017
+            % BW Copyright Vistasoft Team, 2017
             
             p = inputParser;
             p.KeepUnmatched = true;
