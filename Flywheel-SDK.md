@@ -10,6 +10,7 @@ When you create the scitran object, st = scitran('stanfordlabs'); the Flywheel S
 
 Here is a document tersely describing the [api calls](https://flywheel-io.github.io/core/branches/master/matlab/flywheel.api.html)
 
-And the [base wiki ](https://flywheel-io.github.io/core/)
+That wiki also has a large variety of examples.
        
-The SDK is auto-generated and available for several languages (Matlab, Python, and R) as part of the Flywheel SDK.
+The SDK is auto-generated and available for several languages (Matlab, Python, and R) as part of the Flywheel SDK.  Here is the [wiki for all of the different languages](https://flywheel-io.github.io/core/)
+
