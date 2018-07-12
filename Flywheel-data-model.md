@@ -1,4 +1,4 @@
-The database is organized into a set of basic categories, the Flywheel [data model](https://flywheel-io.github.io/core/branches/master/matlab/data_model.html).  The search queries are structured around these categories.
+The search queries are structured using the Flywheel [data model](https://flywheel-io.github.io/core/branches/master/matlab/data_model.html).  Here is a description of the critical concepts. These are described in more detail in the link.
 
 * **Projects** - data from multiple sessions; a project belongs to a research *group* 
 * **Sessions** - complete set of files acquired in a visit to the scanner.  A session usually contains many data and auxiliary files
