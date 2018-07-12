@@ -1,5 +1,5 @@
 classdef scicli < handle
-    % Scitran object to interact with the Flywheel instance via the CLI
+    % Scitran object to manage the Flywheel CLI
     %
     %   cli = scicli(instance,'action',...)
     %
@@ -17,6 +17,9 @@ classdef scicli < handle
     % Examples:
     %
     %    cli = scicli('stanfordlabs'); % Return CLI object
+    %    cli.version
+    %    cli.status
+    %
     %    scicli('stanfordlabs','action','refresh');  % Update CLI key
     %
     % LMP/BW Scitran Team, 2016
