@@ -19,6 +19,7 @@
 Notes
 * [Flywheel SDK](Flywheel-SDK)
 * [Flywheel data model](Flywheel-data-model)
+* [Flywheel command line](Flywheel-cli)
 * [Reproducible papers](Reproducible-Research)
 * [Technical notes](Technical-notes)
 * [Toolboxes class](Toolboxes-class)
