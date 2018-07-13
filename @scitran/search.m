@@ -491,6 +491,15 @@ if ischar(srch)
                 else
                     srch.filters{end + 1}.term.subject0x2Ecode = val;
                 end
+                
+            case {'subjectlastname'}
+                % This seems to be 'contains', though I am not sure.
+                if ~isfield(srch,'filters')
+                    srch.filters{1}.term.subject0x2Elastname = val;
+                else
+                    srch.filters{end + 1}.term.subject0x2Elastname = val;
+                end
+                
             case {'subjectagerange'}
                 % s = st.search('session','subject age range',[90.1 96]);  
                 % s = st.search('session','subject age range',[70.1 76]);  

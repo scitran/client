@@ -138,10 +138,15 @@ switch returnType
         end
         
     case 'session'
+        % When you get sessions in a project, not all of the info
+        % objects are provided.  If you want the info fields, you need
+        % to find the session IDs and call fw.getSession(sessionID)
         data = fw.getProjectSessions(parentID);
         
     case 'acquisition'
         % Parent is session
+        % See note in session.  Same applies a lot of places.
+        % Maybe we need a flag that says get me an info.
         data = fw.getSessionAcquisitions(parentID);
         
     case 'file'
@@ -174,8 +179,23 @@ switch returnType
         data = this.files;
 
     
+    case 'sessionanalyses'
+        % h = st.projectHierarchy('HCP_preproc')
+        % thisSession = h.sessions{2};
+        % analyses = st.fw.getSessionAnalyses(idGet(thisSession));
+        
+        % for i = 1:numel(analyses)
+        %  fprintf('%s: %s\n', analyses{i}.id, analyses{i}.label);
+        % end
+        % thisAnalysis = st.fw.getAnalysis(idGet(analyses{5}))
+
+        % thisAnalysis.job
+        % thisAnalysis.job.config
+        % thisAnalysis.job.config.config
+
     case 'analysis'
-        data = fw.getAnalysis(parentID);
+        % If you know the analysis ID, get it this way
+        data = fw.getAnalysis(analysisID);
     
     case 'collection'
         % An email address of the curator replaces the groupID/parentID
