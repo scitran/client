@@ -49,4 +49,21 @@ sessions     = st.list('session',idGet(projects{1}));
 acquisitions = st.list('acquisition',idGet(sessions{1})); 
 files        = st.list('file',idGet(acquisitions{2})); 
 
+%%  Analyses
+project = st.search('project','project label exact','HCP_preproc');
+
+h = st.projectHierarchy('HCP_preproc');
+thisSession = h.sessions{2};
+analyses = st.fw.getSessionAnalyses(idGet(thisSession));
+
+for i = 1:numel(analyses)
+  fprintf('%s: %s\n', analyses{i}.id, analyses{i}.label);
+end
+
+thisAnalysis = st.fw.getAnalysis(idGet(analyses{5}));
+
+thisAnalysis.job
+thisAnalysis.job.config
+thisAnalysis.job.config.config
+
 %%
