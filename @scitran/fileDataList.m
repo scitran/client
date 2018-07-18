@@ -4,16 +4,18 @@ function dataFiles = fileDataList(st,containerType,containerID, fileType)
 %   st.fileDataList(containerType, containerID, fileType)
 %
 % Description
-%   fileData is a file attached to an acquisition. We return a list of
-%   all the files within a container (project, session, acquisition,
-%   collection) that are inside of an acquisition and match a
-%   particular fileType attribute (e.g., 'archive', 'dicom', 'nifti'). 
+%   fileData refers to a file attached to an acquisition. We return a list
+%   of all the files within a container (project, session, acquisition,
+%   collection) that are in an acquisition and match a particular fileType
+%   attribute (e.g., 'archive', 'dicom', 'nifti').
 %
+% Inputs
+%   st - scitran object
+%   containerType - the big container (e.g., project, session, collection)
+%   containerID   - string
+%   fileType      - dicom, nifti, archive, source code, ...
 %
-% Examples
-%   Session name must be car, all the zip files
-%   All the zip files in all the sessions
-%   The obj files in the acquisition named Spaceship
+% Examples - see code
 %
 % ZL/BW Vistasoft Team, 2018
 %
@@ -22,17 +24,45 @@ function dataFiles = fileDataList(st,containerType,containerID, fileType)
 
 % Examples:
 %{
+ % All the zip files in a session
  st = scitran('stanfordlabs');
  h = st.projectHierarchy('Graphics assets');
  sessionID = h.sessions{1}.id;
  files = st.fileDataList('session',sessionID,'archive')
 %}
+%{
+ % All the nifti files in a project
+ st = scitran('stanfordlabs');
+ project = st.search('project','project label exact','TBI: NeuroCor');
+ dataFiles = st.fileDataList('project',idGet(project{1},'data type','project'),'nifti')
+%}
+%{
+  % All the archive files in an acquisition
+  st = scitran('stanfordlabs');
+  h = st.projectHierarchy('VWFA');
+%}
 
 %%
 summary = true;
-
 %%
 switch containerType
+    case 'project'
+        % containerID = '56e9d386ddea7f915e81f703';
+        project = st.search('project','project id',containerID);
+        h = st.projectHierarchy(project{1}.project.label);
+        dataFiles = cell(1,1);
+
+        % The indexing on dataFiles is ridiculous.  I need to understand
+        % the cell array indexing better and do the right thing (BW).
+        for ss = 1:length(h.sessions)
+            acq = h.acquisitions{ss};  % Acq for this session
+            for aa = 1:length(acq)
+                files = st.list('file',acq{aa}.id);
+                dataFiles{ss}{aa} = stFileSelect(files,'type',fileType);
+            end
+        end
+        
+            
     case 'session'
         % Top container is a session
         acq = st.list('acquisition',containerID);
