@@ -1,7 +1,7 @@
-function dataFiles = fileDataList(st,containerType,containerID, fileType)
+function [dataFiles, acqID] = fileDataList(st,containerType,containerID, fileType, varargin)
 % Find the data files (files in an acquisition) that match a file type
 %
-%   st.fileDataList(containerType, containerID, fileType)
+%   [dataFiles, acqID] = st.fileDataList(containerType, containerID, fileType, varargin)
 %
 % Description
 %   fileData refers to a file attached to an acquisition. We return a list
@@ -14,6 +14,9 @@ function dataFiles = fileDataList(st,containerType,containerID, fileType)
 %   containerType - the big container (e.g., project, session, collection)
 %   containerID   - string
 %   fileType      - dicom, nifti, archive, source code, ...
+%
+% Optional key/value pairs
+%    info field label and value
 %
 % Examples - see code
 %
@@ -58,7 +61,7 @@ switch containerType
             acq = h.acquisitions{ss};  % Acq for this session
             for aa = 1:length(acq)
                 files = st.list('file',acq{aa}.id);
-                dataFiles{ss}{aa} = stFileSelect(files,'type',fileType);
+                dataFiles{ss}{aa} = stFileSelect(files,'type',fileType,varargin{:});
             end
         end
         
@@ -71,15 +74,20 @@ switch containerType
         % match
         dataFiles = cell(1,1);
         for ii=1:length(acq)
+            acqID{ii} = acq{ii}.id;
             files = st.list('file',acq{ii}.id);
-            dataFiles{ii} = stFileSelect(files,'type',fileType);
+            dataFiles{ii} = stFileSelect(files,'type',fileType,varargin{:});
         end
     case 'acquistion'
     otherwise
 end
 
 if summary
-    fprintf('Found %d files of file type "%s"\n',length(dataFiles),fileType);
+    total = 0;
+    for ii=1:length(dataFiles)
+        total = total + length(dataFiles{ii});
+    end
+    fprintf('Found %d files of file type "%s"\n',total,fileType);
 end
 
 end

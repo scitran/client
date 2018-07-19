@@ -18,6 +18,7 @@ function destination = fileDownload(obj,file,varargin)
 %    containerType {'project', 'session', 'acquisition', 'collection'}
 %    containerID   You can use idGet() for most objects
 %  destination:   Full path to the local file (default is in tempdir)
+%  unzip:         Unzip the download and delete the zip file
 %
 % Return
 %  destination:  Full path to the local file
@@ -101,13 +102,14 @@ p.addRequired('file',vFunc);
 p.addParameter('containertype','',@ischar); % If file is string, required
 p.addParameter('containerid','',@ischar);   % If file is string, required
 p.addParameter('destination','',@ischar);
-p.addParameter('size',[],@isnumeric);
+p.addParameter('unzip',false,@islogical);
 
 p.parse(file,varargin{:});
 containerType = p.Results.containertype;
 containerID   = p.Results.containerid;
 file          = p.Results.file;
 destination   = p.Results.destination;
+zipFlag       = p.Results.unzip;
 
 %% Set up the Flywheel SDK call
 
@@ -147,6 +149,13 @@ switch lower(containerType)
 
     otherwise
         error('No fileDownload for container type %s\n',containerType);
+end
+
+if zipFlag
+    % User said to unzip the file and delete the zip file.
+    outputDir = fileparts(destination);
+    unzip(destination,outputDir);
+    delete(destination);
 end
 
 end
