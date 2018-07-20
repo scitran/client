@@ -5,7 +5,9 @@ The Flywheel environment is designed to support both data management and reprodu
 ## Flywheel data management
 
 ### Data and metadata
-Flywheel uses a database to manage information and computations.  A database is part of most modern computer architectures, but you don't normally think about it. For example, on a Mac when you ask for the 'Info' on about a file, you are provided with data about that file. The file itself is the **data**, and the information about the file is the **metadata**. The metadata includes simple information (e.g., the file name) and it can also include complex information (number of diffusion directions, or TR, or ...). The database helps you search the metadata to find and understand the data. The scitran methods  for [data management](data-management) include utilities for searching, reading and editing both data and metadata.
+Flywheel uses a database to manage information and computations.  A database is part of most modern computer architectures, but you don't normally think about it. For example, on a Mac you ask for the 'Info' on about a file and you are provided with data (e.g., file size, date of access). The file is the **data**, and the information about the file is the **metadata**. 
+
+For scientific data management the metadata will include critical information (TR, TE, voxel size, number of diffusion directions, ...). The scitran methods for [data management](data-management) include utilities for searching, reading and editing both data and metadata.
 
 ### Containers
 The Flywheel system is built to organize data, and it uses a directory-tree organization that is very common in all computer systems.  First, Flywheel identifies you and your group membership; you can see all the data that you have permission to access. The organization of the data, and the names of the terms, are designed to match a typical neuroimaging experiment.  The data organization starts with a Project container.  Each project contains multiple Sessions. Each Session contains multiple Acquisitions, and these contain files.  
