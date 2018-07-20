@@ -5,22 +5,32 @@ Flywheel uses a database to manage information.  A database is part of most mode
 
 The metadata include critical scientific information (TR, TE, voxel size, number of diffusion directions, ...). Such information is not always part of the data file.  For example, the widely used NIfTI format does not include much information about the MR parameters (the DICOM file includes much more). When Flywheel converts a DICOM file to a NIfTI file, it stores the critical information into the metadata of the NIfTI file.  
 
-### Containers
+### Containers - Projects, Sessions and Acquisitions
 The Flywheel database uses a simple three-level hierarchy to organize the data.  The hierarchy is designed to match a typical neuroimaging experiment. The top level is a Project; each project contains multiple Sessions; each session contains multiple Acquisitions; each acquisition contains multiple **data files**.  
 
 The Project, Session and Acquisitions are called containers.  The files are called files.
 
 A difference between computers and the database concerns the flexibility of the containers; a general operating system can have many layers of directories and you can name them freely.  Much of the power and speed of a database system comes from its structure:  The Project, Session, and Acquisition ('Containers') and the files are always present.
 
-There containers and the files can all have metadata; this takes the form of **notes, tags, or attachments** that describe important information the experiment. While in most computer systems users think almost entirely about the files, in database systems there is always important metadata connected to the containers and files. 
+Containers and files can all have metadata.  While in most computer systems users think almost entirely about the files, in database systems there is always important metadata connected to the containers and files. 
 
 The scitran methods are organized the actions that apply to containers, data files, and metadata. The naming convention we use is to specify the type of object followed by an action.  For example, suppose you create a scitran object, 
 
     st = scitran('stanfordlabs');
 
-The  **st.containerDownload** is a method for downloading one of the several container types.  The method **st.fileDownload** downloads a file. Notice that we distinguish between containers and files (directories and files).  To see all the methods that apply to containers, type st.container<TAB>. The arguments to the method specify critical details, such as the container type, the file name, and so forth.
+There are [many methods like these]():
+```
+st.containerDownload - downloading one of the several container types
+st.containerCreate - Create a container on the remote site
+st.fileDownload - downloads a data file
+st.fileDelete -  delete a file
+```
+
+Notice that we distinguish between containers and files (directories and files).  To see all the methods that apply to containers, type st.container<TAB>. The arguments to the method specify critical details, such as the container type, the file name, and so forth.
 
 ### Notes, tags and attachments
+ this takes the form of **notes, tags, or attachments** that describe important information the experiment.
+
 We use the word Information (or Info) to refer to actions on the metadata.  There are many methods to read and modify the Info fields in Flywheel system.  These information fields are particularly critical for scientific data management because the data files themselves do not usually contain all the information needed to describe the experimental measurements.
 
 
