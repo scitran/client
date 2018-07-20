@@ -1,5 +1,3 @@
-## Flywheel data management
-
 The **scitran** [data management methods](data-management) search, download, upload and edit all kinds of information about your data.  This section describes the data organization.
 
 ### Data and metadata
