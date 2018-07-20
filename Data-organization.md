@@ -3,10 +3,12 @@ The **scitran** [data management methods](data-management) search, download, upl
 ### Data and metadata
 Flywheel uses a database to manage information.  A database is part of most modern computer architectures. For example, on a Mac you ask for the 'Info' on about a file and you are provided with data (e.g., file size, date of access). The file is the **data**, and the information about the file is the **metadata**. 
 
-The metadata include critical scientific information (TR, TE, voxel size, number of diffusion directions, ...). Such information is not always part of the data file.  For example, the widely used NIfTI format does not include much information about the MR parameters (the DICOM file includes much more). When Flywheel converts a DICOM file to a NIfTI file, it stores the critical information into the metadata of the data file.  
+The metadata include critical scientific information (TR, TE, voxel size, number of diffusion directions, ...). Such information is not always part of the data file.  For example, the widely used NIfTI format does not include much information about the MR parameters (the DICOM file includes much more). When Flywheel converts a DICOM file to a NIfTI file, it stores the critical information into the metadata of the NIfTI file.  
 
 ### Containers
-The Flywheel database uses a simple hierarchy to organize the data.  The hierarchy is designed to match a typical neuroimaging experiment. The top level is a Project.  Each project contains multiple Sessions. Each Session contains multiple Acquisitions, and these contain **data files**.  The Project, Session and Acquisitions are called containers.
+The Flywheel database uses a simple three-level hierarchy to organize the data.  The hierarchy is designed to match a typical neuroimaging experiment. The top level is a Project; each project contains multiple Sessions; each session contains multiple Acquisitions; each acquisition contains multiple **data files**.  
+
+The Project, Session and Acquisitions are called containers.  The files are called files.
 
 A difference between computers and the database concerns the flexibility of the containers; a general operating system can have many layers of directories and you can name them freely.  Much of the power and speed of a database system comes from its structure:  The Project, Session, and Acquisition ('Containers') and the files are always present.
 
