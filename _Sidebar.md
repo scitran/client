@@ -1,7 +1,7 @@
 * [Introduction](Home)
 * [Installation](Installation)
-* [Authentication](Authentication)
 * [Conceptual overview](Conceptual-overview)
+* [Connecting and Authentication](Authentication)
 * [Data management](Data-management)
    * [Listing and searching](Search-and-list)
      * [List examples](List-examples)
