@@ -1,21 +1,3 @@
-
-A scitran object is instantiated by a call that identifies which Flywheel database you wish to address. 
-```
-st = scitran('stanfordlabs');
-```
-
-The scitran object contains the Flywheel database url, the instance name, a way to access the Flywheel SDK, and some hidden information about user permission.
-```
-st = 
-
-  scitran with properties:
-
-         url: 'https://vistalab.flywheel.io'
-    instance: 'vistalab'
-          fw: [1×1 Flywheel]
-```
-The [authentication page](Authorization) describes how to create an instance (in this example 'vistalab') and save your Flywheel permission information.
-
 ## Methods
 Scitran methods enable you to find database contents, get information about these objects, download and upload files, and modify metadata. See the [Flywheel terms](Flywheel-terms) page to learn about the conceptual organization of Flywheel data.
 
