@@ -1,6 +1,8 @@
 * [Introduction](Home)
 * [Installation](Installation)
 * [Conceptual overview](Conceptual-overview)
+    * [Data organization](Data-organization)
+    * [Computational organization](Computational-organization)
 * [Connecting and Authentication](Authentication)
 * [Data management](Data-management)
    * [Listing and searching](Search-and-list)
