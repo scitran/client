@@ -1,5 +1,4 @@
-## Methods
-Scitran methods enable you to find database contents, get information about these objects, download and upload files, and modify metadata. See the [Flywheel terms](Flywheel-terms) page to learn about the conceptual organization of Flywheel data.
+Scitran data management methods enable you to find database contents, get information about these objects, download and upload files, and modify metadata. See the [Flywheel terms](Flywheel-terms) page to learn about the conceptual organization of Flywheel data.
 
 Usage details of these methods are provided in other wiki pages.   Because the code is still under development, for now we encourage you to type help or doc to bring up the current information in the method, say
 
