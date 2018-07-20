@@ -18,20 +18,21 @@ The scitran methods are organized the actions that apply to containers, data fil
 
     st = scitran('stanfordlabs');
 
-There are [many methods like these]():
+There are many methods like these.
 ```
 st.containerDownload - downloading one of the several container types
 st.containerCreate - Create a container on the remote site
 st.fileDownload - downloads a data file
 st.fileDelete -  delete a file
 ```
+Notice that we distinguish between containers, files and info.  Use tab-completion (e.g., st.file<Tab>) to see the current list. The arguments to the method specify the container type and other necessary parameters. 
 
-Notice that we distinguish between containers and files (directories and files).  To see all the methods that apply to containers, type st.container<TAB>. The arguments to the method specify critical details, such as the container type, the file name, and so forth.
+### Metadata - Notes, tags and attachments
 
-### Notes, tags and attachments
- this takes the form of **notes, tags, or attachments** that describe important information the experiment.
+We use the word Information (or Info) to refer to actions on the metadata. There are many methods to read and modify the Info fields in Flywheel system.  These information fields are particularly critical for scientific data management because the data files themselves do not usually contain all the information needed to describe the experimental measurements.
 
-We use the word Information (or Info) to refer to actions on the metadata.  There are many methods to read and modify the Info fields in Flywheel system.  These information fields are particularly critical for scientific data management because the data files themselves do not usually contain all the information needed to describe the experimental measurements.
+    st.containerInfoGet - Read the metadata from a container
 
+Certain types of container and file **metadata** are given a special status.  We call these **notes, tags, and attachments**.  Honestly, they are just metadata.  But it dawned on us that people use this system, and sometimes they like having meaningful names for certainly classes of information. 
 
 More details about the [Flywheel data model are here](Flywheel-data-model)
