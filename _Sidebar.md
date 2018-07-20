@@ -2,7 +2,7 @@
 * [Installation](Installation)
 * [Authentication](Authentication)
 * [Conceptual overview](Conceptual-overview)
-* [Data management](Scitran-class)
+* [Data management](Data-management)
    * [Listing and searching](Search-and-list)
      * [List examples](List-examples)
      * [Search examples](Search-examples)
