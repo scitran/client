@@ -1,11 +1,11 @@
-The **scitran matlab client** enables Matlab users to interact with a [Flywheel data and computation system](https://flywheel.io). The client methods search, list, upload, download, read and analyze Flywheel data and metadata.  The client can control job scheduling. 
+The **scitran matlab client** enables Matlab users to compute with a [Flywheel data and computation system](https://flywheel.io). The client methods help you search, upload, download, read and analyze Flywheel data and metadata. The client also schedules and controls jobs (Gears). 
 
 The **scitran matlab client** can be run securely from any computer on the Internet. We have used the client extensively on Mac and Linux systems.
 
 This wiki describes the software and explains how to
 
 * obtain authorization to interact with a Flywheel database
-* list and search the database contents
+* list and search the database contents (files, metadata, and jobs)
 * download and read database objects (e.g., files, sessions, projects, analyses)
 * upload files, notes, and attachments (e.g., files, graphs, metadata)
 * upload analyses and software (e.g., Matlab files) for computational sharing
