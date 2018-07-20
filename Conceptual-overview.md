@@ -2,7 +2,7 @@ We describe the idea of a container informally.  We link to the more detailed fl
 
 We describe the idea of metadata.
 
-We talk about analyses.
+We talk about analyses and the toolbox class.
 
 We describe notes.
 
