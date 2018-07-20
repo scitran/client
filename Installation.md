@@ -13,7 +13,7 @@ This will create two directories, scitran and JSONio.  Please add both directori
 
 ### Matlab toolbox Add-Ons toolbox
 
-The SDK is installed as a Matlab toolbox managed using their 'Add-Ons' methods. The installation is done once, and you can do the installation with the scitran function
+The SDK is installed as a Matlab toolbox managed using their 'Add-Ons' methods. You can do the installation with the scitran function
 
     stFlywheelSDK('install');
 
@@ -22,14 +22,16 @@ That command downloads the toolbox from the web and installs it as an Add-On too
     status = stFlywheelSDK('verify')
     status = stFlywheelSDK('uninstall')
 
-If you are upgrading we suggest you uninstall, restart matlab, and then install.  We have done this sequence several times with success.  We haven't succeeded without the restart.
+The SDK is under active development, and we anticipate several new releases through 2018 and into 2019.  To install a new specific release number, we suggest you uninstall, restart matlab, and then install.  We have done this sequence several times with success; we haven't succeeded without the restart.  For example, to upgrade to version '2.4.3' you can do this:
 
     stFlywheelSDK('uninstall');
     RESTART MATLAB
-    stFlywheelSDK('install');
+    stFlywheelSDK('install','sdkVersion','2.4.3');
 
 ### SDK methods
-The scitran methods are a kinder, gentler interface to the Flywheel SDK methods. If you want to use the SDK methods directly, the scitran object makes them available through the fw slot. You can see the full list of methods by typing 
+The scitran methods are a kinder, gentler interface to the Flywheel SDK methods. They are organized to help neuroimaging scientists achieve basic goals. 
+
+If you prefer to use the SDK methods directly, or you want to write your own scitran methods based on the SDK methods, the scitran object makes them available through the fw slot. You can see the full list of methods by typing 
 
     st = scitran('stanfordlabs');
     st.fw.<TAB>
