@@ -22,4 +22,4 @@ The  **st.containerDownload** is a method for downloading one of the several con
 We use the word Information (or Info) to refer to actions on the metadata.  There are many methods to read and modify the Info fields in Flywheel system.  These information fields are particularly critical for scientific data management because the data files themselves do not usually contain all the information needed to describe the experimental measurements.
 
 
-More details about the [Flywheel data model is here](Flywheel-data-model)
+More details about the [Flywheel data model are here](Flywheel-data-model)
