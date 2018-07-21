@@ -1,4 +1,7 @@
-The **scitran** [data management methods](data-management) search, download, upload and edit all kinds of information about your data.  This section describes the data organization.
+* The **scitran** [data management methods](data-management) search, download, upload and edit your data and metadata.
+* Matlab interacts with the Flywheel system through a [connecting scitran object](Connection-and-Authentication), ```st = scitran('yourSiteName');```
+
+***
 
 ### Data and metadata
 Flywheel uses a database to manage information.  A database is part of most modern computer architectures. For example, on a Mac you ask for the 'Info' on about a file and you are provided with data (e.g., file size, date of access). The file is the **data**, and the information about the file is the **metadata**. 
