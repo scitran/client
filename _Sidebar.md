@@ -11,7 +11,7 @@
    * [Info (metadata)](Set-and-get-metadata)
 * [Reproducible computations](Reproducible-Matlab)
    * [Gears](Gears-and-Analyses)
-   * [Scitran analyses](Scitran-analyses)
+   * [Local analyses](Scitran-analyses)
        * [Toolbox methods](Toolbox-methods)
        * [Running functions](Run-function)
 * [Programming utilities](Programming-utilities)
