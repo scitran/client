@@ -3,6 +3,7 @@
 * Collections are a special type of container.  
 * Some files are data files, other files are attachments.  
 * Info refers to metadata
+* Notes, tags and attachments are special kinds of metadata
 
 ## Data methods
 ```
