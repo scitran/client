@@ -43,8 +43,4 @@ The list of SDK commands will show up as optional Matlab completions.
 
 The SDK is auto-generated into several different languages (Matlab, Python, and R).
 
-## Flywheel command line interface (CLI)
-
-We will write a stFlywheelCLI to install and invoke.  Hasn't happened yet.
-
 
