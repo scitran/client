@@ -5,7 +5,7 @@
 * [Installation](Installation)
 * [Connecting](Connecting-and-Authentication)
 * [Data management](Data-management)
-   * [Listing and searching](Search-and-list)
+   * [List and search](Search-and-list)
    * [Download and read](Download-and-read)
    * [Create and upload](Create-and-upload)
    * [Info (metadata)](Set-and-get-metadata)
