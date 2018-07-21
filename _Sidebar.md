@@ -8,7 +8,7 @@
    * [Listing and searching](Search-and-list)
    * [Download and read](Download-and-read)
    * [Create and upload](Create-and-upload)
-   * [Set and get metadata](Set-and-get-metadata)
+   * [Info (metadata)](Set-and-get-metadata)
 * [Reproducible computations](Reproducible-Matlab)
    * [Toolbox methods](Toolbox-methods)
    * [Running functions](Run-function)
