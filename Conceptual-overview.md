@@ -10,3 +10,4 @@ Here are pointers to related support sites.
 * [Flywheel SDK Matlab examples](https://flywheel-io.github.io/core/branches/master/matlab/examples.html)
 * [Command line interface](https://docs.flywheel.io/display/EM/CLI+and+SDKs)
 * [Flywheel user manual](https://docs.flywheel.io/display/EM/About+Flywheel)
+* [Flywheel data hierarchy manual](https://docs.flywheel.io/display/EM/Data+Hierarchy)
