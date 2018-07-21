@@ -1,4 +1,6 @@
-The Matlab scitran client is designed to be a simple interface to the wide array of endpoints available in the Flywheel SDK.  
+The Matlab scitran client is a wrapper on the methods available in the Flywheel SDK. It is possible to use the SDK methods directly, without using the **scitran** methods. The value of **scitran** is that it reformulates the SDK methods in a way that we find easier to understand and use. 
+
+Some day, the approach we have adopted here might be applied to the Flywheel SDK, in which case scitran will be less useful.  But for now, some people prefer to use scitran rather than calling the Flywheel SDK methods.  All of these methods are available from the scitran class (scitran.fw.<TAB>).
 
 ## Installing the SDK
 
