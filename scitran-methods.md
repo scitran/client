@@ -1,4 +1,4 @@
-#### Tips
+### Tips
 * Projects, sessions and acquisitions are containers.  
 * Collections are a special type of container.  
 * Some files are data files, other files are attachments.  
@@ -33,7 +33,7 @@ st.containerInfoGet  - Get metadata values (e.g., subject code, sex ...)
 st.collectionCreate
 st.collectionDelete
 ```
-### Computational methods
+## Computational methods
 ```
 % Analysis
 st.analysisAddNote
@@ -56,7 +56,7 @@ st.toolboxGet()
 st.toolboxInstall()
 st.toolboxValidate()
 ```
-### Miscellaneous methods
+## Miscellaneous methods
 ```
 st.exist   - See if a container with a particular label exists
 st.verify  - Test that the connection was made
