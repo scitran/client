@@ -13,7 +13,7 @@
    * [Toolbox methods](Toolbox-methods)
    * [Running functions](Run-function)
    * [Gears and analyses](Gears-and-Analyses)
-* [Utilities](Client-utilities)
+* [Programming utilities](Programming-utilities)
 ***
 Notes
 * [Flywheel SDK](Flywheel-SDK)
