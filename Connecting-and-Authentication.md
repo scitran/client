@@ -1,3 +1,7 @@
+* [Flywheel manual - Getting started](https://flywheel-io.github.io/core/branches/master/matlab/getting_started.html)
+
+***
+
 A connection to the Flywheel database os established by creating a scitran object
 ```
 st = scitran('stanfordlabs');
