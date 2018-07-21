@@ -1,5 +1,11 @@
-## The compute model
-The **scitran** and **toolboxes** classes simplify sharing Matlab-code that uses Flywheel-data. A main goal is to support reproducible methods for publication. Flywheel already incorporates Gears and Analyses to help with reproducibility. The Flywheel Matlab client supports a different niche; you are preparing analyses and figures for a paper.  
+Flywheel supports multiple types of computations. The method you choose to use is likely to depend on how advanced the analysis methods 
+
+* Gears - Utility
+* Gears - Advanced
+* SDK 
+* Local analyses
+
+***
 
 In general, we suppose that:
 
