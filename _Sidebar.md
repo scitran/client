@@ -23,5 +23,4 @@ Notes
 * [Reproducible papers](Reproducible-Research)
 * [Technical (wonkish)](Technical-notes)
 * [More search](Search-syntax)
-* [Scripts](Client-scripts)
 * [BIDS](BIDS)
