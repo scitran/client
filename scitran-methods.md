@@ -23,7 +23,7 @@ st.containerInfoSet  - Set database values (e.g., subject code, sex ...)
 st.containerInfoGet  - Get database values (e.g., subject code, sex ...)
 
 % Analysis
-st. analysisAddNote
+st.analysisAddNote
 st.analysisCreate
 st.analysisDownload
 st.analysisInfoGet
