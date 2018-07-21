@@ -48,3 +48,4 @@ Virtual experiments described
 
 Pointers, reuse, database
 
+[Flywheel collections manual](https://docs.flywheel.io/display/EM/Using+Collections)
