@@ -1,8 +1,10 @@
 The [Data organization](Data-organization) and [Computational organization](Computational-organization) pages describe principles used in the Flywheel system.  Understanding these principles is important when using the **scitran** and **Flywheel SDK** software. 
 
-Those pages are intentionally short, providing a _'Read Me First'_ introduction. Over time we will continue to add links with more examples and explanation.  We will also add pointers to related support sites.
+Those pages are intentionally short, providing a _'Read Me First'_ introduction. Over time we will add more links with examples and explanation.  
 
 ### Related links
+
+Here are pointers to related support sites.
 
 * [Flywheel API documentation](https://flywheel-io.github.io/core/branches/master/matlab/flywheel.api.html)
 * [Flywheel SDK Matlab examples](https://flywheel-io.github.io/core/branches/master/matlab/examples.html)
