@@ -12,7 +12,7 @@
 * [Reproducible computations](Reproducible-Matlab)
    * [Gears](Gears-and-Analyses)
    * [Local programming](Scitran-analyses)
-       * [Toolbox methods](Toolbox-methods)
+       * [Github methods](Toolbox-methods)
        * [Running functions](Run-function)
        * [Programming utilities](Programming-utilities)
 ***
