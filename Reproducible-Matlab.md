@@ -1,9 +1,9 @@
-Flywheel supports multiple types of computations. The method you choose to use is likely to depend on how advanced the analysis methods 
+* Flywheel supports multiple types of computations. 
+    * Utility Gears
+    * Advanced Gears
+    * Scitran programming 
 
-* Gears - Utility
-* Gears - Advanced
-* SDK 
-* Local analyses
+* A project can use a combination of these different methods.
 
 ***
 
