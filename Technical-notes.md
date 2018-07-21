@@ -8,6 +8,3 @@ When humans want to interact with the files, we need understandable filenames an
 
 There are other ways to humanize interactions with the files in a database. In an earlier implementation of the database, Bob Dougherty used the [Fuse filesystem](https://en.wikipedia.org/wiki/Filesystem_in_Userspace), a particularly useful tool for writing virtual file systems.  Historically, the method has [security issues](https://github.com/libfuse/libfuse/issues/15), and moreover we believe that search is central to our mission.  So, we converted to the elastic search approach.
 
-## Installing from Matlab (alternative)
-
-Just a reminder for us - probably not important This is [script we once used to install from the Matlab command line](https://github.com/scitran/client/blob/master/utility/installScitran.m).
