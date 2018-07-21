@@ -24,7 +24,7 @@ Notes
 * [Flywheel data model](Flywheel-data-model)
 * [Flywheel command line](Flywheel-cli)
 * [Reproducible papers](Reproducible-Research)
-* [Technical notes](Technical-notes)
+* [Technical (wonkish)](Technical-notes)
 * [Toolboxes class](Toolboxes-class)
 * [More search](Search-syntax)
 * [Scripts](Client-scripts)
