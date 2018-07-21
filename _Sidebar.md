@@ -11,10 +11,10 @@
    * [Info (metadata)](Set-and-get-metadata)
 * [Reproducible computations](Reproducible-Matlab)
    * [Gears](Gears-and-Analyses)
-   * [Local analyses](Scitran-analyses)
+   * [Local programming](Scitran-analyses)
        * [Toolbox methods](Toolbox-methods)
        * [Running functions](Run-function)
-* [Programming utilities](Programming-utilities)
+       * [Programming utilities](Programming-utilities)
 ***
 Notes
 * [Flywheel SDK](Flywheel-SDK)
