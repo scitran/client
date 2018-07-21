@@ -4,7 +4,7 @@ The **scitran matlab client** can be run securely from any computer on the Inter
 
 This wiki has a [conceptual overview](Conceptual-overview) of Flywheel and then explanations on how to
 
-* [Connect](Connecting-and-authorization) with a Flywheel database
+* [Connect](Connecting-and-Authentication) with a Flywheel database
 * list and search the database contents (files, metadata, and jobs)
 * download and read database objects (e.g., files, sessions, projects, analyses)
 * upload files, notes, and attachments (e.g., files, graphs, metadata)
