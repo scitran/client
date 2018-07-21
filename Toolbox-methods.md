@@ -1,3 +1,4 @@
+
 Toolbox files specify the github repository and a command for testing for the presence of the repository. The specification is stored on Flywheel, often on the project page.  The specification is a JSON file.  This code snippet reads a file stored on the Flywheel site
 ```
 st = scitran('vistalab');
@@ -82,3 +83,7 @@ The JSON file defining the toolboxes is stored on the project page with a **scit
 
 ### Example files
 The data directory in scitran includes several toolboxes files and a script, [s_tbxSave](https://github.com/scitran/client/blob/master/data/s_tbxSave.m). 
+
+## Related
+
+* [Toolboxes class](Toolboxes-class)
