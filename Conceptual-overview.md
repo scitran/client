@@ -5,3 +5,4 @@ Over time we will add links to more help and examples to both of those pages as 
 ### Related links
 
 * [Flywheel API documentation](https://flywheel-io.github.io/core/branches/master/matlab/flywheel.api.html)
+* [Flywheel SDK Matlab examples](https://flywheel-io.github.io/core/branches/master/matlab/examples.html)
