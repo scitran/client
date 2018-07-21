@@ -10,9 +10,10 @@
    * [Create and upload](Create-and-upload)
    * [Info (metadata)](Set-and-get-metadata)
 * [Reproducible computations](Reproducible-Matlab)
-   * [Toolbox methods](Toolbox-methods)
-   * [Running functions](Run-function)
-   * [Gears and analyses](Gears-and-Analyses)
+   * [Gears](Gears-and-Analyses)
+   * [Scitran analyses](Scitran-analyses)
+       * [Toolbox methods](Toolbox-methods)
+       * [Running functions](Run-function)
 * [Programming utilities](Programming-utilities)
 ***
 Notes
