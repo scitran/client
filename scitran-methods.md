@@ -63,7 +63,7 @@ st.runFunction* - Download toolboxes and run a function from a remote site
 ```
 st.exist   - See if a container with a particular label exists
 st.verify  - Test that the connection was made
-st.browser - Bring a browser to a location
+st.browser - Open a browser to the Flywheel site
 st.listInstances
 st.showToken
 
