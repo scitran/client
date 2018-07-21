@@ -8,7 +8,7 @@
 ## Data methods
 ```
 %% Search and list
-st.search  -  Search for objects constrained by many possible limits (file type, label, date...).
+st.search  -  Search for files, containers, and related
 st.list    - List objects within a parent; might change to getObjects
 st.projectID - Return the id of the project
 st.projectHierarchy - List the project, sessions and acquisitions
