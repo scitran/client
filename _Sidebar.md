@@ -3,7 +3,7 @@
     * [Data](Data-organization)
     * [Computation](Computational-organization)
 * [Installation](Installation)
-* [Connecting and Authentication](Connecting-and-Authentication)
+* [Connecting](Connecting-and-Authentication)
 * [Data management](Data-management)
    * [Listing and searching](Search-and-list)
    * [Download and read](Download-and-read)
