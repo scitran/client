@@ -1,5 +1,7 @@
-We talk about analyses and the toolbox class.
+* Gears
+* Jobs
+* The analysis object
+* Local programming
+* [Github toolbox methods](Toolboxes) support reproducible computation using github repositories.
 
-The [analysis methods](Toolboxes) support reproducible computation, such as interactions with github repositories.
-
-We describe jobs.
+***
