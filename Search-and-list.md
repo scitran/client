@@ -1,3 +1,9 @@
+* [List examples](List-examples)
+* [Search examples](Search-examples)
+* [Special searches](Special-search-parameters)
+
+***
+
 ### Listing vs. Searching
 
 The scitran **list** method is useful when you know the ID of a container (project, session, acquisition or collection) and you want to list what is within it. The [list examples page](list-examples) demonstrates the usage.  One way to understand the information returned from a list or search is to explore the values in the returned Matlab structs.  You also might want to look at the [Flywheel data model](https://github.com/scitran/core/wiki/Data-Model) to see the definition of a term.
