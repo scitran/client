@@ -48,13 +48,16 @@ st.dwiDownload - Read a nifti file and its associated bvec/bval data
 st.dicomInfoGet   - Information about files or database objects
 st.vistaDownload* - Create a local vistasoft data structure
 
-% Computational
-st.docker*
-st.runFunction* - Download toolboxes and run a function from a remote site
+% Github Toolbox methods
 st.toolboxClone()
 st.toolboxGet()
 st.toolboxInstall()
 st.toolboxValidate()
+
+% Computational utilities
+st.docker*
+st.runFunction* - Download toolboxes and run a function from a remote site
+
 ```
 ## Miscellaneous methods
 ```
