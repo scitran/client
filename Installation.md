@@ -28,19 +28,6 @@ The SDK is under active development, and we anticipate several new releases thro
     RESTART MATLAB
     stFlywheelSDK('install','sdkVersion','2.4.3');
 
-### SDK methods
-The scitran methods are a kinder, gentler interface to the Flywheel SDK methods. They are organized to help neuroimaging scientists achieve basic goals. 
-
-If you prefer to use the SDK methods directly, or you want to write your own scitran methods based on the SDK methods, the scitran object makes them available through the fw slot. You can see the full list of methods by typing 
-
-    st = scitran('stanfordlabs');
-    st.fw.<TAB>
-
-The list of SDK commands will show up as optional Matlab completions. 
-
-* [This api web page](https://flywheel-io.github.io/core/branches/master/matlab/flywheel.api.html) tersely describes the SDK methods. It also includes some chatty description and examples. 
-* [This wiki web page](https://flywheel-io.github.io/core/) has the core documentation.
-
 The SDK is auto-generated into several different languages (Matlab, Python, and R).
 
 
