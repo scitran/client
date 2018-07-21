@@ -10,24 +10,24 @@
 %% Search and list
 st.search  -  Search for objects constrained by many possible limits (file type, label, date...).
 st.list    - List objects within a parent; might change to getObjects
-st.projectHierarchy - Create a struct summarizing the project, sessions and acquisitions
 st.projectID - Return the id of the project
+st.projectHierarchy - List the project, sessions and acquisitions
 
 % File
-st.fileDelete   - Delete remote file
-st.fileDownload - Write file to disk
+st.fileDelete   - Delete remote data file
+st.fileDownload - Write data file to disk
+st.fileUpload   - Upload a data file
 st.fileRead     - Certain file types can be downloaded and read into a Matlab variable  
-st.fileInfoGet
-st.fileInfoSet
-st.fileUpload
+st.fileInfoGet  - Get file metadata
+st.fileInfoSet  - Set file metadata
 
 % Container methods (project, session, acquisition)
 st.containerUpload   - Not sure this is real
-st.containerDownload - Download a directory tree containing a database object as a tar file
+st.containerDownload - Download the container and its contents as a tar file
 st.containerCreate   - Create a project or a session or an acquisition
-st.containerDelete - Delete container objects
-st.containerInfoSet  - Set database values (e.g., subject code, sex ...)
-st.containerInfoGet  - Get database values (e.g., subject code, sex ...)
+st.containerDelete   - Delete container and its contents
+st.containerInfoSet  - Set metadata values (e.g., subject code, sex ...)
+st.containerInfoGet  - Get metadata values (e.g., subject code, sex ...)
 
 % A special type of container
 st.collectionCreate
@@ -70,10 +70,6 @@ st.print*
 st.help*
 st.API;
 st.siteConfig()
-
-% BIDS related
-st.bidsUpload*
-st.bidsDownload*
 
 *Early in development
 ```
