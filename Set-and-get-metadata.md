@@ -10,12 +10,27 @@ files = st.search('file',...
           'project label exact','qa');
 
 % This returns info as a slot within the files{} struct
-files = st.getdicominfo(files);
-fprintf('Echo Time %s\n',files{1}.info.('EchoTime'))
-Echo Time 30
+info = st.fileInfoGet(files{1});
+
+% The info structure has a lot of fields with useful metadata
+info.classification
+  CommonClassification with properties:
+
+         Intent: {'Functional'}
+    Measurement: {'T2*'}
+
+info.info
+  AcquisitionDate: 20171113
+  AcquisitionMatrix: [4×1 double]
+  AcquisitionNumber: 1
+  AcquisitionTime: 84103
+  AngioFlag: 'N' 
+...
+fprintf('%d\n',info.info.EchoTime)
+30
 ```
-### setFileInfo
-The **setFileInfo** method places metadata in a file's Information.  The metadata is represented as slots in a Matlab struct.  This code snippet, which was run on the CNI site, illustrates the **setFileInfo** method.
+### fileInfoSet
+The **fileInfoSet** method places metadata in a file's Information.  The metadata is represented as slots in a Matlab struct.  This code snippet, which was run on the CNI site, illustrates the **fileInfoSet** method.
 ```
 % This is a json file that has metadata we will use for the information field
 files = st.search('file',...
