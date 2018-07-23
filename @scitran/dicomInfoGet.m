@@ -1,8 +1,8 @@
-function files = getdicominfo(st,files)
+function files = dicomInfoGet(st,files)
 % Get info about a dicom file.  Attach it to the input files{} structs
 %
 % Syntax
-%    files = scitran.getdicominfo(files, ...)
+%    files = scitran.dicomInfoGet(files, ...)
 %
 % Description
 %  Dicom header information describes critical parameters about the file
