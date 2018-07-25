@@ -1,10 +1,13 @@
-* Scitran data management methods enable you to find database contents, get information about these objects, download and upload files, and modify metadata. See the [Conceptual overview](conceptual-overview) and [Flywheel data model](Flywheel-data-model) pages to learn about the Flywheel organization.
+* Scitran data management methods enable you to find database contents, including both data and metadata. There are also methods to download and upload files, and modify metadata, and create collections. See the [Conceptual overview](conceptual-overview) and [Flywheel data model](Flywheel-data-model) pages to learn about the organization of Flywheel data and metadata. 
 
-* To learn about the scitran methods read the examples in these wiki pages. Perhaps simplest, we encourage you to type help or doc to bring up the current information in the method, say
+* These wiki pages are an introduction to the scitran methods. It is difficult to keep these pages absolutely up-to-date. We do try to keep the comments in the file up-to-date.  Thus, we encourage you to use the Matlab help and doc methods to bring up the current information in the method, say
 
-    doc scitran.MethodName
+    doc scitran.MethodName, or 
+    help scitran.MethodName
 
-Over time, as the methods input and return parameters stabilize, we will put more information in the wiki. Here is a link to a [list of scitran methods](scitran-methods) that we are trying to keep updated.
+As the methods stabilize, we will put more information into this wiki, or perhaps some more advanced manual system provided by the Flywheel team. 
+
+Here is a link to a [list of scitran methods](scitran-methods) to give you a quick sense of what is available now.
 
 
 
