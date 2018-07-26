@@ -28,7 +28,7 @@ fName = st.fileDownload('dtiError.json',...
 
 When downloading certain files (matlab, json, obj, nifti) you can return the contents of the file into a Matlab variable
 
-    [data, outfile] = scitran.read(file,...);
+    [data, outfile] = scitran.fileRead(file,...);
 
 For detailed examples see the script s_stDownload.m
 
