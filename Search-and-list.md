@@ -1,14 +1,14 @@
 * [List examples](List-examples)
-* [Search examples](Search-examples)
+* [Search examples](Search-examples) and [More search examples](https://github.com/scitran/client/blob/master/scripts/s_stSearches.m)
 * [Special searches](Special-search-parameters)
 
 ***
 
 ### Listing vs. Searching
 
-The scitran **list** method is useful when you know the ID of a container (project, session, acquisition or collection) and you want to list what is within it. The [list examples page](list-examples) demonstrates the usage.  One way to understand the information returned from a list or search is to explore the values in the returned Matlab structs.  You also might want to look at the [Flywheel data model](https://github.com/scitran/core/wiki/Data-Model) to see the definition of a term.
+The scitran **list** method is useful when you know the containers (project, session, acquisition or collection), and you want to list the container content. The list command returns a cell array.  Each cell has the type of the object that you are listing.  For example, listing the sessions returns a cell array of object with class flywheel.model.Session.
 
-The scitran **search** method is useful when you are planning to find and analyze data from existing projects. The scitran **search** method returns a great deal of information about the file or container. To learn more about setting search parameter see [search examples on this page](search-examples) and an [m-file with many examples](https://github.com/scitran/client/blob/master/scripts/s_stSearches.m). 
+The scitran **search** method is useful when you are trying to find data. The scitran **search** method returns a great deal of information about the object it found. The search command returns a cell array.  Each cell has the type flywheel.model.SearchResponse.  
 
 If you know what you want and where it is, use **list**.  If you are exploring, use **search**.
 
