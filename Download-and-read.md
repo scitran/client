@@ -1,24 +1,26 @@
-To download a container (e.g., project, session, acquisition,  collection or analysis) or a file use a **download**<> method. To get metadata about a file or container, The **read** method downloads a file and calls a function to load/read the data, and then deletes the file.
+To download a container (e.g., project, session, acquisition,  collection or analysis) or a file use a **download** method. The **read** methods apply to certain file types; these methods download a file, then read the data into a variable, and then delete the downloaded file.
 
 ## File download
 A file is downloaded as, well, a file. At present, the downloadFile method requires that you know the container type and the container ID of the file.  This is because files can be attached to many containers (projects, sessions, acquisitions, analyses) and the files themselves do not have IDs.  
 
 ### Download from search 
 
-     st = scitran('vistalab');
+     st = scitran('stanfordlabs');
      file = st.search('file','project label exact','DEMO','filename','dtiError.json');
-     fName = st.downloadFile(file{1});
+     fName = st.fileDownload(file{1});
 
-Note that file{1} is a struct, like the one that is returned from a search. At a minimum the struct must contain the fields `file{1}.file.name, file{1}.parent.type and file{1}.parent.x_id`.
+Note that file{1} is a flywheel.model.searchResponse.
 
 ### Container type and id known
 
 If you know the container type and id, you can use this form (which also specifies the destination)
-
-    fName = st.downloadFile('dtiError.json',...
-          'containerType','project','containerID',id, ...
-          'destination',fullfile(pwd,'deleteme.json'));
-
+```
+project = st.search('file','project label exact','DEMO');
+idGet(project{1},'data type','project')
+fName = st.fileDownload('dtiError.json',...
+    'containerType','project','containerID',id, ...
+    'destination',fullfile(pwd,'deleteme.json'));
+```
 
 ### File read
 
