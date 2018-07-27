@@ -1,10 +1,6 @@
 * The **scitran** [data management methods](data-management) search, download, upload and edit your data and metadata.
 * [Creating a scitran object](Connecting-and-Authentication) to securely communicate with a Flywheel system 
 
-```
-st = scitran('yourSiteName');
-```
-
 ***
 
 ### Data and metadata
