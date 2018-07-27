@@ -9,7 +9,7 @@ Flywheel recognizes two types of computing.
 
 Flywheel supports both types of computation.  Configuring and invoking an existing program is called running a **Gear**.  When a user writes their own program, they interact with Flywheel using the Software Development Kit (**SDK**).
 
-**Scitran** is a Matlab wrapper on the **SDK**. The **SDK** includes methods to invoke **Gears** and monitor their progress, providing command line control of the **Gears**. 
+**Scitran** is a Matlab wrapper on the **SDK**. The **SDK** includes methods to invoke **Gears** and monitor their progress, providing command line control of **Gears**. 
 
 ## Gears
 
