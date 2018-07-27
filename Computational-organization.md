@@ -13,12 +13,12 @@ Flywheel supports both types of computation.  Configuring and invoking an existi
 
 ## Gears
 
-## Own code
+## SDK
 
-### CLI
+## CLI
 
-### Analysis object
+## Analysis object
 
-### Github
+## Github support
 
 [Github toolbox methods](Toolboxes) support reproducible computation using github repositories.
