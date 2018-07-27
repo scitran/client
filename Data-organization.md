@@ -1,5 +1,5 @@
-* The **scitran** [data management methods](data-management) search, download, upload and edit your data and metadata.
-* [Creating a scitran object](Connecting-and-Authentication) to securely communicate with a Flywheel system 
+* [Creating a **scitran** object](Connecting-and-Authentication) to securely communicate with a Flywheel system 
+* [**scitran** data management methods](data-management) to search, download, upload and edit data and metadata.
 
 ***
 
