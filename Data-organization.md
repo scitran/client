@@ -1,5 +1,9 @@
 * The **scitran** [data management methods](data-management) search, download, upload and edit your data and metadata.
-* Matlab interacts with the Flywheel system through a [connecting scitran object](Connecting-and-Authentication), ```st = scitran('yourSiteName');```
+* [Creating a scitran object](Connecting-and-Authentication) to securely communicate with a Flywheel system 
+
+```
+st = scitran('yourSiteName');
+```
 
 ***
 
