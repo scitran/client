@@ -32,7 +32,7 @@ st.fileDelete -  delete a file
 ```
 Use tab-completion (e.g., st.file<Tab>) to see the current list. The arguments to the method specify the container type and other necessary parameters. 
 
-### Metadata - Notes, tags and attachments
+### Notes, tags and attachments
 
 **scitran** methods use the term Info to refer to actions on the metadata. There are many methods to read and modify the Flywheel Info fields.
 
