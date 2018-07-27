@@ -4,13 +4,13 @@ The **scitran matlab client** can be run securely from any computer on the Inter
 
 This wiki has a [conceptual overview](Conceptual-overview) of Flywheel and then explanations on how to
 
-* [Connect with a Flywheel database](Connecting-and-Authentication) 
+* [connect securely with a Flywheel database](Connecting-and-Authentication) 
 * list and search the database contents (files, metadata, and jobs)
 * download and read database objects (e.g., files, sessions, projects, analyses)
 * upload files, notes, and attachments (e.g., files, graphs, metadata)
 * upload analyses and software (e.g., Matlab files) for computational sharing
 
-This client and Flywheel are part of our vision to create a work environment that supports sharing data and computations. We hope this work will lead to reproducible research that is accessed through publications. See the [Stanford Project on Scientific Transparency (PoST)](http://post.stanford.edu) for an overview of our goals.
+This client and Flywheel are part of our vision to create a work environment that supports sharing data and computations. We hope these tools lead to reproducible research that supports better sharing through publications. See the [Stanford Project on Scientific Transparency (PoST)](http://post.stanford.edu) for a statement of our goals.
 
 ### Related information
 
