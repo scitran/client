@@ -17,9 +17,9 @@ The database hierarchy has less flexibility than an operating systems' directory
 
 There is one important conceptual difference to remember as well: When using a computer we typically focus on the files and directories. When using database systems, the metadata has a very prominent role. You will find critical experimental information that is indexed and searchable in the metadata. All Flywheel Containers and Files have metadata. 
 
-### Methods and data
+### Methods
 
-**Scitran** methods are organized the actions that apply to containers, data files, and metadata. The naming convention we use is to specify the **type of object** followed by an **action**.  For example, suppose you create a scitran object, 
+[**Scitran** methods](https://github.com/vistalab/scitran/wiki/scitran-methods) are organized the actions that apply to containers, data files, and metadata. The naming convention we use is to specify the **type of object** followed by an **action**.  For example, suppose you create a scitran object, 
 
     st = scitran('stanfordlabs');
 
