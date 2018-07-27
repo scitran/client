@@ -5,7 +5,7 @@
 ***
 Flywheel recognizes two types of computing.  
 * One type executes programs that are installed in the user's system (e.g., FSL, Freesurfer, and dcm2niix). These programs are run by specifying input files and parameters. 
-* In addition, many users compute using their **own code**. They use a variety of languages (Python, Matlab, R, bash scripts). These users can obtain authorization to read and edit Flywheel data and metadata.
+* In addition, many users compute using their **own code** in Python, Matlab, R, or bash scripts. Within their own code, users can obtain authorization to read and edit Flywheel data and metadata.
 
 Flywheel supports both types of computation.  Configuring and invoking an existing program is called running a **Gear**.  When a user writes their own program, they interact with Flywheel using the Software Development Kit (**SDK**).
 
@@ -14,6 +14,8 @@ Flywheel supports both types of computation.  Configuring and invoking an existi
 ## Gears
 
 ## Own code
+
+### CLI
 
 ### Analysis object
 
