@@ -38,9 +38,7 @@ The method is incomplete because for certain file types the load requires an aux
 
 ## Container download
 
-** NOT YET IMPLEMENTED **
-
-We are expecting to get an endpoint that downloads a tar-file of a container.  
+IN PROGRESS
 
     project = st.search('project','project label exact','VWFA');
     id = idGet(project{1});
@@ -48,5 +46,7 @@ We are expecting to get an endpoint that downloads a tar-file of a container.
 
 A project, session, acquisition, collection or analysis is downloaded as a tar file. 
 
-It will soon be possible to download a project in [BIDS](BIDS) format.
+## BIDS
+
+Using the CLI to download a project in [BIDS](BIDS) format.
 
