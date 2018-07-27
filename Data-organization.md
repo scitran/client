@@ -42,7 +42,7 @@ Certain types of **metadata** are given a special status.  These are **notes, ta
 
 More details about the [Flywheel data model are here](Flywheel-data-model)
 
-### A virtual project:  Collections
+### Virtual projects:  Collections
 
 Data management simplifies the task of reusing data.  In a typical computer system, reusing the data typically means copying many files into a new directory tree.  In a database, however, we can easily create a virtual experiment just by adding new fields into the database.  The data stay in their position, but we see the virtual experiment by looking up all the files that are in the database field.
 
