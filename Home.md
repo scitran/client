@@ -1,16 +1,16 @@
-The **scitran Matlab client** enables users to compute with a [Flywheel data and computation system](https://flywheel.io) from their Matlab process. The client has functions that search, upload, download, read and analyze Flywheel data and metadata. The client also schedules and controls jobs (Gears). 
+The **scitran Matlab client** enables users to programmatically control a [Flywheel data and computation system](https://flywheel.io) from their Matlab command window. The client has functions that search, upload, download, read and analyze Flywheel data and metadata. The client also schedules and controls computational jobs (Gears). 
 
 The **scitran matlab client** can be run securely from any computer on the Internet. We have used the client extensively on Mac and Linux systems.
 
 This wiki has a [conceptual overview](Conceptual-overview) of Flywheel and then explanations on how to
 
-* [Connect](Connecting-and-Authentication) with a Flywheel database
+* [connect securely with a Flywheel database](Connecting-and-Authentication) 
 * list and search the database contents (files, metadata, and jobs)
 * download and read database objects (e.g., files, sessions, projects, analyses)
 * upload files, notes, and attachments (e.g., files, graphs, metadata)
 * upload analyses and software (e.g., Matlab files) for computational sharing
 
-This client and Flywheel are part of our vision to create a work environment that supports sharing data and computations. We hope this work will lead to reproducible research that is accessed through publications. See the [Stanford Project on Scientific Transparency (PoST)](http://post.stanford.edu) for an overview of our goals.
+This client and Flywheel are part of our vision to create a work environment that supports sharing data and computations. We hope these tools lead to reproducible research that supports better sharing through publications. See the [Stanford Project on Scientific Transparency (PoST)](http://post.stanford.edu) for a statement of our goals.
 
 ### Related information
 
