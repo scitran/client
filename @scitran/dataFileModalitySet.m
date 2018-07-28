@@ -67,29 +67,3 @@ end
         
 end
 
-%{
-% st.fw.getAcquisitionFileInfo(thisAcquisition.id,thisFile.name)
-% Not sure if we can replace modality and classification, or only
-% classification
-thisStruct = struct('modality','CG','classification',struct('asset',{{'car'}}));
-thisStruct = struct('asset',{{'car'}});
-st.fw.setAcquisitionFileClassification(thisAcquisition.id, files.name, thisStruct)
-%}
-%{
-% We think this follows the logic.  Let's ask JE what we should do
-%
-st.fw.replaceAcquisitionFileClassification(thisAcquisition.id, files.name, struct('asset',{{'car'}}))
-%}
-
-%%
-%{
-st = scitran('stanfordlabs');
-h = st.projectHierarchy('Graphics assets');
-
-% How do we adjust cInput?
-% cInput = flywheel.model.ClassificationUpdateInput;
-acquisitions = h.acquisitions{2};   % From session 2
-thisAcquisition = acquisitions{2};
-files = thisAcquisition.files;
-thisFile = files{1}
-%}

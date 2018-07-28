@@ -5,7 +5,8 @@ function info = containerInfoGet(st,containerType, containerID)
 %   info = st.containerInfoGet(containerType, containerID)
 %
 % Description
-%   Return a struct with the container information.
+%   Return a struct with the container information.  The notes and tags are
+%   attached to the returned info object.
 %
 % Inputs
 %   containerType:  project, session, acquisition, or collection.  There is
@@ -23,6 +24,7 @@ function info = containerInfoGet(st,containerType, containerID)
 % BW, Vistasoft, 2017
 %
 % See also:
+%    scitran.containerInfoSet
 
 % Example
 %{
@@ -30,11 +32,11 @@ function info = containerInfoGet(st,containerType, containerID)
 
   project = st.search('project','project label exact','VWFA');
   id = idGet(project{1},'data type','project');
-  info = st.getContainerInfo('project',id);
+  info = st.containerInfoGet('project',id);
 
   sessions = st.list('session',id);   % Parent id
   stPrint(sessions,'subject','code')
-  info = st.getContainerInfo('session',idGet(sessions{1},'data type','session'));
+  info = st.containerInfoGet('session',idGet(sessions{2},'data type','session'));
 %}
 
 %% Parse
