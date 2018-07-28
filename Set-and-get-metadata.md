@@ -62,3 +62,33 @@ st.fileInfoSet(files{1},qaInfo);
 ### getContainerInfo and setContainerInfo
 The search and list operations typically return the metadata (info) about a container.  The getContainerInfo and setContainerInfo methods return structs with the metadata (info). They are not used a lot because the information is also present from a list or search.  (MORE INSTRUCTIONS NEEDED HERE).
 
+## Scratch code to deal with somewhere
+
+```
+%{
+% st.fw.getAcquisitionFileInfo(thisAcquisition.id,thisFile.name)
+% Not sure if we can replace modality and classification, or only
+% classification
+thisStruct = struct('modality','CG','classification',struct('asset',{{'car'}}));
+thisStruct = struct('asset',{{'car'}});
+st.fw.setAcquisitionFileClassification(thisAcquisition.id, files.name, thisStruct)
+%}
+%{
+% We think this follows the logic.  Let's ask JE what we should do
+%
+st.fw.replaceAcquisitionFileClassification(thisAcquisition.id, files.name, struct('asset',{{'car'}}))
+%}
+
+%%
+%{
+st = scitran('stanfordlabs');
+h = st.projectHierarchy('Graphics assets');
+
+% How do we adjust cInput?
+% cInput = flywheel.model.ClassificationUpdateInput;
+acquisitions = h.acquisitions{2};   % From session 2
+thisAcquisition = acquisitions{2};
+files = thisAcquisition.files;
+thisFile = files{1}
+%}
+```
