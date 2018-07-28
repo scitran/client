@@ -1,24 +1,27 @@
-function [dataFiles, acqID] = fileDataList(st,containerType,containerID, fileType, varargin)
-% Find the data files (files in an acquisition) that match a file type
+function [dataFiles, acqID] = dataFileList(st,containerType, containerID, fileType, varargin)
+% Find the data files that match a specific file type property
 %
-%   [dataFiles, acqID] = st.fileDataList(containerType, containerID, fileType, varargin)
+%   [dataFiles, acqID] = st.dataFileList(containerType, containerID, fileType, varargin)
 %
 % Description
-%   fileData refers to a file attached to an acquisition. We return a list
-%   of all the files within a container (project, session, acquisition,
-%   collection) that are in an acquisition and match a particular fileType
-%   attribute (e.g., 'archive', 'dicom', 'nifti').
+%   dataFile refers to a file in an acquisition. (Flywheel sometimes calls
+%   these acquisitionFiles). There are times we want to find all the data
+%   files within a session or a project. This method returns a list of all
+%   the data files within a container (project, session, acquisition,
+%   collection) and match a particular fileType attribute (e.g., 'archive',
+%   'dicom', 'nifti').
 %
 % Inputs
 %   st - scitran object
-%   containerType - the big container (e.g., project, session, collection)
+%   containerType - a container (e.g., project, session, collection)
 %   containerID   - string
 %   fileType      - dicom, nifti, archive, source code, ...
 %
 % Optional key/value pairs
-%    info field label and value
+%   summary - print a summary (default is true)
+%   info field label and value - Not yet implemented
 %
-% Examples - see code
+% Examples - see code in the method
 %
 % ZL/BW Vistasoft Team, 2018
 %
@@ -27,26 +30,31 @@ function [dataFiles, acqID] = fileDataList(st,containerType,containerID, fileTyp
 
 % Examples:
 %{
- % All the zip files in a session
+ % All the zip files ('archive') in a session
  st = scitran('stanfordlabs');
  h = st.projectHierarchy('Graphics assets');
  sessionID = h.sessions{1}.id;
- files = st.fileDataList('session',sessionID,'archive')
+ files = st.dataFileList('session',sessionID,'archive')
 %}
 %{
  % All the nifti files in a project
  st = scitran('stanfordlabs');
  project = st.search('project','project label exact','TBI: NeuroCor');
- dataFiles = st.fileDataList('project',idGet(project{1},'data type','project'),'nifti')
-%}
-%{
-  % All the archive files in an acquisition
-  st = scitran('stanfordlabs');
-  h = st.projectHierarchy('VWFA');
+ dataFiles = st.dataFileList('project',idGet(project{1},'data type','project'),'nifti')
 %}
 
 %%
-summary = true;
+p = inputParser;
+p.addRequired('st',@(x)(isa(x,'scitran')));
+p.addRequired('containerType',@ischar);
+p.addRequired('containerID',@ischar);
+p.addRequired('fileType',@ischar);
+p.addParameter('summary',true,@islogical);
+
+p.parse(st,containerType,containerID,fileType,varargin{:});
+
+summary = p.Results.summary;
+
 %%
 switch containerType
     case 'project'
@@ -64,7 +72,6 @@ switch containerType
                 dataFiles{ss}{aa} = stFileSelect(files,'type',fileType,varargin{:});
             end
         end
-        
             
     case 'session'
         % Top container is a session
@@ -73,13 +80,21 @@ switch containerType
         % Loop through all the acquisitions and select the files that
         % match
         dataFiles = cell(1,1);
+        acqID = cell(length(acq),1);
         for ii=1:length(acq)
             acqID{ii} = acq{ii}.id;
             files = st.list('file',acq{ii}.id);
             dataFiles{ii} = stFileSelect(files,'type',fileType,varargin{:});
         end
+        
     case 'acquistion'
+        disp('Acquisition: Not yet implemented');
+        
+    case 'collection'
+        disp('Collection: Not yet implemented');
+        
     otherwise
+        error('Unknown container type %s',containerType);
 end
 
 if summary

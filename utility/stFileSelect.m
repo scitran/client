@@ -7,7 +7,7 @@ function selectedFiles = stFileSelect(files,slot,matchVal,varargin)
 %  matchVal - What the slot must match
 %
 % Optional key/value pairs
-%    One info field property and one value
+%    info field name, the info field value
 %
 % Returns
 %  keepFiles - The files that matched
@@ -17,6 +17,9 @@ function selectedFiles = stFileSelect(files,slot,matchVal,varargin)
 % Examples:
 %{
   stFileSelect(files,'type','archive','asset','car');
+%}
+%{
+  stFileSelect(files,'name',filename);
 %}
 
 %%
@@ -47,6 +50,7 @@ for jj = 1:length(files)
                 end
             catch
                 % Did not match
+                disp('No info field match');
             end
         end
     end

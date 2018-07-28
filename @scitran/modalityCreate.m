@@ -2,10 +2,11 @@ function modalityCreate(st,name,varargin)
 % Create a new Flywheel modality defining the properties of a data type
 %
 % Inputs
-%   name:      Modality name (a string)
+%   name:      Modality name, assigned to be the modality 'id'
 %
 % Optional Key/Value pairs
-%  classification:  Struct defining options for modality properties
+%  classification:  Struct defining options for classifications within the
+%                   modality
 %
 % Returns
 %   None
@@ -15,22 +16,22 @@ function modalityCreate(st,name,varargin)
 % See also
 %   scitran.modalityReplace
 
+% Examples:
 %{
-
-name = 'Dental'
+name = 'Dental';
 classification = ...
-    struct('data', {{'radiance', 'rgb'}}, ...
+    struct(...
+    'data', {{'radiance', 'rgb'}}, ...
     'location',{{'whitesurface','teeth', ...
-    'tonguelateral','tongueventral','tonguedorsal',...
-    'lowerinnerlip','hardpalate','cheek','floorofmouth'}});
+      'tonguelateral','tongueventral','tonguedorsal',...
+      'lowerinnerlip','hardpalate','cheek','floorofmouth'}});
 st.modalityCreate(name,'classification',classification);
-
 %}
 
 %%
 p = inputParser;
 p.addRequired('st',@(x)(isa(x,'scitran')));
-p.addRequired('modality',@(x)(isa(x,'flywheel.model.Modality')));
+p.addRequired('name',@ischar);
 p.addParameter('classification',[],@isstruct);
 
 p.parse(st,name,varargin{:});
@@ -41,7 +42,7 @@ classification = p.Results.classification;
 
 modality = flywheel.model.Modality('id', name, 'classification', classification);
 
-% The name (id) and a classification specification.
+% The name (id) and the classification specification.
 st.fw.addModality(modality);
 
 end

@@ -16,9 +16,13 @@ function modalityReplace(st,id,modality)
 % See also
 %   scitran.modalityCreate
 
+% Examples:
 %{
-(newModality = flywheel.model.Modality('id', 'Dental', 'classification', classification);
+cgClasses.model = {'Subaru','Mercedes','Ford','Volvo','Ferrari'};
+modality = flywheel.model.Modality('id','CG','classification',cgClasses);
+st.modalityReplace('CG',modality);
 %}
+
 
 %%
 p = inputParser;
