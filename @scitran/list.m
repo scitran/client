@@ -26,7 +26,7 @@ function result = list(obj, returnType, parentID, varargin)
 %
 % Inputs (required)
 %  returnType - project, session, acquisition, file, collection,
-%               collectionsession, collectionacquisition
+%               collectionsession, collectionacquisition, group
 %  parentID   - A Flywheel ID of the parent container.
 %               If the search is for a project, then parentID is the group
 %               label, or the string 'all' or '' to indicate all groups.
@@ -38,11 +38,12 @@ function result = list(obj, returnType, parentID, varargin)
 % Return
 %  result:  Cell array of flywheel.model objects
 %
-% Example on Wiki
+% Examples
 %  projects     = st.list('project','wandell');
 %  sessions     = st.list('session',idGet(projects{5}));     % Pick one ....
 %  acquisitions = st.list('acquisition',idGet(sessions{1})); 
 %  files        = st.list('file',idGet(acquisitions{1})); 
+%  groups       = st.list('group','');
 %
 % LMP/BW Vistasoft Team, 2015-16
 %
@@ -75,11 +76,6 @@ function result = list(obj, returnType, parentID, varargin)
 
 %% Programming todo
 %
-% N.B. Acquisition id '56e9d386ddea7f915e81f705' (stanfordlabs ) had a
-% problem because it has a field name with a very long string. Matlab
-% has a longest permission field name (63), set in namelengthmax.  We
-% can't adjust that.  So we need JE to catch this on his end.
-
 
 %% Parse inputs
 p = inputParser;
@@ -114,7 +110,12 @@ switch returnType
         % the groups that the user is part of.  Could that be?
         allGroups = fw.getAllGroups;
         data = cellfun(@(x)(x.label),allGroups,'UniformOutput',false);
-
+    case 'modality'
+        % These are the general data type modalities on the scitran site.
+        % They are used to make metadata.
+        % st.list('modality','');
+        allModalities = fw.getAllModalities;
+        data = cellfun(@(x)(x.id),allModalities,'UniformOutput',false);
     case 'project'
         % ParentID is a group label
         %  projects     = st.list('project','wandell');
@@ -216,6 +217,10 @@ switch returnType
     case 'collectionacquisition'
         % Parent is the collection
         data = fw.getCollectionAcquisitions(parentID);
+        
+    case 'acquisitionfile'
+        % The files in an acquisition, which we call data files, usually
+        disp('acquisition file not yet implemented');
         
     otherwise
         error('Unknown object type %s\n',returnType);

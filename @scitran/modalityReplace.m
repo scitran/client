@@ -1,0 +1,32 @@
+function modalityReplace(st,id,modality)
+% Replace an existing Flywheel modality with a new definition
+%
+% Inputs
+%   id:        Old modality id (its name, a string)
+%   modality:  New modality object 
+%
+% Optional Key/Value pairs
+%   None
+%
+% Returns
+%   None
+%
+% BW, Vistasoft Team, 2018
+%
+% See also
+%   scitran.modalityCreate
+
+%{
+(newModality = flywheel.model.Modality('id', 'Dental', 'classification', classification);
+%}
+
+%%
+p = inputParser;
+p.addRequired('st',@(x)(isa(x,'scitran')));
+p.addRequired('id',@ischar)
+p.addRequired('modality',@(x)(isa(x,'flywheel.model.Modality')));
+
+%%
+st.fw.replaceModality(id,modality);
+
+end

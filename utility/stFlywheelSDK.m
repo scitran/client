@@ -106,7 +106,7 @@ switch action
         matlab.addons.toolbox.installToolbox(tbxFile);
         
         % We might decide to verify here
-        status = stFlywheelSDK('exist',true);
+        status = stFlywheelSDK('exist');
         if ~status
             warning('Installation problem');
             return;

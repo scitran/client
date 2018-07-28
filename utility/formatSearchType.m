@@ -11,8 +11,10 @@ function srch = formatSearchType(srch)
 
 srch = lower(srch);
 valid = {'file','session','acquisition','project','analysis','group', ...
-    'collection','collectionsession','collectionacquisition'};
-if ismember(srch,valid)    
+    'collection','collectionsession','collectionacquisition',...
+    'modality','acquisitionfile'};
+if ismember(srch,valid)
+    % Already valid, so return
     return;
 end
 
@@ -24,12 +26,15 @@ elseif strcmp(srch,'projects'),      srch = 'project';     return;
 elseif strcmp(srch,'collections'),   srch = 'collection';  return;
 elseif strcmp(srch,'analyses'),      srch = 'analysis';    return;
 elseif strcmp(srch,'groups'),        srch = 'group';       return;
+elseif strcmp(srch,'modalities'),    srch = 'modality';    return;
 elseif strcmp(srch,'collectionsessions')
-    srch = 'collectionsession';
+    srch = 'collectionsession'; return;
 elseif strcmp(srch,'collectionacquisitions')
-    srch = 'collectionacquisition';
+    srch = 'collectionacquisition'; return;
+elseif strcmp(srch,'acquisitionfiles')
+    srch = 'acquisitionfile'; return;
 else
-    % Not fine and not plural.  Complain.
+    % Complain.
     error('Unknown srch string %s\n',srch);
 end
 
