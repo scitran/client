@@ -1,6 +1,11 @@
 All Flywheel containers (projects, sessions, acquisitions, files and collections) can have metadata. The metadata are stored in Information fields attached to the container; you can see the information fields in the user interface by clicking on the drawer on the right and selecting 'Information.' If there is no metadata, the field is gray'd out.
 
-### File info get
+## Modality and classification
+
+st.dataFileModalitySet and st.dataFileModalityGet
+
+### Info
+
 Files have metadata associated with them. For example, when we read a DICOM file from a scanner, Flywheel automatically extracts the header information and incorporates much of it into Information file for the dicom file. This makes the header information searchable in the database. 
 
 To read this metadata use the **fileInfoGet** method.
