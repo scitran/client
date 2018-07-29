@@ -72,8 +72,9 @@ end
 % sourcecode and they ignore obj.
 fileTypes = {'matlabdata','nifti','json','source code','obj'};
 fileType = fileInfo.file.type;
+fileType = ieParamFormat(fileType);  % Remove spaces, force lower case
 try
-    validatestring(fileType,fileTypes)
+    validatestring(fileType,fileTypes);
 catch
     [~,~,ext] = fileparts(fileInfo.file.name);
     switch ext
@@ -113,7 +114,7 @@ switch fileType
         % fprintf('CSV read Not yet implemented %s\n',fileType);
         % fprintf('Download name %s\n',dname);
         % data = textscan(dname);
-    case {'json','source code'}
+    case {'json','sourcecode'}
         % Use JSONio stuff
         data = jsonread(dname);
         
