@@ -57,14 +57,14 @@ idGet(files)
 %{
 % Checking for the SDK type containers
 % Notice that no data type is required for the idGet in this case.
-projects = st.list('project','wandell');
-projID = idGet(projects{1});
-idGet(projects)
-sessions = st.list('session',projID);
-id = idGet(sessions)
-acquisitions = st.list('acquisition',id{1});
-id = idGet(acquisitions)
-id = idGet(acquisitions{1})
+ projects = st.list('project','wandell');
+ projID = idGet(projects{1});
+ idGet(projects)
+ sessions = st.list('session',projID);
+ id = idGet(sessions)
+ acquisitions = st.list('acquisition',id{1});
+ id = idGet(acquisitions)
+ id = idGet(acquisitions{1})
 %}
 %{
 % We need to add the collection tests when that is fixed in Flywheel

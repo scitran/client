@@ -1,25 +1,28 @@
 function [data, dname] = fileRead(st,fileInfo,varargin)
 % Read scitran data from a file into a Matlab variable
 %
-%   [data, destinationFile] = st.fileRead(file, ...);
+%   [data, destinationFile] = st.fileRead(fileInfo, ...);
 %
 % Inputs:
-%    fileInfo - An object returned by a search
+%    fileInfo - An object returned by a search, FileEntry, or filename.
+%               Additional parameters are required for filename or
+%               FileEntry.
 %
-% Parameter
+% Optional key/value parameter
 %    'destination'  - Full path to file destination
 %    'save'         - Delete or not destination file (logical)
+%    'containertype'- Required for filename or FileEntry
+%    'containerid'  - Required for filename or FileEntry
 %
 % See also: s_stRead, scitran.downloadFile
 %
 % BW/SCITRAN Team, 2017
 
 % Programming todo
-%   We need to add some of the read functions into scitran.  Sigh.  For
-%   now, I am just adding vistasoft to the path.  Bit niftiRead, objRead
-%   ...
-%
-%
+%   We need to add some of the read functions into scitran.  For now, I am
+%   just adding vistasoft to the path.  Bit niftiRead, objRead are part of
+%   vistasoft, not scitran.
+
 % Examples:
 %{
   % Read a JSON file
@@ -45,33 +48,75 @@ function [data, dname] = fileRead(st,fileInfo,varargin)
 %% Parse input parameters
 
 p = inputParser;
+varargin = stParamFormat(varargin);
 
 p.addRequired('st',@(x)(isa(x,'scitran')));
-p.addRequired('fileInfo',@(x)(isa(x,'flywheel.model.SearchResponse')));
+vFunc = @(x)(isa(x,'flywheel.model.SearchResponse') || ...
+             isa(x,'flywheel.model.FileEntry') || ...
+             ischar(x));
+p.addRequired('fileInfo',vFunc);
 
 p.addParameter('destination',[],@ischar);
 p.addParameter('save',false,@islogical);
+p.addParameter('containerid','',@ischar);
+p.addParameter('containertype','',@ischar);
 
 p.parse(st, fileInfo, varargin{:});
 
-save        = p.Results.save;
+save          = p.Results.save;
+containerType = p.Results.containertype;
+containerID   = p.Results.containerid;
+destination   = p.Results.destination;
+
 % The only reason you would have two outputs is to save the file.
 if nargout > 1, save = true; end
 
-% Create destination from file name.  Might need the extension for
-% filetype
-destination = p.Results.destination;
-fname       = fileInfo.file.name;
-if isempty(p.Results.destination),  dname = fullfile(tempdir,fname); 
-else,                               dname = destination;
+%% Get the file name, container id and container type
+if ischar(fileInfo)
+    % Set up the download variables
+    fname = fileInfo;
+    if isempty(containerType) || isempty(containerID)
+        error('If file is a string, you must specify container information');
+    end
+    % We need to search for the file type
+    srch = st.search('file','file name exact',fname, ...
+        'acquisition id',containerID);
+    fileType = srch{1}.file.type;
+elseif isa(fileInfo,'flywheel.model.FileEntry')
+    % A file entry is not much more than the file name at this point.  We
+    % need to specify container type and id.  Not sure why it is so
+    % limited.
+    fname = fileInfo.name;
+    fileType      = fileInfo.type;
+    if isempty(containerType) || isempty(containerID)
+        error('If file is a FileEntry, you must specify container information');
+    end
+elseif isa(fileInfo,'flywheel.model.SearchResponse')
+    % A Flywheel search object has a lot of information about the file.
+    fname         = fileInfo.file.name;
+    containerType = fileInfo.parent.type;
+    containerID   = fileInfo.parent.id;
+    fileType      = fileInfo.file.type;
 end
 
-% When we read the file, it should be one of these file types
+% Create destination from file name.  Might need the extension for
+% filetype
+if isempty(destination),  dname = fullfile(tempdir,fname); 
+else,                     dname = destination;
+end
+
+%% Download the file
+
+st.fileDownload(fname,...
+    'container type',containerType,...
+    'container id', containerID,...
+    'destination',dname);
+
+%% When we read the file, it should be one of these file types
 
 % Not all file types are coordinated with Flywheel.  They label json as
 % sourcecode and they ignore obj.
 fileTypes = {'matlabdata','nifti','json','source code','obj'};
-fileType = fileInfo.file.type;
 fileType = ieParamFormat(fileType);  % Remove spaces, force lower case
 try
     validatestring(fileType,fileTypes);
@@ -84,10 +129,6 @@ catch
             error('Unknown file type %s\n',fileInfo.file.type);
     end
 end
-
-%% Download the file
-
-st.fileDownload(fileInfo,'destination',dname);
 
 %% Load the file data
 

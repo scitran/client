@@ -24,33 +24,45 @@ function selectedFiles = stFileSelect(files,slot,matchVal,varargin)
 
 %%
 p = inputParser;
+
 p.addRequired('files',@iscell);
 p.addRequired('slot',@ischar);
 p.addRequired('matchVal',@ischar);
+p.addParameter('infoval','',@ischar);
 
 p.parse(files,slot,matchVal); %,varargin{:});
+matchVal = ieParamFormat(matchVal);
 
 %%  Check if the file type and the critical info field matches the requirements
 
 cnt = 1;
 selectedFiles = {};
 for jj = 1:length(files)
-    if isequal(files{jj}.(slot),matchVal)
+    % Force the slot value to lower case and no spaces.
+    try
+        slotVal = ieParamFormat(files{jj}.(slot));
+    catch
+        % If it doesn't exist, set it to empty.
+        slotVal = '';
+    end
+    
+    % See if the slot value matches
+    if isequal(slotVal,matchVal)
         if isempty(varargin)
-            % Have a match.  No info fields to check.
+            % No info fields to check.
             selectedFiles{cnt} = files{jj}; %#ok<AGROW>
             cnt = cnt + 1;
         else
-            % Check the info field specified by varargin
+            % There is also an info field specified.  Check that.
             try
-                % Does the info field match?
+                % Does the info field match?  This must be exact.
                 if isequal(files{jj}.info.(varargin{1}),varargin{2})
                     selectedFiles{cnt} = files{jj}; %#ok<AGROW>
                     cnt = cnt + 1;
                 end
             catch
                 % Did not match
-                disp('No info field match');
+                disp('Seems to be a bad info field name %s\n',varargin{1});
             end
         end
     end

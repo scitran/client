@@ -10,13 +10,15 @@ function destination = fileDownload(obj,file,varargin)
 %   has input and output files, use st.analysisDownload.
 %
 % Required Inputs
-%  file - A filename (string), or 
-%         A Flywheel search object.
+%  file - A filename (string), FileEntry, or a Flywheel search object.
+%         Additional parameters are required for filename or FileEntry.
 %
 % Optional Key/value parameter 
-%  if file is a string you must specify the container information
-%    containerType {'project', 'session', 'acquisition', 'collection'}
-%    containerID   You can use idGet() for most objects
+%  if file is a string or FileEntry you must specify the container
+%  information 
+%
+%  containerType {'project', 'session', 'acquisition', 'collection'}
+%  containerID   You can use idGet() for most objects
 %  destination:   Full path to the local file (default is in tempdir)
 %  unzip:         Unzip the download and delete the zip file
 %
@@ -95,7 +97,9 @@ varargin = stParamFormat(varargin);
 p = inputParser;
 
 % Either a struct or a char string
-vFunc =( @(x)(isa(x,'flywheel.model.SearchResponse') || ischar(x)));
+vFunc = @(x)(isa(x,'flywheel.model.SearchResponse') || ...
+             isa(x,'flywheel.model.FileEntry') || ...
+             ischar(x));
 p.addRequired('file',vFunc);
 
 % Param/value pairs
@@ -105,13 +109,15 @@ p.addParameter('destination','',@ischar);
 p.addParameter('unzip',false,@islogical);
 
 p.parse(file,varargin{:});
+
 containerType = p.Results.containertype;
 containerID   = p.Results.containerid;
 file          = p.Results.file;
 destination   = p.Results.destination;
 zipFlag       = p.Results.unzip;
 
-%% Set up the Flywheel SDK call
+%% Set up the Flywheel SDK method parameters. 
+% These are the filename and container information.
 
 if ischar(file)
     % Set up the download variables
@@ -119,8 +125,16 @@ if ischar(file)
     if isempty(containerType) || isempty(containerID)
         error('If file is a string, you must specify container information');
     end
-else
-    % A Flywheel search object
+elseif isa(file,'flywheel.model.FileEntry')
+    % A file entry is not much more than the file name at this point.  We
+    % need to specify container type and id.  Not sure why it is so
+    % limited.
+    filename = file.name;
+    if isempty(containerType) || isempty(containerID)
+        error('If file is a FileEntry, you must specify container information');
+    end
+elseif isa(file,'flywheel.model.SearchResponse')
+    % A Flywheel search object has a lot of information about the file.
     containerType = file.parent.type;
     containerID   = file.parent.id;
     filename      = file.file.name;
