@@ -42,7 +42,7 @@ function [data, dname] = fileRead(st,fileInfo,varargin)
                    'subject code',4256,...
                    'filetype','nifti',...
                    'summary',true);
-  data = st.fileRead(file{1});
+  data = st.fileRead(file{1});   % Requires vistasoft niftiRead on path
 %}
 
 %% Parse input parameters
@@ -72,33 +72,10 @@ destination   = p.Results.destination;
 if nargout > 1, save = true; end
 
 %% Get the file name, container id and container type
-if ischar(fileInfo)
-    % Set up the download variables
-    fname = fileInfo;
-    if isempty(containerType) || isempty(containerID)
-        error('If file is a string, you must specify container information');
-    end
-    % We need to search for the file type
-    srch = st.search('file','file name exact',fname, ...
-        'acquisition id',containerID);
-    fileType = srch{1}.file.type;
-elseif isa(fileInfo,'flywheel.model.FileEntry')
-    % A file entry is not much more than the file name at this point.  We
-    % need to specify container type and id.  Not sure why it is so
-    % limited.
-    fname = fileInfo.name;
-    fileType      = fileInfo.type;
-    if isempty(containerType) || isempty(containerID)
-        error('If file is a FileEntry, you must specify container information');
-    end
-elseif isa(fileInfo,'flywheel.model.SearchResponse')
-    % A Flywheel search object has a lot of information about the file.
-    fname         = fileInfo.file.name;
-    containerType = fileInfo.parent.type;
-    containerID   = fileInfo.parent.id;
-    fileType      = fileInfo.file.type;
-end
 
+[fname, containerType, containerID, fileType] = ...
+    st.dataFileParse(fileInfo,containerType,containerID);
+    
 % Create destination from file name.  Might need the extension for
 % filetype
 if isempty(destination),  dname = fullfile(tempdir,fname); 
@@ -125,6 +102,8 @@ catch
     switch ext
         case '.obj'
             fileType = 'obj';
+        case '.json'
+            fileType = 'source code';
         otherwise
             error('Unknown file type %s\n',fileInfo.file.type);
     end
@@ -133,7 +112,7 @@ end
 %% Load the file data
 
 % This code depends on having certain
-switch fileType
+switch ieParamFormat(fileType)
     case {'matlabdata'}        
         data   = load(dname);
         
