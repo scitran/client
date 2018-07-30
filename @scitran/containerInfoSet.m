@@ -6,8 +6,8 @@ function info = containerInfoSet(st,containerType,containerID,data,varargin)
 %
 % Description
 %   Modify an info field of a container.  This includes notes and tags. You
-%   are permitted to modify some, but not all of the fields. More
-%   definition is needed here.
+%   are permitted to modify some, but not all of the basic info fields.
+%   More definition is needed here.
 %
 % Input
 %   containerType:  A string from 'project','session','acquisition','collection'
