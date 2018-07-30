@@ -2,11 +2,11 @@ All Flywheel containers (projects, sessions, acquisitions, files and collections
 
 The metadata are a very powerful aspect of analyzing the data. They represent features of the data files such as the subject, the time and date of the experiment, the parameters of the instrument, notes that the experimenters made about the experiment, and so forth.  Just like the experimental data take many forms (e.g., different types of MRI measurements), the metadata too are usefully organized into different categories.
 
-### Info
+### File metadata (Information)
 
-Files have metadata associated with them. For example, when we read a DICOM file from a scanner, Flywheel automatically extracts the header information and incorporates much of it into Information file for the dicom file. This makes the header information searchable in the database. 
+Every Flywheel file has metadata; the specific entries depends on the type of file. For example, when we read a DICOM file from an MR scanner, Flywheel automatically extracts the header information and incorporates much of it into Information file for the DICOM file. This makes the header information searchable in the database. 
 
-To read this metadata use the **fileInfoGet** method.
+To read the file metadata use the **fileInfoGet** method.
 ```
 st = scitran('cni');
 files = st.search('file',...
@@ -35,7 +35,8 @@ fprintf('%d\n',info.info.EchoTime)
 30
 ```
 ### fileInfoSet
-The **fileInfoSet** method lets you edit metadata in a file's Information field. This code snippet, which was run on the CNI site, illustrates the **fileInfoSet** method.
+The **fileInfoSet** method edits the file's Information field (metadata). This code snippet, which was run on the CNI site, illustrates the **fileInfoSet** method. In this example, we add a metadata field to the file.  The field represents the number of noise spikes in the MR data for this quality assurance test.
+
 ```
 % This json file has metadata we use in our quality assurance testing
   files = st.search('file',...
@@ -57,14 +58,14 @@ st.fileInfoSet(files{1},qaInfo);
 ```
 
 ### Container info
-
-The search and list operations typically return the metadata (info) about a container.  The getContainerInfo and setContainerInfo methods return structs with the metadata (info). They are not used a lot because the information is also present from a list or search.  (MORE INSTRUCTIONS NEEDED HERE).
-
+Containers also have Information fields (metadata). The containerInfoGet and containerInfoSet methods return objects with the metadata. (MORE INSTRUCTIONS NEEDED HERE).
 
 ## Modality and classification
-The Flywheel database recognizes different types of experimental modalities.  For many people, the principle modality is magnetic resonance data (MR). But new modalities (e.g., EEG, PET, Computer Graphics, Dental) have also been used.  Users are free to create new **modalities** and to classify data within the modality.  By choosing the right modality and setting up its classification, you provide a framework for the metadata in that modality.
+Flywheel identifies one special type of metadata, the data **modality**. This is a major description summarizing the type of data.  For most users, the principal modality is magnetic resonance (MR). But some Flywheel users also story data from other modalities (e.g., EEG, PET, Computer Graphics, Dental).  Users are free to create new **modalities** and to associate each modality with specific types of classification data that are unique to that modality.  This can be very helpful for searching and organizing data.
 
-Relevant scitran routines for creating modalities are
+For example, at Stanford we use a Computer Graphics ('CG') modality to store assets for rendering.  We are still experimenting with the fields we will use for classifying the assets, but they include notions of the asset type (e.g., car or pedestrian), and other features (skymap, object).  
+
+Relevant scitran routines for creating modalities and their classifications are
 
 ```
 st.modalityCreate;
