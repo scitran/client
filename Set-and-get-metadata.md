@@ -1,8 +1,6 @@
-All Flywheel containers (projects, sessions, acquisitions, files and collections) can have metadata. The metadata are stored in Information fields attached to the container; you can see the information fields in the user interface by clicking on the drawer on the right and selecting 'Information.' If there is no metadata, the field is gray'd out.
+All Flywheel containers (projects, sessions, acquisitions, files and collections) have metadata. The metadata are stored in Information fields attached to the container; the information fields are rendered in the interface by clicking on the drawer on the right and selecting 'Information.'
 
-## Modality and classification
-
-st.dataFileModalitySet and st.dataFileModalityGet
+The metadata are a very powerful aspect of analyzing the data. They represent features of the data files such as the subject, the time and date of the experiment, the parameters of the instrument, notes that the experimenters made about the experiment, and so forth.  Just like the experimental data take many forms (e.g., different types of MRI measurements), the metadata too are usefully organized into different categories.
 
 ### Info
 
