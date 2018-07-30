@@ -49,7 +49,6 @@ The **fileInfoSet** method lets you edit metadata in a file's Information field.
 %% Download the json file into this qaInfo struct
 qaInfo = st.fileRead(files{1})
 
-
 %% Add a field to the struct
 qaInfo.numSpikes = numel(qaInfo.spikes);
 
@@ -57,8 +56,30 @@ qaInfo.numSpikes = numel(qaInfo.spikes);
 st.fileInfoSet(files{1},qaInfo);
 ```
 
-### getContainerInfo and setContainerInfo
+### Container info
+
 The search and list operations typically return the metadata (info) about a container.  The getContainerInfo and setContainerInfo methods return structs with the metadata (info). They are not used a lot because the information is also present from a list or search.  (MORE INSTRUCTIONS NEEDED HERE).
+
+
+## Modality and classification
+The Flywheel database recognizes different types of experimental modalities.  For many people, the principle modality is magnetic resonance data (MR). But new modalities (e.g., EEG, PET, Computer Graphics, Dental) have also been used.  Users are free to create new **modalities** and to classify data within the modality.  By choosing the right modality and setting up its classification, you provide a framework for the metadata in that modality.
+
+Relevant scitran routines for creating modalities are
+
+```
+st.modalityCreate;
+st.modalityReplace;
+st.modalityDelete;
+```
+
+Each modality has different classifications with in it.  These are part of the metadata about the data.  For example, the classification fields of MR data are extremely rich.  Click on an information for an MR Dicom data file to see some of the fields.
+
+You can read and set these fields programmatically using 
+
+```
+st.dataFileModalitySet
+st.dataFileModalityGet
+```
 
 ## Scratch code to deal with somewhere
 
