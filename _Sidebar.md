@@ -8,7 +8,7 @@
    * [List and search](Search-and-list)
    * [Download and read](Download-and-read)
    * [Create and upload](Create-and-upload)
-   * [Info (metadata)](Set-and-get-metadata)
+   * [Info (metadata)](Metadata-(Information))
 * [Reproducible computations](Reproducible-Matlab)
    * [Gears](Gears-and-Analyses)
    * [Local programming](Local-programming)
