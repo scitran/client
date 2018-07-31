@@ -6,7 +6,7 @@ Certain types of programs are important utilities that are run by many different
 
 An example of an important utility used by many people is [**dcm2niix**](https://github.com/rordenlab/dcm2niix) by Chris Rorden and his colleagues.  This important utility converts DICOM files to the NIfTI files that many people use in their data analysis.  Flywheel sites typically have a Gear that can be run automatically to convert DICOM files.  This is a 'Utility Gear'.
 
-Advanced Gears
+### Analysis Gears
 * [Flywheel Analysis Gears](https://docs.flywheel.io/display/EM/Analysis+Gears)
 
 Another important program is [**FreeSurfer**](https://surfer.nmr.mgh.harvard.edu/), by Bruce Fischl and his colleagues. This is a tool that performs many analyses of T1 anatomical files.  If you obtain permission from the MGH group, you can run this 'Analysis Gear' on a Flywheel site.
