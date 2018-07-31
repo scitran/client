@@ -29,7 +29,8 @@ function info = infoGet(st,object,varargin)
 % Example
 %{
   st = scitran('stanfordlabs');
-  
+  st.verify;
+
   % Search for files
   files = st.search('file',...
       'project label exact','DEMO', ...
@@ -74,6 +75,10 @@ infoType = p.Results.infotype;
 
 %% Figure out the the proper container information
 
+[containerType, containerID, fileContainerType] = ...
+    st.objectParse(object, containerType,containerID);
+
+%{
 % This might all become a method scitran.objectParse
 if ischar(object)
     
@@ -121,6 +126,7 @@ else
         containerID = object.id;
     end
 end
+%}
 
 %% Call the right SDK function to get the whole info struct
 

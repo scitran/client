@@ -79,7 +79,7 @@ projects = st.search('project',...
 stPrint(projects,'project','label')
 assert(length(projects) >= 62);
 
-projectID = idGet(projects{end},'data type','project');
+[~, projectID] = st.objectParse(projects{end});
 projectLabel = projects{end}.project.label;
 
 %% Exact and contains matches
@@ -100,7 +100,7 @@ projects{1}.project.label
     'project label contains','vwfa');
 
 % Save this project information
-projectID    = idGet(projects{end},'data type','project');
+[~, projectID] = st.objectParse(projects{end});
 projectLabel = projects{end}.project.label;
 
 %% Get a sessions within a specific collection with a subject code
