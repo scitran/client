@@ -19,4 +19,4 @@ Another important program is [**FreeSurfer**](https://surfer.nmr.mgh.harvard.edu
 Some advantages of running Gears within Flywheel is that (a) you do not have to download and install the program itself, (b) the version and time when you ran the program is archived on the site itself, and (c) the outputs of the program are stored on the site either adjacent to the data (Utility Gear) or in an Analysis page (Analysis Gear), and (d) the Flywheel engine (Lab Edition) supports running multiple copies of Analysis Gears.
 
 ## Wonkish
-Gears are implemented as Docker containers, combined with an interface for letting the user configure the input parameters. Gear execution is managed by specialized software that queues up the jobs as resources become available.
+Gears are implemented as Docker containers, combined with an interface for letting the user configure the input parameters. Gear execution is managed by specialized software that queues up the jobs as resources become available. Flywheel maintains an [online resource](https://github.com/flywheel-io/exchange) for building and exchanging Gears.  In the long-run, this will expand.
