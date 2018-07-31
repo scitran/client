@@ -69,6 +69,10 @@ idGet(files)
 %{
 % We need to add the collection tests when that is fixed in Flywheel
 %}
+
+%%
+disp('To be deprectaed. Consider using stObjectParse instead');
+
 %%
 p = inputParser;
 varargin = stParamFormat(varargin);
