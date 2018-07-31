@@ -2,18 +2,33 @@ function [containerType, containerID, fileContainerType, fileType] = ...
     stObjectParse(object,containerType, containerID)
 % Returns information about an object  
 %
+%   ** See doc scitran.objectParse for the official discussion.  This
+%   function may be removed in the future in favor of
+%   scitran.objectParse **
+%
 % Syntax
 %  [containerType, containerID, fileContainerType, fileType] = ...
 %           stFileParse(object,[containerType],[containerID])
 %
-% Brief Description
-% ...  Write me. ...
-%   ...
+% Brief Description 
 %
-%   This whole routine stinks.  Just trying to clean up the look of
-%   the code at the front end of various other routines by hiding it
-%   here.
+%   The Flywheel SDK provides information about objects in two main
+%   formats: a return from a search or as a return from a list. Either
+%   way, we often want to know properties such as the container type
+%   and the container id.  
 %
+%   In addition, sometimes we want information from a file name and
+%   its container and container id, such as the file type and the
+%   file's container.
+%   
+%   This routine takes object information and does its best to return
+%   critical information. We use this routine at the front end of
+%   various methods.  
+%
+%   Hopefully, this routine will be replaced by a proper Flywheel SDK
+%   routine based on the 'resolve' concept. For example, if we have an
+%   object id we should be able to learn its type.% Brief Description
+%   
 % Inputs
 %
 % Optional key/value

@@ -21,7 +21,7 @@ function destination = containerDownload(obj,containertype,containerid,varargin)
 %  containerid    - The Flywheel container ID, usually obtained from a search
 %
 % Optional Key/Val parameters
-%  destination:  full path to tarfile location. THe default is
+%  destination:  full path to tarfile location. The default is
 %      fullfile(pwd,sprintf('Flywheel-%s-%s.tar',containerType,id));
 %
 % Return

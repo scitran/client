@@ -71,9 +71,6 @@ idGet(files)
 %}
 
 %%
-disp('To be deprectaed. Consider using stObjectParse instead');
-
-%%
 p = inputParser;
 varargin = stParamFormat(varargin);
 

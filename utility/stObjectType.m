@@ -4,23 +4,25 @@ function [oType, sType] = stObjectType(object)
 %  [oType, sType] = stObjectType(object)
 %
 % Description
-%    Object type is returned.  If the object type is a search, then
-%    there can also be a search type (sType).
+%   See the discussion in scitran.objectParse.  This function is used
+%   there at a key step.
 %
-%
-% Maybe this should be stObjectClass(object)
+%   The object type (project, session, acquisition, file ... search)
+%   is returned.  If the object type is a search, then a search type
+%   (sType) is also returned (e.g., file, project, ...)
 %
 % Wandell, Vistasoft Team, 2018
 %
 % See also
+%   scitran.objectParse
 %
 
 %{
 h = st.projectHierarchy('Graphics assets');
 stObjectType(h.project)
 stObjectType(h.sessions{1})
-stObjectType(h.acquisitions{1}{1})
-stObjectType(h.acquisitions{1}{1}.files{1})
+stObjectType(h.acquisitions{2}{1})
+stObjectType(h.acquisitions{2}{1}.files{1})
 
 project = st.search('project','project label exact','VWFA')
 [oType, sType] = stObjectType(project{1})

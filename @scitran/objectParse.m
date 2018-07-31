@@ -1,33 +1,65 @@
 function [containerType, containerID, fileContainerType, fileType] = ...
     objectParse(~, object,containerType, containerID)
-% Figure out stuff about an object information 
+% Determine properties of a Flywheel SDK object.
 %
 % Syntax
-%
 %  [fname, containerType, containerID, fileType] = ...
-%           stFileParse(fileInfo,containerType,containerID)
+%           st.objectParse(object,containerType, containerID)
 %
 % Brief Description
-%   Flywheel codes stores file information as a FileEntry, a search
-%   response, or as a filename plus container type and id.  We have to
-%   sort this out at the front end of various methods.  Hopefully,
-%   this will vanish as a hack before too long, if Justin E. does the
-%   right set of things.  For example, maybe files will get an id.  Or
-%   maybe FileEntry will have a container type and container id.  Or
-%   ...
+%   The Flywheel SDK provides information about objects in two main
+%   formats: a return from a search or as a return from a list. Either
+%   way, we often want to know properties such as the container type
+%   and the container id.  
 %
-%   This whole routine stinks.  Just trying to clean up the look of
-%   the code at the front end of various other routines by hiding it
-%   here.
+%   In addition, sometimes we want information from a file name and
+%   its container and container id, such as the file type and the
+%   file's container.
+%   
+%   This routine takes object information and does its best to return
+%   critical information. We use this routine at the front end of
+%   various methods.  
+%
+%   Hopefully, this routine will be replaced by a proper Flywheel SDK
+%   routine based on the 'resolve' concept. For example, if we have an
+%   object id we should be able to learn its type.
 %
 % Inputs
+%   object:  A Flywheel list or search return, or a file name (char)
 %
-% Optional key/value
+% Optional
+%   containerType -  If a file name, then this is the file's container
+%   container id  -  If a file name, this is the file's container id
 %
 % Returns
+%   containerType
+%   containerID
+%   fileContainerType
+%   fileType
 %
 % Wandell, Vistasoft 2018
 %
+% See also
+
+% Examples:
+%{
+st = scitran('stanfordlabs');
+h = st.projectHierarchy('Graphics assets');
+[oType, id] = st.objectParse(h.project)
+[oType, id] = st.objectParse(h.sessions{1})
+[oType, id] = st.objectParse(h.acquisitions{2}{1})
+
+acquisition = st.search('acquisition',...
+    'project label exact','Graphics assets', ...
+    'acquisition id',id); 
+
+% oType = The object type       (search, project, ...)
+% id  - the object id           (string)
+% fileCType - If file, its container type   (project, acq)
+% The file type                             (Matlab data, source code ...)
+
+[oType, id, fileCType, fType]= st.objectParse(h.acquisitions{2}{1}.files{1})
+%}
 
 %%
 if notDefined('object'), error('Object required'); end
@@ -36,9 +68,9 @@ if notDefined('containerID'),   containerID = ''; end
 
 %%
 if ischar(object)
-    
-    % User sent in a string.  So, this must be a file.  And the must
-    % send the container type and id
+    % User sent in a string, so, this must be a file.  
+    % The user must also send the container type and id.  At some
+    % point, files will become a genuine object.s
     containerType = stParamFormat(containerType);  % Spaces, lower
     if ~isequal(containerType(1:4),'file')
         error('Char requires file container type.'); 
@@ -59,73 +91,39 @@ if ischar(object)
 else
     % Either a list return or a search return. 
     
-    % Figure out what type of object this is.
+    % Figure out which type of object this is.  oType is the object
+    % type itself, or search. If search, then sType is the type of
+    % search.  At present, the sType estimate is not always accurate.
+    % We hope that Justin will make it better.
     [oType, sType] = stObjectType(object);
     
     % If it is a search, then ...
     if isequal(oType,'search')  && isequal(sType,'file') 
         % A file search object has a parent id included.
-        containerType = 'file';
+        containerType     = 'file';
+        containerID       = object.parent.id;
+        fileType          = object.file.type;
+        fileContainerType = object.parent.type; % Container that contains the file
+
+        % Some day, we could return the file name, I suppose
         % fname  = object.file.name;
-        containerID   = object.parent.id;
-        fileContainerType = object.parent.type;
-        fileType      = fileInfo.file.type;
+
     elseif isequal(oType,'search')
-        % Another type of search.  The id and type should be there.
+        % Search for a container.  The id and type should be there.
         containerType = sType;
         containerID   = object.(sType).id;
     else   
-        % It a list return, not a search return
+        % A list, not a search, return
         containerType = oType;
-        containerID = object.id;
-        fileType = fileInfo.type;
+        containerID   = object.id;
+        if isequal(oType, 'file')
+            fileType = object.type;
+            warning('File ids not yet implemented; file container type cannot be determined');
+            containerID = '';        % Adjust this when files get IDs
+            fileContainerType = '';  % Container that contains the file
+        end        
     end
 end
 
 end
 
-%{
-%% If the person does not have the container type and id, they won't send it
-
-% But it is weird to send it and then just get it back.  And it is
-% weird to not send it in only for the search response case.  This
-% whole routine stinks.
-if notDefined('fileInfo'), error('File information required'); end
-if notDefined('containerType'), containerType = ''; end
-if notDefined('containerID'),   containerID = ''; end
-
-%% Do your best to parse
-
-if ischar(fileInfo)
-    % Set up the download variables
-    fname = fileInfo;
-    if isempty(containerType) || isempty(containerID)
-        error('If file is a string, you must specify container information');
-    end
-    % We need to search for the file type
-    if nargout > 3
-        srch = st.search('file','file name exact',fname, ...
-            'acquisition id',containerID);
-        fileType = srch{1}.file.type;
-    end
-elseif isa(fileInfo,'flywheel.model.FileEntry')
-    % A file entry is not much more than the file name at this point.  We
-    % need to specify container type and id.  Not sure why it is so
-    % limited.
-    fname    = fileInfo.name;
-    if isempty(containerType) || isempty(containerID)
-        error('If file is a FileEntry, you must specify container information');
-    end
-    if nargout > 3
-        fileType = fileInfo.type;
-    end
-elseif isa(fileInfo,'flywheel.model.SearchResponse')
-    % A Flywheel search object has a lot of information about the file.
-    fname         = fileInfo.file.name;
-    containerType = fileInfo.parent.type;
-    containerID   = fileInfo.parent.id;
-    if nargout > 3
-        fileType      = fileInfo.file.type;
-    end
-end
-%}
