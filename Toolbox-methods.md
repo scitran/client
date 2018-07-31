@@ -1,3 +1,6 @@
+[Github toolbox methods](Toolboxes) support reproducible computation using github repositories.
+
+***
 
 In general, we suppose that:
 
@@ -98,6 +101,7 @@ The JSON file defining the toolboxes is stored on the project page with a **scit
 
     project = st.search('projects','project label exact','SOC ECoG (Hermes)');
     st.upload('SOC-ECoG-toolboxes.json','project',idGet(project));
+
 
 ### Example files
 The data directory in scitran includes several toolboxes files and a script, [s_tbxSave](https://github.com/scitran/client/blob/master/data/s_tbxSave.m). 
