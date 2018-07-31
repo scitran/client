@@ -13,12 +13,14 @@ Flywheel recognizes two typical modes of computing.
 ## Gears 
 Certain types of programs are run routinely by many users. Such programs can be installed within Flywheel as a *Gear*.  The installation is usually managed by Flywheel itself or by the site manager.  You can see the set of *Gears* installed at your site by clicking on 'Gears installed' on the left panel of the Flywheel web page.
 
-Running a program that is installed within Flywheel is called running a **Gear**. 
+Running a program that is installed within Flywheel is called running a **Gear**.  You can read more about [Gears on this page](Gears).
 
 ## SDK
 The tools to support users writing their own code is called the Flywheel Software Development Kit (**SDK**).
 
 **Scitran** is a Matlab wrapper on the Flywheel **SDK**, which is quite extensive.  There are methods for connecting to the site and authorizing the user, reading and writing data and metadata, storing analysis results, creating projects, and much more. The SDK also includes methods to invoke **Gears** and monitor their progress. 
+
+This entire wiki is an explanation of tools that invoke the SDK from Matlab.
 
 ## CLI - Command line interface
 
