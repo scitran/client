@@ -44,7 +44,9 @@ switch oType
         % We should be getting a return_type parameter some day, in which case
         % this can be replaced.
         oType = 'search';
-        if isempty(object.project)
+        if ~isempty(object.file)
+            sType = 'file';
+        elseif isempty(object.project)
             sType = 'group';
         elseif isempty(object.session)
             sType = 'project';
@@ -53,7 +55,8 @@ switch oType
         elseif isempty(object.file)
             sType = 'acquisition';
         else
-            sType = 'file';
+            warning('Uncertain search classification');
+            disp(object)
         end
 end
 

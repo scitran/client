@@ -1,26 +1,27 @@
-function info = infoSet(st,containerType,containerID,metadata,varargin)
-% Modify the database info from a Flywheel container
+function info = infoSet(st,object,metadata,varargin)
+% Set metadata (info field) on a Flywheel object
 %
 % Syntax
-%   info = st.infoSet(containerType,containerID,metadata,varargin)
+%   info = st.infoSet(object,metadata,varargin)
 %
 % Description
-%   Modify an info field of a container or a file in a container. The
-%   info can be a field or a note or a tag. 
+%   Modify an info field of an object. The info can be a field or a
+%   note or a tag.
 %   
 %   QUESTIONS:  Are you a permitted to  modify some, but not all of the info
 %   fields? More definition is needed here.  For example, if the field
 %   does not exist, then it is added. If it does exist, then its value
 %   is changed. Right?
 %
+%   How are we going to handle deleting fields?
+%
 % Input
-%   containerType:  A string that defines the object.  These are
+%   object:  A string that defines the object.  These are
 %       'project','session','acquisition','collection', 'fileproject',
 %       'filesession', 'fileacquisition', 'filecollection'.  We
 %       consider fileX to be a group and they required the key/value
 %       fname (see below).
-%   containerID:    The container's id
-%   data:           By default the infotype is 'info'.  In this case data
+%   metadata:  By default the infotype is 'info'.  In this case data
 %                   should be a struct whose fields contain the new values.
 %                   Some possible fields are 'label' and 'description'.
 % 
@@ -40,31 +41,42 @@ function info = infoSet(st,containerType,containerID,metadata,varargin)
 % Example
 %{
   project = st.search('project','project label exact','VWFA');
-  projectID = idGet(project{1},'data type','project');
-  info = st.containerInfoGet('project',projectID);
+  info = st.infoGet(project{1},'info type','info');
 
   % Set up and modify the specific field
-  data    = struct('description','Visual word form area in adult.');
-  modInfo = st.containerInfoSet('project', projectID, data);
+  metadata = struct('delete','this metadata.');
+  modInfo  = st.infoSet(project{1}, metadata);
+  
+  % Clean it up
+  projectID = idGet(project{1},'data type','project');
+  st.fw.deleteProjectInfoFields(projectID,{{'delete'}});
+
 %}
 %{
+  project = st.search('project','project label exact','DEMO');
+  projectID = idGet(project{1},'data type','project');
+
   sessions = st.list('session',projectID);
-  info = st.containerInfoGet('session',idGet(sessions{1},'data type','session'));
+  allinfo = st.infoGet(sessions{1});
+  info = st.infoGet(sessions{1},'infotype','info');
+
   data.subject.firstname = 'Annette2';
-  modInfo = st.containerInfoSet('session',idGet(sessions{1},'data type','session'),data);
-  modInfo.subject.firstname
+  modInfo = st.infoSet(sessions{1},data);
+  modInfo.info.subject.firstname
 
   % Put it back
   data.subject.firstname = 'Annette';
-  modInfo = st.containerInfoSet('session',idGet(sessions{1},'data type','session'),data);
-  modInfo.subject.firstname
+  modInfo = st.infoSet(sessions{1},data);
+  modInfo.info.subject.firstname
 
 %}
 %{
-% Add a note
-  project = st.search('project','project label exact','VWFA');
+  % Add and delte a note
+  project = st.search('project','project label exact','DEMO');
   projectID = idGet(project{1},'data type','project');
-  modInfo = st.containerInfoSet('project', projectID, 'Test note','infotype','note');
+  modInfo = st.infoSet(project{1}, 'Test note','infotype','note');
+  st.fw.deleteProjectNote(projectID,modInfo.notes{1}.id)
+
 %}
 
 %%
@@ -72,31 +84,42 @@ p = inputParser;
 varargin = stParamFormat(varargin);
 
 p.addRequired('st',@(x)(isa(x,'scitran')));
-validTypes = {'project','session','acquisition','collection', ...
-    'fileproject','filesession','fileacquisition','filecollection'};
-p.addRequired('containerType',@(x)(ismember(x,validTypes)));
-p.addRequired('containerID',@ischar);
+p.addRequired('object');
 p.addRequired('metadata',@(x)(isstruct(x) || ischar(x)));
 
-% Required for fileX container types
-p.addParameter('fname','',@ischar);   
-
 % The data can be added to an info slot or treated as a tag or a note
-validInfo = {'info','note','tag'};
+validInfo = {'info','note','tag','classification'};
 p.addParameter('infotype','info',@(x)(ismember(x,validInfo)));
 
-p.parse(st,containerType,containerID,data,varargin{:});
+p.parse(st,object,metadata,varargin{:});
 
 infoType = p.Results.infotype;
 
-% Parse the container type to see if it starts with file.  Then figure
-% out the file container type.
-if strncmp(containerType,'file',4)
-    containerType     = containerType(1:4);
-    fileContainerType = containerType(5:end);
-    fname = p.Results.fname;
-    if isempty(fname), error('File name required'); end
+%% Figure out the the proper container information
+
+% This would be a part of scitran.objectParse, as drafted in infoGet.m
+
+% Figure out what type of object this is.
+[oType, sType] = stObjectType(object);
+
+% If it is a search, then ...
+if isequal(oType,'search')  && isequal(sType,'file')
+    % A file search object has a parent id included.
+    containerType = 'file';
+    fname  = object.file.name;
+    containerID   = object.parent.id;
+    fileContainerType = object.parent.type;
+    
+elseif isequal(oType,'search')
+    % Another type of search.  The id and type should be there.
+    containerType = sType;
+    containerID   = object.(sType).id;
+else
+    % It a list return, not a search return
+    containerType = oType;
+    containerID = object.id;
 end
+
 
 %%  Call the right Flywheel SDK routie
 
@@ -104,7 +127,7 @@ switch containerType
     case 'project'
         switch infoType
             case 'info'
-                st.fw.modifyProject(containerID,metadata);
+                st.fw.setProjectInfo(containerID,metadata);
             case 'note'
                 st.fw.addProjectNote(containerID,metadata);
             case 'tag'
@@ -115,7 +138,7 @@ switch containerType
     case 'session'
         switch infoType
             case 'info'
-                st.fw.modifySession(containerID,metadata);
+                st.fw.setSessionInfo(containerID,metadata);
             case 'note'
                 st.fw.addSessionNote(containerID,metadata);
             case 'tag'
@@ -126,7 +149,7 @@ switch containerType
     case 'acquisition'
         switch infoType
             case 'info'
-                st.fw.modifyAcquisition(containerID,metadata);
+                st.fw.setAcquisitionInfo(containerID,metadata);
             case 'note'
                 st.fw.addAcquisitionNote(containerID,metadata);
             case 'tag'
@@ -137,7 +160,7 @@ switch containerType
     case 'collection'
         switch infoType
             case 'info'
-                st.fw.modifyCollection(containerID,metadata);
+                st.fw.setCollectionInfo(containerID,metadata);
             case 'note'
                 st.fw.addCollectionNote(containerID,metadata);
             case 'tag'
@@ -162,7 +185,7 @@ switch containerType
             case 'acquisition'
                 fw.setAcquisitionFileInfo(containerID,fname,metadata);
                 info = st.fw.getAcquisitionFileInfo;
-            case 'collecton'
+            case 'collection'
                 fw.setCollectionFileInfo(containerID,fname,metadata);
                 info = st.fw.getCollectionFileInfo;
         end

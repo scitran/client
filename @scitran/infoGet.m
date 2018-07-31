@@ -10,9 +10,6 @@ function info = infoGet(st,object,varargin)
 %  have to list the container and then search for the info field associated
 %  with that file in the container. 
 %
-%  TODO: Notes and Tags and Classification are part of the info.  We
-%  should add an infoType parameter if we only want one of those back.
-%
 % Input (required)
 %   file - A search response defining the file, or the filename
 %          string.  If a string, you must send container type and id.
@@ -32,24 +29,25 @@ function info = infoGet(st,object,varargin)
 % Example
 %{
   st = scitran('stanfordlabs');
-  % List the files
+  
+  % Search for files
   files = st.search('file',...
       'project label exact','DEMO', ...
       'acquisition label exact','1_1_3Plane_Loc_SSFSE');
-  files{1}  
   info = st.infoGet(files{1},'container type','file acquisition');
 %}
 %{
   acquisition = st.search('acquisition',...
       'project label exact','DEMO', ...
       'acquisition label exact','1_1_3Plane_Loc_SSFSE');
-  info = st.infoGet(session{1});
-
+  info = st.infoGet(acquisition{1});
 %}
 %{
   sessions = st.search('session',...
      'project label exact','DEMO');
   sessionID = idGet(sessions{1},'data type','session');
+
+  % List acquisitions
   acquisition = st.list('acquisition',sessionID);
   info = st.infoGet(acquisition{1});
 %}
@@ -60,45 +58,67 @@ p = inputParser;
 varargin = stParamFormat(varargin);
 
 p.addRequired('st',@(x)(isa(x,'scitran')));
-p.addRequired('object',@(x)(isa(x,'flywheel.model.SearchResponse') || ischar(x)));
+p.addRequired('object');
 
 validTypes = {'project','session','acquisition','collection', ...
     'fileproject','filesession','fileacquisition','filecollection'};
-p.addParameter('containertype','',@(x)(ismember(x,validTypes)));
+p.addParameter('containertype','',@(x)(ismember(ieParamFormat(x),validTypes)));
 p.addParameter('containerid','',@ischar);
-p.addParameter('infotype','info',@ischar);
+p.addParameter('infotype','all',@ischar);
 
 p.parse(st,object,varargin{:});
 
 containerType = p.Results.containertype;
 containerID   = p.Results.containerid;
+infoType = p.Results.infotype;
 
-% Parse containerType to see if it starts with 'file'.  If so, get a
-% file name and fileContainerType
-if strncmp(containerType,'file',4)
-    containerType = stParamFormat(containerType);
-    fileContainerType = containerType(5:end);
-    containerType     = containerType(1:4);
-else
-    fileContainerType = '';
-end
+%% Figure out the the proper container information
 
-
+% This might all become a method scitran.objectParse
 if ischar(object)
+    
+    % User sent in a string.  So, this must be a file.  And we must
+    % have the container type and id
     fname = object;
-    if isempty(containerID)
-        error('container id required');
+    containerType = stParamFormat(containerType);  % Spaces, lower
+    if ~isequal(containerType(1:4),'file')
+        error('Char requires file container type.'); 
     end
+    if isempty(containerID), error('container id required'); end
+
+    % If containerType is fileX format, get the containerType from the
+    % second half of the string
+    if length(containerType) > 4
+        fileContainerType = containerType(5:end);
+    else
+        % No fileX. We assume the user gave just the container file type
+        fileContainerType = containerType;
+    end
+    % Did I mention this has to be a file?
+    containerType     = 'file';
+
 else
+    % Either a list return or a search return. 
+    
+    % Figure out what type of object this is.
     [oType, sType] = stObjectType(object);
-    if strncmp(oType,'search',6)  % A search object
+    
+    % If it is a search, then ...
+    if isequal(oType,'search')  && isequal(sType,'file') 
+        % A file search object has a parent id included.
+        containerType = 'file';
         fname  = object.file.name;
-        if isempty(containerID)
-            containerID   = object.parent.id;
-        end
-        if isempty(containerType)
-            containerType = object.parent.type;
-        end
+        containerID   = object.parent.id;
+        fileContainerType = object.parent.type;
+
+    elseif isequal(oType,'search')
+        % Another type of search.  The id and type should be there.
+        containerType = sType;
+        containerID   = object.(sType).id;
+    else   
+        % It a list return, not a search return
+        containerType = oType;
+        containerID = object.id;
     end
 end
 
@@ -106,34 +126,45 @@ end
 
 switch containerType
     case 'project'
-        info = st.fw.getProject(containerID);
+        meta = st.fw.getProject(containerID);
     case 'session'
-        info = st.fw.getSession(containerID);
+        meta = st.fw.getSession(containerID);
     case 'acquisition'
-        info = st.fw.getAcquisition(containerID);
+        meta = st.fw.getAcquisition(containerID);
     case 'collection'
-        info = st.fw.getCollection(containerID);
+        meta = st.fw.getCollection(containerID);
     case 'file'
         switch fileContainerType
             case 'project'
-                info = st.fw.getProjectFileInfo(containerID,fname);
+                meta = st.fw.getProjectFileInfo(containerID,fname);
             case 'session'
-                info = st.fw.getSessionFileInfo(containerID,fname);
+                meta = st.fw.getSessionFileInfo(containerID,fname);
             case 'acquisition'
-                info = st.fw.getAcquisitionFileInfo(containerID,fname);
+                meta = st.fw.getAcquisitionFileInfo(containerID,fname);
             case 'collection'
-                info = st.fw.getCollectionFileInfo(containerID,fname);
+                meta = st.fw.getCollectionFileInfo(containerID,fname);
         end
 end
 
 %% If the user asks for something specific, parse the request here
 
-% Not sure what info type fields should be allowed.s
-switch infotype
+% Not sure what info type fields are there.  I think classification is
+% only present for a file.
+switch infoType
+    case 'all'
+        info = meta;
     case 'info'
+        info = meta.info;
     case 'note'
+        info = meta.notes;
     case 'tag'
+        info = meta.tags;
     case 'classification'
+        if ~isequal(containerType,'file')
+            error('classification present only for files');
+        elseif isfield(meta,'classification')
+            info = meta.classification; 
+        end
     otherwise
         % Probably just info
 end
