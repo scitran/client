@@ -36,7 +36,7 @@ Use tab-completion (e.g., st.file<Tab>) to see the current list. The arguments t
 
 **scitran** methods use the term Info to refer to actions on the metadata. There are many methods to read and modify the Flywheel Info fields.
 
-    st.containerInfoGet - Read the metadata from a container
+    st.infoGet - Read the metadata from a container or file
 
 Certain types of **metadata** are given a special status.  These are **notes, tags, and attachments**.  They are all metadata, but it dawned on us that people use this system, and people like having meaningful names for certain types of information. 
 
