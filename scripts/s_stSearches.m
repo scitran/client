@@ -110,7 +110,7 @@ sessions = st.search('session',...
     'subject code','SU ex10316',...
     'summary',true);
 
-%% Get all the sessions within a specific collection
+%% Get all the sessions within a specific collection **
 
 [sessions, srchCmd] = st.search('session',...
     'collection label contains','Anatomy Male 45-55',...
@@ -290,7 +290,7 @@ files = st.search('file',...
     'acquisition label contains','00 Coil Survey',...
     'summary',true);
 
-%% get files in project/session/acquisition/collection
+%% get files in project/session/acquisition/collection **
 files = st.search('file',...
     'collection label contains','ENGAGE',...
     'acquisition label contains','T1w 1mm', ...
@@ -324,15 +324,17 @@ files = st.search('file',...
     'allData',true,'summary',true);
 
 
-%%  Find the number of projects owned by a specific group, by label
+%%  Find the number of projects owned by a specific group, by label **
 
 group = 'Wandell Lab';
 [projects,srchCmd] = st.search('project',...
     'group label',group,...
     'summary',true);
 
-group = {'ALDIT','John Day Lab','PanLab'};
+%% jwday fails, as below ... ** 
+group = {'ALDIT','jwday','PanLab'};
 for ii=1:length(group)
+    disp(group{ii})
     projects = st.search('project',...
         'group label',group{ii},...
         'summary',true);
@@ -345,13 +347,10 @@ group = 'wandell';
     'group name',group,...
     'summary',true);
 
-group = {'jwday'};
-for ii=1:length(group)
-    projects = st.search('project',...
-        'group name',group{ii},...
-        'summary',true);
-end
-
+%% Something about this group label vs. group name?  **
+projects = st.search('project',...
+    'group label','John Day Lab',...
+    'summary',true);
 
 %% Looking up group information
 
@@ -359,15 +358,15 @@ end
 groups = st.search('group','all');
 disp(groups{1})
 
-% Just the group labels
+%% Just the group labels
 labels = st.search('group','alllabels');
 disp(labels)
 
-% The users for a particular group - NOT WORKING
+%% The users for a particular group
 users = st.search('group','users','wandell');
 disp(users)
 
-% Struct for a particular group 
+%% Struct for a particular group 
 thisGroup = st.search('group','name','wandell');
 disp(thisGroup)
 
@@ -377,22 +376,22 @@ collections = st.search('collection',...
     'collection label contains','GearTest',...
     'summary',true);
 
-% All collections
+%% All collections
 collections = st.search('collection','summary',true);
 
-%% Return analyses
+%% Return analyses **
 
 % Analyses within a project
 analyses = st.search('analysis',...
     'project label contains','VWFA FOV',...
     'summary',true);
 
-% Freesurfer analyses in the whole stanfordlabs database
+%% Freesurfer analyses in the whole stanfordlabs database
 analyses = st.search('analysis',...
     'analysis label contains','freesurfer-recon-all',...
     'summary',true);
 
-% Wow, lots of AFQ in the stanfordlabs database
+%% Wow, lots of AFQ in the stanfordlabs database
 analyses = st.search('analysis',...
     'analysis label contains','AFQ',...
     'summary',true);

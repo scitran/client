@@ -35,12 +35,17 @@ function [status, url, toolboxTable] = stFlywheelSDK(action,varargin)
 %
 % Simple examples
 %    status = stFlywheelSDK;   % Test if add-on is installed
-%    status = stFlywheelSDK('exist',true);  % Equivalent
+%    status = stFlywheelSDK('exist');  % Equivalent
 %
-%    status = stFlywheelSDK('uninstall',true);  % Uninstall
-%    status = stFlywheelSDK('install',true);    % Download and install
+%    status = stFlywheelSDK('uninstall');  % Uninstall
+%
+%    % Restart MATLAB
+%    status = stFlywheelSDK('install');    % Download and install
 %
 % BW, Vistasoft, 2018
+%
+% See also
+%
 
 %Examples:
 %{
@@ -100,8 +105,7 @@ switch action
         % Download from Flywheel and install
         fprintf('Installing the Flywheel Add-Ons toolbox: %s\n',tbxFile);
         cd(fullfile(stRootPath,'local'));
-        % websave(tbxFile,'https://github.com/flywheel-io/core/releases/download/2.1.4/flywheel-sdk-2.1.4.mltbx');
-        websave(tbxFile,'https://github.com/flywheel-io/core/releases/download/2.4.3/flywheel-sdk-2.4.3.mltbx');
+        websave(tbxFile,url);
         
         matlab.addons.toolbox.installToolbox(tbxFile);
         

@@ -5,28 +5,32 @@ function info = infoGet(st,object,varargin)
 %    st.infoGet(obj,object,...)
 %
 % Description
-%  Files have an associated info object that describes critical metadata.
-%  This method returns the availble info.  To find the info, we apparently
-%  have to list the container and then search for the info field associated
-%  with that file in the container. 
+%  Flywheel objects have an associated set of metadata called 'info'.
+%  This method returns the info specified by 'infotype'.  There are
+%  several possible info types, specified below in the optional
+%  key/value input.
 %
 % Input (required)
 %   file - A search response defining the file, or the filename
 %          string.  If a string, you must send container type and id.
 %   
-% Input (optional)
-%   containerID   - 
-%   containerType - If file is a string, the parent id is required
+% Optional key/value pairs
+%   infoType      - 'all' (default),'info','tag','note'
+%   containerType - If the 'object' input is a string, we know that
+%                   the request is for a file. The parent container
+%                   and id required
+%   containerID   - See above.
 %
 % Return
-%  info - struct
+%  info - Returned information.  Might be a struct or a flywheel.model
+%         class. 
 %
 % BW, Vistasoft Team, 2017
 %
-% See also:  scitran.setFileInfo, scitran.setInfo, scitran.getFileInfo
+% See also:  scitran.infoSet
 
 % 
-% Example
+% Examples:
 %{
   st = scitran('stanfordlabs');
   st.verify;
@@ -71,62 +75,11 @@ p.parse(st,object,varargin{:});
 
 containerType = p.Results.containertype;
 containerID   = p.Results.containerid;
-infoType = p.Results.infotype;
+infoType      = p.Results.infotype;
 
 %% Figure out the the proper container information
-
-[containerType, containerID, fileContainerType] = ...
+[containerType, containerID, fileContainerType, fname] = ...
     st.objectParse(object, containerType,containerID);
-
-%{
-% This might all become a method scitran.objectParse
-if ischar(object)
-    
-    % User sent in a string.  So, this must be a file.  And we must
-    % have the container type and id
-    fname = object;
-    containerType = stParamFormat(containerType);  % Spaces, lower
-    if ~isequal(containerType(1:4),'file')
-        error('Char requires file container type.'); 
-    end
-    if isempty(containerID), error('container id required'); end
-
-    % If containerType is fileX format, get the containerType from the
-    % second half of the string
-    if length(containerType) > 4
-        fileContainerType = containerType(5:end);
-    else
-        % No fileX. We assume the user gave just the container file type
-        fileContainerType = containerType;
-    end
-    % Did I mention this has to be a file?
-    containerType     = 'file';
-
-else
-    % Either a list return or a search return. 
-    
-    % Figure out what type of object this is.
-    [oType, sType] = stObjectType(object);
-    
-    % If it is a search, then ...
-    if isequal(oType,'search')  && isequal(sType,'file') 
-        % A file search object has a parent id included.
-        containerType = 'file';
-        fname  = object.file.name;
-        containerID   = object.parent.id;
-        fileContainerType = object.parent.type;
-
-    elseif isequal(oType,'search')
-        % Another type of search.  The id and type should be there.
-        containerType = sType;
-        containerID   = object.(sType).id;
-    else   
-        % It a list return, not a search return
-        containerType = oType;
-        containerID = object.id;
-    end
-end
-%}
 
 %% Call the right SDK function to get the whole info struct
 
@@ -154,8 +107,10 @@ end
 
 %% If the user asks for something specific, parse the request here
 
-% Not sure what info type fields are there.  I think classification is
-% only present for a file.
+% There are separate methods for Notes and Tags.  I don't think they
+% are needed because the information is in the info object.  So, the
+% preferred way to get them is infoGet( ...., 'info type','note') ...
+% or similar.
 switch infoType
     case 'all'
         info = meta;

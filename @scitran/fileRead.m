@@ -73,9 +73,14 @@ if nargout > 1, save = true; end
 
 %% Get the file name, container id and container type
 
+[~, containerID, ~, fname] = ...
+    st.objectParse(fileInfo,containerType,containerID);
+
+%{
 [fname, containerType, containerID, fileType] = ...
     st.dataFileParse(fileInfo,containerType,containerID);
-    
+%}
+
 % Create destination from file name.  Might need the extension for
 % filetype
 if isempty(destination),  dname = fullfile(tempdir,fname); 

@@ -1,4 +1,4 @@
-function [containerType, containerID, fileContainerType, fileType] = ...
+function [containerType, containerID, fileContainerType, fname, fileType] = ...
     objectParse(~, object,containerType, containerID)
 % Determine properties of a Flywheel SDK object.
 %
@@ -56,15 +56,19 @@ acquisition = st.search('acquisition',...
 % oType = The object type       (search, project, ...)
 % id  - the object id           (string)
 % fileCType - If file, its container type   (project, acq)
+% The file name
 % The file type                             (Matlab data, source code ...)
-
-[oType, id, fileCType, fType]= st.objectParse(h.acquisitions{2}{1}.files{1})
+[oType, id, fileCType, fname, fType]= st.objectParse(h.acquisitions{2}{1}.files{1})
 %}
 
 %%
 if notDefined('object'), error('Object required'); end
 if notDefined('containerType'), containerType = ''; end
 if notDefined('containerID'),   containerID = ''; end
+
+% Default returns
+fileContainerType = '';
+fname = '';
 
 %%
 if ischar(object)
@@ -105,23 +109,31 @@ else
         fileType          = object.file.type;
         fileContainerType = object.parent.type; % Container that contains the file
 
-        % Some day, we could return the file name, I suppose
-        % fname  = object.file.name;
+        fname  = object.file.name;
 
     elseif isequal(oType,'search')
         % Search for a container.  The id and type should be there.
         containerType = sType;
         containerID   = object.(sType).id;
+        
     else   
-        % A list, not a search, return
+        % A list return
+ 
+        % This object
         containerType = oType;
-        containerID   = object.id;
+        
         if isequal(oType, 'file')
+            % For a file, the containerID and containerType both refer
+            % to the parent of the file.  We are defaulting to
+            % acquisition until we can do better.
+            warning('File "id" not yet implemented; file container defaults to "acquisition"');
+            fileContainerType = 'acquisition';
             fileType = object.type;
-            warning('File ids not yet implemented; file container type cannot be determined');
-            containerID = '';        % Adjust this when files get IDs
-            fileContainerType = '';  % Container that contains the file
-        end        
+            fname = object.name;
+        else
+            % Not a file.  So, we use the object ID.
+            containerID   = object.id;
+        end
     end
 end
 

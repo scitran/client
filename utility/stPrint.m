@@ -1,22 +1,22 @@
-function val = stPrint(result, slot, field)
+function [val, oType] = stPrint(objects, slot1, slot2)
 % Print and return the fields from a search or list result 
 %
 % Syntax
-%  val = stPrint(result, slot, field)
+%  [val, oType] = stPrint(objects, slot1, [slot2])
 %
 % Description
-%  Print out a list of the values from a cell array that is returned by a
-%  scitran.search or a scitran.list method.
+%  Print out a list of the values from a cell array of objects,
+%  returned by a scitran.search or a scitran.list method.
 %
-%  The slot and field refers to the first and second struct entries.
+%  The slot1 and field refers to the first and second struct entries.
 %  So, what is printed is a loop over ii for
 %
-%     result{ii}.slot.field
+%     objects{ii}.slot1.slot2
 %
 % Inputs:
 %   result -  A cell array returned from the search or list method
-%   slot   -  Main slot
-%   field  -  Field within the slot
+%   slot1   - Main slot1
+%   slot2  -  Field within the slot1
 %
 % Optional Key/vals
 %   None
@@ -47,8 +47,9 @@ function val = stPrint(result, slot, field)
 %{
   % Limited to make the example short.
   projects = st.search('project');
+  [~,id] = st.objectParse(projects{1})
   sessions = st.search('session',...
-      'project id',idGet(projects{1}), ...
+      'project id',id, ...
       'limit',10);
 
   val = stPrint(sessions,'session','label');
@@ -56,47 +57,49 @@ function val = stPrint(result, slot, field)
   stPrint(sessions,'subject','code');
 %}
 %{
-  % List example, no slot 
-  % Notice the unfortunate difference in the returned object and thus
-  % the stPrint arguments 
+  % List example 
   projects = st.list('project','wandell');
-  stPrint(projects,'label','')
+  stPrint(projects,'label')
 
   % Print metadata
   project = st.search('project','project label exact','VWFA');
-  id = idGet(project{1});
-  info = st.getContainerInfo('project',id);
+  info = st.infoGet(project{1});
 
+  [~,id] = st.objectParse(project{1});
   sessions = st.list('session',id);   % Parent id
-  stPrint(sessions,'subject','code')
+  stPrint(sessions,'subject','code');
+
+  [val, oType] =   stPrint(sessions,'subject','code');
+
 %}
 
 %% Parse
-p = inputParser;
-p.addRequired('result',@iscell);
-p.addRequired('slot',  @ischar);
-p.addRequired('field', @ischar);
-
-p.parse(result,slot,field);
+if notDefined('objects'), error('objects are required'); end
+if notDefined('slot1'), error('Main slot is required'); end
+if notDefined('slot2'), slot2 = ''; end
 
 % Return the values we print out
-val = cell(length(result),1);
+val = cell(length(objects),1);
 
 %% Start printing
 
-fprintf('\n %s %s\n-----------------------------\n',slot,field);
+fprintf('\n %s %s\n-----------------------------\n',slot1,slot2);
         
-if isempty(field)
-    for ii=1:length(result)
-        val{ii} = result{ii}.(slot);
+if isempty(slot2)
+    for ii=1:length(objects)
+        val{ii} = objects{ii}.(slot1);
         fprintf('\t%d - %s \n',ii,val{ii} );
     end
 else
-    for ii=1:length(result)
-        val{ii} = result{ii}.(slot).(field);
+    for ii=1:length(objects)
+        val{ii} = objects{ii}.(slot1).(slot2);
         fprintf('\t%d - %s \n',ii,val{ii});
     end
 end
-        
+
+% Not sure this is a good idea.  Means we have to update
+% stObjectParse.
+if nargout > 1
+    oType = stObjectParse(objects{1});
 end
 

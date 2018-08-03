@@ -2,8 +2,9 @@ function [fname, containerType, containerID, fileType] = ...
     dataFileParse(st,fileInfo,containerType,containerID)
 % Parse file information at front of various functions
 %
-% Syntax
+% Might be obsolete, in need of deprecation, to be replaced by objectParse
 %
+% Syntax:
 %  [fname, containerType, containerID, fileType] = ...
 %           stFileParse(fileInfo,containerType,containerID)
 %

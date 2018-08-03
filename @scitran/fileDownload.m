@@ -5,9 +5,9 @@ function destination = fileDownload(st,file,varargin)
 %   outfile = scitran.fileDownload(file, ...)
 %
 % Description
-%   We download files from the data containers, project, session,
-%   acquisition, or collection. To download a file from an analysis, which
-%   has input and output files, use st.analysisDownload.
+%   We download files from the containers, project, session,
+%   acquisition, or collection. To download a file from an analysis,
+%   which has input and output files, use st.analysisDownload.
 %
 % Required Inputs
 %  file - A filename (string), FileEntry, or a Flywheel search object.
@@ -78,7 +78,7 @@ vFunc = @(x)(isa(x,'flywheel.model.SearchResponse') || ...
 p.addRequired('file',vFunc);
 
 % Param/value pairs
-p.addParameter('containertype','',@ischar); % If file is string, required
+p.addParameter('containertype','acquisition',@ischar); % If file is string, required
 p.addParameter('containerid','',@ischar);   % If file is string, required
 p.addParameter('destination','',@ischar);
 p.addParameter('unzip',false,@islogical);
@@ -94,9 +94,14 @@ zipFlag       = p.Results.unzip;
 %% Set up the Flywheel SDK method parameters. 
 % These are the filename and container information.
 
-[filename, containerType, containerID] = ...
-    st.dataFileParse(file,containerType,containerID);
+[~, containerID, ~, filename] = ...
+    st.objectParse(file,containerType,containerID);
 
+%{
+    % Could be deprecated
+    [filename, containerType, containerID] = ...
+      st.dataFileParse(file,containerType,containerID);
+%}
 if isempty(destination)
     destination = fullfile(pwd,filename);
 end
