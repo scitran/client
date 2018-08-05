@@ -30,6 +30,8 @@ function [fname, containerType, containerID, fileType] = ...
 % Wandell, Vistasoft 2018
 %
 
+disp('dataFileParse is deprecated')
+
 %% If the person does not have the container type and id, they won't send it
 
 % But it is weird to send it and then just get it back.  And it is

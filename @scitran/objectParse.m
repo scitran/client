@@ -8,9 +8,9 @@ function [containerType, containerID, fileContainerType, fname, fileType] = ...
 %
 % Brief Description
 %   The Flywheel SDK provides information about objects in two main
-%   formats: a return from a search or as a return from a list. Either
-%   way, we often want to know properties such as the container type
-%   and the container id.  
+%   formats: a return from a search or a return from a list. Either way, we
+%   may want to know the object properties such as the container type and
+%   id.
 %
 %   In addition, sometimes we want information from a file name and
 %   its container and container id, such as the file type and the
@@ -18,11 +18,12 @@ function [containerType, containerID, fileContainerType, fname, fileType] = ...
 %   
 %   This routine takes object information and does its best to return
 %   critical information. We use this routine at the front end of
-%   various methods.  
+%   various methods.
 %
-%   Hopefully, this routine will be replaced by a proper Flywheel SDK
-%   routine based on the 'resolve' concept. For example, if we have an
-%   object id we should be able to learn its type.
+%   At some point in the next few months, this routine will be simplified
+%   by using a new Flywheel SDK method based on the 'resolve' concept. The
+%   proposal is that all objects and files will have an id, and Flywheel
+%   will use the id to learn the object type and name or label.
 %
 % Inputs
 %   object:  A Flywheel list or search return, or a file name (char)
@@ -72,24 +73,42 @@ fname = '';
 
 %%
 if ischar(object)
-    % User sent in a string, so, this must be a file.  
-    % The user must also send the container type and id.  At some
-    % point, files will become a genuine object.s
-    containerType = stParamFormat(containerType);  % Spaces, lower
-    if ~isequal(containerType(1:4),'file')
-        error('Char requires file container type.'); 
+    % User sent in a string, so, the containerTYpe must be a file.  
+    % The user must might have sent in a container type and id.  Also, for
+    % the case of a file  we expect a containerType like
+    %     fileacquisition or filesession or ...
+    % 
+    % (At some point, file's will have an id and much of  this will go
+    % away). 
+    if isempty(containerID)
+        error('A string "object" means a file and requires the id of it''s container.'); 
     end
-    if isempty(containerID), error('container id required'); end
+    
+    fname = object;
+    containerType = stParamFormat(containerType);  % Spaces, lower
 
-    % If containerType is fileX format, get the containerType from the
-    % second half of the string
-    if length(containerType) > 4
+    % Otherwise, the container type can be in one of two formats:
+    % filecontainerType or just containerType.  If filecontainerType
+    % format, get the containerType from the second half of the string.
+    if isempty(containerType)
+        % If there is no containerType, we assume this is a data file in an
+        % acquisition and we search. 
+        % We assume a file in an acquisition because that is the most
+        % common.
+        srch = st.search('file','file name exact',fname, ...
+            'acquisition id',containerID);
+        fileType = srch{1}.file.type;
+        fileContainerType = 'acquisition';
+    elseif length(containerType) > 4
+        % The user told us.  Hurray.
         fileContainerType = containerType(5:end);
     else
-        % No fileX. We assume the user gave just the container file type
+        % We assume the user correctly passed the file's container type and
+        % forgot to put it in the format filecontainerType
         fileContainerType = containerType;
     end
-    % Did I mention this has to be a file?
+    
+    % This object itself is a file.  So, its container type "file".
     containerType     = 'file';
 
 else
@@ -126,7 +145,7 @@ else
             % For a file, the containerID and containerType both refer
             % to the parent of the file.  We are defaulting to
             % acquisition until we can do better.
-            warning('File "id" not yet implemented; file container defaults to "acquisition"');
+            % warning('File "id" not yet implemented; file container defaults to "acquisition"');
             fileContainerType = 'acquisition';
             fileType = object.type;
             fname = object.name;

@@ -97,11 +97,6 @@ zipFlag       = p.Results.unzip;
 [~, containerID, ~, filename] = ...
     st.objectParse(file,containerType,containerID);
 
-%{
-    % Could be deprecated
-    [filename, containerType, containerID] = ...
-      st.dataFileParse(file,containerType,containerID);
-%}
 if isempty(destination)
     destination = fullfile(pwd,filename);
 end

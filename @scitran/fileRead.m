@@ -73,13 +73,10 @@ if nargout > 1, save = true; end
 
 %% Get the file name, container id and container type
 
-[~, containerID, ~, fname] = ...
+% Returns are:
+% [containerType, containerID, fileContainerType, fname, fileType]
+[~, containerID, ~, fname, fileType] = ...
     st.objectParse(fileInfo,containerType,containerID);
-
-%{
-[fname, containerType, containerID, fileType] = ...
-    st.dataFileParse(fileInfo,containerType,containerID);
-%}
 
 % Create destination from file name.  Might need the extension for
 % filetype
