@@ -78,7 +78,7 @@ containerID   = p.Results.containerid;
 infoType      = p.Results.infotype;
 
 %% Figure out the the proper container information
-[containerType, containerID, fileContainerType, fname] = ...
+[containerID, containerType, fileContainerType, fname] = ...
     st.objectParse(object, containerType,containerID);
 
 %% Call the right SDK function to get the whole info struct

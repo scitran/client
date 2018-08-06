@@ -6,23 +6,15 @@ function result = list(obj, returnType, parentID, varargin)
 %
 % Description
 %  The Flywheel objects and files are organized hierarchically
-%
-%    Group Name
-%     Project Name
-%      Session Name
-%       Acquisition Name
-%        ...
-%
+%    Group Name -> Project Name ->  Session Name ->  Acquisition Name
 % Or,
+%     Curator Name -> Collection -> Session -> Acquisition
 %
-%     Curator Name
-%       Collection
-%         Session
-%           Acquisition
 %
-% The list function takes the id of a parent, say a project, and then
-% lists the sessions in that parent.  Or the parent might be a session
-% and the acquisitions are listed.
+% The list function takes the id of a parent, say 
+%   a project, and then lists the sessions in that parent.  
+%   a session, and the acquisitions are listed
+%   a session and the analyses are listed.
 %
 % Inputs (required)
 %  returnType - project, session, acquisition, file, collection,
@@ -181,9 +173,12 @@ switch returnType
 
     
     case 'sessionanalyses'
-        % h = st.projectHierarchy('HCP_preproc')
-        % thisSession = h.sessions{2};
-        % analyses = st.fw.getSessionAnalyses(idGet(thisSession));
+        % List the analyses in a session
+        %
+        % I don't understand this.  Ask JE.
+        %
+        disp('session analyses needs some work. NYI.');
+        % analyses = st.fw.getSessionAnalyses('session', parentID, subcontainerName);
         
         % for i = 1:numel(analyses)
         %  fprintf('%s: %s\n', analyses{i}.id, analyses{i}.label);
@@ -195,8 +190,9 @@ switch returnType
         % thisAnalysis.job.config.config
 
     case 'analysis'
-        % If you know the analysis ID, get it this way
-        data = fw.getAnalysis(analysisID);
+        % Each analysis has an ID, so this is the analysis id, not
+        % the analysis parent ID.
+        data = fw.getAnalysis(parentID);
     
     case 'collection'
         % An email address of the curator replaces the groupID/parentID

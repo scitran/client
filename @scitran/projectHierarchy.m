@@ -73,7 +73,8 @@ if isempty(projectID)
     elseif isempty(project)
         error('No project found with label %s\n',projectLabel);
     end
-    projectID = idGet(project{1},'data type','project');
+    % projectID = idGet(project{1},'data type','project');
+    projectID = obj.objectParse(project{1});
 end
 
 % Get the project object.

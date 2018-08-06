@@ -60,6 +60,9 @@ switch oType
             warning('Uncertain search classification');
             disp(object)
         end
+    case 'searchsessionresponse'
+        oType = 'search';
+        sType = 'session';
 end
 
 end

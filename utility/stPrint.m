@@ -47,7 +47,7 @@ function [val, oType] = stPrint(objects, slot1, slot2)
 %{
   % Limited to make the example short.
   projects = st.search('project');
-  [~,id] = st.objectParse(projects{1})
+  id = st.objectParse(projects{1})
   sessions = st.search('session',...
       'project id',id, ...
       'limit',10);
@@ -65,7 +65,7 @@ function [val, oType] = stPrint(objects, slot1, slot2)
   project = st.search('project','project label exact','VWFA');
   info = st.infoGet(project{1});
 
-  [~,id] = st.objectParse(project{1});
+  id = st.objectParse(project{1});
   sessions = st.list('session',id);   % Parent id
   stPrint(sessions,'subject','code');
 
@@ -100,6 +100,6 @@ end
 % Not sure this is a good idea.  Means we have to update
 % stObjectParse.
 if nargout > 1
-    oType = stObjectParse(objects{1});
+    [~,oType] = stObjectParse(objects{1});
 end
 

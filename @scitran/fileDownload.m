@@ -78,7 +78,7 @@ vFunc = @(x)(isa(x,'flywheel.model.SearchResponse') || ...
 p.addRequired('file',vFunc);
 
 % Param/value pairs
-p.addParameter('containertype','acquisition',@ischar); % If file is string, required
+p.addParameter('containertype','',@ischar); % If file is string, required
 p.addParameter('containerid','',@ischar);   % If file is string, required
 p.addParameter('destination','',@ischar);
 p.addParameter('unzip',false,@islogical);
@@ -94,7 +94,7 @@ zipFlag       = p.Results.unzip;
 %% Set up the Flywheel SDK method parameters. 
 % These are the filename and container information.
 
-[~, containerID, ~, filename] = ...
+[containerID, containerType, fileContainerType, filename] = ...
     st.objectParse(file,containerType,containerID);
 
 if isempty(destination)
@@ -105,7 +105,7 @@ end
 % Perhaps we could call the analysis download too.  But I don't understand
 % the syntax yet (BW).
 %  fw.downloadAnalysisOutputsByFilename
-switch lower(containerType)
+switch lower(fileContainerType)
     case 'project'
         st.fw.downloadFileFromProject(containerID,filename,destination);
     case 'session'

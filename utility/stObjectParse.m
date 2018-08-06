@@ -1,14 +1,14 @@
-function [containerType, containerID, fileContainerType, fileType] = ...
+function [containerID, containerType, fileContainerType, fileType] = ...
     stObjectParse(object,containerType, containerID)
 % Returns information about an object  
 %
 %   ** See doc scitran.objectParse for the official discussion.  This
-%   function may be removed in the future in favor of
-%   scitran.objectParse **
+%   function may be removed in the future in favor of having people only
+%   use scitran.objectParse **
 %
 % Syntax
-%  [containerType, containerID, fileContainerType, fileType] = ...
-%           stFileParse(object,[containerType],[containerID])
+%  [containerID, containerType, fileContainerType, fileType] = ...
+%           stObjectParse(object,[containerType],[containerID])
 %
 % Brief Description 
 %

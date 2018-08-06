@@ -35,13 +35,19 @@ fprintf('** Analysis:\nlabel: %s\nid: %s\n', ...
     analysis{1}.analysis.label,analysis{1}.analysis.id);
 
 % Readable way to get the analysis is
-id = idGet(analysis{1},'data type','analysis');
+[parentID, containerType] = st.objectParse(analysis{1}.session);
 
-% This gets the information container of the analysis
-analysis = st.list('analysis',id);
-stPrint(analysis,'label','');
+%% This gets the information container of the analysis 
 
-% Apparently, we need to have a destination for the file.
+analysis = st.list('sessionanalyses',analysis{1}.analysis.id);
+
+%%
+thisAnalysis = st.list('analyses',analysis{1}.analysis.id);
+
+%
+stPrint(thisAnalysis,'label','');
+
+%% Apparently, we need to have a destination for the file.
 fName = fullfile(stRootPath,'local','lh.pial.obj');
 st.fileDownload('lh.pial.obj',...
     'container id',id,...
@@ -50,6 +56,8 @@ st.fileDownload('lh.pial.obj',...
 
 if exist(fName,'file'), fprintf('File downloaded to %s\n',fName); end
 
-pause(1); fprintf('Deleting\n'), delete(fName);
+%%
+fprintf('Deleting %s\n',fName)
+delete(fName);
 
 %%

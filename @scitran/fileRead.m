@@ -75,7 +75,7 @@ if nargout > 1, save = true; end
 
 % Returns are:
 % [containerType, containerID, fileContainerType, fname, fileType]
-[~, containerID, ~, fname, fileType] = ...
+[containerID, ~, ~, fname, fileType] = ...
     st.objectParse(fileInfo,containerType,containerID);
 
 % Create destination from file name.  Might need the extension for

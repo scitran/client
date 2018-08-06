@@ -97,29 +97,10 @@ infoType = p.Results.infotype;
 
 %% Figure out the the proper container information
 
-% This would be a part of scitran.objectParse, as drafted in infoGet.m
-
 % Figure out what type of object this is.
-[oType, sType] = stObjectType(object);
 
-% If it is a search, then ...
-if isequal(oType,'search')  && isequal(sType,'file')
-    % A file search object has a parent id included.
-    containerType = 'file';
-    fname  = object.file.name;
-    containerID   = object.parent.id;
-    fileContainerType = object.parent.type;
-    
-elseif isequal(oType,'search')
-    % Another type of search.  The id and type should be there.
-    containerType = sType;
-    containerID   = object.(sType).id;
-else
-    % It a list return, not a search return
-    containerType = oType;
-    containerID = object.id;
-end
-
+[containerID, containerType, fileContainerType, fname] = ...
+    st.objectParse(object);
 
 %%  Call the right Flywheel SDK routie
 
@@ -192,6 +173,18 @@ switch containerType
         
     otherwise
         error('Container type %s either unknown or not implemented\n',containerType);
+end
+
+switch infoType
+    case 'info'
+    case 'tags'
+        disp('info returned.  info type not yet implemented')
+    case 'notes'
+        disp('info returned.  info type not yet implemented')
+    case 'classification'
+        disp('info returned.  info type not yet implemented')
+    otherwise
+        error('Unknown info type %s',infoType);
 end
 
 end

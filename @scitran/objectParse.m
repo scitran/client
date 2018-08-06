@@ -1,9 +1,9 @@
-function [containerType, containerID, fileContainerType, fname, fileType] = ...
+function [containerID, containerType, fileContainerType, fname, fileType] = ...
     objectParse(~, object,containerType, containerID)
 % Determine properties of a Flywheel SDK object.
 %
 % Syntax
-%  [fname, containerType, containerID, fileType] = ...
+%  [containerID, containerType, fileContainerType, fname, fileType] = ...
 %           st.objectParse(object,containerType, containerID)
 %
 % Brief Description
@@ -46,9 +46,9 @@ function [containerType, containerID, fileContainerType, fname, fileType] = ...
 %{
 st = scitran('stanfordlabs');
 h = st.projectHierarchy('Graphics assets');
-[oType, id] = st.objectParse(h.project)
-[oType, id] = st.objectParse(h.sessions{1})
-[oType, id] = st.objectParse(h.acquisitions{2}{1})
+[id, oType] = st.objectParse(h.project)
+[id, oType] = st.objectParse(h.sessions{1})
+[id, oType] = st.objectParse(h.acquisitions{2}{1})
 
 acquisition = st.search('acquisition',...
     'project label exact','Graphics assets', ...
@@ -59,7 +59,7 @@ acquisition = st.search('acquisition',...
 % fileCType - If file, its container type   (project, acq)
 % The file name
 % The file type                             (Matlab data, source code ...)
-[oType, id, fileCType, fname, fType]= st.objectParse(h.acquisitions{2}{1}.files{1})
+[id, oType, fileCType, fname, fType]= st.objectParse(h.acquisitions{2}{1}.files{1})
 %}
 
 %%
@@ -99,7 +99,7 @@ if ischar(object)
             'acquisition id',containerID);
         fileType = srch{1}.file.type;
         fileContainerType = 'acquisition';
-    elseif length(containerType) > 4
+    elseif strncmp(containerType,'file',4)
         % The user told us.  Hurray.
         fileContainerType = containerType(5:end);
     else
