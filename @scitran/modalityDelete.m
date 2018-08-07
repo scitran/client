@@ -39,7 +39,7 @@ end
 % OK, not MR, so ....
 prompt = sprintf('Do you want to delete the modality %s? (yes/no)\n',name);
 str = input(prompt,'s');
-if strmp(str,'yes')
+if strcmp(str,'yes')
     fprintf('Deleting modality %s\n',name);
     st.fw.deleteModality(name);
 else

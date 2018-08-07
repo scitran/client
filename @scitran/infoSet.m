@@ -16,11 +16,7 @@ function info = infoSet(st,object,metadata,varargin)
 %   How are we going to handle deleting fields?
 %
 % Input
-%   object:  A string that defines the object.  These are
-%       'project','session','acquisition','collection', 'fileproject',
-%       'filesession', 'fileacquisition', 'filecollection'.  We
-%       consider fileX to be a group and they required the key/value
-%       fname (see below).
+%   object:  The Flywheel object.  It will be parsed by objectParse.
 %   metadata:  By default the infotype is 'info'.  In this case data
 %                   should be a struct whose fields contain the new values.
 %                   Some possible fields are 'label' and 'description'.
@@ -29,7 +25,7 @@ function info = infoSet(st,object,metadata,varargin)
 %                   be a string.
 %
 % Optional key/value
-%   fname    -  File name, required for fileX container types
+%   fname    -  File name, required for fileXXXX container types
 %   infotype -  Add an 'info' field, a 'note', or a 'tag' and we
 %               should add 'classification' (default: 'info')
 %
@@ -71,7 +67,7 @@ function info = infoSet(st,object,metadata,varargin)
 
 %}
 %{
-  % Add and delte a note
+  % Add and delete a note
   project = st.search('project','project label exact','DEMO');
   projectID = idGet(project{1},'data type','project');
   modInfo = st.infoSet(project{1}, 'Test note','infotype','note');
@@ -90,17 +86,23 @@ p.addRequired('metadata',@(x)(isstruct(x) || ischar(x)));
 % The data can be added to an info slot or treated as a tag or a note
 validInfo = {'info','note','tag','classification'};
 p.addParameter('infotype','info',@(x)(ismember(x,validInfo)));
+p.addParameter('containerid','',@ischar);
+p.addParameter('containertype','',@ischar);
 
 p.parse(st,object,metadata,varargin{:});
 
+% 
 infoType = p.Results.infotype;
+
+% Dealing with fileXXX types
+containerID   = p.Results.containerid;
+containerType = p.Results.containertype;
 
 %% Figure out the the proper container information
 
 % Figure out what type of object this is.
-
 [containerID, containerType, fileContainerType, fname] = ...
-    st.objectParse(object);
+    st.objectParse(object,containerType,containerID);
 
 %%  Call the right Flywheel SDK routie
 

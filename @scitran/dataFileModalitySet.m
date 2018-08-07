@@ -27,11 +27,15 @@ function dataFileModalitySet(st,acqid,fname,param,val)
  fname = h.acquisitions{2}{2}.files{1}.name;
 
  % Sets the modality of the file
- st.dataFileModalitySet(acqid,'Car_2.c4d','modality','CG');
+ % CG.model = {....}
+ % CG.xxxx  = {'',....};
+ st.dataFileModalitySet(acqid,fname,'modality','CG');
 %}
 %{
   % Sets the classification value of the current modality.  The
   % classification subtype must exist, and the string must be permissible
+  % In this case, 'model' is possible value for the modality, which is
+  CG.
   st.dataFileModalitySet(acqID,'car.mtl','model','Ford')  
 %}
 

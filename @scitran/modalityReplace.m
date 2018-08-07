@@ -14,7 +14,7 @@ function modalityReplace(st,id,modality)
 % BW, Vistasoft Team, 2018
 %
 % See also
-%   scitran.modalityCreate
+%   scitran.modalityCreate, flywheel.model.Modality
 
 % Examples:
 %{
