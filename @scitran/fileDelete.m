@@ -1,4 +1,4 @@
-function status = fileDelete(st, filename, containertype, containerid )
+function status = fileDelete(st, filename, containerid, containertype )
 % Deletes a file from a container on a Flywheel site.  
 % 
 %  status = scitran.fileDelete(obj, file, containerid, containertype)
@@ -18,12 +18,13 @@ function status = fileDelete(st, filename, containertype, containerid )
 %
 %{
   % Make sure we have a dummy file up there
-  % remoteFileName = 'test.json';
-  localFilename = fullfile(stRootPath,'data','test.json');
-  project = st.search('projects',...
-    'project label exact','DEMO');
-
-  st.upload(localFilename,'project',idGet(project,'data type','project'));
+  localFilename = fullfile(stRootPath,'local','test.json');
+  s.test = '123';
+  s.more = '456';
+  jsonwrite(localFilename,s);
+  project = st.search('projects','project label exact','DEMO');
+  [id,cType] = st.objectParse(project{1});
+  st.fileUpload(localFilename,id,cType);
 
   % This is the delete operation based on search
   file = st.search('file',...
@@ -34,7 +35,7 @@ function status = fileDelete(st, filename, containertype, containerid )
     'project label exact','DEMO',...
     'filename','test.json');
 
-  st.deleteFile(file);
+  st.fileDeleteFile(file);
 %}
 
 %{

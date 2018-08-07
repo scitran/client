@@ -70,6 +70,7 @@ if notDefined('containerID'),   containerID = ''; end
 % Default returns
 fileContainerType = '';
 fname = '';
+fileType = '';
 
 %%
 if ischar(object)
@@ -153,6 +154,15 @@ else
             % Not a file.  So, we use the object ID.
             containerID   = object.id;
         end
+    end
+end
+
+if isempty(fileType)
+    % Try to determine the file type from the extension
+    [~,~,ext] = fileparts(fname);
+    switch ext
+        case '.mat'
+            fileType = 'MATLAB data';
     end
 end
 

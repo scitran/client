@@ -1,48 +1,49 @@
-function status = fileUpload(obj,filename,containerType,containerId,varargin)
+function status = fileUpload(obj,filename,containerId,containerType)
 % Upload a file to a Flywheel site.
 %
 % Syntax
-%   status = st.fileUpload(obj,filename,containerType,containerId,varargin)
+%   status = st.fileUpload(obj,filename,containerId,containerType)
 %
 % Description
-%  Upload a file to one of several types of containers on a Flywheel
-%  site. Typically the file name is preserved.  You can use the
-%  optional 'remote name' parameter (below) to set the file name on
-%  the Flywheel site.
+%  Upload a file into one of several types of containers on a Flywheel
+%  site. The local file name is preserved.
 % 
 % Inputs (required):
 %   filename      - A full path to a local file
-%   containerType - This can be a project,session, acquisition, or
+%   containerID   - You can use st.objectParse to find an id and type
+%   containerType - This can be a project, session, acquisition, or
 %                   collection 
-%   containerID   - You can use idGet() to find the id
-%
-% Optional key/value parameters:
-%  remoteName     - File name as it should appear on the Flywheel site
 %
 % Outputs:
-%  status:  Boolean indicating success (0) or failure (~=0)
-%
+%   status:  Boolean indicating success (0) or failure (~=0)
 %
 % Examples in the code
 %
 % LMP/BW Vistasoft Team, 2015-16
 %
 % See also:  
-%  downloadFile, create
+%  fileDownload
 
 %
 % Example 1
 %{
+ % Get a local file to work with
  st = scitran('stanfordlabs');
+ fname = 'dtiError.json';
+ file = st.search('file','file name contains',fname);
+ [id,oType,fileContainerType] = st.objectParse(file{1});
+ chdir(fullfile(stRootPath,'local'));
 
+ localFile = st.fileDownload(fname,'container id',id,'container type', fileContainerType);
+%}
+%{
  % Upload a file to a dummy project
- fullFilename = fullfile(stRootPath,'data','test.json');
  gName = 'Wandell Lab';  % Group name (or label?)
  pLabel = 'deleteMe';    % Project label
- id = st.create(gName,pLabel);  % Returns a slot with project id
+ id = st.containerCreate(gName,pLabel);  % Returns a slot with project id
  
  % Upload the file.
- st.upload(fullFilename,'project',id.project);
+ st.fileUpload(fullFilename,id.project,'project');
 
  % Delete the dummy project
  st.deleteContainer('project',id.project); 
@@ -53,61 +54,41 @@ function status = fileUpload(obj,filename,containerType,containerId,varargin)
  % If the project already exists, search and do the upload
  project = st.search('project','project label exact','DEMO');
  fullFilename = fullfile(stRootPath,'data','dtiError.json');
- st.upload(fullFilename,'project',idGet(project,'data type','project'));
+ st.fileUpload(fullFilename,'project',idGet(project,'data type','project'));
 %}
 % Example 3
 %{
  project = st.search('project','project label exact','DEMO');
+ [id, cType] = st.objectParse(project{1});
  fullFilename = fullfile(stRootPath,'data','dtiError.json');
- st.upload(fullFilename,'project',idGet(project,'data type','project'),'remote name','namechange.json');
+ st.fileUpload(fullFilename,id,cType);
 %}
 
 %% Parse input parameters
 p = inputParser;
 
+% varargin = stParamFormat(varargin);
+
 p.addRequired('filename',@(x)(exist(x,'file')));
 vFunc = @(x)(ismember(x,{'project','session','acquisition','collection'}));
-p.addRequired('containerType', vFunc);
 p.addRequired('containerId',@ischar);
+p.addRequired('containerType', vFunc);
 
-p.addParameter('remotename','',@ischar);
-
-varargin = stParamFormat(varargin);
-p.parse(filename,containerType,containerId,varargin{:});
-
-filename      = p.Results.filename;
-containerType = p.Results.containerType;
-containerId   = p.Results.containerId;
-remoteName    = p.Results.remotename;
-
-%% If we want to change the name as it appears on the Flywheel site.
-
-% Maybe I can use the setInfo methods to change rather than copying?
-remoteFlag = false;
-if ~isempty(remoteName)
-    remoteName = fullfile(tempdir,remoteName);
-    copyfile(filename,remoteName);
-    remoteFlag = true;
-else
-    remoteName = filename;
-end
-
+p.parse(filename,containerType,containerId);
 
 %%
 switch containerType
     case 'project'
-        status = obj.fw.uploadFileToProject(containerId, remoteName);
+        status = obj.fw.uploadFileToProject(containerId, filename);
     case 'session'
-        status = obj.fw.uploadFileToSession(containerId, remoteName);
+        status = obj.fw.uploadFileToSession(containerId, filename);
     case 'acquisition'
-        status = obj.fw.uploadFileToAcquisition(containerId, remoteName);
+        status = obj.fw.uploadFileToAcquisition(containerId, filename);
     case 'collection'
-        status = obj.fw.uploadFileToCollection(containerId, remoteName);
+        status = obj.fw.uploadFileToCollection(containerId, filename);
     otherwise
         error('Not handled yet');
 end
 
-%% Clean up
-if remoteFlag,  delete(remoteName); end
 
 end

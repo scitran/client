@@ -11,14 +11,15 @@ function destination = fileDownload(st,file,varargin)
 %
 % Required Inputs
 %  file - A filename (string), FileEntry, or a Flywheel search object.
-%         Additional parameters are required for filename or FileEntry.
+%         The container id and type are required for filename or
+%         FileEntry.
 %
 % Optional Key/value parameter 
 %  if file is a string or FileEntry you must specify the container
 %  information 
 %
 %  containerType {'project', 'session', 'acquisition', 'collection'}
-%  containerID   You can use idGet() for most objects
+%  containerID    You can use st.objectParse() for most objects
 %  destination:   Full path to the local file (default is in tempdir)
 %  unzip:         Unzip the download and delete the zip file
 %
