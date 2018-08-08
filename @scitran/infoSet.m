@@ -114,7 +114,7 @@ switch containerType
             case 'note'
                 st.fw.addProjectNote(containerID,metadata);
             case 'tag'
-                st.fw.addProjectNote(containerID,metadata);
+                st.fw.addProjectTag(containerID,metadata);
         end
         info = st.fw.getProject(containerID);
         
