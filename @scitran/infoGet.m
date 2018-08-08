@@ -65,7 +65,7 @@ varargin = stParamFormat(varargin);
 p.addRequired('st',@(x)(isa(x,'scitran')));
 p.addRequired('object');
 
-validTypes = {'project','session','acquisition','collection', ...
+validTypes = {'project','session','acquisition','collection','analysis', ...
     'fileproject','filesession','fileacquisition','filecollection'};
 p.addParameter('containertype','',@(x)(ismember(ieParamFormat(x),validTypes)));
 p.addParameter('containerid','',@ischar);
@@ -92,6 +92,9 @@ switch containerType
         meta = st.fw.getAcquisition(containerID);
     case 'collection'
         meta = st.fw.getCollection(containerID);
+    case 'analysis'
+      meta = obj.fw.getAnalysis(containerID);
+
     case 'file'
         switch fileContainerType
             case 'project'

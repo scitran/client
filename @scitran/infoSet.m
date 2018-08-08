@@ -5,18 +5,25 @@ function info = infoSet(st,object,metadata,varargin)
 %   info = st.infoSet(object,metadata,varargin)
 %
 % Description
+%   Very little of this is tested yet.  We need to create the unit
+%   tests!
+%
 %   Modify an info field of an object. The info can be a field or a
 %   note or a tag.
 %   
-%   QUESTIONS:  Are you a permitted to  modify some, but not all of the info
-%   fields? More definition is needed here.  For example, if the field
-%   does not exist, then it is added. If it does exist, then its value
-%   is changed. Right?
+%   QUESTIONS:  Are you a permitted to  modify some, but not all of
+%   the info fields? More definition is needed here.  For example, if
+%   the field does not exist, then it is added. If it does exist, then
+%   its value is changed. Right?
+%
+%   Why are there add and set and modify methods.  Which are the right
+%   ones to use here?
 %
 %   How are we going to handle deleting fields?
 %
+%
 % Input
-%   object:  The Flywheel object.  It will be parsed by objectParse.
+%   object:  The Flywheel object. It will be parsed by objectParse.
 %   metadata:  By default the infotype is 'info'.  In this case data
 %                   should be a struct whose fields contain the new values.
 %                   Some possible fields are 'label' and 'description'.
@@ -74,7 +81,10 @@ function info = infoSet(st,object,metadata,varargin)
   st.fw.deleteProjectNote(projectID,modInfo.notes{1}.id)
 
 %}
-
+%{
+info = struct('some_key', 'somevalue', 'another_key', 10);
+fw.setAnalysisInfo(analysisId, info);
+%}
 %%
 p = inputParser;
 varargin = stParamFormat(varargin);
@@ -150,6 +160,18 @@ switch containerType
                 st.fw.addCollectionTag(containerID,metadata);
         end
         info = st.fw.getCollection(containerID);
+        
+    case 'analysis'
+        % Not tested yet.  
+        switch infoType
+            case 'info'
+                st.fw.setAnalysisInfo(containerID,metadata);
+            case 'note'
+                st.fw.addAnalysisNote(containerID,metadata);
+            case 'tag'
+                st.fw.addAnalysisTag(containerID,metadata);
+        end
+        info = st.fw.getAnalysis(containerID);
         
     case 'file'
         % Files are inside of different types of containers.  The call
