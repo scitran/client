@@ -38,6 +38,9 @@ The SDK is under active development, and we anticipate several new releases thro
     ....
     stFlywheelSDK('install','sdkVersion','2.5.0');   % The latest version changes over time. 
 
+## Connecting
+Go to the [next page](Connecting_and_Authenticating) for instructions on how to make a connection
+
 ## Wonkish
 
 The SDK is auto-generated into several different languages (Matlab, Python, and R).
