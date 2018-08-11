@@ -13,20 +13,27 @@ This will create two directories, scitran and JSONio.  Please add both directori
 
 ### Matlab toolbox Add-Ons toolbox
 
-The SDK is installed as a Matlab toolbox managed using their 'Add-Ons' methods. You can do the installation with the scitran function
+#### First installation
+
+The SDK is installed as a Matlab toolbox managed using their 'Add-Ons' methods. You can do the installation with the scitran function from Matlab
 
     stFlywheelSDK('install');
 
-That command downloads the toolbox from the web and installs it as an Add-On toolbox. You can verify or uninstall the toolbox using
+That command downloads the toolbox from the web and installs it as an Add-On toolbox. You can verify the toolbox using
 
     status = stFlywheelSDK('verify')
-    status = stFlywheelSDK('uninstall')
+
+### Upgrading
 
 The SDK is under active development, and we anticipate several new releases through 2018 and into 2019.  To install a new specific release number, we suggest you uninstall, restart matlab, and then install.  We have done this sequence several times with success; we haven't succeeded without the restart.  For example, to upgrade to version '2.4.3' you can do this:
 
     stFlywheelSDK('uninstall');
+    ...
     RESTART MATLAB
-    stFlywheelSDK('install','sdkVersion','2.4.3');
+    ....
+    stFlywheelSDK('install','sdkVersion','2.5.0');   % The version number changes over time. 
+
+## Wonkish
 
 The SDK is auto-generated into several different languages (Matlab, Python, and R).
 
