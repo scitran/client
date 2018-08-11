@@ -21,22 +21,22 @@ The SDK is installed as a Matlab toolbox managed using their 'Add-Ons' methods. 
 
 That command downloads the toolbox from the web and installs it as an Add-On toolbox. You can verify that the toolbox was installed using
 
-    status = stFlywheelSDK('verify')
     stFlywheelSDK('verify')
-       Name: 'flywheel-sdk'
-       Version: '2.5.0'
-       Guid: 'd2fd5657-1710-494e-b5e9-23903828bfb3'
+    
+    >   Name: 'flywheel-sdk'
+    >   Version: '2.5.0'
+    >   Guid: 'd2fd5657-1710-494e-b5e9-23903828bfb3'
 
 
 ### Upgrading
 
-The SDK is under active development, and we anticipate several new releases through 2018 and into 2019.  To install a new specific release number, we suggest you uninstall, restart matlab, and then install.  We have done this sequence several times with success; we haven't succeeded without the restart.  For example, to upgrade to version '2.4.3' you can do this:
+The SDK is under active development, and we anticipate several new releases through 2018 and into 2019.  To install a new specific release number, we suggest you uninstall, restart matlab, and then install.  We have done this sequence several times with success; we haven't succeeded without the restart.  For example, to upgrade to version '2.5.0' you can do this:
 
-    stFlywheelSDK('uninstall');
+    stFlywheelSDK('uninstall');   % This uninstalls the current version
     ...
-    RESTART MATLAB
+    **RESTART MATLAB**
     ....
-    stFlywheelSDK('install','sdkVersion','2.5.0');   % The version number changes over time. 
+    stFlywheelSDK('install','sdkVersion','2.5.0');   % The latest version changes over time. 
 
 ## Wonkish
 
