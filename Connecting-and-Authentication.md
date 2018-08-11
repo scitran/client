@@ -18,7 +18,11 @@ st =
           fw: [1×1 Flywheel]
 ```
 
-The first time you run scitran to connect to a site, you will be asked to authenticate yourself.  Specifically, you will have to provide the site URL and your API Key.  The API key is available from the web page in your user profile section. 
+The first time you run scitran to connect to a site, you will be asked to authenticate yourself.  Specifically, you will have to provide the site URL and your API Key.  The API key is available from the Flywheel web page.  To find it
+
+* Click on your user profile, which is found on the upper right of the page
+* Scroll down to the API section (see image below)
+
 The information you enter will be stored on your computer, and you will only need to enter it again to refresh your authentication every few months.
 
 ### An example
