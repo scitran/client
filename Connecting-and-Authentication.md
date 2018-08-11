@@ -23,7 +23,7 @@ The first time you run scitran to connect to a site, you will be asked to authen
 * Click on your user profile, which is found on the upper right of the page
 * Scroll down to the API section (see image below)
 
-The information you enter will be stored on your computer, and you will only need to enter it again to refresh your authentication every few months.
+The authentication key you enter will be stored on your computer - so this needs to be done infrequently. The API key expires after a few months, so you will need to enter it again to refresh your authentication every few months.
 
 ### An example
 
