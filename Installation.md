@@ -39,7 +39,7 @@ The SDK is under active development, and we anticipate several new releases thro
     stFlywheelSDK('install','sdkVersion','2.5.0');   % The latest version changes over time. 
 
 ## Connecting
-Go to the [next page](Connecting_and_Authenticating) for instructions on how to make a connection
+Go to the [next page](Connecting-and-Authenticating) for instructions on how to make an authenticated connection
 
 ## Wonkish
 
