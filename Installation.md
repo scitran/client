@@ -19,7 +19,7 @@ The SDK is installed as a Matlab toolbox managed using their 'Add-Ons' methods. 
 
     stFlywheelSDK('install');
 
-That command downloads the toolbox from the web and installs it as an Add-On toolbox. You can verify the toolbox using
+That command downloads the toolbox from the web and installs it as an Add-On toolbox. You can verify that the toolbox was installed using
 
     status = stFlywheelSDK('verify')
 
