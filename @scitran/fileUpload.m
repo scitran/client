@@ -68,13 +68,13 @@ function status = fileUpload(obj,filename,containerId,containerType)
 p = inputParser;
 
 % varargin = stParamFormat(varargin);
-
+p.addRequired('obj',@(x)(isa(x,'scitran')));
 p.addRequired('filename',@(x)(exist(x,'file')));
-vFunc = @(x)(ismember(x,{'project','session','acquisition','collection'}));
 p.addRequired('containerId',@ischar);
+vFunc = @(x)(ismember(x,{'project','session','acquisition','collection'}));
 p.addRequired('containerType', vFunc);
 
-p.parse(filename,containerType,containerId);
+p.parse(obj,filename,containerId,containerType);
 
 %%
 switch containerType

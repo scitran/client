@@ -67,13 +67,13 @@ end
 
 switch containertype
     case 'project'
-        status = obj.fw.replaceProjectFile(containerid, filename);
+        status = st.fw.replaceProjectFile(containerid, filename);
     case 'session'
-        status = obj.fw.replaceSessionFile(containerid, filename);
+        status = st.fw.replaceSessionFile(containerid, filename);
     case 'acquisition'
-        status = obj.fw.replaceAcquisitionFile(containerid,filename);
+        status = st.fw.replaceAcquisitionFile(containerid,filename);
     case 'collection'
-        status = obj.fw.replaceCollectionFile(containerid, filename);
+        status = st.fw.replaceCollectionFile(containerid, filename);
     otherwise
         error('This container type not handled yet %s',containerTypes);
 end

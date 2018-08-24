@@ -4,8 +4,9 @@ function id = collectionCreate(obj, label, varargin)
 % Syntax
 %   id = collectionCreate(obj, labels)
 %
-% Create a collection with a specific label within the specified
-% group.
+% Description
+%   Create a collection with a specific label within the specified
+%   group.
 % 
 % BW 2017
 %

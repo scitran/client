@@ -56,7 +56,7 @@
 % At Stanford, we have a stanfordlabs site.  You will have to replace
 % 'stanfordlabs' with the name for your site.
 st = scitran('stanfordlabs');
-st.verify
+st.verify;
 
 % The Flywheel SDK object is part of the scitran object.  If you want to
 % experiment with it, you might pull it out and try some calls.
@@ -410,5 +410,17 @@ analyses = st.search('analysis',...
 analyses = st.search('analysis',...
     'analysis label contains','AFQ',...
     'summary',true);
+
+%% Analyses
+[afqDemos, tst] = st.search('analysis','gear name','afq-pipeline-3');
+
+% get the analysis itself
+thisAnalysis  = st.fw.getAnalysis(afqDemos{1}.analysis.id);
+id = thisAnalysis.job.id;
+j = st.fw.getJob(id);  % There is also a getJobConfig() ....
+j = st.fw.getJobConfig(id);  % There is also a getJobConfig() ....
+
+thisAnalysis.job.config
+
 
 %% END

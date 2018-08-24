@@ -2,14 +2,17 @@ function idS = containerCreate(obj, group, project, varargin)
 % Create a project, session or acquisition on a Flywheel instance
 %
 % Syntax
-%   idS = st.containerCreate(groupL, projectL,'session',sessionLabel,'acquisition',acquisitionLabel)
+%   idS = st.containerCreate(groupL, projectL,...
+%                 'session',sessionLabel,...
+%                 'acquisition',acquisitionLabel)
 %
-% We make a series of objects, starting with project, session, and
-% acquisition.  In each case we check if the object already exists, and if
-% not, we create it. We return a struct with the Flywheel id value of the
-% objects that we create.
+% Description
+%   Make a series of containers, starting with project, then session,
+%   and acquisition.  In each case we check if the object already
+%   exists, and if not, we create it. We return a struct with the
+%   Flywheel id value of the objects that we create.
 %
-% There is a separate function (createCollection) for collections.
+%   There is a separate function (collectionCreate) for collections.
 %
 % Required Inputs
 %  groupL   - Group Label
