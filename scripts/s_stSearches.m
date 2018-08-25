@@ -38,6 +38,21 @@
 % See also:  st.browser - we use this function to visualize the returned
 %            object in the browser.
 %
+%
+% Contains and Exact issue
+%
+%{
+analyses = st.search('analysis',...
+    'project label contains','Weston',...
+    'analysis label contains','AFQ',...
+    'summary',true);
+
+% This works, but not with label contains.  Puzzling to me.
+analyses = st.search('analysis',...
+    'project label exact','Weston Havens',...
+    'analysis label contains','AFQ',...
+    'summary',true);
+%}
 
 %% Examples
 %{
@@ -394,7 +409,7 @@ collections = st.search('collection',...
 %% All collections
 collections = st.search('collection','summary',true);
 
-%% Return analyses **  Fails for problect label contains, but works for exact
+%% Return analyses **  Fails for project label contains, but works for exact
 
 % Analyses within a project
 analyses = st.search('analysis',...
@@ -405,22 +420,5 @@ analyses = st.search('analysis',...
 analyses = st.search('analysis',...
     'analysis label contains','freesurfer-recon-all',...
     'summary',true);
-
-%% Wow, lots of AFQ in the stanfordlabs database
-analyses = st.search('analysis',...
-    'analysis label contains','AFQ',...
-    'summary',true);
-
-%% Analyses
-[afqDemos, tst] = st.search('analysis','gear name','afq-pipeline-3');
-
-% get the analysis itself
-thisAnalysis  = st.fw.getAnalysis(afqDemos{1}.analysis.id);
-id = thisAnalysis.job.id;
-j = st.fw.getJob(id);  % There is also a getJobConfig() ....
-j = st.fw.getJobConfig(id);  % There is also a getJobConfig() ....
-
-thisAnalysis.job.config
-
 
 %% END
