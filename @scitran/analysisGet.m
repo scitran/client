@@ -38,14 +38,16 @@ function val = analysisGet(st,thisAnalysis,param)
 
 if notDefined('thisAnalysis'), error('analysis required');
 elseif isa(thisAnalysis,'flywheel.model.SearchResponse')
-    % Get the actual analysis output object based on the search.
+    % Get the whole analysis output object; the search only returns an
+    % abbreviated version because of speed.  Not sure that is a great idea,
+    % but ..
     id = st.objectParse(thisAnalysis.analysis);
     thisAnalysis  = st.fw.getAnalysis(id);
 elseif isa(thisAnalysis,'flywheel.model.SearchAnalysisResponse')
     id = st.objectParse(thisAnalysis);
     thisAnalysis  = st.fw.getAnalysis(id);
 elseif isa(thisAnalysis,'flywheel.model.AnalysisOutput')
-    % Nothing needed
+    % This has everything.  Nothing needed.
 else
     error('First argument must be a SearchResponse or AnalysisOutput');
 end
@@ -69,11 +71,13 @@ switch switchparam
         % st.analysisGet(analysis,'paramnames');
         val = fieldnames(thisAnalysis.job.config.config);
     case {'job'}
-        idJOB = st.objectParse(thisAnalysis.job);
-        val = st.fw.getJob(idJOB);  % There is also a getJobConfig() ....
+        val = thisAnalysis.job;  % There is also a getJobConfig() ....
         % There is also a getJobConfig() .... but it I sent an error
         % message to Justin about this
         % j = st.fw.getJobConfig(id);  
+    case {'state'}
+        % Did the job run correctly?
+        val = thisAnalysis.job.state;  
 
     otherwise
         % A specific parameter value from the config structure
