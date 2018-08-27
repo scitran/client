@@ -60,6 +60,7 @@ p.addParameter('destination',[],@ischar);
 p.addParameter('save',false,@islogical);
 p.addParameter('containerid','',@ischar);
 p.addParameter('containertype','',@ischar);
+p.addParameter('filetype','',@ischar);
 
 p.parse(st, fileInfo, varargin{:});
 
@@ -67,6 +68,7 @@ save          = p.Results.save;
 containerType = p.Results.containertype;
 containerID   = p.Results.containerid;
 destination   = p.Results.destination;
+forcedFileType = p.Results.filetype;
 
 % The only reason you would have two outputs is to save the file.
 if nargout > 1, save = true; end
@@ -77,6 +79,13 @@ if nargout > 1, save = true; end
 % [containerType, containerID, fileContainerType, fname, fileType]
 [containerID, ~, fileContainerType, fname, fileType] = ...
     st.objectParse(fileInfo,containerType,containerID);
+
+% The user is over-riding the Flywheel file type and demanding that we
+% use this file type.  This happens for specific kinds of Matlab data,
+% such as a recipe.
+if ~isempty(forcedFileType)
+    fileType = forcedFileType;
+end
 
 % Create destination from file name.  Might need the extension for
 % filetype
@@ -95,7 +104,7 @@ st.fileDownload(fname,...
 
 % Not all file types are coordinated with Flywheel.  They label json as
 % sourcecode and they ignore obj.
-fileTypes = {'matlabdata','nifti','json','source code','obj'};
+fileTypes = {'matlabdata','nifti','json','source code','obj','recipe'};
 fileType = ieParamFormat(fileType);  % Remove spaces, force lower case
 try
     validatestring(fileType,fileTypes);
@@ -139,6 +148,23 @@ switch ieParamFormat(fileType)
     case {'json','sourcecode'}
         % Use JSONio stuff
         data = jsonread(dname);
+        
+    case {'recipe'}
+        % Read the json data into a struct and convert it to an iset3d
+        % recipe we use for rendering.  The repository iset3d must be
+        % on your path!
+        data = jsonread(dname);
+        fds = fieldnames(data);
+        try  
+            thisR = recipe;
+        catch
+            error('Make sure iset3d is on your path!');
+        end
+        % assign the struct to a recipe class
+        for dd = 1:length(fds)
+            thisR.(fds{dd})= data.(fds{dd});
+        end
+        data = thisR;
         
     otherwise
         error('Unknown file type %s\n,  Download name %s\n',fileType,dname);
