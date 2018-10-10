@@ -1,6 +1,6 @@
 # Scitran client software for Matlab
 
-This repository includes Matlab utilities to work with the SciTran API, which is implemented in Flywheel and openNeuro.org. The Matlab client implements many functions, including search, get, and put. See the [scitran client wiki page](https://github.com/scitran/client/wiki) for a manual with examples of how to use this code.
+This repository includes Matlab utilities to work with the SciTran API, which is implemented in Flywheel and openNeuro.org. The Matlab client implements many functions, including search, get, and put. See the [scitran client wiki page](https://github.com/vistalab/sciran/wiki) for a manual with examples of how to use this code.
 
 Most MRI databases require some authorization before you can download, upload, or search. Speak to your administrator about the appropriate method for your database.
 
@@ -8,7 +8,7 @@ Most MRI databases require some authorization before you can download, upload, o
 
 You can install this scitranClient and another essential toolbox - Guillaume Flandin's code to read and write JSON files (JSONio) - by: 
 
-    git clone https://github.com/scitran/client
+    git clone https://github.com/vistalab/scitran
     git clone https://github.com/gllmflndn/JSONio
     
 This will create two directories, client and JSONio.  We suggest renaming the 'client' directory 'scitranClient'.  
@@ -22,12 +22,12 @@ Add both directories to your Matlab path, with:
 
 ## Installing from Matlab
 
-We provide a script [(installScitran.m)](https://github.com/scitran/client/blob/master/utility/installScitran.m) to enable installation from the Matlab command line<sup>*</sup>
+We provide a script [(installScitran.m)](https://github.com/vistalab/sciran/blob/master/utility/installScitran.m) to enable installation from the Matlab command line<sup>*</sup>
 
 That script can be run interactively from within Matlab (>=R2014b):
 
 ```matlab
-eval(webread('https://raw.githubusercontent.com/scitran/client/master/utility/installScitran.m'));
+eval(webread('https://raw.githubusercontent.com/vistalab/sciran/master/utility/installScitran.m'));
 ```
 
 <sup>*</sup> Requires `git` command-line tool to be available via Matlab.
