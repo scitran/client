@@ -65,7 +65,7 @@ function [status, url, toolboxTable] = stFlywheelSDK(action,varargin)
 p = inputParser;
 varargin = stParamFormat(varargin);
 p.addRequired('action',@ischar);
-p.addParameter('sdkversion','2.5.0',@ischar);
+p.addParameter('sdkversion','4.1.0',@ischar);
 p.addParameter('summary',true,@islogical);
 
 p.parse(action,varargin{:});
