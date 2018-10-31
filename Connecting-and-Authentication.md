@@ -4,12 +4,14 @@
 
 ***
 
-A connection to the Flywheel site is established by creating a scitran object
+### General use
+
+A scitran client connection to the Flywheel site is established by creating a scitran Matlab object
 ```
 st = scitran('stanfordlabs');
 ```
 
-The scitran object returned (**st** in this case) contains the Flywheel database url, the instance name, a way to access the Flywheel SDK methods, and hidden information about user permission.
+The scitran object (**st** in this case) contains the Flywheel database url, the instance name, a way to access the Flywheel SDK methods, and hidden information about user permission.
 ```
 st = 
 
@@ -19,6 +21,7 @@ st =
     instance: 'stanfordlabs'
           fw: [1×1 Flywheel]
 ```
+### First use
 
 The first time you run scitran to connect to a Flywheel site, you will be asked to authenticate yourself.  Specifically, you will have to provide the site URL and your API Key.  The API key is available from the Flywheel site web page.  To find your key
 
@@ -29,7 +32,7 @@ The authentication key you enter will be stored on your computer - so this needs
 
 ### An example
 
-If you want to create a connection to a newSite, type
+To create a connection to a newSite, type
 
     st = scitran('newSite');
 
