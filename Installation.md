@@ -1,5 +1,5 @@
 * This page describes how to download the scitranClient code.
-* The [next page, Connecting](Connecting) describes how to connect to the Flywheel site.
+* The [next page, Connecting](Connecting-and-Authenticating) describes how to connect to the Flywheel site.
 
 ## Github repositories
 You can install this scitranClient and another essential toolbox, Guillaume Flandin's code to read and write JSON files (JSONio) by 
