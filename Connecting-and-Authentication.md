@@ -1,4 +1,5 @@
-* This page describes how to find your key and connect to the Flywheel site.
+* This page describes how to connect to the Flywheel site.
+* The first time, you must provide a security key that can be obtained by logging into the Flywheel web site
 * [Flywheel manual - Getting started](https://flywheel-io.github.io/core/branches/master/matlab/getting_started.html)
 
 ***
