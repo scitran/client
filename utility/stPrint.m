@@ -75,8 +75,8 @@ function [val, oType] = stPrint(objects, slot1, slot2)
 
 %% Parse
 if notDefined('objects'), error('objects are required'); end
-if notDefined('slot1'), error('Main slot is required'); end
-if notDefined('slot2'), slot2 = ''; end
+if notDefined('slot1'),   error('Main slot is required'); end
+if notDefined('slot2'),   slot2 = ''; end
 
 % Return the values we print out
 val = cell(length(objects),1);
@@ -103,3 +103,4 @@ if nargout > 1
     [~,oType] = stObjectParse(objects{1});
 end
 
+end

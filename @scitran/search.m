@@ -56,13 +56,24 @@ function [result, srch] = search(obj,srch,varargin)
 % 
 %   See also: s_stSearches.m, scitran client wiki page
 %
+% List of the search parameters should be included here
+%
 % BW/LMP Vistalab 2016
 %
-% List of the search parameters
-%
+% See also:
+%  s_stSearches
 %
 
 % Examples:
+%{
+ st = scitran('stanfordlabs'); st.verify;
+ p = st.search('project','project label exact','VWFA');
+ id = p{1}.project.id
+%}
+%{
+ allProjects = st.list('project','all')
+ stPrint(allProjects,'label','')
+%}
 %{
 % When debugging, convenience, you might want to look at the JSON
 % created in the Flywheel.search method.
@@ -74,18 +85,6 @@ function [result, srch] = search(obj,srch,varargin)
 %}
 
 % Programming Notes
-%{
-% We had a problem because search is returning deleted projects.
-% Ambrush is on it.  Or somebody like that.
- st = scitran('stanfordlabs');
- st.verify;
- p = st.search('project','project label exact','Computer Graphics');
- id = p{1}.project.id
- st.containerInfoGet('project',id)
- allProjects = st.list('project','all')
- stPrint(allProjects,'label','')
-%}
-
 %  Matlab uses '.' in structs, and json allows '.' as part of the variable
 %  name. So, we insert a dot on the Matlab side by inserting a string,
 %  x0x2E in the Matlab variable. 
