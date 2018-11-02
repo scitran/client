@@ -12,7 +12,8 @@ function srch = formatSearchType(srch)
 srch = lower(srch);
 valid = {'file','session','acquisition','project','analysis','group', ...
     'collection','collectionsession','collectionacquisition',...
-    'modality','acquisitionfile'};
+    'modality','acquisitionfile','subject'};
+
 if ismember(srch,valid)
     % Already valid, so return
     return;
@@ -27,6 +28,7 @@ elseif strcmp(srch,'collections'),   srch = 'collection';  return;
 elseif strcmp(srch,'analyses'),      srch = 'analysis';    return;
 elseif strcmp(srch,'groups'),        srch = 'group';       return;
 elseif strcmp(srch,'modalities'),    srch = 'modality';    return;
+elseif strcmp(srch,'subjects'),      srch = 'subject';    return;
 elseif strcmp(srch,'collectionsessions')
     srch = 'collectionsession'; return;
 elseif strcmp(srch,'collectionacquisitions')

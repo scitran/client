@@ -8,7 +8,7 @@ function subjects = stSubjectInfo(sessions)
 %    Age distribution of the unique subjects
 %    Sex distribution of these subjects?
 %
-%  Note:  The date in sessions.source.created can be converted by datestr
+%  Note:  The date in sessions.subject.created can be converted by datestr
 %  if we replace the 'T' with a space.
 %
 % Inputs:
@@ -29,41 +29,44 @@ p.addRequired('sessions',vFunc);
 
 % Convert single struct to a single cell
 if isstruct(sessions), s{1} = sessions;
-else s = sessions;
+else, s = sessions;
 end
 
 % Possible fields to return.  Default would be all
 subjects = cell(length(sessions),1);
 nSessions = length(sessions);
 
+%%
 for ii=1:nSessions
     
-    if isfield(s{ii}.source.subject,'code') 
-        subjects{ii}.code= s{ii}.source.subject.code;
+    % Used to be isfield.  Now that it is an object, we need isprop.
+    % Note this somewhere better than here.
+    if isprop(s{ii}.subject,'code') 
+        subjects{ii}.code= s{ii}.subject.code;
     else
         subjects{ii}.code= 0;
     end
     
-    if isfield(s{ii}.source.subject,'firstname') 
-        subjects{ii}.firstname= s{ii}.source.subject.firstname;
+    if isprop(s{ii}.subject,'firstname') 
+        subjects{ii}.firstname= s{ii}.subject.firstname;
     else
         subjects{ii}.firstname= '';
     end
     
-    if isfield(s{ii}.source.subject,'lastname')
-        subjects{ii}.lastname= s{ii}.source.subject.lastname;
+    if isprop(s{ii}.subject,'lastname')
+        subjects{ii}.lastname= s{ii}.subject.lastname;
     else
         subjects{ii}.lastname= '';
     end
     
-    if ~isfield(s{ii}.source.subject,'sex') || isempty(s{ii}.source.subject.sex)
+    if ~isprop(s{ii}.subject,'sex') || isempty(s{ii}.subject.sex)
         subjects{ii}.sex= 'u';
     else
-        subjects{ii}.sex= s{ii}.source.subject.sex; 
+        subjects{ii}.sex= s{ii}.subject.sex; 
     end
     
-    if isfield(s{ii}.source.subject,'age')
-        subjects{ii}.age= sec2year(s{ii}.source.subject.age);
+    if isprop(s{ii}.subject,'age')
+        subjects{ii}.age= sec2year(s{ii}.subject.age);
     else
         subjects{ii}.age= 0;
     end

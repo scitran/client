@@ -21,7 +21,7 @@ function [status, url, toolboxTable] = stFlywheelSDK(action,varargin)
 %   'action'  - install, uninstall or exist. Defaults to 'exist'
 %
 % Optional Key/values
-%   'sdkVersion' Current is 2.4.3
+%   'sdkVersion' Current is 4.1.0 (Nov. 1, 2018)
 %   'summary'    Print out a summary of the installed toolboxes
 %
 % Returns
@@ -49,23 +49,23 @@ function [status, url, toolboxTable] = stFlywheelSDK(action,varargin)
 
 %Examples:
 %{
-  status = stFlywheelSDK('exist',true);
+  status = stFlywheelSDK('exist');
 %}
 %{
   status = stFlywheelSDK;
 %}
 %{
-  [s,u,tbl] = stFlywheelSDK('install',true,'sdkVersion','2.4.3');
+  [s,u,tbl] = stFlywheelSDK('install','sdkVersion','4.1.0');
 %}
 %{
-  stFlywheelSDK('uninstall',true);
+  stFlywheelSDK('uninstall');
 %}
 
 %%
 p = inputParser;
 varargin = stParamFormat(varargin);
 p.addRequired('action',@ischar);
-p.addParameter('sdkversion','2.5.0',@ischar);
+p.addParameter('sdkversion','4.1.0',@ischar);
 p.addParameter('summary',true,@islogical);
 
 p.parse(action,varargin{:});
