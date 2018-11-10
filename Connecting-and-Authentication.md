@@ -26,6 +26,9 @@ st =
 The first time you run scitran to connect to a Flywheel site, you will be asked to authenticate yourself.  Specifically, you will have to provide the site URL and your API Key.  The API key is available from the Flywheel site web page.  To find your key
 
 * Click on your user profile, which is found on the upper right of the Flywheel web page
+
+![](https://github.com/scitran/client/wiki/images/loginProfile.png)
+
 * Scroll down to the API section (see image below)
 
 The authentication key you enter will be stored on your computer - so this needs to be done infrequently. The API key expires after a few months, so you will need to enter it again to refresh your authentication every few months.
