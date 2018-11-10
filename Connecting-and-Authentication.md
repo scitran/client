@@ -37,7 +37,7 @@ The authentication key you enter will be stored on your computer - so this needs
 
 To create a connection to a newSite, type
 
-    st = scitran('newSite');
+    st = scitran('stanfordlabs');
 
 You will be asked to enter your API key.  
 
@@ -51,7 +51,7 @@ Copy and paste from API key in your user profile - it is the long string that lo
 
 If you already have the client configured, you can simply type
 
-    st = scitran('newSite');
+    st = scitran('stanfordlabs');
 
 ### List instances
 To list the sites you have stored, you can type
@@ -69,21 +69,25 @@ To list the sites you have stored, you can type
 
 ### Remove instances
 
-    st = scitran('newSite','action','remove');
+    st = scitran('stanfordlabs','action','remove');
 
 To refresh the API Key, obtain the new key on the site and then run
 
-    st = scitran('newSite','action','refresh');
+    st = scitran('stanfordlabs','action','refresh');
 
 ### Verify the authentication
 
 Use this method to verify that the scitran object is correctly connecting to your site
 
     % Should print the number of projects you have access
-    st = scitran('newSite');   
+    st = scitran('stanfordlabs');   
     st.verify
 
     % Alternatively, you might choose to open the browser to verify that the URL 
     % and your ID are correct
     st.browser;
+    
+    %  Print the project labels
+    projects = st.list('projects','all');
+    stPrint(projects,'label');
 
