@@ -16,15 +16,14 @@ function hierarchy = projectHierarchy(obj, projectLabel, varargin)
 %
 % Optional key/value
 %   print - Print a list of the session and acquisition labels
+%   limit - Only return the hierarchy for up to 'limit' number of sessions
 %
 % Output:
 %   A struct is returned with these slots
-%    h.project:      the project 
-%    h.sessions:     the sessions contained in the project
-%    h.acquisitions: the acquisitions contained in each session
-%  h.project   -   a flywheel.model.project (not a cell array)
-%  h.sessions  -   a N x 1 cell array of flywheel.model.Session
-%  h.acquisition - N cell arrays, one for each session.
+%
+%    h.project   -  flywheel.model.project (not a cell array)
+%    h.sessions  -  N x 1 cell array of flywheel.model.Session
+%    h.acquisition - N cell arrays, one for each session.
 %                  Each cell array is length M for the number of
 %                  acquisitions. 
 %
@@ -57,6 +56,7 @@ varargin = stParamFormat(varargin);
 p.addRequired('projectLabel',@ischar);
 p.addParameter('print',false,@islogical);
 p.addParameter('projectid','',@ischar);
+p.addParameter('limit',-1,@isnumeric);
 
 p.parse(projectLabel,varargin{:});
 
@@ -86,6 +86,10 @@ nSessions = numel(sessions);
 if nSessions < 1
     error('No sessions for project %s found',projectLabel);
 end
+
+% User can ask for a smaller number of sessions
+limit = min(p.Results.limit,nSessions);
+if limit > 0, sessions = sessions(1:limit); nSessions = limit; end
 
 %% for each session search its acquisitions
 acquisitions = cell(1,length(sessions));

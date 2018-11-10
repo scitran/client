@@ -1,8 +1,8 @@
-function [val, oType] = stPrint(objects, slot1, slot2)
+function val = stPrint(objects, slot1, slot2)
 % Print and return the fields from a search or list result 
 %
 % Syntax
-%  [val, oType] = stPrint(objects, slot1, [slot2])
+%  val = stPrint(objects, slot1, [slot2])
 %
 % Description
 %  Print out a list of the values from a cell array of objects,
@@ -12,6 +12,10 @@ function [val, oType] = stPrint(objects, slot1, slot2)
 %  So, what is printed is a loop over ii for
 %
 %     objects{ii}.slot1.slot2
+%
+% The specified slots must be consistent with the type of object. If the
+% objects are returned by a list or a search, even though they are the same
+% type of object, the slot names differ.
 %
 % Inputs:
 %   result -  A cell array returned from the search or list method
@@ -69,8 +73,7 @@ function [val, oType] = stPrint(objects, slot1, slot2)
   sessions = st.list('session',id);   % Parent id
   stPrint(sessions,'subject','code');
 
-  [val, oType] =   stPrint(sessions,'subject','code');
-
+  val = stPrint(sessions,'subject','code');
 %}
 
 %% Parse
@@ -78,7 +81,7 @@ if notDefined('objects'), error('objects are required'); end
 if notDefined('slot1'),   error('Main slot is required'); end
 if notDefined('slot2'),   slot2 = ''; end
 
-% Return the values we print out
+% We will return the values as well as print them
 val = cell(length(objects),1);
 
 %% Start printing
@@ -95,12 +98,6 @@ else
         val{ii} = objects{ii}.(slot1).(slot2);
         fprintf('\t%d - %s \n',ii,val{ii});
     end
-end
-
-% Not sure this is a good idea.  Means we have to update
-% stObjectParse.
-if nargout > 1
-    [~,oType] = stObjectParse(objects{1});
 end
 
 end

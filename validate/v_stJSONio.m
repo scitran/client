@@ -13,6 +13,7 @@
 %% Preserve the first underscore in a string (_id)
 %
 % Put x0x5F in the Matlab variable to lead with an underscore
+%  Notice that the "_id" field starts with the underscore
 
 clear srch
 srch.projects.match.x0x5Fid = 111;
@@ -26,5 +27,7 @@ jsonwrite(srch,struct('indent','  ','replacementstyle','hex'))
 clear srch
 srch.sessions.range.subject0x2Eage.gt = 1;
 jsonwrite(srch,struct('indent','  ','replacementstyle','hex'))
+
+% Notice that the subject.age field has a dot inside the variable name
 
 %%
