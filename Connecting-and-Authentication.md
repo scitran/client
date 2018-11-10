@@ -33,9 +33,7 @@ The first time you run scitran to connect to a Flywheel site, you will be asked 
 
 The authentication key you enter will be stored on your computer - so this needs to be done infrequently. The API key expires after a few months, so you will need to enter it again to refresh your authentication every few months.
 
-### An example
-
-To create a connection to a newSite, type
+To create a connection to a **stanfordlabs**, type
 
     st = scitran('stanfordlabs');
 
