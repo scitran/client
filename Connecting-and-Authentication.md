@@ -47,34 +47,6 @@ Copy and paste from API key in your user profile - it is the long string that lo
 
 ![](https://github.com/scitran/client/wiki/images/userAPI.png)
 
-### Examples 
-
-If you already have the client configured, you can simply type
-
-    st = scitran('stanfordlabs');
-
-### List instances
-To list the sites you have stored, you can type
-
-    st.listInstances;
-
-```
-     scitran: [1×1 struct]
-         url: ''
-       token: ''
-    vistalab: [1×1 struct]
-         cni: [1×1 struct]
-     newSite: [1×1 struct]
-```
-
-### Remove instances
-
-    st = scitran('stanfordlabs','action','remove');
-
-To refresh the API Key, obtain the new key on the site and then run
-
-    st = scitran('stanfordlabs','action','refresh');
-
 ### Verify the authentication
 
 Use this method to verify that the scitran object is correctly connecting to your site
@@ -90,4 +62,33 @@ Use this method to verify that the scitran object is correctly connecting to you
     %  Print the project labels
     projects = st.list('projects','all');
     stPrint(projects,'label');
+
+### List and remove instances
+
+If you already have the client configured, you can simply type
+
+    st = scitran('stanfordlabs');
+
+To list the sites you have stored, you can type
+
+    st.listInstances;
+
+```
+     scitran: [1×1 struct]
+         url: ''
+       token: ''
+    vistalab: [1×1 struct]
+         cni: [1×1 struct]
+     newSite: [1×1 struct]
+```
+
+Or remove an instance this way
+
+    st = scitran('stanfordlabs','action','remove');
+
+To refresh the API Key, obtain the new key on the site and then run
+
+    st = scitran('stanfordlabs','action','refresh');
+
+
 
