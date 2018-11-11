@@ -477,7 +477,9 @@ if ischar(srch)
                 %                 end
             case {'filetype'}
                 % Nifti, dicom, bvec, bval,montage ...
-                % 
+                % This checking could include force to lower case and
+                % eliminate spaces.  But the Flywheel side does not seem
+                % to work that way.
                 v = stValid('file type');
                 if ~ismember(val,v)
                     fprintf('Valid file types are\n');

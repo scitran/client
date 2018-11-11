@@ -133,12 +133,24 @@ switch ieParamFormat(fileType)
         if length(fnames) == 1, data = data.(fnames{1}); end
         
     case 'nifti'
-        data = niftiRead(dname);
+        if isempty(which('niftiRead'))
+            fprintf('File has been downloaded to\n\t%s\n',dname);
+            fprintf('But no *niftiRead* method is on your path.  Add vistasoft\n');
+            error('No niftiRead method.');
+        else
+            data = niftiRead(dname);
+        end
         
     case 'obj'
         % Not sure what to do.  This is a text file, I think.
-        data = objRead(dname);
-        
+        if isempty(which('objRead'))
+            fprintf('File has been downloaded to\n\t%s\n',dname);
+            fprintf('But no *objRead* method is on your path.  Add vistasoft\n');
+            error('No objRead method.');
+        else
+            data = objRead(dname);
+        end
+
         % case 'csv'
         % Read as text
         % Could be a csv file.
@@ -146,7 +158,8 @@ switch ieParamFormat(fileType)
         % fprintf('Download name %s\n',dname);
         % data = textscan(dname);
     case {'json','sourcecode'}
-        % Use JSONio stuff
+        
+        % Use JSONio stuff.  This is always on the scitran path
         data = jsonread(dname);
         
     case {'recipe'}
@@ -158,7 +171,7 @@ switch ieParamFormat(fileType)
         try  
             thisR = recipe;
         catch
-            error('Make sure iset3d is on your path!');
+            error('No *recipe* method found. Make sure iset3d is on your path!');
         end
         % assign the struct to a recipe class
         for dd = 1:length(fds)

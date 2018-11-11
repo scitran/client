@@ -52,7 +52,7 @@ function [status, url, toolboxTable] = stFlywheelSDK(action,varargin)
   status = stFlywheelSDK('exist');
 %}
 %{
-  status = stFlywheelSDK;
+  [status,url,toolboxTable] = stFlywheelSDK('exist');
 %}
 %{
   [s,u,tbl] = stFlywheelSDK('install','sdkVersion','4.1.0');

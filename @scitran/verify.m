@@ -38,8 +38,12 @@ try
     else,                 status = 1;
     end
     
-    if verbose && status == 1, fprintf('Connection verified\n');
-    elseif verbose,            fprintf('Connection NOT verified\n');
+    if verbose && status == 1
+        fprintf('Connection verified\n');
+        sdk = stFlywheelSDK('exist');
+        fprintf('SDK version %s\n',sdk.Version);
+    elseif verbose
+        fprintf('Connection NOT verified\n');
     end
 
 catch ME
