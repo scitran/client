@@ -18,7 +18,7 @@ function [status, url, toolboxTable] = stFlywheelSDK(action,varargin)
 %   
 %
 % Input
-%   'action'  - install, uninstall or exist. Defaults to 'exist'
+%   'action'  - exist, install, uninstall or releases. Defaults to 'exist'
 %
 % Optional Key/values
 %   'sdkVersion' Current is 4.1.0 (Nov. 1, 2018)
@@ -38,9 +38,11 @@ function [status, url, toolboxTable] = stFlywheelSDK(action,varargin)
 %    status = stFlywheelSDK('exist');  % Equivalent
 %
 %    status = stFlywheelSDK('uninstall');  % Uninstall
+%    status = stFlywheelSDK('exist'); 
 %
 %    % Restart MATLAB
-%    status = stFlywheelSDK('install');    % Download and install
+%    % Install newest version
+%    status = stFlywheelSDK('install','sdkVersion','4.1.0');    % Download and install
 %
 % BW, Vistasoft, 2018
 %
@@ -60,6 +62,9 @@ function [status, url, toolboxTable] = stFlywheelSDK(action,varargin)
 %{
   stFlywheelSDK('uninstall');
 %}
+%{
+  stFlywheelSDK('releases');
+%}
 
 %%
 p = inputParser;
@@ -73,6 +78,8 @@ p.parse(action,varargin{:});
 action     = p.Results.action;
 sdkVersion = p.Results.sdkversion;
 summary    = p.Results.summary;
+
+status = [];   % In case it is not set below.
 
 %% Do the selected task
 
@@ -121,16 +128,23 @@ switch action
         
     case 'uninstall'
         try
-            matlab.addons.toolbox.uninstallToolbox('flywheel-sdk');
+            status = matlab.addons.toolbox.uninstallToolbox('flywheel-sdk');
         catch
             toolboxes = matlab.addons.toolbox.installedToolboxes;
             for ii=1:length(toolboxes)
                 if toolboxes(ii).Name == 'flywheel-sdk'
-                    matlab.addons.toolbox.uninstallToolbox(toolboxes(ii));
+                    status = matlab.addons.toolbox.uninstallToolbox(toolboxes(ii));
                     break;
                 end
             end
         end
+        
+    case {'releases','sdkwebsite'}
+        disp('SDK Releases')
+        web('https://github.com/flywheel-io/core/releases','-browser');
+        
+    otherwise
+        error('Unknown action: %s\n',action);
 end
 
 if summary
