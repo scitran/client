@@ -79,7 +79,7 @@ action     = p.Results.action;
 sdkVersion = p.Results.sdkversion;
 summary    = p.Results.summary;
 
-status = [];   % In case it is not set below.
+status = false;   % In case it is not set below.
 
 %% Do the selected task
 
@@ -103,6 +103,7 @@ switch action
                         % Just set it true because it exists
                         status = true;
                     end
+                    % fprintf('Installed version: %s\n',tbx(ii).Version);
                 end
             end
         else, status = false;
