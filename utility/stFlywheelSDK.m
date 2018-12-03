@@ -42,7 +42,7 @@ function [status, url, toolboxTable] = stFlywheelSDK(action,varargin)
 %
 %    % Restart MATLAB
 %    % Install newest version
-%    status = stFlywheelSDK('install','sdkVersion','4.1.0');    % Download and install
+%    status = stFlywheelSDK('install','sdkVersion','4.3.2');    % Download and install
 %
 % BW, Vistasoft, 2018
 %
@@ -57,7 +57,7 @@ function [status, url, toolboxTable] = stFlywheelSDK(action,varargin)
   [status,url,toolboxTable] = stFlywheelSDK('exist');
 %}
 %{
-  [s,u,tbl] = stFlywheelSDK('install','sdkVersion','4.1.0');
+  [s,u,tbl] = stFlywheelSDK('install','sdkVersion','4.3.2');
 %}
 %{
   stFlywheelSDK('uninstall');
@@ -70,7 +70,7 @@ function [status, url, toolboxTable] = stFlywheelSDK(action,varargin)
 p = inputParser;
 varargin = stParamFormat(varargin);
 p.addRequired('action',@ischar);
-p.addParameter('sdkversion','4.1.0',@ischar);
+p.addParameter('sdkversion','4.3.2',@ischar);
 p.addParameter('summary',true,@islogical);
 
 p.parse(action,varargin{:});
@@ -133,7 +133,7 @@ switch action
             toolboxes = matlab.addons.toolbox.installedToolboxes;
             for ii=1:length(toolboxes)
                 if toolboxes(ii).Name == 'flywheel-sdk'
-                    status = matlab.addons.toolbox.uninstallToolbox(toolboxes(ii));
+                    matlab.addons.toolbox.uninstallToolbox(toolboxes(ii));
                     break;
                 end
             end
