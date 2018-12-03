@@ -27,19 +27,19 @@ That command downloads the toolbox from the web and installs it as an Add-On too
     stFlywheelSDK('verify')
     
     >   Name: 'flywheel-sdk'
-    >   Version: '2.5.0'
+    >   Version: '4.3.2'
     >   Guid: 'd2fd5657-1710-494e-b5e9-23903828bfb3'
 
 
 ### Upgrading
 
-The SDK is under active development, and we anticipate several new releases through 2018 and into 2019.  To install a new specific release number, we suggest you uninstall, restart matlab, and then install.  We have done this sequence several times with success; we haven't succeeded without the restart.  For example, to upgrade to version '2.5.0' you can do this:
+The SDK is under active development, and we anticipate several new releases through 2018 and into 2019.  Sometimes just invoking 'uninstall' and then 'install' works. In other cases, we have had to 'uninstall', restart matlab, and then 'install'. 
 
     stFlywheelSDK('uninstall');   % This uninstalls the current version
     ...
     **RESTART MATLAB**
     ....
-    stFlywheelSDK('install','sdkVersion','2.5.0');   % The latest version changes over time. 
+    stFlywheelSDK('install');   % The latest version changes over time. 
 
 ## Connecting
 Go to the [next page](Connecting-and-Authentication) for instructions on how to make an authenticated connection
