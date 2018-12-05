@@ -1,8 +1,8 @@
-function [status, url, toolboxTable] = stFlywheelSDK(action,varargin)
+function [status, flywheelTbx, toolboxTable] = stFlywheelSDK(action,varargin)
 % Check the status, install, or uninstall the Flywheel Add-On toolbox
 %
 % Syntax
-%   [status, url, toolboxTable] = stFlywheelSDK(action, ...)
+%   [status,  toolboxTable] = stFlywheelSDK(action, ...)
 %
 % Description
 %   The Flywheel Add-Ons toolbox is necessary for scitran to run.  %
@@ -13,29 +13,38 @@ function [status, url, toolboxTable] = stFlywheelSDK(action,varargin)
 %   inside of fullfile(userpath,'Add-Ons');
 %
 %   The sdkVersion is used to identify the Add-On download release
-%   from github.  Here is the link:
-%   https://github.com/flywheel-io/core/releases 
-%   
+%   from github.  Here is the link to the releases.
 %
+%         https://github.com/flywheel-io/core/releases 
+%   
 % Input
-%   'action'  - exist, install, uninstall or releases. Defaults to 'exist'
+%   'action'  - The variable action is one of the following strings
+%      'exist'     - Tests whether the toolbox is installed
+%      'install'   - Install the matlab toolbox add-on
+%      'uninstall' - Unstall the matlab toolbox add-on
+%      'releases'  - Opens a web browser to the page of releases
+%      'installed version' - Returns a number describiing installed
+%          version in your Matlab Add-Ons.  Returned as an integer
+%          with all the '.' removed from version string. 
+%      'single use' - When running as a Gear, we want to be able to
+%          create a single use key that is provided by the Flywheel system.
 %
 % Optional Key/values
-%   'sdkVersion' Current is 4.1.0 (Nov. 1, 2018)
-%   'summary'    Print out a summary of the installed toolboxes
+%   'sdkVersion'        - Release version you want to install (current is
+%                         4.3.2 (Dec. 1, 2018))
+%   'summary'           - Print out a summary of the installed toolbox
 %
 % Returns
-%   status:  true or false depending on request
-%   url:     URL to github of the mtlbx
-%   toolboxTables - Table list of the installed Add-Ons toolboxes
+%   status        - true or false depending on presence of Toolbox
+%   flywheelTbx   - The flywheel toolbox Add-On
 %
 % Installation instructions are here on the scitran wiki
 %
 %   https://github.com/scitran/client/wiki/Flywheel-SDK
 %
 % Simple examples
-%    status = stFlywheelSDK;   % Test if add-on is installed
-%    status = stFlywheelSDK('exist');  % Equivalent
+%    status = stFlywheelSDK('exist');   % Test if add-on is installed
+%    stFlywheelSDK('exist','summary',true);  % Print info
 %
 %    status = stFlywheelSDK('uninstall');  % Uninstall
 %    status = stFlywheelSDK('exist'); 
@@ -54,7 +63,7 @@ function [status, url, toolboxTable] = stFlywheelSDK(action,varargin)
   status = stFlywheelSDK('exist');
 %}
 %{
-  [status,url,toolboxTable] = stFlywheelSDK('exist');
+  [status,flywheelTbx] = stFlywheelSDK('exist');
 %}
 %{
   [s,u,tbl] = stFlywheelSDK('install','sdkVersion','4.3.2');
@@ -65,17 +74,20 @@ function [status, url, toolboxTable] = stFlywheelSDK(action,varargin)
 %{
   stFlywheelSDK('releases');
 %}
+%{
+  versionNumber = stFlywheelSDK('installed version');
+%}
 
 %%
 p = inputParser;
 varargin = stParamFormat(varargin);
 p.addRequired('action',@ischar);
 p.addParameter('sdkversion','4.3.2',@ischar);
-p.addParameter('summary',true,@islogical);
+p.addParameter('summary',false,@islogical);
 
 p.parse(action,varargin{:});
 
-action     = p.Results.action;
+action     = mrvParamFormat(p.Results.action);
 sdkVersion = p.Results.sdkversion;
 summary    = p.Results.summary;
 
@@ -94,7 +106,7 @@ switch action
         if numel(tbx) >= 1
             for ii=1:numel(tbx)
                 if isequal(tbx(ii).Name,'flywheel-sdk')
-                    % flywheelTbx = tbx(ii);
+                    flywheelTbx = tbx(ii);
                     try
                         % This would be preferred, but doesn't run on
                         % 2017a.  It does on 2017b.
@@ -127,6 +139,9 @@ switch action
         % Then delete the downloaded file
         delete(tbxFile);
         
+    case 'singleuse'
+        error('Single use is not yet implemented');
+        
     case 'uninstall'
         try
             status = matlab.addons.toolbox.uninstallToolbox('flywheel-sdk');
@@ -140,10 +155,14 @@ switch action
             end
         end
         
-    case {'releases','sdkwebsite'}
+    case {'releases'}
         disp('SDK Releases')
         web('https://github.com/flywheel-io/core/releases','-browser');
         
+    case {'installedversion'}
+        % Returns an integer corresponding to this Add-On version
+        [~, flywheelTbx] = stFlywheelSDK('exist');
+         status = str2double(strrep(flywheelTbx.Version,'.',''));
     otherwise
         error('Unknown action: %s\n',action);
 end
