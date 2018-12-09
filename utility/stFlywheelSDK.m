@@ -87,7 +87,7 @@ p.addParameter('summary',false,@islogical);
 
 p.parse(action,varargin{:});
 
-action     = mrvParamFormat(p.Results.action);
+action     = stParamFormat(p.Results.action);
 sdkVersion = p.Results.sdkversion;
 summary    = p.Results.summary;
 
