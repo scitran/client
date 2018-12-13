@@ -4,7 +4,7 @@
 ## Github repositories
 You can install this scitranClient and another essential toolbox, Guillaume Flandin's code to read and write JSON files (JSONio) by 
 
-    git clone https://github.com/vistasoft/scitran
+    git clone https://github.com/vistalab/scitran
     git clone https://github.com/gllmflndn/JSONio
     
 This will create two directories, scitran and JSONio.  Please add both directories to your path, say by using
