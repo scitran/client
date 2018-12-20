@@ -6,11 +6,11 @@ function idS = containerCreate(obj, group, project, varargin)
 %                 'session',sessionLabel,...
 %                 'acquisition',acquisitionLabel)
 %
-% Description
-%   Make a container.  Top level is a project; optionally, add a session,
-%   and again optionally add an acquisition.  In each case we check if the
-%   object already exists, and if not, we create it. We return a struct
-%   with the Flywheel id value of the objects that we create.
+% Description:
+%   Make a container. Top level is a project; then a session, and then
+%   an acquisition.  In each case we check if the object already
+%   exists, and if not, we create it. We return a struct with the
+%   Flywheel id value of the objects that we create.
 %
 %   There is a separate function (collectionCreate) for collections.
 %
@@ -23,7 +23,7 @@ function idS = containerCreate(obj, group, project, varargin)
 %  acquisition - Acquisition label
 %
 % Returns:
-%   idS - Struct containiing the ids of the created objects, such as
+%   idS - Struct containing the ids of the created objects, such as
 %     idS.project, idS.session, idS.acquisition
 %
 % See also:  delete

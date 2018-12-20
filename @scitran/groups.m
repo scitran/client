@@ -1,0 +1,64 @@
+function g = groups(obj,varargin)
+% Find the user's group
+%
+%     scitran.groups
+%
+% Description
+%   Returns a list of the user's groups.  If you just want the
+%   properties of a particular group, use the 'label' option.
+%
+% Inputs
+%   N/A
+%
+% Optional key/value pairs
+%   'label' - string defining the group
+%
+%
+% BW, SCITRAN Team, 2018
+
+%{
+  allGroups = st.groups;
+%}
+%{
+  % Find a label this way
+  allGroups = st.groups('list',true);
+  g = st.groups('label',allGroups{1}.label,'list',true)
+%}
+
+%%
+p = inputParser;
+
+p.addParameter('label','',@ischar);     % Look for a particular group label
+p.addParameter('list',false,@logical);  % List all the group labels
+
+p.parse(varargin{:});
+
+label = p.Results.label;
+list  = p.Results.list;
+
+
+%%  All of the groups the person belongs to
+
+allGroups = obj.fw.getAllGroups;
+if list
+    stPrint(allGroups,'label')
+end
+
+
+if ~isempty(label)
+    % Squeeze out spaces and force lower case on the match
+    label = stParamFormat(label);
+    for ii=1:length(allGroups)
+        if strcmpi(label,stParamFormat(allGroups{ii}.label))
+            g = allGroups{ii};
+            return;
+        end
+    end
+    warning('No matching group found %s\n',label);
+    g = [];
+else
+    g = allGroups;
+end
+
+end
+
