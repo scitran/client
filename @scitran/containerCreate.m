@@ -7,10 +7,10 @@ function idS = containerCreate(obj, group, project, varargin)
 %                 'acquisition',acquisitionLabel)
 %
 % Description
-%   Make a series of containers, starting with project, then session,
-%   and acquisition.  In each case we check if the object already
-%   exists, and if not, we create it. We return a struct with the
-%   Flywheel id value of the objects that we create.
+%   Make a container.  Top level is a project; optionally, add a session,
+%   and again optionally add an acquisition.  In each case we check if the
+%   object already exists, and if not, we create it. We return a struct
+%   with the Flywheel id value of the objects that we create.
 %
 %   There is a separate function (collectionCreate) for collections.
 %
