@@ -148,8 +148,9 @@ else
             % acquisition until we can do better.
             % warning('File "id" not yet implemented; file container defaults to "acquisition"');
             fileContainerType = 'acquisition';
+            % containerID = '';   % We need to get the acquisition ID
             fileType = object.type;
-            fname = object.name;
+            fname    = object.name;
         else
             % Not a file.  So, we use the object ID.
             containerID   = object.id;
