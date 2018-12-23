@@ -23,7 +23,7 @@ analysis.label = 'Local Analysis Example';
 
 % TODO
 containerType = 'acquisition'; 
-acquisiton = fw.getAcquisition('');
+acquisition = fw.getAcquisition('');
 inputFileName = '';
 
 % Build analysis input struct

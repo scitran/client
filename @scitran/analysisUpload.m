@@ -1,45 +1,34 @@
-function [status, result] = putAnalysis(obj,stAnalysis,container,varargin)
+function [status, result] = analysisUpload(obj,analysis,container,varargin)
 % Put a local file or analysis structure to a scitran site
 %
-%  NOT FULLY IMPLEMENTED YET
+% Synopsis
+%    st.analysisUpload(stAnalysis,container)
 %
-%      st.putAnalysis(stAnalysis,container)
+% Brief description:
+%  Upload an analyses to a Flywheel site. We can attach the
+%  analysis to a session or to a project.  Not sure whether we will be able
+%  to upload to a collection.  ASK.
 %
-% We use this method to put files or analyses onto a scitran site
-% Currently, we either attach a file to a location in the site, or we place
-% an analysis onto the site.
+% Inputs
+%   obj - scitran object
+%   analysis   - a struct formated with scitran analysis fields
+%   container  - where we put the analysis
 %
-% The analysis can be attached to a collection or session.
-%   {'session analysis','collection analysis'}
-%
-% The file can be attached to several different container types.  That part
-% of the code is not thoroughly tested yet, but we do put files up there
-% anyway.
-%
-% Inputs:
-%  stAnalysis
-%     'collection analysis'
-%     'session analysis'   -
-%          An analysis is a collection of files defined in stData. We are
-%          currently defining an analysis class.  At present stData is a
-%          struct
-%
-%          stData  = struct('inputs','','name','','outputs','');
-%
-%     When uploading an analysis the id of the container must be set!  This
-%     seems to be a session at this point.  I am not sure if projects or
-%     collections have analyses yet.  They will, some day.
+% Optional key/value pairs
 %
 % Outputs:
 %  status:  Boolean indicating success (0) or failure (~=0)
 %  result:  The output of the verbose curl command
 %
-% Example:
-%    st.putAnalysis(stData,'id',collection{1}.id);
+% BW Vistasoft Team, 2018
 %
-% See also:  s_stAnalysis
-%
-% LMP/BW Vistasoft Team, 2015-16
+% See also
+%   s_stAnalysis
+
+% Examples:
+%{
+  st.analysisUpload(stData,'id',collection{1}.id);
+%}
 
 
 %% Parse inputs
@@ -48,9 +37,9 @@ p = inputParser;
 % Should have a vFunc here with more detail
 p.addRequired('stData',@isstruct);
 p.addRequired('container','',@(x)(ischar(x) || isstruct(x)));
-p.parse(stAnalysis,varargin{:});
+p.parse(analysis,varargin{:});
 
-stAnalysis = p.Results.stData;
+analysis = p.Results.stData;
 container  = p.Results.container;
 
 %% Do relevant upload
@@ -65,42 +54,42 @@ if isempty(id), error('The container id must be set'); end
 % Construct the command to upload input and output files of any
 % length % TODO: These should exist.
 inAnalysis = '';
-for ii = 1:numel(stAnalysis.inputs)
-    inAnalysis = strcat(inAnalysis, sprintf(' -F "file%s=@%s" ', num2str(ii), stAnalysis.inputs{ii}.name));
+for ii = 1:numel(analysis.inputs)
+    inAnalysis = strcat(inAnalysis, sprintf(' -F "file%s=@%s" ', num2str(ii), analysis.inputs{ii}.name));
 end
 
 outAnalysis = '';
-for ii = 1:numel(stAnalysis.outputs)
-    outAnalysis = strcat(outAnalysis, sprintf(' -F "file%s=@%s" ', num2str(ii + numel(stAnalysis.inputs)), stAnalysis.outputs{ii}.name));
+for ii = 1:numel(analysis.outputs)
+    outAnalysis = strcat(outAnalysis, sprintf(' -F "file%s=@%s" ', num2str(ii + numel(analysis.inputs)), analysis.outputs{ii}.name));
 end
 
 % We have to pad the json struct or jsonwrite?? will not give us a list
-if length(stAnalysis.inputs) == 1
-    stAnalysis.inputs{end+1}.name = '';
+if length(analysis.inputs) == 1
+    analysis.inputs{end+1}.name = '';
 end
-if length(stAnalysis.outputs) == 1
-    stAnalysis.outputs{end+1}.name = '';
+if length(analysis.outputs) == 1
+    analysis.outputs{end+1}.name = '';
 end
 
 % Remove full the full path, leaving only the file name, from input
 % and output name fields.
-for ii = 1:numel(stAnalysis.inputs)
-    [~, f, e] = fileparts(stAnalysis.inputs{ii}.name);
-    stAnalysis.inputs{ii}.name = [f, e];
+for ii = 1:numel(analysis.inputs)
+    [~, f, e] = fileparts(analysis.inputs{ii}.name);
+    analysis.inputs{ii}.name = [f, e];
 end
-for ii = 1:numel(stAnalysis.outputs)
-    [~, f, e] = fileparts(stAnalysis.outputs{ii}.name);
-    stAnalysis.outputs{ii}.name = [f, e];
+for ii = 1:numel(analysis.outputs)
+    [~, f, e] = fileparts(analysis.outputs{ii}.name);
+    analysis.outputs{ii}.name = [f, e];
 end
 
 % Jsonify the payload (assuming it is necessary)
-if isstruct(stAnalysis)
-    stAnalysis = jsonwrite(stAnalysis);
+if isstruct(analysis)
+    analysis = jsonwrite(analysis);
     % Escape the " or the cmd will fail.
-    stAnalysis = strrep(stAnalysis, '"', '\"');
+    analysis = strrep(analysis, '"', '\"');
 end
 
-curlCmd = sprintf('curl %s %s -F "metadata=%s" %s/api/%s/%s/analyses -H "Authorization":"%s"', inAnalysis, outAnalysis, stAnalysis, obj.url, target, id, obj.token );
+curlCmd = sprintf('curl %s %s -F "metadata=%s" %s/api/%s/%s/analyses -H "Authorization":"%s"', inAnalysis, outAnalysis, analysis, obj.url, target, id, obj.token );
 
 %% Execute the curl command with all the fields
 
