@@ -1,52 +1,111 @@
-function [status, result] = analysisUpload(obj,analysis,container,varargin)
-% Put a local file or analysis structure to a scitran site
+function analysisID = analysisUpload(st,containerid,analysis,varargin)
+% Upload a local analysis to a Flywheel site
 %
-% Synopsis
-%    st.analysisUpload(stAnalysis,container)
+% Syntax:
+%    analysisID = st.analysisUpload(st,containerid,analysis,varargin)
 %
 % Brief description:
-%  Upload an analyses to a Flywheel site. We can attach the
-%  analysis to a session or to a project.  Not sure whether we will be able
-%  to upload to a collection.  ASK.
+%  Upload an analysis to a session or to a project. If the analysis already
+%  exists, you can just upload a cell array of output files, a note, or an
+%  info struct. 
 %
 % Inputs
-%   obj - scitran object
-%   analysis   - a struct formated with scitran analysis fields
-%   container  - where we put the analysis
+%   containerID  - Container for the analysis; if the id is already the
+%                  analysis of an existing ID, then can add the outputs,
+%                  note or info without creating a new analysis
+%   analysis     - A struct comprising
+%                    analysis.label  - a string
+%                    analysis.inputs - a cell array of Flywheel file
+%                    descriptions 
+%                      inputs{}.id   - The id of the file's container
+%                      inputs{}.type - The type of container
+%                      inputs{}.name - The file name
 %
 % Optional key/value pairs
+%   outputs - Cell array of local file names (full path)
+%   note    - Text string for a note
+%   info    - Key/value struct
 %
 % Outputs:
-%  status:  Boolean indicating success (0) or failure (~=0)
-%  result:  The output of the verbose curl command
+%  analysisID
 %
-% BW Vistasoft Team, 2018
+% BW SCITRAN Team, 2018
 %
 % See also
-%   s_stAnalysis
+%    oeFluorescenceAnalysis
 
 % Examples:
 %{
-  st.analysisUpload(stData,'id',collection{1}.id);
+  % See oeFluorescenceAnalysis.m
 %}
-
 
 %% Parse inputs
 p = inputParser;
 
-% Should have a vFunc here with more detail
-p.addRequired('stData',@isstruct);
-p.addRequired('container','',@(x)(ischar(x) || isstruct(x)));
-p.parse(analysis,varargin{:});
+p.addRequired('st',@(x)(isequal(class(x),'scitran')));
+p.addRequired('containerid',@ischar);
 
-analysis = p.Results.stData;
-container  = p.Results.container;
+% Can be empty when id is an analysis
+p.addRequired('analysis',@(x)(isstruct(x) || isempty(x))); 
 
-%% Do relevant upload
+p.addParameter('outputs',[],@iscell);  % Cell array of local files
+p.addParameter('note',[],@ischar);     % Text string for a note
+p.addParameter('info',[],@isstruct);   % Text string for a note
 
+p.parse(st, containerid, analysis, varargin{:});
+outputs = p.Results.outputs;
+note    = p.Results.note;
+info    = p.Results.info;
+
+%% Invoke the proper upload call
+
+% Maybe this should be a new method:
+%
+% containerType = st.getType(containerid)
+%
+container         = st.fw.getContainer(containerid);
+[~,containerType] = st.objectParse(container);
+
+% Create and upload the analysis structure with its inputs
+% I wonder if we have analysis.outputs that would work?
+switch containerType
+    case 'project'
+        analysisID = st.fw.addProjectAnalysis(containerid, analysis);
+    case 'session'
+        analysisID = st.fw.addSessionAnalysis(containerid, analysis);
+    case 'analysis'
+        % ID was an analysis, so the user is modifying the note, outputs,
+        % or info.
+        analysisID = containerid;
+    otherwise
+        error('Analyses can be attached only to projeccts or sessions');
+end
+
+%% If there are local files to place in the outputs, do it here
+% This may not be the proper way to do it. 
+if isempty(outputs)
+else
+    st.fw.uploadOutputToAnalysis(analysisID, outputs);
+    fprintf('Uploading output files .\n');
+end
+
+if isempty(note)
+else
+    st.fw.addAnalysisNote(analysisID, note);
+    fprintf('Uploading note.\n');
+end
+
+if isempty(info)
+else
+    st.fw.setAnalysisInfo(analysisID, info);
+    fprintf('Setting info.\n');
+end
+    
+end
+
+%{
 % Analysis upload to a collection or session.
 % In this case, the id needed to be set
-if isempty(id), error('The container id must be set'); end
 
 % We need a legitimate analysis object that we can check.  The
 % definition here is implicit and should become explicit!  BW
@@ -89,10 +148,11 @@ if isstruct(analysis)
     analysis = strrep(analysis, '"', '\"');
 end
 
-curlCmd = sprintf('curl %s %s -F "metadata=%s" %s/api/%s/%s/analyses -H "Authorization":"%s"', inAnalysis, outAnalysis, analysis, obj.url, target, id, obj.token );
+curlCmd = sprintf('curl %s %s -F "metadata=%s" %s/api/%s/%s/analyses -H "Authorization":"%s"', inAnalysis, outAnalysis, analysis, st.url, target, id, st.token );
 
 %% Execute the curl command with all the fields
 
 [status,result] = stCurlRun(curlCmd);
 
 end
+%}

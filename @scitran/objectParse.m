@@ -28,19 +28,21 @@ function [containerID, containerType, fileContainerType, fname, fileType] = ...
 % Inputs
 %   object:  A Flywheel list or search return, or a file name (char)
 %
-% Optional
+% Optional parameters (not key/value)
 %   containerType -  If a file name, then this is the file's container
 %   container id  -  If a file name, this is the file's container id
 %
 % Returns
-%   containerType
-%   containerID
-%   fileContainerType
-%   fileType
+%   containerID       - ID of the container itself
+%   containerType     - The container type of the object itself
+%   fileContainerType - If file, its container type   (project, acq)
+%   fname             - If a file, its name
+%   fileType          - (Matlab data, source code ...)
 %
 % Wandell, Vistasoft 2018
 %
 % See also
+%   stObjectType
 
 % Examples:
 %{
@@ -53,12 +55,7 @@ h = st.projectHierarchy('Graphics assets');
 acquisition = st.search('acquisition',...
     'project label exact','Graphics assets', ...
     'acquisition id',id); 
-
-% oType = The object type       (search, project, ...)
-% id  - the object id           (string)
-% fileCType - If file, its container type   (project, acq)
-% The file name
-% The file type                             (Matlab data, source code ...)
+                           
 [id, oType, fileCType, fname, fType]= st.objectParse(h.acquisitions{2}{1}.files{1})
 %}
 
@@ -93,9 +90,8 @@ if ischar(object)
     % format, get the containerType from the second half of the string.
     if isempty(containerType)
         % If there is no containerType, we assume this is a data file in an
-        % acquisition and we search. 
-        % We assume a file in an acquisition because that is the most
-        % common.
+        % acquisition and we search. We assume a file in an acquisition
+        % because that is the most common.
         srch = st.search('file','file name exact',fname, ...
             'acquisition id',containerID);
         fileType = srch{1}.file.type;
@@ -113,7 +109,7 @@ if ischar(object)
     containerType     = 'file';
 
 else
-    % Either a list return or a search return. 
+    % Either a list return, a search return, or a getContainer return
     
     % Figure out which type of object this is.  oType is the object
     % type itself, or search. If search, then sType is the type of
@@ -135,6 +131,11 @@ else
         % Search for a container.  The id and type should be there.
         containerType = sType;
         containerID   = object.(sType).id;
+        
+    elseif isequal(oType,'getcontainer')
+        % Returned by fw.getContainer(id)
+        containerType = sType;
+        containerID   = object.id;
         
     else   
         % A list return

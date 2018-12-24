@@ -11,12 +11,23 @@ function [oType, sType] = stObjectType(object)
 %   is returned.  If the object type is a search, then a search type
 %   (sType) is also returned (e.g., file, project, ...)
 %
+% Inputs:
+%   object:  A Flywheel object, usually a container
+%
+% Optional key/value pairs
+%   N/A
+% 
+% Returns
+%   oType:  Object type (project, session, or returned by a search)
+%   sType:  Search type (file, project, ...)
+%
 % Wandell, Vistasoft Team, 2018
 %
 % See also
 %   scitran.objectParse
 %
 
+% Examples
 %{
 h = st.projectHierarchy('Graphics assets');
 stObjectType(h.project)
@@ -26,6 +37,15 @@ stObjectType(h.acquisitions{2}{1}.files{1})
 
 project = st.search('project','project label exact','VWFA')
 [oType, sType] = stObjectType(project{1})
+
+c = st.fw.getContainer(h.project.id);
+[oType, sType] = stObjectType(c)
+
+c = st.fw.getContainer(h.sessions{1}.id);
+[oType, sType] = stObjectType(c)
+
+c = st.fw.getContainer(h.acquisitions{2}{1}.id);
+[oType, sType] = stObjectType(c)
 
 %}
 
@@ -42,6 +62,7 @@ switch oType
     case 'fileentry'
         oType = 'file';
         return;
+        
     case 'searchresponse'
         % We should be getting a return_type parameter some day, in which case
         % this can be replaced.
@@ -63,6 +84,24 @@ switch oType
     case 'searchsessionresponse'
         oType = 'search';
         sType = 'session';
+    
+    case 'containerprojectoutput'
+        % Returned by a fw.getContainer
+        oType = 'getcontainer';
+        sType = 'project';
+    case 'containersessionoutput'
+        oType = 'getcontainer';
+        sType = 'session';
+    case 'containeracquisitionoutput'
+        oType = 'getcontainer';
+        sType = 'acquisition';
+    case 'containeranalysisoutput'
+        oType = 'getcontainer';
+        sType = 'analysis';
+    case 'containercollectionoutput'
+        % Not sure this exists.
+        oType = 'getcontainer';
+        sType = 'collection';
 end
 
 end
