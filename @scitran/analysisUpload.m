@@ -104,55 +104,22 @@ end
 end
 
 %{
-% Analysis upload to a collection or session.
-% In this case, the id needed to be set
+% Some notes.
+analysis_id = st.fw.addProjectAnalysis(h.project.id, analysis);
+st.fw.deleteProjectAnalysis(h.project.id,analysis_id);
 
-% We need a legitimate analysis object that we can check.  The
-% definition here is implicit and should become explicit!  BW
+clear analysis
+analysis.label = 'Test of 4 files';
+analysis.inputs = fourFiles;
+analysis_id = st.fw.addProjectAnalysis(h.project.id, analysis);
+st.fw.uploadOutputToAnalysis(analysis_id, analysis_output);
 
-% Construct the command to upload input and output files of any
-% length % TODO: These should exist.
-inAnalysis = '';
-for ii = 1:numel(analysis.inputs)
-    inAnalysis = strcat(inAnalysis, sprintf(' -F "file%s=@%s" ', num2str(ii), analysis.inputs{ii}.name));
-end
+st.fw.deleteProjectAnalysis(h.project.id,analysis_id);
 
-outAnalysis = '';
-for ii = 1:numel(analysis.outputs)
-    outAnalysis = strcat(outAnalysis, sprintf(' -F "file%s=@%s" ', num2str(ii + numel(analysis.inputs)), analysis.outputs{ii}.name));
-end
+analysis_id = st.fw.addSessionAnalysis(sessions{1}.id, analysis);
+st.fw.deleteSessionAnalysis(sessions{1}.id,analysis_id);
 
-% We have to pad the json struct or jsonwrite?? will not give us a list
-if length(analysis.inputs) == 1
-    analysis.inputs{end+1}.name = '';
-end
-if length(analysis.outputs) == 1
-    analysis.outputs{end+1}.name = '';
-end
-
-% Remove full the full path, leaving only the file name, from input
-% and output name fields.
-for ii = 1:numel(analysis.inputs)
-    [~, f, e] = fileparts(analysis.inputs{ii}.name);
-    analysis.inputs{ii}.name = [f, e];
-end
-for ii = 1:numel(analysis.outputs)
-    [~, f, e] = fileparts(analysis.outputs{ii}.name);
-    analysis.outputs{ii}.name = [f, e];
-end
-
-% Jsonify the payload (assuming it is necessary)
-if isstruct(analysis)
-    analysis = jsonwrite(analysis);
-    % Escape the " or the cmd will fail.
-    analysis = strrep(analysis, '"', '\"');
-end
-
-curlCmd = sprintf('curl %s %s -F "metadata=%s" %s/api/%s/%s/analyses -H "Authorization":"%s"', inAnalysis, outAnalysis, analysis, st.url, target, id, st.token );
-
-%% Execute the curl command with all the fields
-
-[status,result] = stCurlRun(curlCmd);
-
-end
+% Upload the local analysis file
+st.fw.uploadOutputToAnalysis(analysis_id, analysis_output);
 %}
+

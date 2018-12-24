@@ -10,7 +10,10 @@ function fname = stCSVwrite(fname, header, data, params)
 %
 % Inputs:
 %   header:  Cell array of strings
-%   params:  Params string/value pairs
+%   params:  Params string/value pairs 
+%            x_label,y_label,x_title,color_column1 ... style_column1 ...
+%            Collors are ##ff0000 style.  Not sure how to interpret
+%            style_columnX might be 'dashed'
 %   data:    Matrix of numbers
 %
 % Optional key/value pairs
