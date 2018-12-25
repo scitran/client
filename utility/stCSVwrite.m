@@ -1,20 +1,20 @@
-function fname = stCSVwrite(fname, header, data, params)
+function fname = stCSVwrite(fname, data, header, params)
 % Write a csv file in the flywheel plotting format
 %
 % Syntax:
-%     fullpathFname = stCSVwrite(fname, header, data, params)
+%     fullpathFname = stCSVwrite(fname, data, header, params)
 %
 % Description:
 %   Write a CSV file in a special format (created by Renzo Frigato) so that
 %   Flywheel plots tick marks, labels and controls line styles.
 %
 % Inputs:
-%   header:  Cell array of strings
-%   params:  Params string/value pairs 
+%   data:    Matrix of numbers
+%   header:  Cell array that define first few strings in line 1
+%   params:  Params string/value pairs that define strings in line 1 and 2
 %            x_label,y_label,x_title,color_column1 ... style_column1 ...
 %            Collors are ##ff0000 style.  Not sure how to interpret
 %            style_columnX might be 'dashed'
-%   data:    Matrix of numbers
 %
 % Optional key/value pairs
 %   N/A  -  Probably we should make params these pairs
@@ -61,32 +61,39 @@ type(fname)
 
 %% Check parameters
 
-if notDefined('header') || ~iscell(header), error('Header required'); end
 if notDefined('data')   || ~ismatrix(data), error('Matrix data required'); end   
+if notDefined('header'), header = []; end 
 if notDefined('params'), params = []; end
 
-%%  Complicated because there may or may not be parameters
-cHeader  = stCSVcatcomma(header);
-if ~isempty(params)
-    cHeaderP = stCSVcatcomma(params(1:2:end));
-    cHeader  = [cHeader,',',cHeaderP];
-    cValues  = stCSVcatcomma(params(2:2:end));
-    % Put the numbers and parameters on row 2
-    numeric = strsplit(num2str(data(1,:)),' ');
-    row2    = [stCSVcatcomma(numeric),',',cValues];
-end
+%%  Complicated because Flywheel has a plotting format for some csv cases
 
-% Write header to csv file
-fid = fopen(fname,'w');
-fprintf(fid,'%s\n',cHeader);
-if ~isempty(params), fprintf(fid,'%s\n',row2); end
-fclose(fid);
-
-% Add the data
-if ~isempty(params)
-    dlmwrite(fname, data(2:end,:),'-append');
+if ~isempty(header)      % There is a header
+    cHeader  = stCSVcatcomma(header);
+    if ~isempty(params)
+        % There are additional parameters
+        cHeaderP = stCSVcatcomma(params(1:2:end));
+        cHeader  = [cHeader,',',cHeaderP];
+        cValues  = stCSVcatcomma(params(2:2:end));
+        % Put the numbers and parameters on row 2
+        numeric = strsplit(num2str(data(1,:)),' ');
+        row2    = [stCSVcatcomma(numeric),',',cValues];
+    end
+    
+    % Write first two lines to the csv file
+    fid = fopen(fname,'w');
+    fprintf(fid,'%s\n',cHeader);
+    if ~isempty(params), fprintf(fid,'%s\n',row2); end
+    fclose(fid);
+    
+    % Add the data
+    if ~isempty(params)
+        dlmwrite(fname, data(2:end,:),'-append');
+    else
+        dlmwrite(fname, data,'-append');
+    end
 else
-    dlmwrite(fname, data,'-append');
+    % No header and params.  Just use csvwrite
+    csvwrite(fname, data);
 end
 
 fname = which(fname);

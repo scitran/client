@@ -10,15 +10,15 @@ function result = list(obj, returnType, parentID, varargin)
 % Or,
 %     Curator Name -> Collection -> Session -> Acquisition
 %
-%
 % The list function takes the id of a parent, say 
 %   a project, and then lists the sessions in that parent.  
 %   a session, and the acquisitions are listed
 %   a session and the analyses are listed.
 %
 % Inputs (required)
-%  returnType - project, session, acquisition, file, collection,
-%               collectionsession, collectionacquisition, group
+%  returnType - group, project, session, acquisition, file, collection,
+%               'collection session', 'collection acquisition', 
+%               'analyses session', 'analyses project'
 %  parentID   - A Flywheel ID of the parent container.
 %               If the search is for a project, then parentID is the group
 %               label, or the string 'all' or '' to indicate all groups.
@@ -86,7 +86,7 @@ p.addParameter('summary',false,@islogical);
 
 p.parse(returnType,parentID,varargin{:});
 
-summary = p.Results.summary;
+summary       = p.Results.summary;
 containerType = p.Results.containertype;
 
 % Get the Flywheel commands
@@ -142,6 +142,14 @@ switch returnType
         % Maybe we need a flag that says get me an info.
         data = fw.getSessionAcquisitions(parentID);
         
+    case 'analysessession'
+        % Parent is session or project
+        data = fw.getSessionAnalyses(parentID);
+        
+    case 'analysesproject'
+        % Parent is session or project
+        data = fw.getProjectAnalyses(parentID);
+        
     case 'file'
         % ParentID for the file container can be one of many different
         % types. We get the container and pull out the files from the
@@ -164,8 +172,9 @@ switch returnType
                 % This is not working for BW in the VWFA project
                 this = fw.getAcquisition(thisID);
             case 'analysis'
-                % Not tested
-                this = fw.getAnalysis(thisID);
+                % thisID is the analysis ID
+                thisAnalysis = fw.getAnalysis(thisID);
+                this = thisAnalysis.files;
             otherwise
                 error('Unknown container type %s\n',containerType);
         end

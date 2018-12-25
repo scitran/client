@@ -1,22 +1,23 @@
-function [destination, thisAnalysis] = analysisDownload(obj,id,varargin)
+function result = analysisDownload(st,id,varargin)
 % Return the flywheel.model.Analysis container
 %
 % Syntax
-%   thisAnalysis = scitran.analysisDownload(id, ...)
+%   result = scitran.analysisDownload(id, ...)
 %
 % Description
-%  Not sure whether there is a way to get the whole analysis down with a
-%  ticket or what.
+%  Download an analysis object based on its id, or download a file from the
+%  analysis.
 %
 % Required Inputs
 %  id    - The Flywheel analysis ID
-%  fname - Name of the analysis output file
 %
 % Optional key/value parameters
+%  inputfile   - Name of the analysis input file
+%  outputfile  - Name of the analysis output file
 %  destination - full path to file output location
 %
 % Return
-%  destination:  Full path to the file object on disk
+%  result - Either and analysis struct or the full path to downloaded file
 %
 % LMP/BW Vistasoft Team, 2015-16
 %
@@ -29,9 +30,20 @@ function [destination, thisAnalysis] = analysisDownload(obj,id,varargin)
   analysis = st.search('analysis',...
    'project label exact','Brain Beats',...
    'session label exact','20180319_1232');
+
   id = idGet(analysis{1},'data type','analysis');
-  d = st.analysisDownload(id,'rh.white.obj');
-  fprintf('Downloaded %s\n',d);
+  d = st.analysisDownload(id);
+
+  st.analysisDownload(id,...
+    'file name',d.files{1}.name,...
+    'in or out','out',...
+    'destination','deleteme.mat');
+
+  st.analysisDownload(id,...
+    'file name',d.inputs{1}.name,...
+    'in or out','in',...
+    'destination','deleteme.nii.gz');
+
 %}
 
 %%
@@ -54,32 +66,54 @@ function [destination, thisAnalysis] = analysisDownload(obj,id,varargin)
 
 %% Parse inputs
 p = inputParser;
-p.addRequired('id',@ischar);
-
-% This is what needs to come on down.  Not sure whether there is an API for
-% this or we need to loop.
-thisAnalysis = obj.fw.getAnalysis(id);
-thisAnalysis.inputs
-thisAnalysis.files
-
-% destination = fullfile(stRootPath,'local',fname);
-
-disp('analysis download NYI')
-
-end
-
-
-%{
 varargin = stParamFormat(varargin);
 
+p.addRequired('id',@ischar);
 
-p.addRequired('fname',@ischar);
-p.parse(id,fname,varargin{:});
+p.addParameter('filename','',@ischar);
+p.addParameter('destination','',@ischar);
+p.addParameter('inorout','out',@ischar);
 
-%% Download a file from analysis
+p.parse(id,varargin{:});
+fname       = p.Results.filename;
+destination = p.Results.destination;
+source      = p.Results.inorout;
 
-destination = obj.fw.downloadOutputFromAnalysis(id, fname, destination);
+%% If fname is not empty, 
+
+if isempty(fname)
+    % Person wants the analysis, not a file from the analysis
+    result = st.fw.getAnalysis(id);
+    return;
+else
+    % User wants an input or output file from the analysis. Make sure the
+    % file destination is a full path.  This could be a function.  Also,
+    % should we use pwd or tempdir?
+    if ~isempty(destination)
+        % Make sure destination is a full path
+        thisSlash = fullfile(pwd);
+        if ~isequal(destination(1),thisSlash(1))
+            destination = fullfile(pwd,destination);
+        end
+    else
+        [~,n,e] = fileparts(fname);
+        destination = fullfile(pwd,[n,e]);
+    end
+    
+    
+    % We could download the analysis and search the filenames to determine
+    % if this is an input or output side file.
+    switch(source)
+        case 'in'
+            st.fw.downloadInputFromAnalysis(id, fname, destination);
+        case 'out'
+            st.fw.downloadOutputFromAnalysis(id, fname, destination);
+        otherwise
+            error('Unknown source type: %s\n',source)
+    end
+    result = destination;
+end 
 
 end
-%}
+
 

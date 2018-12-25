@@ -57,10 +57,15 @@ p.addRequired('projectLabel',@ischar);
 p.addParameter('print',false,@islogical);
 p.addParameter('projectid','',@ischar);
 p.addParameter('limit',-1,@isnumeric);
+p.addParameter('verbose',false,@islogical);
 
 p.parse(projectLabel,varargin{:});
 
+verbose = p.Results.verbose;
+
 %% Find the project 
+
+if verbose, fprintf('Reading %s project hierarchy ...',projectLabel); end
 
 projectID = p.Results.projectid;
 
@@ -116,5 +121,7 @@ if p.Results.print
         end
     end
 end
+
+if verbose, fprintf('done.\n'); end
 
 end
