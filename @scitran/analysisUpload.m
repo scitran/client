@@ -85,20 +85,20 @@ end
 % This may not be the proper way to do it. 
 if isempty(outputs)
 else
+    fprintf('Uploading output files.\n');
     st.fw.uploadOutputToAnalysis(analysisID, outputs);
-    fprintf('Uploading output files .\n');
 end
 
 if isempty(note)
 else
-    st.fw.addAnalysisNote(analysisID, note);
     fprintf('Uploading note.\n');
+    st.fw.addAnalysisNote(analysisID, note);
 end
 
 if isempty(info)
 else
-    st.fw.setAnalysisInfo(analysisID, info);
     fprintf('Setting info.\n');
+    st.fw.setAnalysisInfo(analysisID, info);
 end
     
 end

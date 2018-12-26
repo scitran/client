@@ -70,25 +70,31 @@ varargin = stParamFormat(varargin);
 
 p.addRequired('id',@ischar);
 
-p.addParameter('filename','',@ischar);
+p.addParameter('inputfile','',@ischar);
+p.addParameter('outputfile','',@ischar);
 p.addParameter('destination','',@ischar);
-p.addParameter('inorout','out',@ischar);
 
 p.parse(id,varargin{:});
-fname       = p.Results.filename;
+inputfile   = p.Results.inputfile;
 destination = p.Results.destination;
-source      = p.Results.inorout;
+outputfile  = p.Results.outputfile;
 
 %% If fname is not empty, 
 
-if isempty(fname)
+if isempty(inputfile) && isempty(outputfile)
     % Person wants the analysis, not a file from the analysis
     result = st.fw.getAnalysis(id);
     return;
+elseif ~isempty(inputfile) && ~isempty(outputfile)
+        error('We cannot download both an input and an output file at this time');
 else
-    % User wants an input or output file from the analysis. Make sure the
-    % file destination is a full path.  This could be a function.  Also,
-    % should we use pwd or tempdir?
+    % User wants an input or output file from the analysis. 
+    if isempty(inputfile), fname = outputfile;
+    else, fname = inputfile;
+    end
+    
+    % Make sure the file destination is a full path.  This could be a
+    % function.  Also, should we use pwd or tempdir?
     if ~isempty(destination)
         % Make sure destination is a full path
         thisSlash = fullfile(pwd);
@@ -100,19 +106,17 @@ else
         destination = fullfile(pwd,[n,e]);
     end
     
-    
     % We could download the analysis and search the filenames to determine
     % if this is an input or output side file.
-    switch(source)
-        case 'in'
-            st.fw.downloadInputFromAnalysis(id, fname, destination);
-        case 'out'
-            st.fw.downloadOutputFromAnalysis(id, fname, destination);
-        otherwise
-            error('Unknown source type: %s\n',source)
+    if ~isempty(inputfile)
+        st.fw.downloadInputFromAnalysis(id, fname, destination);
+    elseif ~isempty(outputfile)
+        st.fw.downloadOutputFromAnalysis(id, fname, destination);
+    else
+        warning('No input or output file names found');
     end
     result = destination;
-end 
+end
 
 end
 
