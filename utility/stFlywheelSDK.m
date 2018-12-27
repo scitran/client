@@ -121,6 +121,16 @@ switch action
         else, status = false;
         end
         
+        % We might not have installed using mltbx. In that case, check the
+        % old fashioned way.
+        if (~status)
+            temp = which('flywheel.Flywheel');
+            if (~isempty(temp))
+                status = true;
+                flywheelTbx = fileparts(temp);
+            end
+        end
+        
     case 'install'
         % Download from Flywheel and install
         fprintf('Installing the Flywheel Add-Ons toolbox: %s\n',tbxFile);
@@ -161,8 +171,15 @@ switch action
         
     case {'installedversion'}
         % Returns an integer corresponding to this Add-On version
-        [~, flywheelTbx] = stFlywheelSDK('exist');
-         status = str2double(strrep(flywheelTbx.Version,'.',''));
+        try
+            [~, flywheelTbx] = stFlywheelSDK('exist');
+            status = str2double(strrep(flywheelTbx.Version,'.',''));
+        
+        % This is a kluge to deal with the case where we have the current
+        % SDK installed, but not using mltbx.
+        catch
+            status = 432;
+        end    
     otherwise
         error('Unknown action: %s\n',action);
 end
