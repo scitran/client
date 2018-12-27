@@ -5,24 +5,22 @@ function analysisID = analysisUpload(st,containerid,analysis,varargin)
 %    analysisID = st.analysisUpload(st,containerid,analysis,varargin)
 %
 % Brief description:
-%  Upload an analysis to a session or to a project. If the analysis already
-%  exists, you can just upload a cell array of output files, a note, or an
-%  info struct. 
+%  Upload an analysis to a session or to a project. This creates the
+%  analysis.  It does not appear possible to add outputs to the analysis
+%  after it is already created (ask Justin).
 %
 % Inputs
-%   containerID  - Container for the analysis; if the id is already the
-%                  analysis of an existing ID, then can add the outputs,
-%                  note or info without creating a new analysis
+%   containerID  - Create an analysis, with defined inputs and outputs,
+%                  note and info
 %   analysis     - A struct comprising
-%                    analysis.label  - a string
-%                    analysis.inputs - a cell array of Flywheel file
-%                    descriptions 
+%                    analysis.label  - string
+%                    analysis.inputs - cell array of Flywheel file info 
 %                      inputs{}.id   - The id of the file's container
 %                      inputs{}.type - The type of container
 %                      inputs{}.name - The file name
 %
 % Optional key/value pairs
-%   outputs - Cell array of local file names (full path)
+%   outputs - Cell array of local file names (full path) to upload
 %   note    - Text string for a note
 %   info    - Key/value struct
 %
@@ -45,7 +43,8 @@ p = inputParser;
 p.addRequired('st',@(x)(isequal(class(x),'scitran')));
 p.addRequired('containerid',@ischar);
 
-% Can be empty when id is an analysis
+% When containerid is an analysis, we are adding a file to an existing
+% analysis.  In that case, this can be empty.
 p.addRequired('analysis',@(x)(isstruct(x) || isempty(x))); 
 
 p.addParameter('outputs',[],@iscell);  % Cell array of local files
@@ -73,10 +72,6 @@ switch containerType
         analysisID = st.fw.addProjectAnalysis(containerid, analysis);
     case 'session'
         analysisID = st.fw.addSessionAnalysis(containerid, analysis);
-    case 'analysis'
-        % ID was an analysis, so the user is modifying the note, outputs,
-        % or info.
-        analysisID = containerid;
     otherwise
         error('Analyses can be attached only to projeccts or sessions');
 end
@@ -85,6 +80,7 @@ end
 % This may not be the proper way to do it. 
 if isempty(outputs)
 else
+    % Test more whether we can add outputs after analysis already exists.
     fprintf('Uploading output files.\n');
     st.fw.uploadOutputToAnalysis(analysisID, outputs);
 end
@@ -103,23 +99,4 @@ end
     
 end
 
-%{
-% Some notes.
-analysis_id = st.fw.addProjectAnalysis(h.project.id, analysis);
-st.fw.deleteProjectAnalysis(h.project.id,analysis_id);
-
-clear analysis
-analysis.label = 'Test of 4 files';
-analysis.inputs = fourFiles;
-analysis_id = st.fw.addProjectAnalysis(h.project.id, analysis);
-st.fw.uploadOutputToAnalysis(analysis_id, analysis_output);
-
-st.fw.deleteProjectAnalysis(h.project.id,analysis_id);
-
-analysis_id = st.fw.addSessionAnalysis(sessions{1}.id, analysis);
-st.fw.deleteSessionAnalysis(sessions{1}.id,analysis_id);
-
-% Upload the local analysis file
-st.fw.uploadOutputToAnalysis(analysis_id, analysis_output);
-%}
 

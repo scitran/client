@@ -1,4 +1,4 @@
-function [oType, sType] = stObjectType(object)
+function [objectType, searchType] = stObjectType(object)
 % Estimate the type (class) of object 
 %
 %  [oType, sType] = stObjectType(object)
@@ -54,54 +54,46 @@ c = st.fw.getContainer(h.acquisitions{2}{1}.id);
 % Find the text after the last period.  That tells us the type of
 % object this is in the flywheel.model world.
 tmp = split(lower(class(object)),'.');
-oType = tmp{end};
-sType = '';
+objectType = tmp{end};
+searchType = '';
 
 % Simplify these cases.
-switch oType
+switch objectType
     case 'fileentry'
-        oType = 'file';
-        return;
+        warning('How did we get a fileentry type?')
+        objectType = 'file';
         
     case 'searchresponse'
         % We should be getting a return_type parameter some day, in which case
         % this can be replaced.
-        oType = 'search';
-        if ~isempty(object.file)
-            sType = 'file';
-        elseif isempty(object.project)
-            sType = 'group';
-        elseif isempty(object.session)
-            sType = 'project';
-        elseif isempty(object.acquisition)
-            sType = 'session';
-        elseif isempty(object.file)
-            sType = 'acquisition';
-        else
-            warning('Uncertain search classification');
-            disp(object)
-        end
+        objectType = 'search';
+        searchType = object.returnType;
+        
+    % Probably never happens.  Depreciate, I think.    
     case 'searchsessionresponse'
-        oType = 'search';
-        sType = 'session';
+        warning('searchsessionresponse is deprecated.  I think.');
+        objectType = 'search';
+        searchType = 'session';
     
+    % fw.getContainer returns.  Somehow, JE didn't put a returnType in for
+    % this case.  So, we figure it out from the class.
     case 'containerprojectoutput'
         % Returned by a fw.getContainer
-        oType = 'getcontainer';
-        sType = 'project';
+        objectType = 'getcontainer';
+        searchType = 'project';
     case 'containersessionoutput'
-        oType = 'getcontainer';
-        sType = 'session';
+        objectType = 'getcontainer';
+        searchType = 'session';
     case 'containeracquisitionoutput'
-        oType = 'getcontainer';
-        sType = 'acquisition';
+        objectType = 'getcontainer';
+        searchType = 'acquisition';
     case 'containeranalysisoutput'
-        oType = 'getcontainer';
-        sType = 'analysis';
+        objectType = 'getcontainer';
+        searchType = 'analysis';
     case 'containercollectionoutput'
         % Not sure this exists.
-        oType = 'getcontainer';
-        sType = 'collection';
+        objectType = 'getcontainer';
+        searchType = 'collection';
 end
 
 end

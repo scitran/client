@@ -1,15 +1,24 @@
-function result = analysisDownload(st,id,varargin)
+function result = analysisDownload(st,analysis,varargin)
 % Return the flywheel.model.Analysis container
 %
 % Syntax
-%   result = scitran.analysisDownload(id, ...)
+%   result = scitran.analysisDownload(analysis, ...)
 %
 % Description
-%  Download an analysis object based on its id, or download a file from the
-%  analysis.
+%  Download either the analysis object metadata or a file from the
+%  analysis. 
+%
+%  As an example, you might search for the analysis.  The search return
+%  does not have all the information. You can get the full information by
+%  calling analysisDownload with the search return
+%
+%      analysisSearch = st.search(... analysis ...);
+%      analysis = st.analysisDownload(analysisSearch);
 %
 % Required Inputs
-%  id    - The Flywheel analysis ID
+%  analysis    - A Flywheel analysis object or a string specifying just the
+%                id. The analysis object can be a search return or the
+%                an analysis object via fw.getAnalysis.
 %
 % Optional key/value parameters
 %  inputfile   - Name of the analysis input file
@@ -17,69 +26,70 @@ function result = analysisDownload(st,id,varargin)
 %  destination - full path to file output location
 %
 % Return
-%  result - Either and analysis struct or the full path to downloaded file
+%  result - Either an analysis object or the full path to downloaded file.
 %
 % LMP/BW Vistasoft Team, 2015-16
 %
 % See also: 
 %   s_stDownloadContainer, s_stDownloadFile, scitran.search
 
+%% Download the whole analysis as a tar file is supposed to become possible.
+%  Also, remember FlywheelExamples.m
+%  Also, Justin E has a major upgrade in the works involving methods
+%  attached to objects (e.g. session.downloadDown) as part of the SDK 2.0.
+
 % Examples
 %{
   st = scitran('stanfordlabs');
-  analysis = st.search('analysis',...
-   'project label exact','Brain Beats',...
-   'session label exact','20180319_1232');
 
-  id = idGet(analysis{1},'data type','analysis');
-  d = st.analysisDownload(id);
+  % The search return for the analysis does not get the whole analysis,
+  % It gets a lot of information.  But to keep search fast, they return a
+  % SearchAnalysisResponse, rather than
+  analysisSearch = st.search('analysis',...
+    'project label exact','Brain Beats',...
+    'session label exact','20180319_1232');
 
+  % id char format - maybe you already know the file names
+  id = st.objectParse(analysisSearch{1});
   st.analysisDownload(id,...
-    'file name',d.files{1}.name,...
-    'in or out','out',...
-    'destination','deleteme.mat');
-
-  st.analysisDownload(id,...
-    'file name',d.inputs{1}.name,...
-    'in or out','in',...
+    'inputfile',d.inputs{1}.name,...
     'destination','deleteme.nii.gz');
 
+  % flywheel.model.AnalysisOutput format
+  analysis = st.analysisDownload(id);
+  st.analysisDownload(analysis,...
+    'outputfile',analysis.files{1}.name,...
+    'destination','deleteme.mat');
+
 %}
-
-%%
-
-%{
-
-% From FlywheelExample.m
-% Have a look at the files
-% disp(cellfun(@(f) {f.name}, input_analysis.files))
-
-% Grab the segmented image
-% input_file = 'HERO_gka1_aparc.a2009s+aseg.nii.gz';
-% dest_path = fullfile('/scratch', input_file);
-% fw.downloadOutputFromAnalysis(input_analysis.id, input_file, dest_path);
-%}
-
-% We need to figure out how to download the whole analysis as a tar
-% file, or individual input and output files. Examples are in
-% FlywheelExamples.m
 
 %% Parse inputs
 p = inputParser;
 varargin = stParamFormat(varargin);
 
-p.addRequired('id',@ischar);
+p.addRequired('analysis', ...
+    @(x)(ischar(x) || ...
+    isa(x,'flywheel.model.AnalysisOutput')));
 
 p.addParameter('inputfile','',@ischar);
 p.addParameter('outputfile','',@ischar);
 p.addParameter('destination','',@ischar);
 
-p.parse(id,varargin{:});
+p.parse(analysis,varargin{:});
 inputfile   = p.Results.inputfile;
 destination = p.Results.destination;
 outputfile  = p.Results.outputfile;
 
-%% If fname is not empty, 
+% If a string that should be the id.  Otherwise it should be a
+% flywheel.model.AnalysisOutput.  See examples above.
+if     ischar(analysis),        id = analysis;
+elseif isa(analysis,'flywheel.model.AnalysisOutput'), id = analysis.id;
+end
+
+%% Download either the analysis object or a file.
+
+% We could search the analysis filenames to determine if this is an
+% input or output side file.  But for now, we make the user specify.
 
 if isempty(inputfile) && isempty(outputfile)
     % Person wants the analysis, not a file from the analysis
@@ -106,8 +116,7 @@ else
         destination = fullfile(pwd,[n,e]);
     end
     
-    % We could download the analysis and search the filenames to determine
-    % if this is an input or output side file.
+   
     if ~isempty(inputfile)
         st.fw.downloadInputFromAnalysis(id, fname, destination);
     elseif ~isempty(outputfile)

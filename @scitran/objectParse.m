@@ -129,8 +129,8 @@ else
 
     elseif isequal(oType,'search')
         % Search for a container.  The id and type should be there.
-        containerType = sType;
-        containerID   = object.(sType).id;
+        containerType = object.returnType;
+        containerID   = object.(containerType).id;
         
     elseif isequal(oType,'getcontainer')
         % Returned by fw.getContainer(id)
