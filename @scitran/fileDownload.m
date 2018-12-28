@@ -106,6 +106,11 @@ end
 % Perhaps we could call the analysis download too.  But I don't understand
 % the syntax yet (BW).
 %  fw.downloadAnalysisOutputsByFilename
+%
+% In 4.4.0 there should be a simpler unified method based on the file
+% itself.  values = file.read(), or file.download()
+% Or if you have the container acquisition.readfile(fname)
+%
 switch lower(fileContainerType)
     case 'project'
         st.fw.downloadFileFromProject(containerID,filename,destination);
