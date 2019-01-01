@@ -71,7 +71,7 @@ fileType = '';
 
 %%
 if ischar(object)
-    % User sent in a string, so, the containerTYpe must be a file.  
+    % User sent in a string, so, the containerType must be a file.  
     % The user must might have sent in a container type and id.  Also, for
     % the case of a file  we expect a containerType like
     %     fileacquisition or filesession or ...
@@ -120,6 +120,8 @@ else
     % If it is a search, then ...
     if isequal(oType,'search')  && isequal(sType,'file') 
         % A file search object has a parent id included.
+        % In 4.4 this will be replaced because the file information
+        % will be enough to let us download without the parent information. 
         containerType     = 'file';
         containerID       = object.parent.id;
         fileType          = object.file.type;

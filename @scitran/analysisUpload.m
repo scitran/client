@@ -62,6 +62,7 @@ info    = p.Results.info;
 %
 % containerType = st.getType(containerid)
 %
+% In 4.4.0 the container return will have a type attached to it.
 container         = st.fw.getContainer(containerid);
 [~,containerType] = st.objectParse(container);
 
