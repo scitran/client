@@ -176,7 +176,10 @@ switch action
             status = str2double(strrep(flywheelTbx.Version,'.',''));
         
         % This is a kluge to deal with the case where we have the current
-        % SDK installed, but not using mltbx.
+        % SDK installed, but not using mltbx. The only way I can figure out
+        % how to do this without having an open flywheel object is to open
+        % the file flywheel.Flywheel.m and then parse it to find the value
+        % fo the SDK version property of the object.
         catch
             status = 432;
         end    
