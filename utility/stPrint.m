@@ -86,7 +86,7 @@ val = cell(length(objects),1);
 
 %% Start printing
 
-fprintf('\n %s %s\n-----------------------------\n',slot1,slot2);
+fprintf('\nEntry: %s.%s\n-----------------------------\n',slot1,slot2);
         
 if isempty(slot2)
     for ii=1:length(objects)
@@ -95,9 +95,15 @@ if isempty(slot2)
     end
 else
     for ii=1:length(objects)
-        val{ii} = objects{ii}.(slot1).(slot2);
-        fprintf('\t%d - %s \n',ii,val{ii});
+        if iscell(objects{ii}.(slot1))
+            for jj=1:length(objects{ii}.(slot1))
+                val{ii}{jj} = objects{ii}.(slot1){jj}.(slot2);
+                fprintf('cell (%d), entry (%d) - %s \n',ii,jj,val{ii}{jj});
+            end
+        else
+            val{ii} = objects{ii}.(slot1).(slot2);
+            fprintf('\t%d - %s \n',ii,val{ii});
+        end
     end
-end
 
 end

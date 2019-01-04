@@ -7,7 +7,7 @@ function selected = stSelect(containers,slot,matchVal,varargin)
 % Inputs
 %  container - cell array of containers from a scitran.list
 %  slot      - the slot that must be matched
-%  matchVal  - String that the slot must match (exact, by default)
+%  matchVal  - String that the slot must match (contains, by default)
 %
 % Optional key/value pairs
 %  contains - Boolean to use contains matchVal rather than exact match
@@ -23,12 +23,10 @@ function selected = stSelect(containers,slot,matchVal,varargin)
 
 % Examples:
 %{
-  stSelect(files,'type','archive','asset','car');
+  % stSelect(files,'type','archive','asset','car');
 %}
 %{
-%}
-%{
-  stSelect(files,'name',filename);
+  % stSelect(files,'name',filename);
 %}
 
 %% Parse inputs
@@ -40,7 +38,7 @@ p.addRequired('files',@iscell);
 p.addRequired('slot',@ischar);
 p.addRequired('matchVal',@ischar);
 
-p.addParameter('contains',false,@logical);   % Contains or Exact match.
+p.addParameter('contains',true,@logical);    % Contains or Exact match.
 p.addParameter('infoval','',@ischar);        % Info field to match
 p.addParameter('infofield','',@ischar);      % Info field value to match
 
