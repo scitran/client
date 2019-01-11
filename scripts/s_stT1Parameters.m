@@ -4,7 +4,7 @@ stPrint(projects,'label')
 
 project = st.fw.lookup('adni/ADNI: DWI (AD)');
 project = st.fw.lookup('adni/ADNI: T1');
-project = st.fw.lookup('wandell/Weston Havens');
+project = st.lookup('wandell/Weston Havens');
 
 % How do we find all the T1 nifti files in here?  A search?
 fileList =  st.search('file','file type','dicom',...
