@@ -1,18 +1,33 @@
-function id = projectID(st,label)
+function [id, project] = projectID(st,label)
 % Return the id of a project with the specified label
 %
+% Syntax:
+%   [id, project] = scitran.projectID('project label'.varargin)
+%
+% Brief description:
+%   Get the project id.  You can further get the project metadata
+%
+% Inputs:
+%   label - The project label
+%
+% Optional key/value pairs
+%   N/A
+%
+% Outputs
+%   id:       The project id (ischar)
+%   project:  The project metadata
+%s
 % Wandell, Vistasoft 2018
 %
-% TODO:  We might try to figure out only the projects for this group?
-%
 % See also
+%   scitran.containerGet
 %
 
 % Examples:
 %{
   st = scitran('stanfordlabs');
   label = 'SVIP Released Data (SIEMENS)';
-  id = st.projectID(label);
+  [id,project] = st.projectID(label);
 %}
 
 %% Parse
@@ -20,18 +35,9 @@ function id = projectID(st,label)
 p = inputParser;
 p.addRequired('st',@(x)(isa(x,'scitran')));
 p.addRequired('label',@ischar);
-p.parse(st,label)
 
-%% Alternative code.
-%{
-% This is faster, but we would need to get the group (wandell) and the
-% label (VWFA) sent in.  One thought is that the scitran class should always
-% have the user's group attached to it (st.group).  At create time.
-  tic
-  tmp = st.fw.resolve('wandell/VWFA');
-  id = tmp.path{2}.id
-  toc
-%}
+project = [];
+
 %% Get all the project labels
 
 allProjects = st.fw.getAllProjects;
@@ -46,10 +52,14 @@ nFound = sum(lst);
 if nFound == 1
     thisProject = allProjects(lst);
     id = thisProject{1}.id;
+    if nargout == 2
+        % The user asked for the container metadata
+        project = st.containerGet(id);
+    end
 elseif nFound == 0
     error('No project labeled %s found\n',label);
 else
-    error('More than one project found.\n');
+    error('More than one project labeled %s found.\n',label);
 end
 
 end

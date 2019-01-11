@@ -5,27 +5,30 @@ function result = list(obj, returnType, parentID, varargin)
 %   result = scitran.list(returnType, parentID, ...)
 %
 % Description
-%  The Flywheel objects and files are organized hierarchically
-%    Group Name -> Project Name ->  Session Name ->  Acquisition Name
-% Or,
-%     Curator Name -> Collection -> Session -> Acquisition
+%  The list function takes the id of a parent and lists the children. Say 
 %
-% The list function takes the id of a parent, say 
-%   a project, and then lists the sessions in that parent.  
-%   a session, and the acquisitions are listed
-%   a session and the analyses are listed.
+%   * a project, and then lists the sessions in that parent.  
+%   * a session, and the acquisitions are listed
+%   * a session and the analyses are listed.
+%
+%  Flywheel objects and files are organized hierarchically
+%
+%    Group Name -> Project Name ->  Session Name ->  Acquisition Name -> Files
+% Or,
+%    Curator Name -> Collection -> Session -> Acquisition -> Files
 %
 % Inputs (required)
 %  returnType - group, project, session, acquisition, file, collection,
-%               'collection session', 'collection acquisition', 
-%               'analyses session', 'analyses project'
-%  parentID   - A Flywheel ID of the parent container.
-%               If the search is for a project, then parentID is the group
-%               label, or the string 'all' or '' to indicate all groups.
+%                 'collection session', 'collection acquisition', 
+%                 'analyses session', 'analyses project'
+%  parentID   - The id of the parent container, or
+%               If you are listing a project, the parentID is either 
+%                  the group label, or 
+%                  the string 'all' or '' to indicate all groups.
 %
 % Inputs (optional)
-%  containerType - Used for retrieving files
-%  summary:      - Print a brief summary of the returned objects
+%  containerType - Used for listing files
+%  summary:      - Print a brief summary of the returned objects (logical)
 %
 % Return
 %  result:  Cell array of flywheel.model objects
