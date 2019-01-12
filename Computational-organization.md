@@ -3,6 +3,21 @@
 * Github
 
 ***
+### Methods
+
+[**Scitran** methods](https://github.com/vistalab/scitran/wiki/scitran-methods) are organized the actions that apply to containers, data files, and info. The naming convention we use is to specify the **type of object** followed by an **action**.  For example, suppose you create a scitran object, 
+
+    st = scitran('stanfordlabs');
+
+The scitran object has many methods, such as
+```
+st.containerDownload - downloading one of the several container types
+st.containerCreate - Create a container on the remote site
+st.fileDownload - downloads a data file
+st.fileDelete -  delete a file
+```
+Use tab-completion (e.g., st.file<Tab>) to see the current list.
+
 
 ## Types of computing
 Flywheel recognizes two typical modes of computing.  
