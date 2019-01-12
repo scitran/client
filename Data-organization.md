@@ -29,6 +29,7 @@ In a typical computer system, reusing data typically means copying files into a 
 
 Flywheel lets you select data for reuse by creating a Collection. The contents of a collection are sessions, acquisitions, and files that you choose from the database.  In the user interface, a Collection looks like a Project.  We think of a Collection as a virtual project based on reusing data.  
 
-**Scitran** has many methods to interact with Collections
+**Scitran** has many methods to interact with Collections.  These can be found using
 
-[Flywheel collections manual](https://docs.flywheel.io/display/EM/Using+Collections)
+    scitran.collections<TAB>
+
