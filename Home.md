@@ -18,6 +18,14 @@ This client is a wrapper on the [Flywheel SDK](Flywheel-SDK) developed by Justin
 
 The same Flywheel SDK is used by [**a scitran python client**](https://github.com/scitran/python-client) and a **scitran** 'R' client.  We are unaware of similar wrappers for those clients.
 
+Here are pointers to the related Flywheel documentation.
+
+* [Flywheel API documentation](https://flywheel-io.github.io/core/branches/master/matlab/flywheel.api.html)
+* [Flywheel SDK Matlab examples](https://flywheel-io.github.io/core/branches/master/matlab/examples.html)
+* [Flywheel manual - Command line interface](https://docs.flywheel.io/display/EM/CLI+and+SDKs)
+* [Flywheel manual - About](https://docs.flywheel.io/display/EM/About+Flywheel)
+* [Flywheel manual - data hierarchy](https://docs.flywheel.io/display/EM/Data+Hierarchy)
+
 ### Acknowledgement
 
 The Wandell lab gratefully acknowledge the [Simons Foundation](https://www.simonsfoundation.org/) and particularly the [Simons Foundation Autism Research Initiative](https://sfari.org/) for their support of the [Project on Scientific Transparency](http://post.stanford.edu).  The code in this repository and the api functionality are being developed by Justin Ehlert, Michael Perry, Gari Lerma, Zhenyi Liu, and Brian Wandell.  We thank Renzo Frigato, Nathaniel Kofalt, Megan Henning, and Jen Reiter for their contributions.
