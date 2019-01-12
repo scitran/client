@@ -10,7 +10,7 @@ The Project, Session and Acquisitions are called containers.  ** scitran ** has 
     scitran.container<TAB>
     scitran.file<TAB>
 
-One additional type of data container, the **Collection**, is described later on this page. Other objects (Gears, Jobs, and Analyses) that are described in the [Computational organization] section.
+One additional type of data container, the **Collection**, is described later on this page. Other objects (Gears, Jobs, and Analyses) that are described in the [Computational organization section](Computational organization).
 
 ### Notes, tags and attachments
 
