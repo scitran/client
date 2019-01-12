@@ -13,21 +13,6 @@ A database hierarchy has less flexibility than an operating systems' directory t
 
 There is one important conceptual difference to remember as well: When using a computer we typically focus on the files and directories. When using database systems, the Info (metadata) has a very prominent role. You will find critical experimental information that is indexed and searchable in the Info fields. All Flywheel Containers and Files can have Info. 
 
-### Methods
-
-[**Scitran** methods](https://github.com/vistalab/scitran/wiki/scitran-methods) are organized the actions that apply to containers, data files, and info. The naming convention we use is to specify the **type of object** followed by an **action**.  For example, suppose you create a scitran object, 
-
-    st = scitran('stanfordlabs');
-
-The scitran object has many methods, such as
-```
-st.containerDownload - downloading one of the several container types
-st.containerCreate - Create a container on the remote site
-st.fileDownload - downloads a data file
-st.fileDelete -  delete a file
-```
-Use tab-completion (e.g., st.file<Tab>) to see the current list.
-
 ### Notes, tags and attachments
 
 **scitran** methods use the term Info to refer to actions on the metadata. There are many methods to read and modify the Flywheel Info fields.
@@ -40,8 +25,10 @@ More details about the [Flywheel data model are here](Flywheel-data-model)
 
 ### Virtual projects:  Collections
 
-Data management simplifies the task of reusing data.  In a typical computer system, reusing the data typically means copying many files into a new directory tree.  In a database, however, we can easily create a virtual experiment just by adding new fields into the database.  The data stay in their position, but we see the virtual experiment by looking up all the files that are in the database field.
+In a typical computer system, reusing data typically means copying files into a new directory tree.  In a database, however, we can reorganize data by adding new fields into the database.  The data are not copied; we present the user with a new virtual experiment by just reorganizing pointers in the database. 
 
-A collection is an entry, like a project, in the database.  The contents of a collection are sessions, acquisitions, and files that are present in the database.  In this way, a Collection looks just like a Project.  The data and metadata in the Collection can be drawn from anywhere in the database.  A Collection is a virtual project based on reusing data.  **Scitran** has many methods to interact with Collections
+Flywheel lets you select data for reuse by creating a Collection. The contents of a collection are sessions, acquisitions, and files that you choose from the database.  In the user interface, a Collection looks like a Project.  We think of a Collection as a virtual project based on reusing data.  
+
+**Scitran** has many methods to interact with Collections
 
 [Flywheel collections manual](https://docs.flywheel.io/display/EM/Using+Collections)
