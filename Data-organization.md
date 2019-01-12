@@ -1,6 +1,3 @@
-* The Flywheel data model
-
-***
 
 ### Data and metadata
 Flywheel uses a database to manage information.  A database is part of most modern computer architectures. For example, when you ask for the 'Info' about a file on a Mac, you are provided with file metadata (e.g., file size, date of access). The file itself is the **data**, and the information about the file is the **metadata**. 
