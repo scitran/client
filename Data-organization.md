@@ -1,5 +1,4 @@
-* [Creating a **scitran** object](Connecting-and-Authentication) to securely communicate with a Flywheel system 
-* [**scitran** data management methods](data-management) to search, download, upload and edit data and metadata.
+* The Flywheel data model
 
 ***
 
