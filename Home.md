@@ -5,16 +5,18 @@ The **scitran matlab client** can be run securely from any computer on the Inter
 This wiki has a [conceptual overview](Conceptual-overview) of Flywheel and then explanations on how to
 
 * [connect securely with a Flywheel database](Connecting-and-Authentication) 
-* list and search the database contents (files, metadata, and jobs)
-* download and read database objects (e.g., files, sessions, projects, analyses)
-* upload files, notes, and attachments (e.g., files, graphs, metadata)
-* upload analyses and software (e.g., Matlab files) for computational sharing
+* search the database contents (files, metadata, gears, and jobs)
+* read the metadata about specific files, analyses, and containers (projects, sessions, acquisitions, collections)
+* download files, analyses, notes, and containers 
+* upload files, analyses, and notes into containers 
 
-This client and Flywheel are part of our vision to create a work environment that supports sharing data and computations. We hope these tools lead to reproducible research that supports better sharing through publications. See the [Stanford Project on Scientific Transparency (PoST)](http://post.stanford.edu) for a statement of our goals.
+This client and Flywheel are part of our software development to support a work environment that supports sharing data and computations. We hope these tools lead to reproducible research that supports better sharing through publications. See the [Stanford Project on Scientific Transparency (PoST)](http://post.stanford.edu) for a statement of our goals.
 
 ### Related information
 
-This client relies on the [Flywheel SDK](Flywheel-SDK) a platform independent set of functions.  This client calls the Flywheel SDK functions from Matlab. The same Flywheel SDK is used by [**a scitran python client**](https://github.com/scitran/python-client) and a **scitran** 'R' client.
+This client is a wrapper on the [Flywheel SDK](Flywheel-SDK) developed by Justin Ehlert. The SDK is a platform independent set of functions that access the endpoints in the Flywheel API.  This client provides an interface to the Flywheel SDK functions that we believe makes them easier to understand and use.  The comments in the code are designed to help people learn about the SDK and to add further functionality.
+
+The same Flywheel SDK is used by [**a scitran python client**](https://github.com/scitran/python-client) and a **scitran** 'R' client.  We are unaware of similar wrappers for those clients.
 
 ### Acknowledgement
 
