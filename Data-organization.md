@@ -1,32 +1,32 @@
 
 ### Data and metadata
-Flywheel uses a database to manage information.  A database is part of most modern computer architectures. For example, when you ask for the 'Info' about a file on a Mac, you are provided with file metadata (e.g., file size, date of access). The file itself is the **data**, and the information about the file is the **metadata**. 
+Flywheel uses a database to manage information.  A database is part of most modern computer architectures. For example, when you ask for the 'Info' about a file on a Mac, you are provided with file metadata (e.g., file size, date of access). The file itself is the **data**, and the information about the file is the **metadata**. Like the Mac, Flywheel calls the metadata in its system 'Info' or 'Information'.
 
-In MRI metadata includes critical scientific information (TR, TE, voxel size, number of diffusion directions, ...). Such information can be included within the data file, for example the DICOM format has an extensive header. But the widely used NIfTI format does not include much information about the MR parameters. When Flywheel converts a DICOM file to a NIfTI file, it stores this information into Flywheel metadata associated with the NIfTI file.
+In MRI the Info includes critical scientific information (TR, TE, voxel size, number of diffusion directions, ...). Such information can be included within the data file, for example the DICOM format includes this information in an extensive header. The widely used NIfTI format does not, by default, include much information about the MR parameters. When Flywheel converts a DICOM file to a NIfTI file, it stores this information into Flywheel metadata associated with the NIfTI file.
 
 ### Containers - Projects, Sessions and Acquisitions
-The Flywheel database organizes information using a hierarchy that matches a typical scientific (neuroimaging) experiment. The data is part of a Project; each project contains multiple Sessions; each session contains multiple Acquisitions; each acquisition contains multiple **data files**.  All of these objects have various types of metadata.
+The Flywheel database organizes information using a hierarchy that matches a typical neuroimaging project. The top level of the hierarchy is a Project; each project contains multiple Sessions; each session contains multiple Acquisitions; each acquisition contains multiple **data files**.
 
 The Project, Session and Acquisitions are called containers.  There is one additional type of data container, the **Collection**, that we describe at the end of this page.
 
-The database hierarchy has less flexibility than an operating systems' directory tree. The operating system can have many layers of directories that can be named freely. The power and speed of a database for searching system relies on having a more disciplined structure:  The hierarchy of the user's Group, Project, Session, and Acquisition ('Containers') and files, coupled with specific formats for the metadata, is enforced. The benefit is that you can rapidly search, categorize and compute using the data and metadata.
+A database hierarchy has less flexibility than an operating systems' directory tree. The speed of a database search relies on having a more disciplined structure:  The hierarchy of the user's Group, Project, Session, and Acquisition ('Containers') and Files, coupled with specific formats for the metadata. The operating system can have many layers of directories that are organized arbitrarily. The benefit of the hierarchy is that you can rapidly search, categorize and compute using the data and Info.
 
-There is one important conceptual difference to remember as well: When using a computer we typically focus on the files and directories. When using database systems, the metadata has a very prominent role. You will find critical experimental information that is indexed and searchable in the metadata. All Flywheel Containers and Files have metadata. 
+There is one important conceptual difference to remember as well: When using a computer we typically focus on the files and directories. When using database systems, the Info (metadata) has a very prominent role. You will find critical experimental information that is indexed and searchable in the Info fields. All Flywheel Containers and Files can have Info. 
 
 ### Methods
 
-[**Scitran** methods](https://github.com/vistalab/scitran/wiki/scitran-methods) are organized the actions that apply to containers, data files, and metadata. The naming convention we use is to specify the **type of object** followed by an **action**.  For example, suppose you create a scitran object, 
+[**Scitran** methods](https://github.com/vistalab/scitran/wiki/scitran-methods) are organized the actions that apply to containers, data files, and info. The naming convention we use is to specify the **type of object** followed by an **action**.  For example, suppose you create a scitran object, 
 
     st = scitran('stanfordlabs');
 
-The object has many methods like these.
+The scitran object has many methods, such as
 ```
 st.containerDownload - downloading one of the several container types
 st.containerCreate - Create a container on the remote site
 st.fileDownload - downloads a data file
 st.fileDelete -  delete a file
 ```
-Use tab-completion (e.g., st.file<Tab>) to see the current list. The arguments to the method specify the container type and other necessary parameters. 
+Use tab-completion (e.g., st.file<Tab>) to see the current list.
 
 ### Notes, tags and attachments
 
