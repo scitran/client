@@ -12,13 +12,13 @@ This wiki has a [conceptual overview](Conceptual-overview) of Flywheel and then 
 
 This client and Flywheel are part of the Wandell lab software to support sharing data and reproducible computations. See the [Stanford Project on Scientific Transparency (PoST)](http://post.stanford.edu) for a statement of our goals.
 
-### Related information
+### About the scitran Matlab client
 
 This **scitran** client is a wrapper on the [Flywheel SDK](Flywheel-SDK) developed by Justin Ehlert. That SDK accesses the endpoints of the Flywheel API; these endpoints are how users interact with Flywheel through the browser. We wrote this client to make the code easier to understand and use.The comments in the code and the examples are designed to help people learn about the SDK and to add further functionality.
 
 Justin exposes the same Flywheel endpoints into a [**a scitran python client**](https://github.com/scitran/python-client) and a **scitran 'R' client**.  We are unaware of wrappers for those languages, but perhaps the Matlab wrapper could offer a model.
 
-### Related Flywheel documentation.
+### Flywheel documentation.
 
 * [Flywheel API documentation](https://flywheel-io.github.io/core/branches/master/matlab/flywheel.api.html)
 * [Flywheel SDK Matlab examples](https://flywheel-io.github.io/core/branches/master/matlab/examples.html)
