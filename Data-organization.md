@@ -32,7 +32,7 @@ Flywheel lets you select data for reuse by creating a Collection. The contents o
     scitran.collection<TAB>
 
 ### General comments about Data and Info (metadata)
-####Flywheel uses a database to manage information.  
+#### Flywheel uses a database to manage information.  
 A database is part of most modern computer architectures. For example, when you ask for the 'Info' about a file on a Mac, you are provided with file metadata (e.g., file size, date of access). The file itself is the **data**, and the information about the file is the **metadata**. Like the Mac, Flywheel calls the metadata in its system 'Info' or 'Information'.
 
 #### Metadata
