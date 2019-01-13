@@ -4,10 +4,15 @@
 
     doc scitran.MethodName, or 
     help scitran.MethodName
+    doc scitran.verify          % An example
+
+To see examples of usage, use
+
+    stExamplesShow(FUNCTION_NAME);              % Syntax
+    stExamplesShow('scitran.containerUpload');  % An example
 
 As the methods stabilize, we will put more information into this wiki, or perhaps some more advanced manual system provided by the Flywheel team. 
 
-Here is a link to a [list of scitran methods](scitran-methods) to give you a quick sense of what is available now.
 
 
 
