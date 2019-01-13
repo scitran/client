@@ -1,14 +1,15 @@
 ## Gears
-A **Flywheel Gear** is a way to share software across many users.  Gears are typically created for relatively stable and widely used software. A program that runs without user-intervention, say from a command line, can be transformed into a Flywheel Gear.  Most Flywheel sites have many Gears. You can see the Gears at your site by clicking on 'Gears installed' on the left panel of the Flywheel web page.
+**Flywheel Gears** are a way to share software between users.  Gears are stored in the Flywheel system.  They are typically created for stable and widely shared software. Nearly any program that runs without user-intervention can be transformed into a Flywheel Gear.  Flywheel has converted many programs into Gears, including some of the FSL, Freesurfer, ANTS and HCP programs. We use Chris Rorden's dcm2niix utility frequently.  
 
-The Flywheel system can execute many Gears in parallel. The main limit is the size of your compute architecture. For example, you may want to run a Brain Extraction tool on 100 datasets.  You can instruct the Flywheel system to start up 100 Gears.  The inputs, program parameters, and results will be stored in the Analysis tab.  A record of when the jobs were run and their status (e.g., running or completed) is available in the Provenance Tab.
+Most sites have many Gears; you can see the Gears at your site by clicking on 'Gears installed' on the left panel of the Flywheel web page. Most sites have added Gears based on their specific interests. These Gears can be based on a compiled program, or they can be based on Python, Matlab or R programs. [Read about Gears on this page](Gears).
 
-Flywheel has converted many programs into Gears, including some of the FSL, Freesurfer, ANTS and HCP programs. We use Chris Rorden's dcm2niix utility frequently.  Most sites have added their own Gears, based on their specific interests. These Gears can begin with a compiled program, or they can be based on Python and Matlab programs. You can read more about [Gears on this page](Gears).
+## Jobs
+The Flywheel system can execute many Gears in parallel. The main limit is the size of your compute architecture. For example, you may want to run a Brain Extraction tool on 100 datasets.  You can instruct the Flywheel system to start up 100 Jobs that execute Gears on different data sets.  The inputs, program parameters, and results will be stored in the Analysis tab.  There is an Analysis tab for each Session, and there is an Analysis tab for each Project. 
+
+A record of when the jobs were run and their status (e.g., running or completed) is available in the Provenance Tab.
 
 ## Software Development Kit (SDK)
-Many labs develop their own analysis programs; during the development process it is convenient to be able to access the Flywheel data without downloading it. And before the methods are stable, it is often useful to test them using the data in the Flywheel system.
-
-The Flywheel-SDK is a collection of utilities that lets developers interact with the database through their programming environment, either Python, Matlab or R. The **scitran** methods described here are a wrapper on the Matlab version of the Flywheel-SDK.
+Many labs develop their own analysis programs; during the development process it is convenient to be able to access Flywheel data and methods. The Flywheel-SDK is a collection of utilities that lets developers interact with the database through their programming environment, either Python, Matlab or R. The **scitran** methods described here are a wrapper on the Matlab version of the Flywheel-SDK.
 
 ### Methods
 [**Scitran** methods](https://github.com/vistalab/scitran/wiki/scitran-methods) are organized into actions that apply to containers, data files, info (metadata), analyses, gears, and jobs. The naming convention we use is to specify the **type of object** followed by an **action**.  For example, suppose you create a **scitran** object, 
