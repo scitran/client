@@ -1,8 +1,3 @@
-* Gears and Jobs
-* SDK programming
-* Github
-
-***
 ## Gears
 A **Flywheel Gear** is a way to share software across many users.  Gears are typically created for relatively stable and widely used software. A program that runs without user-intervention, say from a command line, can be transformed into a Flywheel Gear.  Most Flywheel sites have many Gears. You can see the Gears at your site by clicking on 'Gears installed' on the left panel of the Flywheel web page.
 
