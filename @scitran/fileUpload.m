@@ -24,8 +24,7 @@ function status = fileUpload(obj,filename,containerId,containerType)
 % See also:  
 %  fileDownload
 
-%
-% Example 1
+% Examples:
 %{
  % Get a local file to work with
  st = scitran('stanfordlabs');
@@ -48,15 +47,12 @@ function status = fileUpload(obj,filename,containerId,containerType)
  % Delete the dummy project
  st.deleteContainer('project',id.project); 
 %}
-%
-% Example 2
 %{
  % If the project already exists, search and do the upload
  project = st.search('project','project label exact','DEMO');
  fullFilename = fullfile(stRootPath,'data','dtiError.json');
  st.fileUpload(fullFilename,'project',idGet(project,'data type','project'));
 %}
-% Example 3
 %{
  project = st.search('project','project label exact','DEMO');
  [id, cType] = st.objectParse(project{1});

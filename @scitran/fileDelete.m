@@ -13,10 +13,9 @@ function status = fileDelete(st, filename, containerid, containertype )
 %    
 % BW 2017
 
-% Examples assume
-%   st = scitran('stanfordlabs');
-%
+% Examples:
 %{
+  st = scitran('stanfordlabs');
   % Make sure we have a dummy file up there
   localFilename = fullfile(stRootPath,'local','test.json');
   s.test = '123';
@@ -37,11 +36,9 @@ function status = fileDelete(st, filename, containerid, containertype )
 
   st.fileDeleteFile(file);
 %}
-
 %{
    st.deleteFile(file{1});
 %}
-
 %{
  project = st.search('projects','project label contains','SOC');
  st.deleteFile('WLVernierAcuity.json','containerType','projects','containerID',project{1}.id);   

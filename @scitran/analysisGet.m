@@ -1,93 +1,143 @@
 function val = analysisGet(st,thisAnalysis,param)
-% Retrieve value of gear parameters from an analysis object
+% Read values from an analysis
+%
+% Syntax:
 %
 %    val = analysisGet(st,thisAnalysis,param)
 %
-% Brief description
-%  An analysis describes what happened when we run a Gear.  This includes
-%  the inputs, outputs, and the configuration of the gear parameters.  The
-%  analysis object is rather complex, and this function tries to simplify
-%  how we access specific parameters that were set when the gear was run
-%  (i.e., the job).
+% Brief description:
+%  An analysis describes the inputs and outputs and parameters of a process
+%  Gear or a user-specific analysis. When the analysis is executed as a
+%  Gear, it also includes the Job parameters, such as the job state.
+%
+%  This function simplifies how we read analysis parameters.
 %
 % Inputs
-%  thisAnalysis:  SearchResponse to an analysis, or the
-%       SearchAnalysisResponse, or an AnalysisOutput 
-%  param:  
-%   'all'
-%   'list'
-%   'param' - a string defining the a parameter in the gear configuration
-%
+%  thisAnalysis:  A Flywheel object describing the analysis.  
+%           This could be a SearchResponse, a SearchAnalysisResponse, or an
+%           ContainerAnalysisOutput, ...
+%  param:
+%   'container' - The container metadata
+%   'parameters' - parameter names and values
+%   'parameter names' - just the names
+%   'state' - Complete, or error or something
+%   'label - 
+%   'id' -  Analysis id
+%   'inputs'
+%   'outputs'
+%   
+% 
 % Optional
 %   N/A
 %
-% Returns
-%   Either the names ('list'), a struct of all the parameter ('all') or the
-%   value of one of the parameters
-%
-% Examples
+% Outputs:
+%   The parameter values
 %
 % Wandell, Vistasoft, August 25, 2018
 %
 % See also
 %
 
+% Examples:
+%{
+  st = scitran('stanfordlabs');
+  analysisSearch = st.search('analysis',...
+    'project label exact','Brain Beats',...
+    'session label exact','20180319_1232');
+
+  thisAnalysis = st.analysisGet(analysisSearch{1},'container')
+  st.analysisGet(analysisSearch{1},'label')
+  st.analysisGet(analysisSearch{1},'job')
+  st.analysisGet(analysisSearch{1},'outputs')
+
+%}
+%{
+  thisAnalysis = st.analysisGet(analysisSearch{1},'container')
+  st.analysisGet(thisAnalysis,'job')
+%}
+
 %% Make sure we have the right parameters
 %  In this case, thisAnalysis might be a search or the actual analysis
 %  output.  If it is a search, we get the analysis output.
 
-if notDefined('thisAnalysis'), error('analysis required');
-elseif isa(thisAnalysis,'flywheel.model.SearchResponse')
-    % Get the whole analysis output object; the search only returns an
-    % abbreviated version because of speed.  Not sure that is a great idea,
-    % but ..
-    id = st.objectParse(thisAnalysis.analysis);
-    thisAnalysis  = st.fw.getAnalysis(id);
-elseif isa(thisAnalysis,'flywheel.model.SearchAnalysisResponse')
-    id = st.objectParse(thisAnalysis);
-    thisAnalysis  = st.fw.getAnalysis(id);
-elseif isa(thisAnalysis,'flywheel.model.AnalysisOutput')
-    % This has everything.  Nothing needed.
-else
-    error('First argument must be a SearchResponse or AnalysisOutput');
+p = inputParser;
+p.addRequired('thisAnalysis');
+p.addRequired('param',@ischar);
+p.parse(thisAnalysis,param);
+
+%% Make sure thisAnalysis is the full analysis metadata.
+tmp = split(class(thisAnalysis),'.');
+inType = tmp{end};
+switch stParamFormat(inType)
+    case 'searchresponse'
+        % Get the whole analysis output object; the search only returns an
+        % abbreviated version because of speed.  Not sure that is a great idea,
+        % but ..
+        id = st.objectParse(thisAnalysis.analysis);
+        thisAnalysis  = st.fw.getAnalysis(id);
+    case 'searchanalysisresponse'
+        id = st.objectParse(thisAnalysis);
+        thisAnalysis  = st.fw.getAnalysis(id);
+    case {'containeranalysisoutput'}
+        thisAnalysis  = st.fw.getAnalysis(thisAnalysis.id);
+    case {'analysisoutput'}
+        % This has everything.  Nothing needed.
+    otherwise
+        error('Could not parse thisAnalysis input type %s.\n',class(thisAnalysis)); 
 end
 
-% param is a string
-if     notDefined('param'), error('param required.');
-elseif ~ischar(param),      error('param must be a string.');
-end
-
-% We leave the actual parameter format in place
-switchparam = stParamFormat(param);
 
 %% Find the parameter
 
-switch switchparam
-    case {'config','all'}
+% We leave the actual parameter format in place
+switch stParamFormat(param)
+    case {'all','container'}
+        % This is the whole analysis container
+        val = thisAnalysis;
+    case {'label'}
+        val = thisAnalysis.label;
+    case {'id'}
+        val = thisAnalysis.id;
+        
+        % Gear/Jobs related parameters
+    case {'job'}
+        try    val = thisAnalysis.job;  % There is also a getJobConfig() ....
+        catch, disp('The analysis was not run as a Gear (job)');
+        end
+    case {'parameters','config'}
         % Returns the whole struct of parameters
-        val = thisAnalysis.job.config.config;
-    case {'parameternames','names','list'}
+        try    val = thisAnalysis.job.config.config;
+        catch, disp('The analysis was not run as a Gear (job)');
+        end
+    case {'parameternames','names'}
         % This lists the parameter names
         % st.analysisGet(analysis,'paramnames');
-        val = fieldnames(thisAnalysis.job.config.config);
-    case {'job'}
-        val = thisAnalysis.job;  % There is also a getJobConfig() ....
-        % There is also a getJobConfig() .... but it I sent an error
-        % message to Justin about this
-        % j = st.fw.getJobConfig(id);  
+        try val = fieldnames(thisAnalysis.job.config.config);
+        catch, disp('The analysis was not run as a Gear (job)');
+        end
+    case 'inputs'
+        try val = thisAnalysis.job.inputs;
+        catch, disp('The analysis was not run as a Gear (job)');
+        end
+    case 'outputs'
+        try val = thisAnalysis.job.savedFiles;
+        catch, disp('The analysis was not run as a Gear (job)');
+        end
     case {'state'}
         % Did the job run correctly?
-        val = thisAnalysis.job.state;  
+        try     val = thisAnalysis.job.state;
+        catch,  disp('The analysis was not run as a Gear (job)');
+        end
 
     otherwise
-        % A specific parameter value from the config structure
-        try
-            val = thisAnalysis.job.config.config.(param);
+        % Check for a analysis-specific parameter value from the config
+        % structure 
+        try val = thisAnalysis.job.config.config.(param);
         catch
             fields = fieldnames(thisAnalysis.job.config.config);
             disp(fields);
-            error('Parameter %s not found in config fields (above)',param);
-        end    
+            error('%s  - not found in config parameters (above)',param);
+        end
 end
 
 end

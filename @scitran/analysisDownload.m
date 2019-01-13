@@ -38,7 +38,7 @@ function result = analysisDownload(st,analysis,varargin)
 %  Also, Justin E has a major upgrade in the works involving methods
 %  attached to objects (e.g. session.downloadDown) as part of the SDK 2.0.
 
-% Examples
+% Examples:
 %{
   st = scitran('stanfordlabs');
 
@@ -49,18 +49,19 @@ function result = analysisDownload(st,analysis,varargin)
     'project label exact','Brain Beats',...
     'session label exact','20180319_1232');
 
-  % id char format - maybe you already know the file names
+  % Gets the container, which has the input and output files
+  analysis = st.analysisDownload(id);
+
+  % Maybe you already know the input file names
   id = st.objectParse(analysisSearch{1});
   st.analysisDownload(id,...
     'inputfile',d.inputs{1}.name,...
     'destination','deleteme.nii.gz');
-
-  % flywheel.model.AnalysisOutput format
-  analysis = st.analysisDownload(id);
+  
+  % Gets the output file
   st.analysisDownload(analysis,...
     'outputfile',analysis.files{1}.name,...
     'destination','deleteme.mat');
-
 %}
 
 %% Parse inputs

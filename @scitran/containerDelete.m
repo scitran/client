@@ -19,8 +19,9 @@ function containerDelete(st, object, varargin )
 %
 % RF 2017
 
-% Examples
+% Examples:
 %{
+%  None.
 %}
 
 %%

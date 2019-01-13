@@ -25,3 +25,4 @@ niftiFiles{1}.info
 
 cni = scitran('cni');
 
+%%

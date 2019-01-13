@@ -9,6 +9,13 @@ function analysis = analysisCreate(~, label, inputs)
 %   scitran.analysisUpload, scitran.analysisDownload
 %
 
+% Examples:
+%{
+  st = scitran('stanfordlabs');
+  inputs = cell(2,1);  
+  inputs{1} = 'filename1.mat'; inputs{2} = 'filename1.json';
+  analysis = st.analysisCreate('insightfulAnalysis',inputs);
+%}
 %% Set up parameters
 p = inputParser;
 

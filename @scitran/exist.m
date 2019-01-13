@@ -12,7 +12,7 @@ function [status, id, results] = exist(obj, objectType, label, varargin)
 %
 % RF/BW Scitran Team, 2016
 
-% Example
+% Examples:
 %{
  % The results are all the objects of that type within the project or
  % session.  
