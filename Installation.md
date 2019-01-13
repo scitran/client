@@ -9,17 +9,15 @@ Please add both directories to your path, say by using
     chdir(<scitran directory>); addpath(genpath(pwd));
     chdir(<JSONio directory>); addpath(genpath(pwd));
 
-## Flywheel SDK
+## Flywheel-SDK
 
-### Matlab toolbox Add-Ons toolbox
+### First installation
 
-#### First installation
-
-The SDK is installed as a Matlab toolbox managed using their 'Add-Ons' methods. You can do the installation with the scitran function from Matlab
+The Flywheel-SDK is meant to be installed as a Matlab Add-Ons toolbox. You can do the installation using the **scitran** Matlab function
 
     stFlywheelSDK('install');
 
-That command downloads the toolbox from the web and installs it as an Add-On toolbox. You can verify that the toolbox was installed using
+The function downloads the Flywheel-SDK from the web and installs it. To verify the installation use
 
 ```
 >> stFlywheelSDK('verify');
@@ -28,15 +26,19 @@ Verified installed version: 4.3.2
 
 ### Upgrading
 
-We anticipate new releases through 2018 and into 2019.  To install a new release, you should be able to call stFlywheelSDK with the 'uninstall' and then 'install' arguments. In certain cases, we have had to 'uninstall', restart Matlab, and then 'install'. 
+We anticipate new Flywheel-SDK releases through 2018 and into 2019, 
 
+New releases may require some adjustments to the scitran client.  The client updates are managed by a git pull of the scitran repository.
+
+To install a new Flywheel-SDK release, use the stFlywheelSDK function.  A typical set of upgrade commands is:
+
+    stFlywheelSDK('verify')       % What is the status?
     stFlywheelSDK('uninstall');   % This uninstalls the current version
     ...
     **RESTART MATLAB**
     ....
     stFlywheelSDK('install');   % The latest version changes over time. 
 
-When running stFlywheelSDK, you may get some directions about removing directories from the Add-Ons directory.  Please follow those directions,
-
+**N.B. During the upgrade, a warning may advise you to remove directories from the Add-Ons directory. Please do so.**
 
 
