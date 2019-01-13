@@ -1,11 +1,17 @@
 function userInfo = verify(obj,varargin)
-% Search for number of projects, mainly to verify that the APIkey works
+% Verify that the scitran connection is made works
 %
 %   userInfo = st.verify;
 %
-% Returns
-%   status:   1 if verified, 0 otherwise.
-%   userInfo: Structured returned by fw.getCurrentUser method
+% Inputs:
+%   None
+%
+% Optional key/value pairs
+%   None
+%
+% Outputs:
+%   userInfo:  The data returned by fw.getCurrentUser.  Returned as empty
+%   if there is no connection
 %
 % BW Scitran team, 2017
 %
@@ -15,9 +21,7 @@ function userInfo = verify(obj,varargin)
 % Examples:
 %{
   st = scitran('stanfordlabs');
-  if ~st.verify,  error('Bad scitran key, or no projects.'); 
-  else, disp('verified');
-  end
+  userInfo = st.verify;
 %}
 %{
   st = scitran('stanfordlabs');
@@ -50,8 +54,8 @@ try
     end
     
     if verbose && status && connection == 1
-        sdk = stFlywheelSDK('installed version');
-        fprintf('Verified connection, using Flywheel-SDK version %d\n',sdk);
+        stFlywheelSDK('installed version');
+        fprintf('Verified connection\n');
         
         % Proceed through additional verifications
         if esearch
