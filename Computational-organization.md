@@ -3,13 +3,12 @@
 * Github
 
 ***
-
 ## Gears
-Most users execute programs that are installed in their local computer. These programs can be executables written and shared by someone else (e.g., the FSL and Freesurfer packages, or important utilities such as dcm2niix).  These programs might be written by someone at your own site.  Or, they might be scripts that call a series of executables. Often, a site will have a very stable version of the executable code and many people will want to share that code.  Flywheel provides a mechanism so that all users have access to the program and run it on the Flywheel site. These installed programs are called Flywheel Gears.
+Most MRI Centers have computer programs that are used by many users.  These programs can be inserted into the Flywheel system, and users can run them from the web interface or through the SDK. To add a specific program into the system you create a **Flywheel Gear**. Compiled programs that run without user-intervention, say from a command line, can be transformed into a Flywheel Gear.  Most Flywheel sites have many Gears. These are executable programs that are place into Docker containers using a specific organization. You can see the Gears at your site by clicking on 'Gears installed' on the left panel of the Flywheel web page.
 
-Programs that run without user-intervention, say from a command line, can be transformed into a Flywheel Gear. Any program that can takes files as inputs, sets parameters on the command line, and returns files as outputs, can be installed as a Flywheel Gear.  Most Flywheel sites have many Gears already.  You can see the set of *Gears* installed at your site by clicking on 'Gears installed' on the left panel of the Flywheel web page.
+You can run a Flywheel Gear on data from pull down menus in the web-interface.  The computational system can execute many jobs in parallel. For example, you may want to run a Brain Extraction tool on 100 datasets.  You can instruct the Flywheel system to start up 100 Gears.  The inputs, program parameters, and results will be stored in the Analysis tab.  A record of when the jobs were run and their status (e.g., running or completed) is available in the Provenance Tab.
 
-You can read more about [Gears on this page](Gears).
+Examples of programs that we have converted into Gears are some of the FSL, Freesurfer and HCP tools.  We also use Chris Rorden's dcm2niix utility frequently.  We also added Gears based on the work of people at our site, including both Python and Matlab programs. You can read more about [Gears on this page](Gears).
 
 ## Software Development Kit (SDK)
 ### Methods
