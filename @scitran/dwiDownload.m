@@ -26,15 +26,16 @@ function [dwi,destination] = dwiDownload(st,acquisitionID,varargin)
 % See also:
 % s_stDiffusion.m, s_stALDIT.m
 
+% Examples:
 %{
- % Example:
  project = 'ALDIT';
  session = 'Set 3';
  acquisitions = st.search('acquisition', ...
             'project label exact',project,...
             'session label exact',session,...
             'acquisition label contains','1000');
- dwi = st.dwiDownload(idGet(acquisitions{1},'data type','acquisition'),'verbose',true);
+id  = st.objectParse(acquisitions{1});
+[dwi, destination] = st.dwiDownload(id,'verbose',true);
 %}
 
 
@@ -83,9 +84,13 @@ niiName = fullfile(destination,niiFile{1}.file.name);
 if verbose, disp('nifti download'); end
 st.fileDownload(niiFile{1},'destination',niiName);
 
-%% Read and return
-
-dwi = dwiLoad(niiName, bvecName,bvalName);
+%% Try to read and return.  dwiLoad is a vistasoft routine
+try
+    dwi = dwiLoad(niiName, bvecName,bvalName);
+catch
+    dwi = destination;
+    fprintf('Data downloaded to %s, but no dwiLoad found.',destination);
+end
 
 %% Add option to delete after download?
 
