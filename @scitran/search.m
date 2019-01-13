@@ -651,7 +651,7 @@ end
 
 if summary
     % This summary might get more helpful.  Or deleted.
-    if length(result) < 10000
+    if length(result) < limit
         fprintf('Found %d (%s)\n',length(result), searchType);
     else
         % We ran up to the limit.  So warn.

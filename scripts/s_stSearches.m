@@ -34,23 +34,21 @@
 
 %% Site authorization
 
+
+%% Open a connection
+
 % You may need to create a local token for your site.  You can do this
 % using
 %    scitran('yourSite','action','create');
 %
-% You will be queried for the apiKey on the Flywheel User Profile page.
+% You will be queried for the apiKey on the Flywheel User Profile page. See
+% the scitran wiki page for complete instructions.
 %
-
 % At Stanford, we have a stanfordlabs site.  You will have to replace
 % 'stanfordlabs' with the name for your site.
+%
 st = scitran('stanfordlabs');
 st.verify;
-
-% The Flywheel SDK object is part of the scitran object.  If you want to
-% experiment with it, you might pull it out and try some calls.
-%
-%   fw = st.fw;
-%
 
 %% List all projects
 
@@ -59,8 +57,8 @@ projects = st.search('project','summary',true);
 stPrint(projects,'project','label')
 assert(length(projects) >= 35);
 
-
 %% All the projects, not just the ones you are part of
+
 projects = st.search('project',...
     'all data',true,...
     'summary',true);
@@ -69,6 +67,12 @@ assert(length(projects) >= 62);
 
 projectID = st.objectParse(projects{end});
 projectLabel = projects{end}.project.label;
+
+%% Print all the collections
+
+collections = st.search('collection',...
+    'summary',true);
+stPrint(collections,'collection','label');
 
 %% Exact and contains matches
 
@@ -79,10 +83,12 @@ projectLabel = projects{end}.project.label;
 projects{1}.project.label
 
 %% You can also set up a struct with search parameters and run that
+
 projects = st.search(srchCmd,'summary',true);
 projects{1}.project.label
 
-%%
+%% Project with a label containing VWFA
+
 [projects,srchCmd] = st.search('project',...
     'summary',true,...
     'project label contains','vwfa');
@@ -105,11 +111,13 @@ sessions = st.search('session',...
     'summary',true);
 
 %% Something seems wrong about collection label contains **
+
 [sessions, srchCmd] = st.search('session',...
     'collection label contains','Anatomy Male',...
     'summary',true);
 
 %% Get the sessions within a project
+
 sessions = st.search('session',...
     'project id',projectID,...
     'summary',true);
@@ -138,6 +146,7 @@ acquisitions = st.search('acquisition',...
 stPrint(acquisitions,'acquisition','label');
 
 %%
+
 [projects,srchCmd] = st.search('project',...
     'string','BOLD_EPI',...
     'summary',true);
@@ -217,9 +226,9 @@ analyses = st.search('analysis',...
 
 %% The analysis is part of the session, not the  collection.
 
-% We can't search for analyses in a collections yet. We used to have files in analysis, analysis in collection,
-% stuff like that. This code finds all the analyses in the collection by
-% looping through the sessions
+% We can't search for analyses in a collections yet. We used to have files
+% in analysis, analysis in collection, stuff like that. This code finds all
+% the analyses in the collection by looping through the sessions
 analyses = cell(length(sessions),1);
 for ii=1:length(sessions)
     analyses{ii} = st.search('analysis',...
