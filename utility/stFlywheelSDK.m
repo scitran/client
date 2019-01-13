@@ -43,16 +43,18 @@ function [status, flywheelTbx, toolboxTable] = stFlywheelSDK(action,varargin)
 %
 %   https://github.com/scitran/client/wiki/Flywheel-SDK
 %
-% Simple examples
-%    status = stFlywheelSDK('verify');   % Test if add-on is installed
-%    stFlywheelSDK('verify','summary',true);  % Print info
+%   % See your current status
+%   status = stFlywheelSDK('verify');   % Test if add-on is installed
+%   stFlywheelSDK('verify','summary',true);  % Print info
 %
-%    status = stFlywheelSDK('uninstall');  % Uninstall
-%    status = stFlywheelSDK('verify'); 
+%   % Uninstall current system
+%   status = stFlywheelSDK('uninstall');  % Uninstall
+%   status = stFlywheelSDK('verify'); 
 %
-%    % Restart MATLAB
-%    % Install newest version
-%    status = stFlywheelSDK('install','sdkVersion','4.3.2');    % Download and install
+%   % Restart MATLAB
+%
+%   % Install a new version
+%   status = stFlywheelSDK('install','sdkVersion','4.3.2');    % Download and install
 %
 % BW, Vistasoft, 2018
 %
