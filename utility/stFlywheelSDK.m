@@ -19,20 +19,21 @@ function [status, flywheelTbx, toolboxTable] = stFlywheelSDK(action,varargin)
 %   
 % Input
 %   'action'  - The variable action is one of the following strings
-%      'exist'     - Tests whether the toolbox is installed
+%      'verify'    - Tests whether the toolbox is installed
 %      'install'   - Install the matlab toolbox add-on
 %      'uninstall' - Unstall the matlab toolbox add-on
 %      'releases'  - Opens a web browser to the page of releases
 %      'installed version' - Returns a number describiing installed
-%          version in your Matlab Add-Ons.  Returned as an integer
-%          with all the '.' removed from version string. 
-%      'single use' - When running as a Gear, we want to be able to
-%          create a single use key that is provided by the Flywheel system.
+%                    version in your Matlab Add-Ons.  Returned as an
+%                    integer with all the '.' removed from version string.
+%      'single use' - When running the SDK in a Gear, we want to be able to
+%                     create a single use key that is provided by the
+%                     Flywheel system. 
 %
 % Optional Key/values
-%   'sdkVersion'        - Release version you want to install (current is
+%   'sdk version'    - Release version you want to install (current is
 %                         4.3.2 (Dec. 1, 2018))
-%   'summary'           - Print out a summary of the installed toolbox
+%   'summary'        - Print out a summary of the installed toolbox
 %
 % Returns
 %   status        - true or false depending on presence of Toolbox
@@ -43,11 +44,11 @@ function [status, flywheelTbx, toolboxTable] = stFlywheelSDK(action,varargin)
 %   https://github.com/scitran/client/wiki/Flywheel-SDK
 %
 % Simple examples
-%    status = stFlywheelSDK('exist');   % Test if add-on is installed
-%    stFlywheelSDK('exist','summary',true);  % Print info
+%    status = stFlywheelSDK('verify');   % Test if add-on is installed
+%    stFlywheelSDK('verify','summary',true);  % Print info
 %
 %    status = stFlywheelSDK('uninstall');  % Uninstall
-%    status = stFlywheelSDK('exist'); 
+%    status = stFlywheelSDK('verify'); 
 %
 %    % Restart MATLAB
 %    % Install newest version
@@ -60,10 +61,10 @@ function [status, flywheelTbx, toolboxTable] = stFlywheelSDK(action,varargin)
 
 %Examples:
 %{
-  status = stFlywheelSDK('exist');
+  status = stFlywheelSDK('verify');
 %}
 %{
-  [status,flywheelTbx] = stFlywheelSDK('exist');
+  [status,flywheelTbx] = stFlywheelSDK('verify');
 %}
 %{
   [s,u,tbl] = stFlywheelSDK('install','sdkVersion','4.3.2');
@@ -100,7 +101,7 @@ tbxFile = sprintf('flywheel-sdk-%s.mltbx',sdkVersion);
 url = sprintf('https://github.com/flywheel-io/core/releases/download/%s/flywheel-sdk-%s.mltbx',sdkVersion,sdkVersion);
 
 switch action
-    case {'verify','exist'}
+    case {'verify'}
         % Checks that the flywheel-sdk is installed in the Add-Ons
         tbx = matlab.addons.toolbox.installedToolboxes;
         if numel(tbx) >= 1
@@ -115,7 +116,7 @@ switch action
                         % Just set it true because it exists
                         status = true;
                     end
-                    % fprintf('Installed version: %s\n',tbx(ii).Version);
+                    fprintf('Verified installed version: %s\n',tbx(ii).Version);
                 end
             end
         else, status = false;
@@ -130,7 +131,7 @@ switch action
         matlab.addons.toolbox.installToolbox(tbxFile);
         
         % We might decide to verify here
-        status = stFlywheelSDK('exist');
+        status = stFlywheelSDK('verify');
         if ~status
             warning('Installation problem');
             return;
@@ -161,7 +162,7 @@ switch action
         
     case {'installedversion'}
         % Returns an integer corresponding to this Add-On version
-        [~, flywheelTbx] = stFlywheelSDK('exist');
+        [~, flywheelTbx] = stFlywheelSDK('verify');
          status = str2double(strrep(flywheelTbx.Version,'.',''));
     otherwise
         error('Unknown action: %s\n',action);

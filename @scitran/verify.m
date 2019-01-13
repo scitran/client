@@ -51,7 +51,7 @@ try
     
     if verbose && status && connection == 1
         sdk = stFlywheelSDK('installed version');
-        fprintf('Connection verified. SDK version %d\n',sdk);
+        fprintf('Verified connection, using Flywheel-SDK version %d\n',sdk);
         
         % Proceed through additional verifications
         if esearch
