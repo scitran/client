@@ -1,8 +1,4 @@
-* See general notes about data and metadata at the end
-
-***
-
-### Containers - Projects, Sessions and Acquisitions
+### Data Containers - Projects, Sessions and Acquisitions
 The Flywheel database organizes information using a hierarchy that matches a typical neuroimaging project. The top level of the hierarchy is a Project; each project contains multiple Sessions; each session contains multiple Acquisitions; each acquisition contains multiple **data files**.
 
 The Project, Session and Acquisitions are called containers.  ** scitran ** has methods to work with containers or files.  These can be found in the @scitran folder, or once you have created a scitran object use <TAB>-completion
