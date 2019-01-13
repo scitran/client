@@ -5,22 +5,22 @@ function container = containerGet(st,id)
 %    container = scitran.containerGet(id)
 %
 % Brief description:
-%    This function is useful when you perform a search to find a container.
-%    The SearchResponse is a portion of the container's metadata, but you
-%    would like all of the metadata.  You can call this function with the
-%    id in the SearchResponse.
+%  Retrieve the Flywheel container metadata from the object's ID.
 %
-%    I am considering adding an option to the search so that search returns
-%    the container, not a search response.  Maybe pre-pending metadata
+%  The most common application is converting the returns from a search,
+%  which are of type SearchResponse, into Flywheel data. The search
+%  includes the ID, so you can call this function. 
 %
-%       scitran.search('metadata returnType', ...)
+%  The conversion can be useful because the SearchResponse and Flywheel
+%  data contain different information.
 %
-% or maybe
+%  You can also force the search to return the Flywheel data format by
+%  setting the 'fw' key/val option as true.
 %
-%       scitran.search('returnType', ... 'metadata',true);
+%       scitran.search('returnType', ..., 'fw',true)
 %
-%   In which case the return would not be the search response, but would be
-%   an array of container metadata
+%  In that case,  scitran.search calls stSearch2Container, which in turn
+%  calls this function, after collecting up the SearchResponses.
 %
 % Inputs
 %   id:  The container's unique ID, or a SearchResponse of the container

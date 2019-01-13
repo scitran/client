@@ -37,14 +37,19 @@ function [result, srch] = search(obj,srch,varargin)
 %   Many parameter/value pairs are possible to define the search.  For 
 %   common search arguments, see the examples in *s_stSearches*.
 %
-%   In addition to the search parameters, there are two special parameters
+%   In addition to the search parameters, there are several special
+%   parameters that control the search and search output
 %
-%     'allData'   - sets whether to search the entire database, including
+%     'all data'   - sets whether to search the entire database, including
 %                    projects that you do not have access to (boolean,
 %                    default false} 
 %     'summary'    - print out a summary of the number of search items
 %                    returned (boolean, default false}
 %     'limit'      - upper limit on the number of returned objects
+%     'fw'         - convert the SearchResponse returns to a Flywheel
+%                    container before returning
+%     'sort label' - Sort the returned objects by a label (not yet
+%                    implemented).
 %
 % Returns:
 %  result:  A cell array of data structs that match the search parameters
@@ -158,6 +163,7 @@ p.addRequired('srch');
 p.addParameter('alldata',false,@islogical);
 p.addParameter('summary',false,@islogical);
 p.addParameter('sortlabel',[],@ischar);
+p.addParameter('fw',false,@islogical);   % Convert search to object
 
 % -1 is unlimited.  But it turns out Flywheel has a limit
 p.addParameter('limit',10000,@isscalar);   % Max allowed by flywheel
@@ -190,20 +196,16 @@ summary   = p.Results.summary;
 sortlabel = p.Results.sortlabel;
 allData   = p.Results.alldata;
 limit     = p.Results.limit;
+fw        = p.Results.fw;
 
 % Validate the return type string.
-if ischar(srch)
-    if ~stValid('search return',srch)
-        % Already valid, so return
-        disp('Invalid search return type');
-        return;
-    end
-else
-    if ~stValid('search return',srch.returnType)
-        % Already valid, so return
-        disp('Invalid search return type');
-        return;
-    end
+if ischar(srch), test = srch;
+else,            test = srch.returnType;
+end
+if ~stValid('search return',test)
+    % Already valid, so return
+    disp('Invalid search return type');
+    return;
 end
 
 %% If srch is a char array, we build a srch structure
@@ -290,6 +292,9 @@ if ischar(srch)
                 % We manage an upper limit on the number of returns
                 % at the end. 
                 limit = val;
+            case {'fw'}
+                % Ignore - We manage this at the end.
+                
             % GROUP
             case{'group'}
                 % Exact match to group name
@@ -305,8 +310,9 @@ if ischar(srch)
                 else
                     srch.filters{end + 1}.match.group0x2_id = val;
                 end
-            case {'grouplabel'}
-                % Each group has a label in addition to a group name
+            case {'groupid'}
+                % Each group has an id and a label.  It seems to me (BW)
+                % that the label/id search is confused.  Ask Megan.
                 if ~isfield(srch,'filters')
                     srch.filters{1}.match.group0x2Elabel = val;
                 else
@@ -651,6 +657,10 @@ if summary
         % We ran up to the limit.  So warn.
         fprintf('Found %d (%s). Limited to %d\n',length(result), searchType, limit);
     end
+end
+
+if fw  % Convert the search responses to their Flywheel data format
+    result = stSearch2Container(obj,result);
 end
 
 

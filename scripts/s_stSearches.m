@@ -1,12 +1,11 @@
 %% Flywheel search tutorial
 %
 % Syntax:
-%
 %   [results, srchCmd ]  = st.search(searchType,'parameter',value,...)
 %
 % Inputs
 %  searchType - a string that defines the type of object that will be
-%      returned.  Valid strings are stored in stValid('search return')
+%               returned.  Valid strings are stored in stValid('search return')
 %
 % Optional key/value pairs
 %  varagin - There are many key/value pairs that define the search.
@@ -184,6 +183,8 @@ thisProject = 'ALDIT';
     'filetype','nifti',...
     'summary',true);
     
+% I should make this work! (BW).
+% stPrint(files,'name');
 for ii=1:length(files)
     fprintf('%d:  %s\n',ii,files{ii}.file.name);
 end
@@ -348,6 +349,7 @@ end
 % Structs defining the group
 groups = st.search('group','all');
 stPrint(groups,'label')
+stPrint(groups,'id')
 
 %% Just the group labels
 labels = st.search('group','all labels');
@@ -364,14 +366,9 @@ disp(thisGroup)
 %% Or by group name, which is also the group id
 
 % ** Fails.  There is a group label 'Wandell Lab'
-group = 'Wandell Lab';
+group = 'wandell';
 [projects,srchCmd] = st.search('project',...
-    'group label',group,...
-    'summary',true);
-
-%% Something about this group label vs. group name?  **
-projects = st.search('project',...
-    'group label','John Day Lab',...
+    'group id',group,...
     'summary',true);
 
 %% Return collections
