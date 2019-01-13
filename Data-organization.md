@@ -32,10 +32,13 @@ Flywheel lets you select data for reuse by creating a Collection. The contents o
     scitran.collection<TAB>
 
 ### General comments about Data and Info (metadata)
-Flywheel uses a database to manage information.  A database is part of most modern computer architectures. For example, when you ask for the 'Info' about a file on a Mac, you are provided with file metadata (e.g., file size, date of access). The file itself is the **data**, and the information about the file is the **metadata**. Like the Mac, Flywheel calls the metadata in its system 'Info' or 'Information'.
+####Flywheel uses a database to manage information.  
+A database is part of most modern computer architectures. For example, when you ask for the 'Info' about a file on a Mac, you are provided with file metadata (e.g., file size, date of access). The file itself is the **data**, and the information about the file is the **metadata**. Like the Mac, Flywheel calls the metadata in its system 'Info' or 'Information'.
 
+#### Metadata
 MRI Info often includes critical scientific information (TR, TE, voxel size, number of diffusion directions, ...). Such information can be included within the data file, for example the DICOM format includes this information in an extensive header. The widely used NIfTI format does not, by default, include much information about the MR parameters. When Flywheel converts a DICOM file to a NIfTI file, it stores this information into Flywheel metadata associated with the NIfTI file.
 
+#### The database hierarchy
 A database hierarchy has less flexibility than an operating systems' directory tree. The speed of a database search relies on having a more disciplined structure:  The hierarchy of the user's Group, Project, Session, and Acquisition ('Containers') and Files, coupled with specific formats for the metadata. The operating system can have many layers of directories that are organized arbitrarily. The benefit of the hierarchy is that you can rapidly search, categorize and compute using the data and Info.
 
 There is one important conceptual difference to remember as well: When using a computer we typically focus on the files and directories. When using database systems, the Info (metadata) has a very prominent role. You will find critical experimental information that is indexed and searchable in the Info fields. All Flywheel Containers and Files can have Info. 
