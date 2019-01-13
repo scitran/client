@@ -16,7 +16,7 @@ Many labs develop their own analysis programs; during the development process it
 
     st = scitran('stanfordlabs');
 
-The **scitran** instance has many methods.  The naming convention for the methods is <noun><Action>.  The <noun> describes the type of object you are working on (e.g., a container) and the <Action> describes what you are doing.  For example,
+The **scitran** instance has many methods.  The naming convention for the methods is **objectAction**.  The object describes the type of object you are working on (e.g., a container) and the Action> describes what you are doing.  For example,
 
 ```
 st.containerDownload - downloading one of the several container types
@@ -25,7 +25,7 @@ st.fileDownload      - downloads a data file
 st.fileDelete        - delete a file
 st.analysisUpload    - create and upload an analysis structure
 ```
-Use tab-completion (e.g., st.file<Tab>-completion) to see the list of methods. Or, to see an overview of a method run
+Use tab-completion (e.g., st.file**Tab-completion**) to see the list of methods. Or, to see an overview of a method run
 
      doc scitran
      doc scitran.containerDownload
