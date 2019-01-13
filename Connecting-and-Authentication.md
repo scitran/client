@@ -44,7 +44,7 @@ Copy and paste from API key in your user profile - it is the long string that lo
 
 ![](https://github.com/scitran/client/wiki/images/userAPI.png)
 
-### Verify the authentication
+### Verify the connection
 
 Use this method to verify that the scitran object is correctly connecting to your site
 ```
