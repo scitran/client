@@ -49,7 +49,7 @@ Copy and paste from API key in your user profile - it is the long string that lo
 Use this method to verify that the scitran object is correctly connecting to your site
 ```
 >> st.verify
-Connection verified. SDK version 432
+Verified connection, using Flywheel-SDK version 432
 
 ans = 
 
