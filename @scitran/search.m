@@ -64,6 +64,18 @@ function [result, srch] = search(obj,srch,varargin)
 %  s_stSearches
 %
 
+%% Programming notes
+%
+% To convert the struct to JSON use
+%
+%  opts = struct('replacementStyle','hex');
+%  jsonwrite(cmd,opts);
+%
+% See also:  st.browser - we use this function to visualize the returned
+%            object in the browser.
+%
+%
+
 % Examples:
 %{
  st = scitran('stanfordlabs'); st.verify;
@@ -84,7 +96,24 @@ function [result, srch] = search(obj,srch,varargin)
  search_query = jsonwrite(srch,opts);
 %}
 
-% Programming Notes
+%% Programming Notes
+% Contains and Exact issue
+%
+%{
+analyses = st.search('analysis',...
+    'project label contains','Weston',...
+    'analysis label contains','AFQ',...
+    'summary',true);
+
+% This works, but not with label contains.  Puzzling to me.
+analyses = st.search('analysis',...
+    'project label exact','Weston Havens',...
+    'analysis label contains','AFQ',...
+    'summary',true);
+%}
+
+%  Need for JSONio
+%
 %  Matlab uses '.' in structs, and json allows '.' as part of the variable
 %  name. So, we insert a dot on the Matlab side by inserting a string,
 %  x0x2E in the Matlab variable. 
@@ -115,14 +144,15 @@ function [result, srch] = search(obj,srch,varargin)
 %  <https://github.com/scitran/core/wiki/Data-Model Data Model page>.
 % 
 
-%% Could check the srch struct here for the appropriate fields
+%% Parse inputs
 %
 p = inputParser;
 p.KeepUnmatched = true;
 
 % Could be a string or a struct.  If a string, then we are in the simple
-% search case.
-p.addRequired('srch');  
+% search case.  In principle, we should use stValid('search returns') to
+% validate here.  Not sure if there is a problem.
+p.addRequired('srch');
 
 % Not sure what this means yet
 p.addParameter('alldata',false,@islogical);
@@ -149,6 +179,7 @@ if ~isempty(varargin) && isstruct(varargin{1})
         varargin{ii+1} = fieldvals{ii};
     end
 else
+    % Squeeze out spaces, force lower case
     varargin = stParamFormat(varargin);    
 end
 
@@ -159,6 +190,21 @@ summary   = p.Results.summary;
 sortlabel = p.Results.sortlabel;
 allData   = p.Results.alldata;
 limit     = p.Results.limit;
+
+% Validate the return type string.
+if ischar(srch)
+    if ~stValid('search return',srch)
+        % Already valid, so return
+        disp('Invalid search return type');
+        return;
+    end
+else
+    if ~stValid('search return',srch.returnType)
+        % Already valid, so return
+        disp('Invalid search return type');
+        return;
+    end
+end
 
 %% If srch is a char array, we build a srch structure
 

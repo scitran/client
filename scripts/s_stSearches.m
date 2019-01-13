@@ -1,20 +1,17 @@
-%% Flywheel search examples
+%% Flywheel search tutorial
 %
-% This script illustrates Flywheel database searches using the Matlab
-% interface.  The typical interface is to create the scitran object
-%
-%   st = scitran('yourSite');
-%
-% Run searches
+% Syntax:
 %
 %   [results, srchCmd ]  = st.search(searchType,'parameter',value,...)
 %
-%  searchType - a string that defines what will be returned 
-%  ('file', 'acquisition', 'session', 'project', 'collection', 'analysis'
-%  or 'group') 
+% Inputs
+%  searchType - a string that defines the type of object that will be
+%      returned.  Valid strings are stored in stValid('search return')
 %
-%  varagin - parameter value pairs that constrain the search.
+% Optional key/value pairs
+%  varagin - There are many key/value pairs that define the search.
 %
+% Outputs
 %  results - a cell array of database descriptions
 %  srchCmd - a struct that can be used to rerun the search
 %
@@ -27,36 +24,13 @@
 %  * <https://github.com/scitran/client/wiki/Search-examples search examples>
 %
 % LMP/BW Scitran Team, 2017
-
-%% Programming notes
 %
-% To convert the struct to JSON use
+% See also
 %
-%  opts = struct('replacementStyle','hex');
-%  jsonwrite(cmd,opts);
-%
-% See also:  st.browser - we use this function to visualize the returned
-%            object in the browser.
-%
-%
-% Contains and Exact issue
-%
-%{
-analyses = st.search('analysis',...
-    'project label contains','Weston',...
-    'analysis label contains','AFQ',...
-    'summary',true);
-
-% This works, but not with label contains.  Puzzling to me.
-analyses = st.search('analysis',...
-    'project label exact','Weston Havens',...
-    'analysis label contains','AFQ',...
-    'summary',true);
-%}
 
 %% Examples
 %{
- This sciprt is a set of examples.
+ % This script is a set of examples.
 %}
 
 %% Site authorization
