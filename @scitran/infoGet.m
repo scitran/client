@@ -1,8 +1,8 @@
-function info = infoGet(st,object,varargin)
+function info = infoGet(st,container,varargin)
 % Get the info associated from a container or a file within a container 
 %
 % Syntax
-%    st.infoGet(obj,object,...)
+%    scitran.infoGet(container,...)
 %
 % Description
 %  Flywheel objects have an associated set of metadata called 'info'.
@@ -11,19 +11,19 @@ function info = infoGet(st,object,varargin)
 %  key/value input.
 %
 % Input (required)
-%   file - A search response defining the file, or the filename
-%          string.  If a string, you must send container type and id.
+%   container - A search response or an object container, OR, a string
+%       defining the file, or the filename. If a file name string, you
+%       must use the key/value pairs to specify the container type and id. 
 %   
 % Optional key/value pairs
-%   infoType      - 'all' (default),'info','tag','note'
-%   containerType - If the 'object' input is a string, we know that
-%                   the request is for a file. The parent container
-%                   and id required
-%   containerID   - See above.
+%   'info type'      - 'info' (default),'tag','note'
+%   'container type' - If the 'object' input is a string, we know that
+%                      the request is for a file. The parent container
+%                       and id required
+%   containerID      - See above.
 %
 % Return
-%  info - Returned information.  Might be a struct or a flywheel.model
-%         class. 
+%  info - Returned information field.  Either info, tag or note.
 %
 % BW, Vistasoft Team, 2017
 %
@@ -50,9 +50,9 @@ function info = infoGet(st,object,varargin)
 %{
   sessions = st.search('session',...
      'project label exact','DEMO');
-  sessionID = idGet(sessions{1},'data type','session');
+  sessionID = st.objectParse(sessions{1}); 
 
-  % List acquisitions
+  % List acquisitions in that session
   acquisition = st.list('acquisition',sessionID);
   info = st.infoGet(acquisition{1});
 %}
@@ -63,15 +63,15 @@ p = inputParser;
 varargin = stParamFormat(varargin);
 
 p.addRequired('st',@(x)(isa(x,'scitran')));
-p.addRequired('object');
+p.addRequired('container');
 
 validTypes = {'project','session','acquisition','collection','analysis', ...
     'fileproject','filesession','fileacquisition','filecollection'};
-p.addParameter('containertype','',@(x)(ismember(ieParamFormat(x),validTypes)));
+p.addParameter('containertype','',@(x)(ismember(stParamFormat(x),validTypes)));
 p.addParameter('containerid','',@ischar);
-p.addParameter('infotype','all',@ischar);
+p.addParameter('infotype','info',@ischar);
 
-p.parse(st,object,varargin{:});
+p.parse(st,container,varargin{:});
 
 containerType = p.Results.containertype;
 containerID   = p.Results.containerid;
@@ -79,7 +79,7 @@ infoType      = p.Results.infotype;
 
 %% Figure out the the proper container information
 [containerID, containerType, fileContainerType, fname] = ...
-    st.objectParse(object, containerType,containerID);
+    st.objectParse(container, containerType,containerID);
 
 %% Call the right SDK function to get the whole info struct
 
@@ -115,8 +115,6 @@ end
 % preferred way to get them is infoGet( ...., 'info type','note') ...
 % or similar.
 switch infoType
-    case 'all'
-        info = meta;
     case 'info'
         info = meta.info;
     case 'note'
@@ -130,7 +128,9 @@ switch infoType
             info = meta.classification; 
         end
     otherwise
-        % Probably just info
+        warning('No option for %s.  Returning info\n',infoType);
+        info = meta.info;
+
 end
 
 end

@@ -1,3 +1,7 @@
+%% Read the T1 parameters
+%
+%
+
 st = scitran('stanfordlabs');
 projects = st.list('project','wandell');
 stPrint(projects,'label')
