@@ -1,9 +1,5 @@
-### Tips
-* Projects, sessions and acquisitions are containers.  
-* Collections are a special type of container.  
-* Some files are data files, other files are attachments.  
-* Info refers to metadata
-* Notes, tags and attachments are special kinds of metadata
+
+**DEPRECATED PAGE.  WILL BE REINSTALLED AFTER THE CODE STABILIZES.  TO SEE METHODS USE TAB-COMPLETION.**
 
 ## Data methods
 ```
