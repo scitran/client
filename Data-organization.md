@@ -30,18 +30,3 @@ Flywheel lets you select data for reuse by creating a Collection. The contents o
 **Scitran** has methods to create and delete Collections.  These can be found using
 
     scitran.collection<TAB>
-
-### General comments about Data and Info (metadata)
-#### Flywheel uses a database to manage information.  
-A database is part of most modern computer architectures. For example, when you ask for the 'Info' about a file on a Mac, you are provided with file metadata (e.g., file size, date of access). The file itself is the **data**, and the information about the file is the **metadata**. Like the Mac, Flywheel calls the metadata in its system 'Info' or 'Information'.
-
-#### Metadata
-MRI Info includes critical scientific information (TR, TE, voxel size, diffusion directions, ...). This information can be included within a data file, for example the DICOM format includes this information in its header. The widely used NIfTI format does not include as much information in its default header. When Flywheel converts a DICOM file to a NIfTI file, it stores the MRI Info into Flywheel metadata attached to the NIfTI file. 
-
-In typical computer usage, we focus on directories and files. When using database systems, the Info (metadata) has a very prominent role. You can find the INFO in the web-browser interface, and you can download it with the SDK.
-
-#### The database hierarchy
-The speed of a database search relies on having a disciplined data organization.  The Flywheel hierarchy comprises the user's Group, Project, Session, Acquisition and Files. The benefit of enforcing the hierarchy is that you can rapidly search, categorize and compute using the data and Info.
-
-#### Data reuse
-To reuse data, users often copy files into a new directory tree. Using the Flywheel database there is no need to copy. We can reuse the data by copying fields from the database. Flywheel creates a *virtual project* by creating a database entry that contains pointers to existing files. To the user, this appears to be a new project.  Flywheel calls these 'Collections'.  Maybe they should be called 'Virtual Projects.'
