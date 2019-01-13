@@ -1,4 +1,3 @@
-* This page describes how to connect to the Flywheel site.
 * The first time, you must provide a security key that is obtained from your Flywheel site
 * [Flywheel manual - Getting started](https://flywheel-io.github.io/core/branches/master/matlab/getting_started.html)
 
@@ -6,7 +5,7 @@
 
 ### General use
 
-A scitran client connection to the Flywheel site is established by creating a scitran Matlab object
+A scitran client connection to the Flywheel site is established by creating a scitran object.
 ```
 st = scitran('stanfordlabs');
 ```
@@ -23,7 +22,7 @@ st =
 ```
 ### First use
 
-The first time you run scitran to connect to a Flywheel site, you will be asked to authenticate yourself.  Specifically, you will have to provide the site URL and your API Key.  The API key is available from the Flywheel site web page.  To find your key
+The first time you run scitran to connect to a Flywheel site, you will be asked to authenticate.  To do this, you will have to provide the site URL and your API Key.  The API key is available from the Flywheel site web page.  To find your key
 
 * Click on your user profile, which is found on the upper right of the Flywheel web page
 
@@ -48,18 +47,30 @@ Copy and paste from API key in your user profile - it is the long string that lo
 ### Verify the authentication
 
 Use this method to verify that the scitran object is correctly connecting to your site
+```
+>> st.verify
+Connection verified. SDK version 432
 
-    % Should print the number of projects you have access
-    st = scitran('stanfordlabs');   
-    st.verify
+ans = 
 
-    % Alternatively, you might choose to open the browser to verify that the URL 
-    % and your ID are correct
-    st.browser;
-    
-    %  Print the project labels
-    projects = st.list('projects','all');
-    stPrint(projects,'label');
+  User with properties:
+
+             id: 'wandell@stanford.edu'
+      firstname: 'Brian'
+       lastname: 'Wandell'
+          email: 'wandell@stanford.edu'
+         avatar: 'https://gravatar.com/avatar/eacf77651a3a7155eb0b66ddb9bf4588?s=512'
+        avatars: [1×1 flywheel.model.Avatars]
+           root: 1
+       disabled: []
+    preferences: []
+         wechat: []
+     firstlogin: '2016-03-16T23:05:28.246000+00:00'
+      lastlogin: '2019-01-13T05:06:20.555000+00:00'
+        created: 11-Mar-2016 23:14:59
+       modified: 21-Dec-2018 23:23:59
+         apiKey: [1×1 flywheel.model.UserApiKey]
+```
 
 ### List and remove instances
 
