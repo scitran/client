@@ -2,26 +2,36 @@ function v = stValid(param,str)
 % Return cell array of valid parameters for different cases
 %
 % Syntax
-%    status = stValid(param,value)
+%    v = stValid(param,value)
 %
 % Description
 %   Returns the valid strings for different scitran functions.  If a string
-%   is provided as a second argument, the return is a true/false logical
-%   confirming whether or not the string is valid for that parameter.
+%   is provided as a second argument, the return is a logical confirming
+%   whether or not the string is valid.
 %
 % Inputs
+%   param:
+%   str:
+%
 % Key/value pairs
+%   N/A
+%
 % Outputs
+%   v:
 %
 % Note: This functionality should be included in the SDK
 %
 % BW, Vistasoft Team, 2017
+%
+% See also
+%   scitran.search, s_stSearches
+%  
 
-% Example
+% Examples:
 %{
-stValid('file type')
-stValid('data type')
-stValid('search return','file')
+  stValid('file type')
+  stValid('data type')
+  stValid('search return','file')
 %}
 
 %% Parse inputs
