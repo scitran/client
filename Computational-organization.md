@@ -25,7 +25,7 @@ st.fileDownload      - downloads a data file
 st.fileDelete        - delete a file
 st.analysisUpload    - create and upload an analysis structure
 ```
-Use tab-completion (e.g., st.file**Tab-completion**) to see the list of methods. Or, to see an overview of a method run
+Use tab-completion (e.g., st.file**TAB**) to see the list of methods. Or, to see an overview of a method run
 
      doc scitran
      doc scitran.containerDownload
