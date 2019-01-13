@@ -44,8 +44,4 @@ The SDK is under active development, and we anticipate several new releases thro
 ## Connecting
 Go to the [next page](Connecting-and-Authentication) for instructions on how to make an authenticated connection
 
-## Wonkish
-
-The SDK is auto-generated into several different languages (Matlab, Python, and R).
-
 
