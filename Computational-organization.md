@@ -11,8 +11,9 @@ You can run a Flywheel Gear on data from pull down menus in the web-interface.  
 Examples of programs that we have converted into Gears are some of the FSL, Freesurfer and HCP tools.  We also use Chris Rorden's dcm2niix utility frequently.  We also added Gears based on the work of people at our site, including both Python and Matlab programs. You can read more about [Gears on this page](Gears).
 
 ## Software Development Kit (SDK)
-### Methods
+Many labs develop their own analysis programs, and the code evolves over time.  During the development process it is convenient to be able to access the Flywheel data directly, without having to download it and keep an extra copy on your computer.  The Flywheel-SDK is a collection of utilities that lets users interact with the database through their programming environment, either Python, Matlab or R. **Scitran** is a wrapper on the Matlab version of the Flywheel-SDK.
 
+### Methods
 [**Scitran** methods](https://github.com/vistalab/scitran/wiki/scitran-methods) are organized into actions that apply to containers, data files, info (metadata), analyses, gears, and jobs. The naming convention we use is to specify the **type of object** followed by an **action**.  For example, suppose you create a scitran object, 
 
     st = scitran('stanfordlabs');
@@ -29,10 +30,10 @@ Use tab-completion (e.g., st.file<Tab>) to see the list of methods, or run
 
      doc scitran
 
-**Scitran** is a Matlab wrapper on the Flywheel **SDK**, which is quite extensive.  There are methods for connecting to the site and authorizing the user, reading and writing data and metadata, storing analysis results, creating projects, and much more. The SDK also includes methods to invoke **Gears** and monitor their progress. 
-
-This entire wiki is an explanation of tools that invoke the SDK from Matlab.
+The Flywheel **SDK** is quite extensive and evolving. It includes methods for securely connecting to the site, reading and writing data and metadata, storing analysis results, creating projects, controlling Gears and Jobs, and more.  This entire wiki is an explanation of tools that invoke the SDK from Matlab.
 
 ## CLI - Command line interface
+
+We will add text about this separate programming utility at a later time.
 
 
