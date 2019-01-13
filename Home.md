@@ -9,6 +9,7 @@ This wiki has a [conceptual overview](Conceptual-overview) of Flywheel and then 
 * read the metadata of files, analyses, and containers (projects, sessions, acquisitions, collections)
 * download files, analyses, notes, and containers 
 * upload files, analyses, and notes into containers
+* start Flywheel Gears (computations) and check on its progress
 
 This client and Flywheel are part of the Wandell lab software to support sharing data and reproducible computations. See the [Stanford Project on Scientific Transparency (PoST)](http://post.stanford.edu) for a statement of our goals.
 
