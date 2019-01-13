@@ -36,7 +36,7 @@ Flywheel lets you select data for reuse by creating a Collection. The contents o
 A database is part of most modern computer architectures. For example, when you ask for the 'Info' about a file on a Mac, you are provided with file metadata (e.g., file size, date of access). The file itself is the **data**, and the information about the file is the **metadata**. Like the Mac, Flywheel calls the metadata in its system 'Info' or 'Information'.
 
 #### Metadata
-MRI Info includes critical scientific information (TR, TE, voxel size, number of diffusion directions, ...). This information can be included within a data file, for example the DICOM format includes this information in its header. The widely used NIfTI format does not include as much information in its default header. When Flywheel converts a DICOM file to a NIfTI file, it stores the MRI Info into Flywheel metadata attached to the NIfTI file. 
+MRI Info includes critical scientific information (TR, TE, voxel size, diffusion directions, ...). This information can be included within a data file, for example the DICOM format includes this information in its header. The widely used NIfTI format does not include as much information in its default header. When Flywheel converts a DICOM file to a NIfTI file, it stores the MRI Info into Flywheel metadata attached to the NIfTI file. 
 
 In typical computer usage, we focus on directories and files. When using database systems, the Info (metadata) has a very prominent role. You can find the INFO in the web-browser interface, and you can download it with the SDK.
 
