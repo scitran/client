@@ -24,7 +24,6 @@ thisFile = st.list('file',fileList{1}.parent.id);
 stSelect(thisFile,'type','nifti')
 niftiFiles{1}.info
 
-
 %% Experiments with the CNI site
 
 cni = scitran('cni');

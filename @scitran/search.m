@@ -202,7 +202,7 @@ fw        = p.Results.fw;
 if ischar(srch), test = srch;
 else,            test = srch.returnType;
 end
-if ~stValid('search return',test)
+if ~stValid('search return',formatSearchType(test))
     % Already valid, so return
     disp('Invalid search return type');
     return;

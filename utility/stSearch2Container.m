@@ -59,11 +59,11 @@ containerType = srch{1}.returnType;
 switch containerType
     case {'project','session','acquisition','collection'}
         for ii=1:nSrch
-            result{ii} = st.containerGet(srch{1}.(containerType).id);
+            result{ii} = st.containerGet(srch{ii}.(containerType).id);
         end
     case {'analysis'}
         for ii=1:nSrch
-            result{ii} = st.analysisGet(srch{1},'container');
+            result{ii} = st.analysisGet(srch{ii},'container');
         end
     otherwise
         error('Unknown container type %s\n',containerType);

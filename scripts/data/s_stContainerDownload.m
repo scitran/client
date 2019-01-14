@@ -1,9 +1,8 @@
 %% s_stContainerDownload
 %
-% Flywheel has a hierarchy of data containers. The container files can
-% be downloaded into a local tar-file using
-% scitran.containerDownload().  This script illustrates how to do
-% that.
+% Flywheel has a hierarchy of data containers. The container files can be
+% downloaded into a local tar-file using scitran.containerDownload().  This
+% script illustrates how to do that.
 %
 % The containers are
 %   Project, Session, Acquisition, Collection
@@ -36,14 +35,12 @@ chdir(fullfile(stRootPath,'local'));
 session = st.search('session',...
     'project label exact', 'Brain Beats',...
     'session label exact','20180319_1232', ...
+    'fw',true,...
     'summary',true);
 
-stPrint(session,'session','label');
+stPrint(session,'label');
 
-% Readable way to get the analysis is
-id = idGet(session{1},'data type','session');
-
-tarFileName1 = st.containerDownload('session',id);
+tarFileName1 = st.containerDownload('session',session{1}.id);
 untar(tarFileName1);
 
 %% Download an acquisition

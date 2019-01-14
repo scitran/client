@@ -1,14 +1,15 @@
-%% Lookup and find examples
+%% s_stLookupAndFind
 %
-% Most common use is to quickly get an object inside a project.
-% Faster than listing the project, then the sessions, and so forth.
-% One line call rather than list, search, list, search ...  Mostly
-% good when you know what you want.
+% Lookup and find examples
 %
-% find - this has filtering and other fields.  we should review how we
-% use find to replace the getXXX routines
+% Most common use is to quickly get an object inside a project. Faster than
+% stepping through by listing the project, then the sessions, and so forth.
+% Mostly good when you know what you want.
 %
-% 
+% Wandell, SCITRAN
+%
+% See also
+%  
 
 %% Open the object
 st = scitran('stanfordlabs');
@@ -31,9 +32,9 @@ session = st.fw.lookup('wandell/VWFA FOV/20161001_1151')
 subject = st.fw.lookup('wandell/VWFA FOV/20161001_1151')
 
 %
-% This has a subject.update method
+% Version SDK 2.0 will have a subject.update method and many related
+% methods that extend Version 1.0
 %
-
 % This would give you all the sessions for this subject
 % subject.session
 
