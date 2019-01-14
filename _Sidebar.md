@@ -13,9 +13,7 @@
    * [Gears](Gears)
    * [Analyses](Analyses)
    * [Flywheel-SDK programming](Own-programming)
-       * [Github methods](Toolbox-methods)
-       * [Running functions](Run-function)
-       * [Programming utilities](Programming-utilities)
+       
 ***
 Notes
 * [Flywheel SDK](Flywheel-SDK)
@@ -25,3 +23,6 @@ Notes
 * [Technical (wonkish)](Technical-notes)
 * [More search](Search-syntax)
 * [BIDS](BIDS)
+* [Github methods](Toolbox-methods)
+* [Running functions](Run-function)
+* [Programming utilities](Programming-utilities)
