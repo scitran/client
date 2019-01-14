@@ -4,7 +4,7 @@
     * [Computation](Computational-organization)
 * [Installation](Installation)
 * [Connecting](Connecting-and-Authentication)
-* [Data](List)
+* [Listing data](List)
     * [Download and read](Download-and-read)
     * [Create and upload](Create-and-upload)
     * [Info (metadata)](Metadata-(Information))
