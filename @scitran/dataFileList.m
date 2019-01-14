@@ -1,18 +1,24 @@
 function [dataFiles, acqID] = dataFileList(st,containerType, containerID, fileType, varargin)
-% Find the data files that match a specific file type property
+% REWRITE:  Find the data files that match a specific file type property
+%
+% In this routine and others we should use this method to get the container
+% type.  We should only send in the ID.  This may mean doing a lot more
+% containerGet() calls, but it may be worth it.
+%
+% *****  containerType = st.containerType(containerID);
 %
 %   [dataFiles, acqID] = st.dataFileList(containerType, containerID, fileType, varargin)
 %
 % Description
-%   dataFile refers to a file in an acquisition. (Flywheel sometimes calls
-%   these acquisitionFiles). There are times we want to find all the data
-%   files within a session or a project. This method returns a list of all
-%   the data files within a container (project, session, acquisition,
-%   collection) and match a particular fileType attribute (e.g., 'archive',
-%   'dicom', 'nifti').
+%   This method returns a list of all the data files within a container
+%   (project, session, acquisition, collection) that match a particular
+%   fileType attribute (e.g., 'archive', 'dicom', 'nifti').
+%
+%   dataFile means a file in an acquisition. (Flywheel calls these
+%   acquisitionFiles). 
 %
 % Inputs
-%   st - scitran object
+%   st            - scitran object
 %   containerType - a container (e.g., project, session, collection)
 %   containerID   - string
 %   fileType      - dicom, nifti, archive, source code, ...
@@ -39,8 +45,9 @@ function [dataFiles, acqID] = dataFileList(st,containerType, containerID, fileTy
 %{
  % All the nifti files in a project
  st = scitran('stanfordlabs');
- project = st.search('project','project label exact','TBI: NeuroCor');
- dataFiles = st.dataFileList('project',idGet(project{1},'data type','project'),'nifti')
+ project   = st.search('project','project label exact','TBI: NeuroCor');
+ id = st.objectParse(project{1});
+ dataFiles = st.dataFileList('project',id,'nifti')
 %}
 
 %%
@@ -52,8 +59,8 @@ p.addRequired('fileType',@ischar);
 p.addParameter('summary',true,@islogical);
 
 p.parse(st,containerType,containerID,fileType,varargin{:});
-
 summary = p.Results.summary;
+
 
 %%
 switch containerType

@@ -1,4 +1,4 @@
-function container = containerGet(st,id)
+function [container, cType] = containerGet(st,id)
 % Get the container metadata given its id
 %
 % Syntax:
@@ -25,10 +25,12 @@ function container = containerGet(st,id)
 % Inputs
 %   id:  The container's unique ID, or a SearchResponse of the container
 %
-% Returns
-%   container:  The complete container metadata
-%
 % Optional key/value parameters
+%   N/A
+%
+% Outputs
+%   container:  The complete container metadata
+%   cType:      The container type
 %
 % Wandell, Vistasoft Team, 2019
 %
@@ -59,6 +61,7 @@ p.parse(st,id);
 if ischar(id)
     % The user provided the ID
     container = st.fw.getContainer(id);
+    [~,cType] = st.objectParse(container);
 else
     % This was a search response
     cType = id.returnType;

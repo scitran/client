@@ -1,7 +1,8 @@
-function g = groups(obj,varargin)
+function group = groups(obj,varargin)
 % Find the user's group
 %
-%     scitran.groups
+% Syntax:
+%     group = scitran.groups
 %
 % Description
 %   Returns a list of the user's groups.  If you just want the
@@ -11,13 +12,17 @@ function g = groups(obj,varargin)
 %   N/A
 %
 % Optional key/value pairs
-%   'label' - string defining the group
+%   'label' - string defining a particular group to return
 %
+% Outputs:
+%   group:  Either a list of all the user's groups or a specific group
+%           object matching 'label'
 %
 % BW, SCITRAN Team, 2018
 
 %{
   allGroups = st.groups;
+  stPrint(allGroups,'label')
 %}
 %{
   % Find a label this way
@@ -44,20 +49,19 @@ if list
     stPrint(allGroups,'label')
 end
 
-
 if ~isempty(label)
     % Squeeze out spaces and force lower case on the match
     label = stParamFormat(label);
     for ii=1:length(allGroups)
         if strcmpi(label,stParamFormat(allGroups{ii}.label))
-            g = allGroups{ii};
+            group = allGroups{ii};
             return;
         end
     end
     warning('No matching group found %s\n',label);
-    g = [];
+    group = [];
 else
-    g = allGroups;
+    group = allGroups;
 end
 
 end

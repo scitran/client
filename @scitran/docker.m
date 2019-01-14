@@ -1,5 +1,5 @@
 function [cmd, status, result] = docker(~,docker)
-% Run the container with the parameters defined in the docker struct
+% Run the Docker Container with the parameters defined in the docker struct
 %
 %  [cmd, status, result] = st.docker(docker)
 %

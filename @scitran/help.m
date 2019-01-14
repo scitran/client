@@ -21,6 +21,8 @@ function help(~,src)
 % Examples:
 %{
   st = scitran('stanfordlabs');
+  st.help('help');
+
   st.help;     % Wiki
   st.help('wiki');
 
@@ -31,31 +33,32 @@ function help(~,src)
 %}
 
 %%
-if notDefined('src'), src = 'wiki'; end
-src = ieParamFormat(src);
+if notDefined('src'), src = 'help'; end
+src = stParamFormat(src);
 webOptions = {'wiki','sdk releases','sdk examples','sdk package','help'};
 
 %% Bring up the help pages
 
 switch(src)
     case 'wiki'
-        web('https://github.com/scitran/client/wiki','-browser')
+        url = 'https://github.com/scitran/client/wiki';
     case 'sdkreleases'
-        web('https://github.com/flywheel-io/core/releases','-browser')
+        url = 'https://github.com/flywheel-io/core/releases';
     case 'sdkexamples'
-        web('https://flywheel-io.github.io/core/branches/master/matlab/examples.html','-browser');
+        url = 'https://flywheel-io.github.io/core/branches/master/matlab/examples.html';
     case 'sdkpackage'
-        web('https://flywheel-io.github.io/core/branches/master/matlab/flywheel.html#','-browser')
-    case 'help'
-        fprintf('\n');
-        tbl = cell2table(webOptions);
-        disp(tbl);
-        fprintf('\n');
+        url = 'https://flywheel-io.github.io/core/branches/master/matlab/flywheel.html#';
     otherwise
-        fprintf('Unknown help option: %s\nOptions are:\n\n',src);
-        tbl = cell2table(webOptions);
-        disp(tbl);
+        % help brings this up
+        fprintf('st.help(Parameter)\nParameter options \n');
+        for ii=1:length(webOptions)
+            fprintf('   %s\n',webOptions{ii});
+        end
         fprintf('\n');
+        return;
 end
+
+% Bring up the web page
+web(url,'-browser')
 
 end

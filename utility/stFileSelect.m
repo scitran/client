@@ -38,7 +38,7 @@ p.addRequired('matchVal',@ischar);
 p.addParameter('infoval','',@ischar);
 
 p.parse(files,slot,matchVal); %,varargin{:});
-matchVal = ieParamFormat(matchVal);
+matchVal = stParamFormat(matchVal);
 
 %%  Check if the file type and the critical info field matches the requirements
 
@@ -47,7 +47,7 @@ selectedFiles = {};
 for jj = 1:length(files)
     % Force the slot value to lower case and no spaces.
     try
-        slotVal = ieParamFormat(files{jj}.(slot));
+        slotVal = stParamFormat(files{jj}.(slot));
     catch
         % If it doesn't exist, set it to empty.
         slotVal = '';

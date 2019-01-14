@@ -44,7 +44,7 @@ p.addParameter('infofield','',@ischar);      % Info field value to match
 
 p.parse(containers,slot,matchVal,varargin{:}); %,varargin{:});
 
-matchVal   = ieParamFormat(matchVal);
+matchVal   = stParamFormat(matchVal);
 contains   = p.Results.contains;
 infoField  = p.Results.infofield;
 infoVal    = p.Results.infoval;
@@ -56,7 +56,7 @@ selected = {};
 for jj = 1:length(containers)
     % Force the slot value to lower case and no spaces.
     try
-        slotVal = ieParamFormat(containers{jj}.(slot));
+        slotVal = stParamFormat(containers{jj}.(slot));
     catch
         % If it doesn't exist, set it to empty.
         slotVal = '';

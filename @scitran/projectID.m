@@ -5,7 +5,8 @@ function [id, project] = projectID(st,label)
 %   [id, project] = scitran.projectID('project label'.varargin)
 %
 % Brief description:
-%   Get the project id.  You can further get the project metadata
+%   Get the project id.  You can use the ID to get the project metadata via
+%   scitran.containerGet
 %
 % Inputs:
 %   label - The project label
@@ -42,9 +43,9 @@ project = [];
 
 allProjects = st.fw.getAllProjects;
 
-% Find the one that matches the label parameter
+% Find the project whose label matches the label parameter
 allLabels = cellfun(@(x)(x.label),allProjects,'UniformOutput',false);
-lst = strcmp(allLabels,label);
+lst = stContains(allLabels,label);
 
 % If we get one, return the project ID.  Otherwise, wonder about the
 % meaning of life.
@@ -53,7 +54,7 @@ if nFound == 1
     thisProject = allProjects(lst);
     id = thisProject{1}.id;
     if nargout == 2
-        % The user asked for the container metadata
+        % The user asked for the project container metadata
         project = st.containerGet(id);
     end
 elseif nFound == 0

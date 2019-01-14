@@ -22,7 +22,7 @@ function tf = stContains(str,pattern)
 %   contains, strfind
 %   
 
-% Examples
+% Examples:
 %{
    stContains('help','he')
    stContains('help','m')
