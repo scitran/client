@@ -1,12 +1,9 @@
-* [List examples](List-examples)
 * [Search examples](Search-examples) and [More search examples](https://github.com/scitran/client/blob/master/scripts/s_stSearches.m)
 * [Special searches](Special-search-parameters)
 
 ***
 
-### Listing vs. Searching
-
-The scitran **list** method is useful when you know the containers (project, session, acquisition or collection), and you want to list the container content. The list command returns a cell array, and each cell has the type of the object that you are listing.  For example, listing the sessions in a project returns a cell array of objects in the class _flywheel.model.Session_.
+### Searching
 
 The scitran **search** method is useful when you are trying to find data. The scitran **search** method returns a great deal of information about the object it found. The search command returns a cell array, and each cell has the type _flywheel.model.SearchResponse_.  
 
