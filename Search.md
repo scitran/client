@@ -60,8 +60,7 @@ The SearchResponse and the Flywheel database object contain different informatio
 ### Search implementation
 The search method uses [**elastic search**](https://www.elastic.co/), an advanced method for searching large databases.  Elastic search is constantly indexing the data base, and the search is based on this index. For this reason, there may be some delay between the time when you modify the MongoDB itself, and when you can find the modification using elastic search. Typically, the time is fairly short - a few seconds or so. 
 
-### Formats
-The class of the objects returned by **list** and  **search** differ. The list command returns objects within the class that you are listing.  The search returns a generic (searchResponse) class.  This difference can lead to some challenges in calling scitran methods.  In particular, we would like to know the class of the returned object when we use it as a parameter to other scitran methods. 
+Flywheel is about to provide a means for querying whether the indexing is done, or perhaps the system has received a lot of new data or been rebooted and is currently very active.  This information will be shown in the browser interface and perhaps be made available through the Flywheel-SDK.
 
-This is known to you, as a programmer, because when you run a search you specify the type of container or file that you are searching for.  But that information is not saved in the searchResponse class. We have asked Flywheel to provide us with a modification of the searchResponse class that includes this information.  That will greatly simplify some of the methods in **scitran**.
+
 
