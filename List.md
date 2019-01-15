@@ -6,8 +6,6 @@ When you know the general structure of the data in a project, and you would like
 ## Lookup
 
 ## List
-
-## Listing
 The list method specifies two arguments.  The first is the type of object you would like to return; the second specifies the id of the container to list.  Listing is much like using 'dir' or 'ls' on a file system.
 
 Continuing down the directory tree from group, project, session, acquisition, files
