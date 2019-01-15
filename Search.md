@@ -5,21 +5,18 @@
 
 ### Searching
 
-The scitran **search** method is useful when you are trying to find data. The scitran **search** method returns a great deal of information about the object it found. The search command returns a cell array, and each cell has the type _flywheel.model.SearchResponse_.  
+The **scitran.search** method is useful when you are looking to find data of a particular type. For example, you may be interested to know how many examples of a T1 anatomical measurement are present in the database for men between 20 and 30 years of age. Or, how many diffusion weighted scans are there for women older than 50?  
+
+The search command returns a cell array, and each cell has the type _flywheel.model.SearchResponse_.  This is a type of Matlab struct that contains great deal of information about the found objects. An example of one of the SearchResponse objects is 
+
+```
+Illustrate here
+```
+
+Notice that the object describes the object that was sought in the 'returnType' field. The SearchResponse does not contain all of the information about the object, which can be found by using scitran.lookup or scitran.list.  It does contain some additional information, however, say about the 'parent' fields of the returned object.
 
 If you know what you want and where it is, use **list**.  If you are exploring, use **search**.
 
-## Listing
-The list method specifies two arguments.  The first is the type of object you would like to return; the second specifies the id of the container to list.  Listing is much like using 'dir' or 'ls' on a file system.
-
-Continuing down the directory tree from group, project, session, acquisition, files
-
-    projects     = st.list('project','wandell');
-    sessions     = st.list('session',idGet(projects{5}));     % Pick one ....
-    acquisitions = st.list('acquisition',idGet(sessions{1})); 
-    files        = st.list('file',idGet(acquisitions{1})); 
-
-**N.B.** The format of the structures in the list cell array differ from the structures returned by search.  We are producing helper functions to minimize the burden.  In this example, we use the utility function idGet(...), which returns the container id for either the list or search structs. We are hoping that Flywheel writes a function that will make it unnecessary to use idGet() in the near future.
 
 ### Searching
 The arguments to the search method specify (a) the type of object to return and (b) parameters that define the search. For example, to search for all the projects in the database you would use
