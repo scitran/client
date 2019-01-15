@@ -4,6 +4,7 @@
 When you know the general structure of the data in a project, and you would like to find a specific container or the files in a container, you can use the scitran.lookup or the scitran.list method.  These methods are similar to the Unix 'ls' command; or, if you prefer, to the Windows 'dir' command.
 
 ## Lookup
+Can the web interface produce the string we would use for 'lookup'?  Should this be shown in the 'Session' label string, or the acquisition string, or the Information box when it comes up?
 
 ## List
 The list method specifies two arguments.  The first is the type of object you would like to return; the second specifies the id of the container to list.  Listing is much like using 'dir' or 'ls' on a file system.
