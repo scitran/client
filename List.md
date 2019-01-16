@@ -1,10 +1,11 @@
 * [List examples](List-examples)
 
 ***
-When you know the general structure of the data in a project, and you would like to find a specific container or the files in a container, you can use the scitran.lookup or the scitran.list method.  These methods are similar to the Unix 'ls' command; or, if you prefer, to the Windows 'dir' command.
+When you know about the existence and location of project containers and files, you can retrieve them using scitran.lookup or scitran.list.  These methods are similar to the Unix 'ls' command; or, if you prefer, to the Windows 'dir' command.
 
 ## Lookup
-Can the web interface produce the string we would use for 'lookup'?  Should this be shown in the 'Session' label string, or the acquisition string, or the Information box when it comes up?
+The scitran.lookup method takes a string as input and returns a
+(The web interface should provide the 'lookup' string).
 
 ## List
 The list method specifies two arguments.  The first is the type of object you would like to return; the second specifies the id of the container to list.  Listing is much like using 'dir' or 'ls' on a file system.
@@ -20,6 +21,9 @@ Continuing down the directory tree from group, project, session, acquisition, fi
 
 st.objectParse to be explained here.  Reference the 'fw' option in the search.
 
-Talk about stModel.  Also stSearch2Container.
+Talk about 
 
-The scitran **list** method is useful when you know the containers (project, session, acquisition or collection), and you want to list the container content. The list command returns a cell array, and each cell has the type of the object that you are listing.  For example, listing the sessions in a project returns a cell array of objects in the class _flywheel.model.Session_.
+* stModel.  
+* stSearch2Container.
+
+The scitran.list method is useful when you know the containers (project, session, acquisition or collection), and you want to list the container content. The list command returns a cell array, and each cell has the type of the object that you are listing.  For example, listing the sessions in a project returns a cell array of objects in the class _flywheel.model.Session_.
