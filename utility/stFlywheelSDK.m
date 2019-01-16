@@ -60,6 +60,16 @@ function [status, flywheelTbx, toolboxTable] = stFlywheelSDK(action,varargin)
 %
 % See also
 %
+% Comment from DHB
+%{
+P.S. I also figured out how to get rid of something unwanted on the
+static java class path, which may already be well known to others. 
+=> At Matlab prompt: 
+    a) cd(prefdir) 
+    b) edit javaclasspath.txt 
+    c) delete the lines you don?t want and save 
+    d) restart Matlab.  
+%}
 
 %Examples:
 %{
