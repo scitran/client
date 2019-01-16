@@ -44,6 +44,7 @@ function [container, cType] = containerGet(st,id)
  label = 'SVIP Released Data (SIEMENS)';
  id = st.projectID(label);
  project = st.containerGet(id);
+ project2 = st.fw.get(id);
 %}
 %{
  projectSearch = st.search('project','project label exact','ENGAGE');

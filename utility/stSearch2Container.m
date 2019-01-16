@@ -65,6 +65,17 @@ switch containerType
         for ii=1:nSrch
             result{ii} = st.analysisGet(srch{ii},'container');
         end
+    case {'file'}
+        for ii=1:nSrch
+            id = srch{ii}.parent.id;
+            parent = st.fw.get(id); containerType = parent.containerType;
+            switch containerType
+                case 'acquisition'
+                    result{ii} = st.fw.getAcquisitionFileInfo(srch{ii}.parent.id,srch{ii}.file.name);
+                otherwise
+                    disp('NYI');
+            end
+        end
     otherwise
         error('Unknown container type %s\n',containerType);
 end

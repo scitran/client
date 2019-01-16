@@ -338,9 +338,9 @@ files = st.search('file',...
 
 %%  Find the number of projects owned by a specific group, by label **
 
-group = 'Wandell Lab';
+group = 'Wandell';
 [projects,srchCmd] = st.search('project',...
-    'group label',group,...
+    'group id',group,...
     'summary',true);
 
 %% jwday fails, as below ... ** 
@@ -348,10 +348,9 @@ group = {'ALDIT','jwday','PanLab'};
 for ii=1:length(group)
     disp(group{ii})
     projects = st.search('project',...
-        'group label',group{ii},...
+        'group id',group{ii},...
         'summary',true);
 end
-
 
 %% Looking up group information
 

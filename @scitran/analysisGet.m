@@ -17,7 +17,7 @@ function val = analysisGet(st,thisAnalysis,param)
 %           This could be a SearchResponse, a SearchAnalysisResponse, or an
 %           ContainerAnalysisOutput, ...
 %  param:
-%   'container' - The container metadata
+%   'container'  - The container metadata
 %   'parameters' - parameter names and values
 %   'parameter names' - just the names
 %   'state' - Complete, or error or something
@@ -26,12 +26,11 @@ function val = analysisGet(st,thisAnalysis,param)
 %   'inputs'
 %   'outputs'
 %   
-% 
-% Optional
+% Optional key/value pairs
 %   N/A
 %
 % Outputs:
-%   The parameter values
+%   The value of the specified parameter
 %
 % Wandell, Vistasoft, August 25, 2018
 %
@@ -66,20 +65,19 @@ p.addRequired('param',@ischar);
 p.parse(thisAnalysis,param);
 
 %% Make sure thisAnalysis is the full analysis metadata.
-tmp = split(class(thisAnalysis),'.');
-inType = tmp{end};
-switch stParamFormat(inType)
+fwModel = stModel(thisAnalysis);
+switch stParamFormat(fwModel)
     case 'searchresponse'
         % Get the whole analysis output object; the search only returns an
         % abbreviated version because of speed.  Not sure that is a great idea,
         % but ..
         id = st.objectParse(thisAnalysis.analysis);
-        thisAnalysis  = st.fw.getAnalysis(id);
+        thisAnalysis  = st.fw.get(id);
     case 'searchanalysisresponse'
         id = st.objectParse(thisAnalysis);
-        thisAnalysis  = st.fw.getAnalysis(id);
+        thisAnalysis  = st.fw.get(id);
     case {'containeranalysisoutput'}
-        thisAnalysis  = st.fw.getAnalysis(thisAnalysis.id);
+        thisAnalysis  = st.fw.get(thisAnalysis.id);
     case {'analysisoutput'}
         % This has everything.  Nothing needed.
     otherwise

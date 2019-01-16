@@ -296,21 +296,14 @@ if ischar(srch)
                 % Ignore - We manage this at the end.
                 
             % GROUP
-            case{'group'}
+            case{'groupid'}
                 % Exact match to group name
                 if ~isfield(srch,'filters')
                     srch.filters{1}.match.group0x2E_id = val;
                 else
                     srch.filters{end + 1}.match.group0x2E_id = val;
                 end
-            case {'groupname'}
-                % Each group has a name, which is also its id
-                if ~isfield(srch,'filters')
-                    srch.filters{1}.match.group0x2E_id = val;
-                else
-                    srch.filters{end + 1}.match.group0x2_id = val;
-                end
-            case {'groupid'}
+            case {'grouplabel'}
                 % Each group has an id and a label.  It seems to me (BW)
                 % that the label/id search is confused.  Ask Megan.
                 if ~isfield(srch,'filters')
@@ -531,6 +524,7 @@ if ischar(srch)
                 % This checking could include force to lower case and
                 % eliminate spaces.  But the Flywheel side does not seem
                 % to work that way.
+                % WORRIED.  Maybe this should be 'terms'
                 v = stValid('file type');
                 if ~ismember(val,v)
                     fprintf('Valid file types are\n');
@@ -541,20 +535,6 @@ if ischar(srch)
                     srch.filters{1}.term.file0x2Etype = val;
                 else
                     srch.filters{end+1}.term.file0x2Etype = val;
-                end
-            case {'datatype','classification','measurement'} % 'filemeasurement'
-                % Localizer, Anatomy_t1w, Calibration, High_order_shim,
-                % Functional, Anatomy_inplane, Diffusion
-                v = stValid('data type');
-                if ~ismember(val,v)
-                    fprintf('Valid data types are\n');
-                    stValid('file type');
-                    error('Invalid file type: %s',val); 
-                end
-                if ~isfield(srch,'filters')
-                    srch.filters{1}.term.measurements = val;
-                else
-                    srch.filters{end + 1}.term.measurements = val;
                 end
                 
             % SUBJECTS    
@@ -595,7 +575,37 @@ if ischar(srch)
                     srch.filters{end + 1}.match.subject0x2Esex = val;
                 end
                 
+            % Data classification search based on Measurement
+            case {'measurement'}
+                MR = obj.fw.getModality('MR');
+                valid = MR.classification.Measurement;
+                if ~ismember(val,valid)
+                    fprintf('Valid Measurement classifications:\n')
+                    disp(valid);
+                    error('Invalid measurement type: %s\n',val);
+                end
                 
+                % st.search('file','measurement','T1');
+                % Can we get a list of the valid measurement values?
+                if ~isfield(srch,'filters')
+                    srch.filters{1}.match.file0x2Eclassification0x2EMeasurement = val;
+                else
+                    srch.filters{end + 1}.match.file0x2Eclassification0x2EMeasurement = val;
+                end
+                
+            case {'intent'}
+                % st.search('file','intent','structural');
+                % Can we get a list of the valid measurement values?
+                if ~isfield(srch,'filters')
+                    srch.filters{1}.match.file0x2Eclassification0x2EIntent = val;
+                else
+                    srch.filters{end + 1}.match.file0x2Eclassification0x2EIntent = val;
+                end
+                
+            case {'terange'}
+                % Here is a goal.
+                % st.search('file','measurement te range',[v1, v2]);
+                    
             % searchString
             case {'string'}
                 % Not sure what this does yet. But it appears to
@@ -617,7 +627,7 @@ end
 %% Perform the search
 
 % To limit the searches to the top 100, use this
-srchResult = obj.fw.search(srch,'size',num2str(limit)); %.results;
+srchResult = obj.fw.search(srch,'size',limit); %.results;
 
 if isfield(srchResult,'message')
     fprintf('Search error\n');

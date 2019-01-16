@@ -32,7 +32,7 @@ function [status, flywheelTbx, toolboxTable] = stFlywheelSDK(action,varargin)
 %
 % Optional Key/values
 %   'sdk version'    - Release version you want to install (current is
-%                         4.3.2 (Dec. 1, 2018))
+%                         4.4.5 (Jan. 16, 2019))
 %   'summary'        - Print out a summary of the installed toolbox
 %
 % Returns
@@ -54,7 +54,7 @@ function [status, flywheelTbx, toolboxTable] = stFlywheelSDK(action,varargin)
 %   % Restart MATLAB
 %
 %   % Install a new version
-%   status = stFlywheelSDK('install','sdkVersion','4.3.2');    % Download and install
+%   status = stFlywheelSDK('install','sdkVersion','4.4.5');    % Download and install
 %
 % BW, Vistasoft, 2018
 %
@@ -69,7 +69,7 @@ function [status, flywheelTbx, toolboxTable] = stFlywheelSDK(action,varargin)
   [status,flywheelTbx] = stFlywheelSDK('verify');
 %}
 %{
-  [s,u,tbl] = stFlywheelSDK('install','sdkVersion','4.3.2');
+  [s,u,tbl] = stFlywheelSDK('install','sdkVersion','4.4.5');
 %}
 %{
   stFlywheelSDK('uninstall');
@@ -85,7 +85,7 @@ function [status, flywheelTbx, toolboxTable] = stFlywheelSDK(action,varargin)
 p = inputParser;
 varargin = stParamFormat(varargin);
 p.addRequired('action',@ischar);
-p.addParameter('sdkversion','4.3.2',@ischar);
+p.addParameter('sdkversion','4.4.5',@ischar);
 p.addParameter('summary',false,@islogical);
 
 p.parse(action,varargin{:});
