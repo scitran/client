@@ -115,6 +115,7 @@ url = sprintf('https://github.com/flywheel-io/core/releases/download/%s/flywheel
 switch action
     case {'verify'}
         % Checks that the flywheel-sdk is installed in the Add-Ons
+        flywheelTbx = [];
         tbx = matlab.addons.toolbox.installedToolboxes;
         if numel(tbx) >= 1
             for ii=1:numel(tbx)
@@ -175,7 +176,12 @@ switch action
     case {'installedversion'}
         % Returns an integer corresponding to this Add-On version
         [~, flywheelTbx] = stFlywheelSDK('verify');
-         status = str2double(strrep(flywheelTbx.Version,'.',''));
+        if isempty(flywheelTbx)
+            fprintf('No Flywheel SDK Add-ON found\n');
+            status = false;
+        else
+            status = str2double(strrep(flywheelTbx.Version,'.',''));
+        end
     otherwise
         error('Unknown action: %s\n',action);
 end
