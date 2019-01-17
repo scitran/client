@@ -228,13 +228,13 @@ if ischar(srch)
                 for ii=1:length(tmp)
                     result{ii} = tmp{ii}.label;
                 end
-            case 'allnames'
+            case 'allid'
                 tmp = obj.fw.getAllGroups;
                 result = cell(length(tmp),1);
                 for ii=1:length(tmp)
                     result{ii} = tmp{ii}.id;
                 end
-            case 'name'
+            case 'id'
                 % st.search('group','name','wandell');
                 % Returns the struct for the group
                 result = obj.fw.getGroup(varargin{2});
