@@ -89,7 +89,19 @@ classdef scitran < handle
             % Create the Flywheel SDK object
             % We do this for create or refresh, but not for remove.
             if strcmp(action,'create') || strcmp(action,'refresh')
-                obj.fw = flywheel.Flywheel(obj.showToken);
+                try
+                    obj.fw = flywheel.Flywheel(obj.showToken);
+                catch
+                    % If the rest-client.jar was already on the path, you
+                    % receive a warning that the RestClient class exists
+                    % and java will not be cleared.  That shouldn't happen
+                    % here, however.
+                    disp('Adding rest-client.jar to java path')
+                    apiPath = fileparts(fileparts(which('flywheel.Flywheel')));
+                    apiFile = fullfile(apiPath,'api','rest-client.jar');
+                    javaaddpath(apiFile);
+                    obj.fw = flywheel.Flywheel(obj.showToken);
+                end
             end
             
         end
