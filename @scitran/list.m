@@ -106,7 +106,7 @@ fw = obj.fw;
 
 returnType = formatSearchType(returnType);
 
-%%  Call the relevant SDK rouinte
+%%  Call the relevant SDK routine
 switch returnType
     case 'group'
         % Not sure which subset of gruops is returned by this call.
@@ -180,6 +180,7 @@ switch returnType
 
     
     case 'sessionanalyses'
+        % If you want the 
         % h = st.projectHierarchy('HCP_preproc')
         % thisSession = h.sessions{2};
         % analyses = st.fw.getSessionAnalyses(idGet(thisSession));
@@ -195,7 +196,7 @@ switch returnType
 
     case 'analysis'
         % If you know the analysis ID, get it this way
-        data = fw.getAnalysis(analysisID);
+        data = fw.getSessionAnalyses(analysisID);
     
     case 'collection'
         % An email address of the curator replaces the groupID/parentID
