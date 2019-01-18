@@ -381,7 +381,7 @@ users = st.search('group','users','wandell');
 disp(users)
 
 %% Struct for a particular group 
-thisGroup = st.search('group','name','wandell');
+thisGroup = st.search('group','id','wandell');
 disp(thisGroup)
 
 %% Or by group name, which is also the group id
