@@ -1,5 +1,5 @@
 function result = stParseSearch(stClient,srchResult)
-% Simplify the fields in the struct returned by scitran search
+% DEPRECATED: Simplify the fields in the struct returned by scitran search
 %
 %    result = stParseSearch(stClient,srchResult)
 %
@@ -19,6 +19,8 @@ function result = stParseSearch(stClient,srchResult)
 % LMP/BW Scitran Team, 2016
 
 %% Define the search type and re-write the data into result
+
+warning('Deprecated');
 
 % Start empty.  Allocate later if there are data.
 result = [];
