@@ -132,7 +132,18 @@ switch action
                     fprintf('Verified installed version: %s\n',tbx(ii).Version);
                 end
             end
-        else, status = false;
+        else
+            % Probably incorporated into scitran
+            sdkPath = which('flywheel.Flywheel');
+            if isempty(sdkPath)
+                disp('No flywheel SDK found');
+                status = false;
+            else
+                sdk = split(sdkPath,'sdk');
+                sdkVer = sdk{2}(1:3);
+                fprintf('Verified installed version %s\n',sdkVer);
+                status = true;
+            end            
         end
         
     case 'install'
@@ -176,10 +187,9 @@ switch action
         
     case {'installedversion'}
         % Returns an integer corresponding to this Add-On version
-        [~, flywheelTbx] = stFlywheelSDK('verify');
+        [status, flywheelTbx] = stFlywheelSDK('verify');
         if isempty(flywheelTbx)
             fprintf('No Flywheel SDK Add-ON found\n');
-            status = false;
         else
             status = str2double(strrep(flywheelTbx.Version,'.',''));
         end
