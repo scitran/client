@@ -1,15 +1,15 @@
 The **scitran** client communicates between Matlab and a Flywheel instance.  This wiki describes how to perform tasks such as
 
-* search for data
+* search for data and metadata
 * read, download or upload data and metadata
-* start jobs and check their status
-* download or upload the analyses. 
+* launch jobs (Gears) and check their status
+* download or upload the outputs of jobs (analyses)
 
-This very simple example illustrates the 'look-and-feel' of the code.  It makes a connection to the 'stanfordlabs' Flywheel instance, lists the projects owned by 'wandell', and prints the metadata about one project.
+This example illustrates the 'look-and-feel' of the **scitran** code.
 ```
->> st = scitran('stanfordlabs');                 % Make the connection
->> projects = st.list('project','wandell')       % Read the project metadata for group 'wandell'
->> projects{2}                                   % Print out one of the project details
+>> st = scitran('stanfordlabs');                 % Make a scitran object that is connected to 'stanfordlabs'
+>> projects = st.list('project','wandell')       % List the metadata for projects in group 'wandell'
+>> projects{2}                                   % Print the metadata of one project
 
 ans = 
 
