@@ -27,7 +27,7 @@ ans =
 
 >> 
 ```
-Understanding the principles of the [Data organization](Data-organization) and [Computational organization](Computational-organization) can be important to effectively use **scitran**.  The comments below describe these priinciples.
+Understanding the principles of the [Data organization](Data-organization) and [Computational organization](Computational-organization) can be important to effectively use **scitran**.  The comments below describe these principles.
 
 ### Data
 
