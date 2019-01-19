@@ -1,13 +1,18 @@
 ### Data Containers - Projects, Sessions and Acquisitions
-The Flywheel database hierarchy matches a typical neuroimaging project. The top level is a Project; each project contains multiple Sessions; each session contains multiple Acquisitions; each acquisition contains multiple Files.
+The Flywheel database hierarchy matches a neuroimaging project. The top level is your group.  When each group there are Projects; each project contains multiple Sessions; each session contains multiple Acquisitions; each acquisition contains multiple Files.
 
-The Project, Session and Acquisitions are called data containers. Many **scitran** methods work with containers or files.  Once you create a scitran object use <TAB>-completion to see the methods
+Once you create a scitran object use <TAB>-completion to see methods that let you perform general actions, for example
+
+    scitran.lookup('a string')  - Returns metadata about a container
+    scitran.search( ... )       - Searches the database for specific types of metadata
+
+Or actions on specific containers and files, for example
 
     scitran.container<TAB> - Shows all the basic Data Container methods
     scitran.file<TAB>      - Shows all the basic File methods 
     scitran.<TAB>          - Shows all the methods
 
-One additional data container type, the **Collection**, is described later on this page. Other objects (Analyses, Gears, and Jobs) are described in the [Computational organization section](Computational-organization).
+One additional data container type, the **Collection**, is described later on this page. Other objects (Analyses, Gears, and Jobs) are described in the [Computational organization section](Computational-organization).  Most of these containers can include Files.
 
 ### Notes, tags and attachments
 
@@ -27,4 +32,4 @@ To reuse data we create a new data container, the **Collection**. A Collection i
 
 ### References
 
-* More details about the [Flywheel data model are here](Flywheel-data-model)
+* More details about the [Flywheel SDK](https://flywheel-io.github.io/core/tags/4.4.5/matlab/getting_started.html)
