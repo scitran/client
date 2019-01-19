@@ -5,12 +5,12 @@
 
 ### General use
 
-A scitran client connection to the Flywheel site is established by creating a scitran object.
+A connection to a Flywheel instance is established using a scitran object.
 ```
 st = scitran('stanfordlabs');
 ```
 
-The scitran object (**st** in this case) contains the Flywheel database url, the instance name, a way to access the Flywheel SDK methods, and hidden information about user permission.
+The scitran object (**st** in this case) contains information about the Flywheel instance, an interface to the Flywheel SDK methods, and hidden information about your permissions.
 ```
 st = 
 
@@ -22,7 +22,7 @@ st =
 ```
 ### First use
 
-The first time you run scitran to connect to a Flywheel site, you will be asked to authenticate.  To do this, you will have to provide the site URL and your API Key.  The API key is available from the Flywheel site web page.  To find your key
+The first time you connect to a Flywheel site, you will be asked to authenticate.  The authentication is based on a secure API Key that you retrieve by logging into the Flywheel site.  To find your key
 
 * Click on your user profile, which is found on the upper right of the Flywheel web page
 
@@ -32,7 +32,7 @@ The first time you run scitran to connect to a Flywheel site, you will be asked 
 
 The authentication key you enter will be stored on your computer - so this needs to be done infrequently. The API key expires after a few months, so you will need to enter it again to refresh your authentication every few months.
 
-To create a connection to a **stanfordlabs**, type
+To create a connection to a **stanfordlabs**
 
     st = scitran('stanfordlabs');
 
@@ -46,7 +46,7 @@ Copy and paste from API key in your user profile - it is the long string that lo
 
 ### Verify the connection
 
-Use this method to verify that the scitran object is correctly connecting to your site
+To verify that the scitran object is connecting to your site, use
 ```
 >> st.verify
 Verified connection, using Flywheel-SDK version 432
@@ -72,13 +72,8 @@ ans =
          apiKey: [1×1 flywheel.model.UserApiKey]
 ```
 
-### List and remove instances
-
-If you already have the client configured, you can simply type
-
-    st = scitran('stanfordlabs');
-
-To list the sites you have stored, you can type
+### Multiple instances
+You can store the API key for multiple Flywheel instances.  To list the sites you have stored, use
 
     st.listInstances;
 
@@ -90,14 +85,13 @@ To list the sites you have stored, you can type
          cni: [1×1 struct]
      newSite: [1×1 struct]
 ```
-
-Or remove an instance this way
+Remove an instance this way
 
     st = scitran('stanfordlabs','action','remove');
 
-To refresh the API Key, obtain the new key on the site and then run
+To refresh the API Key, use
 
     st = scitran('stanfordlabs','action','refresh');
 
-
+and you will be prompted to enter the new key, which you can obtain from the Flywheel site.
 
