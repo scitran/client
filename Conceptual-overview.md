@@ -1,8 +1,8 @@
-The **scitran** client makes a connection between Matlab and a Flywheel instance.  Through that connection you can search for data, read data, read metadata, start jobs that create analyses, and download the analyses. This wiki describes the software methods for such tasks.  As a very simple example, this code makes the connection to the 'stanfordlabs' Flywheel instance and reads the metadata about a project.
+The **scitran** client makes a connection between Matlab and a Flywheel instance.  Through that connection you can search for data, read data, read metadata, start jobs that create analyses, and download the analyses. This wiki describes the software methods for such tasks.  As a very simple example, this code makes the connection to the 'stanfordlabs' Flywheel instance, lists the projects owned by 'wandell', and prints the metadata about one project.
 ```
->> st = scitran('stanfordlabs');
->> projects = st.list('project','wandell')
->> projects{2}
+>> st = scitran('stanfordlabs');                 % Make the connection
+>> projects = st.list('project','wandell')       % List the projects
+>> projects{2}                                   % Print out the project details
 
 ans = 
 
