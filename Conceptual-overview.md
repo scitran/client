@@ -1,6 +1,6 @@
-The [Data organization](Data-organization) and [Computational organization](Computational-organization) pages describe the organization of data and computations in the Flywheel system.  Understanding these basic components is important to effectively use the **scitran** and **Flywheel SDK** software. 
+The **scitran** client makes a connection between Matlab and a Flywheel instance.  Through that connection you can search for data, read data, read metadata, start jobs that create analyses, and download the analyses. This wiki describes the software methods for all of those tasks.
 
-The comments below describe the ideas abstractly, without many references to the Flywheel system.  These may be useful to to help you understand how we think about data and computational management systems.
+Understanding the principles of the [Data organization](Data-organization) and [Computational organization](Computational-organization) can be important to effectively use **scitran**.  The comments below describe these priinciples.
 
 ### Data
 
