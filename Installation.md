@@ -15,8 +15,6 @@ To verify the installation you can use
 Verified installed version: 4.3.2
 ```
 
-## Flywheel-SDK
-
 ### First connection
 
 Or, you can connect to the Flywheel site and verify this way
