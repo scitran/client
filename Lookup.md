@@ -1,6 +1,3 @@
-* [List examples](List-examples)
-
-***
 When you know about the existence and location of project containers and files, you can retrieve them using scitran.lookup or scitran.list.  These methods are similar to the Unix 'ls' command; or, if you prefer, to the Windows 'dir' command.
 
 ## Lookup
