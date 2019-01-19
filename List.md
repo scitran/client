@@ -4,7 +4,7 @@
 When you know about the existence and location of project containers and files, you can retrieve them using scitran.lookup or scitran.list.  These methods are similar to the Unix 'ls' command; or, if you prefer, to the Windows 'dir' command.
 
 ## Lookup
-To read the metadata about a project, session, or acquisition you can use the **scitran.lookup** method.  It takes a string as input and returns the metadata object.  For example,
+To read metadata about a project, session, or acquisition that you know exists, use the **scitran.lookup** method.  It takes a string as input and returns the metadata object.  For example,
 ```
 >> project = st.lookup('wandell/VWFA');
 >> project
@@ -30,7 +30,7 @@ project =
            tags: {'newtag'}
        analyses: []
 ```
-The metadata objects have methods, as well.  For example, if you would like a cell array of all the metadata of the sessions in this project, you can use
+Using the metadata object, you can continue to learn more about its 'children'. For example, a cell array of the metadata for all the sessions in this project can be read using
 ```
 >> sessions = project.sessions();
 >> numel(sessions)
@@ -39,7 +39,7 @@ ans =
 
    114
 ```
-If you would like to find one session with a particular label, you can use the **find** method
+To find a session with a particular label, use the **find** method
 ```
 >> project.sessions.find('label=20151127_1332')
 
