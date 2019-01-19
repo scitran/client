@@ -1,5 +1,32 @@
-The **scitran** client makes a connection between Matlab and a Flywheel instance.  Through that connection you can search for data, read data, read metadata, start jobs that create analyses, and download the analyses. This wiki describes the software methods for all of those tasks.
+The **scitran** client makes a connection between Matlab and a Flywheel instance.  Through that connection you can search for data, read data, read metadata, start jobs that create analyses, and download the analyses. This wiki describes the software methods for such tasks.  As a very simple example, this code makes the connection to the 'stanfordlabs' Flywheel instance and reads the metadata about a project.
+```
+>> st = scitran('stanfordlabs');
+>> projects = st.list('project','wandell')
+>> projects{2}
 
+ans = 
+
+  Project with properties:
+
+         public: 0
+          label: 'Brain Beats'
+           info: [1×1 flywheel.model.CommonInfo]
+    description: '#### Bakground↵Starting in 2015 we collected fast fMRI scans with simultaneous multislice acquisitions to measure signals related to heartbeats (and maybe respiration).↵↵In 2015 we acquired scans in the following slice order: `[(1:2:round(nslices)) (2:2:round(nslices))]`, now added in a custom field `mux_slice_order`.↵↵↵#### Future Directions↵In 2018 we will be experimenting with different variations of this slice sequence.'
+          group: 'wandell'
+             id: '597b57d097276d001787e839'
+        parents: [1×1 flywheel.model.ContainerParents]
+     infoExists: 0
+        created: 28-Jul-2017 15:27:12
+       modified: 09-Nov-2018 05:41:21
+      templates: []
+    permissions: {[1×1 flywheel.model.Permission]}
+          files: []
+          notes: []
+           tags: []
+       analyses: []
+
+>> 
+```
 Understanding the principles of the [Data organization](Data-organization) and [Computational organization](Computational-organization) can be important to effectively use **scitran**.  The comments below describe these priinciples.
 
 ### Data
