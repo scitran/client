@@ -7,9 +7,9 @@ The **scitran** client communicates between Matlab and a Flywheel instance.  Thi
 
 This example illustrates the 'look-and-feel' of the **scitran** code.
 ```
->> st = scitran('stanfordlabs');                 % Make a scitran object that is connected to 'stanfordlabs'
->> projects = st.list('project','wandell')       % List the metadata for projects in group 'wandell'
->> projects{2}                                   % Print the metadata of one project
+>> st = scitran('stanfordlabs');                 % Make an object connected to 'stanfordlabs'
+>> projects = st.list('project','wandell')       % List project metadata in group 'wandell'
+>> projects{2}                                   % Display metadata of one project
 
 ans = 
 
