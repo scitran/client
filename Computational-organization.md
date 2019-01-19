@@ -1,4 +1,4 @@
-Flywheel supports two types of computations. There is support for sharing computations that many people perform on their data, such as the FSL, FreeSurfer, BIDS, or HCP tools.  There is also support for people who are developing specialized analyses; these analyses may be unique to their experimental design.
+Flywheel supports two types of computations. There is support for sharing computations that many people perform on their data, such as the FSL, FreeSurfer, BIDS, or HCP tools.  There is also support for people who are developing specialized analyses; these analyses may be unique to a user's particular project and experimental design.
 
 ## Gears
 **Flywheel Gears** are a way to share stable and used software. Flywheel has converted many programs into Gears, including some of the FSL, Freesurfer, ANTS and HCP programs. We use Chris Rorden's dcm2niix utility frequently.  Nearly any program that runs without user-intervention can be transformed into a Flywheel Gear.  
