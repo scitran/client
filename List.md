@@ -50,7 +50,9 @@ ans =
     {1×1 flywheel.model.Session}
 ```
 
-## List
+## List (Deprecated)
+The new metadata objects make the List method obsolete.  This section is here for historical usage for a while, but it will be removed in six months (July 1, 2019).
+
 The list method specifies two arguments.  The first is the type of object you would like to return; the second specifies the id of the container to list.  Listing is much like using 'dir' or 'ls' on a file system.
 
 Continuing down the directory tree from group, project, session, acquisition, files
