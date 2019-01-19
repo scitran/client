@@ -3,15 +3,15 @@ The Flywheel database hierarchy matches a typical neuroimaging project. The top 
 
 The Project, Session and Acquisitions are called data containers. Many **scitran** methods work with containers or files.  Once you create a scitran object use <TAB>-completion to see the methods
 
-    scitran.<TAB>          - Shows all the methods
     scitran.container<TAB> - Shows all the basic Data Container methods
     scitran.file<TAB>      - Shows all the basic File methods 
+    scitran.<TAB>          - Shows all the methods
 
 One additional data container type, the **Collection**, is described later on this page. Other objects (Analyses, Gears, and Jobs) are described in the [Computational organization section](Computational-organization).
 
 ### Notes, tags and attachments
 
-We use the term **Info** to refer the metadata. There are methods to read and modify the Flywheel Info fields.
+We use the term **info** to refer the metadata. There are methods to read and modify the Flywheel Info fields.
 
     st.infoGet - Read metadata from a container or file
     st.infoSet - Write metadata on a container or file
