@@ -7,9 +7,9 @@ The remainder of this wiki describes how to perform tasks using the **scitran** 
 
 This example illustrates the 'look-and-feel' of the **scitran** code.
 ```
->> st = scitran('stanfordlabs');                 % Make an object connected to 'stanfordlabs'
->> projects = st.list('project','wandell')       % List project metadata in group 'wandell'
->> projects{2}                                   % Display metadata of one project
+>> st = scitran('stanfordlabs');               % Make an object connected to 'stanfordlabs'
+>> projects = st.list('project','wandell')     % List project metadata in group 'wandell'
+>> projects{2}                                 % Display metadata of one project
 
 ans = 
 
