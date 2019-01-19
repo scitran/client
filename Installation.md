@@ -13,10 +13,16 @@ Please add both directories to your path, say by using
 
 ### First installation
 To verify the installation you can use
-
 ```
 >> stFlywheelSDK('verify');
-Verified installed version: 432
+Verified installed version: 4.3.2
+```
+Or, you can connect to the Flywheel site and verify this way
+```
+>> st = scitran('stanfordlabs');
+>> st.verify
+Verified installed version: 4.3.2
+Verified connection
 ```
 
 
