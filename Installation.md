@@ -9,14 +9,16 @@ Please add both directories to your path, say by using
     chdir(<scitran directory>); addpath(genpath(pwd));
     chdir(<JSONio directory>); addpath(genpath(pwd));
 
-## Flywheel-SDK
-
-### First installation
 To verify the installation you can use
 ```
 >> stFlywheelSDK('verify');
 Verified installed version: 4.3.2
 ```
+
+## Flywheel-SDK
+
+### First connection
+
 Or, you can connect to the Flywheel site and verify this way
 ```
 >> st = scitran('stanfordlabs');
@@ -24,5 +26,4 @@ Or, you can connect to the Flywheel site and verify this way
 Verified installed version: 4.3.2
 Verified connection
 ```
-
 
