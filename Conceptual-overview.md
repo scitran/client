@@ -1,4 +1,4 @@
-The **scitran** client communicates between Matlab and a Flywheel instance.  This wiki describes how to perform tasks such as
+The remainder of this wiki describes how to perform tasks using the **scitran** client methods. Tasks include
 
 * search for data and metadata
 * read, download or upload data and metadata
