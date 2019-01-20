@@ -48,18 +48,10 @@ The Flywheel-SDK also includes methods for securely connecting to the site, read
 
 The command line interface software can be obtained from your user profile page on the Flywheel instance.
 
-ABCD
-
 ![](https://github.com/scitran/client/wiki/images/cliDownload.png)
 
-More
+The program installs as 'fw'.  Type`fw help` to see the options and see the [CLI Documentation here](https://docs.flywheel.io/display/EM/CLI+-+Commands).
 
-![](https://github.com/scitran/client/wiki/images/loginProfile.png)
-
-More
-
-
-More
 
 
 
