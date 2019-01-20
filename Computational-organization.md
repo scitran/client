@@ -48,7 +48,7 @@ The Flywheel-SDK also includes methods for securely connecting to the site, read
 
 The command line interface software can be obtained from your user profile page on the Flywheel instance.
 
-![](https://github.com/vistalab/scitran/wiki/images/cliDownload.png)
+![](https://github.com/vistalab/scitran/wiki/images/cliInstall.png)
 
 The [CLI installation instructions are here](https://docs.flywheel.io/display/EM/CLI+-+Installation). 
 
