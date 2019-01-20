@@ -27,7 +27,7 @@ Entry: name.
 
 
 ### Methods
-Once you create a scitran object use <TAB>-completion to see methods that let you perform general actions, for example
+The scitran object implements many methods, as well.  These let you perform general actions, for example
 
     scitran.lookup('a string')  - Returns metadata about a container
     scitran.search( ... )       - Searches the database for specific types of metadata
@@ -38,7 +38,7 @@ Or actions on specific containers and files, for example
     scitran.file<TAB>      - Shows all the basic File methods 
     scitran.<TAB>          - Shows all the methods
 
-One additional data container type, the **Collection**, is described later on this page. Other objects (Analyses, Gears, and Jobs) are described in the [Computational organization section](Computational-organization).  Most of these containers can include Files.
+One additional data container type, the **Collection**, is described below. Other objects (Analyses, Gears, and Jobs) are described in the [Computational organization section](Computational-organization).  Most of these containers can include Files.
 
 ### Notes, tags and attachments
 
