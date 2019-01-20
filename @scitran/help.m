@@ -26,6 +26,7 @@ function help(~,src)
   st.help;     % Wiki
   st.help('wiki');
 
+  st.help('sdk starting');
   st.help('sdk examples');
   st.help('sdk releases');
   st.help('sdk package');
@@ -35,19 +36,21 @@ function help(~,src)
 %%
 if notDefined('src'), src = 'help'; end
 src = stParamFormat(src);
-webOptions = {'wiki','sdk releases','sdk examples','sdk package','help'};
+webOptions = {'wiki','sdk releases','sdk starting','sdk examples','sdk package','help'};
 
 %% Bring up the help pages
 
 switch(src)
     case 'wiki'
         url = 'https://github.com/scitran/client/wiki';
+    case 'sdkstarting'
+        url = 'https://flywheel-io.github.io/core/tags/4.4.5/matlab/getting_started.html';
     case 'sdkreleases'
         url = 'https://github.com/flywheel-io/core/releases';
     case 'sdkexamples'
-        url = 'https://flywheel-io.github.io/core/branches/master/matlab/examples.html';
+        url = 'https://flywheel-io.github.io/core/tags/4.4.5/matlab/examples.html';
     case 'sdkpackage'
-        url = 'https://flywheel-io.github.io/core/branches/master/matlab/flywheel.html#';
+        url = 'https://flywheel-io.github.io/core/branches/tags/4.4.5/matlab/flywheel.html#';
     otherwise
         % help brings this up
         fprintf('st.help(Parameter)\nParameter options \n');

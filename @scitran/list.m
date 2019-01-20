@@ -1,5 +1,23 @@
 function result = list(obj, returnType, parentID, varargin)
-% List Flywheel containers or files
+% Deprecated:  List Flywheel containers or files
+%
+% The new SDK objects make it trivial to find all the children of an
+% object.  We are leaving 'list' here for backward compatibility, but in
+% the future rather than
+%
+%     sessions = st.list('session',projectID)
+%
+% you should use
+% 
+%      project = st.lookup('group/projectLabel');
+%      sessions = project.sessions();
+%
+% Or,
+%
+%      session = project.sessions.find('label=sessionLabel');
+%
+%
+% ***************
 %
 % Syntax
 %   result = scitran.list(returnType, parentID, ...)
