@@ -1,6 +1,7 @@
 ### Data Containers - Projects, Sessions and Acquisitions
-The Flywheel database hierarchy matches a neuroimaging project. The top level is your group.  When each group there are Projects; each project contains multiple Sessions; each session contains multiple Acquisitions; each acquisition contains multiple Files.
+The Flywheel database hierarchy matches a neuroimaging project. The top level is the user's group;  group contains multiple Projects; each project contains multiple Sessions; each session contains multiple Acquisitions; each acquisition contains multiple Files.
 
+### Methods
 Once you create a scitran object use <TAB>-completion to see methods that let you perform general actions, for example
 
     scitran.lookup('a string')  - Returns metadata about a container
