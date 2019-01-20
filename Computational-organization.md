@@ -50,6 +50,8 @@ The command line interface software can be obtained from your user profile page 
 
 ![](https://github.com/scitran/client/wiki/images/cliDownload.png)
 
+![](https://github.com/vistalab/scitran/wiki/images/cliDownload.png)
+
 The [CLI installation instructions are here](https://docs.flywheel.io/display/EM/CLI+-+Installation). 
 
 After installation, use `fw help` to see the options and read the [CLI Documentation here](https://docs.flywheel.io/display/EM/CLI+-+Commands).
