@@ -1,4 +1,4 @@
-Flywheel supports two types of computations. **Gears** support stable software tools that many people might use, such as the FSL, FreeSurfer, BIDS, or HCP programs.  The **Software Development Kit** supports people who are developing specialized analyses; these analyses may be developed for a particular project and experimental design.  As the development stabilizes, it might become a **Gear**.
+Flywheel supports three types of programming interactions. **Gears** support stable software tools that many people might use, such as the FSL, FreeSurfer, BIDS, or HCP programs.  The **Software Development Kit** supports people who are developing specialized analyses; these analyses may be developed for a particular project and experimental design.  As the development stabilizes, it might become a **Gear**. The **Command Line Interface** is available from the Flywheel instance. This is software that performs various tasks such as uploading and downloading projects and sessions.
 
 ## Gears
 **Flywheel Gears** are a way to share stable and used software. Flywheel has converted many programs into Gears, including some of the FSL, Freesurfer, ANTS and HCP programs. We use Chris Rorden's dcm2niix utility frequently.  Nearly any program that runs without user-intervention can be transformed into a Flywheel Gear.  
@@ -46,6 +46,7 @@ The Flywheel-SDK also includes methods for securely connecting to the site, read
 
 ## CLI - Command line interface
 
-We will add text about this separate programming utility at a later time.
+The command line interface software can be obtained from your user profile page on the Flywheel instance.
+
 
 
