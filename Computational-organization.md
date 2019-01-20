@@ -50,7 +50,7 @@ The command line interface software can be obtained from your user profile page 
 
 ABCD
 
-![](https://github.com/vistalab/scitran/wiki/images/cliDownload.png)
+![](https://github.com/scitran/client/wiki/images/cliDownload.png)
 
 More
 
