@@ -46,13 +46,40 @@ The Flywheel-SDK also includes methods for securely connecting to the site, read
 
 ## CLI - Command line interface
 
-The command line interface software can be obtained from your user profile page on the Flywheel instance.
+The command line interface software enables you to perform data upload and download operations, as well as to execute Gears from your command line.  The CLI software ('fw') can be downloaded through the user profile page on the Flywheel instance.
 
 ![](https://github.com/vistalab/scitran/wiki/images/cliInstall.png)
 
-The [CLI installation instructions are here](https://docs.flywheel.io/display/EM/CLI+-+Installation). 
+The [CLI installation instructions are here](https://docs.flywheel.io/display/EM/CLI+-+Installation) and the [CLI Documentation is here](https://docs.flywheel.io/display/EM/CLI+-+Commands).
 
-After installation, use `fw help` to see the options and read the [CLI Documentation here](https://docs.flywheel.io/display/EM/CLI+-+Commands).
+After installation, use `fw help` to see the options 
+```
+$ fw help
+Flywheel command-line interface
+
+Usage:
+  fw [command]
+
+Available Commands:
+  batch       Start or manage server batch jobs
+  download    Download a remote file or container
+  export      Export data from Flywheel
+  gear        Gear commands (requires Docker)
+  help        Help about any command
+  import      Import data into Flywheel
+  job         Start or manage server jobs
+  login       Login to a Flywheel instance
+  logout      Delete your saved API key
+  ls          Show remote files
+  status      See your current login status
+  upload      Upload a remote file
+  version     Print CLI version
+
+Flags:
+  -h, --help   help for fw
+
+Use "fw [command] --help" for more information about a command.
+```
 
 
 
