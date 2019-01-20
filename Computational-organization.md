@@ -44,7 +44,7 @@ Examples of the methods are often available you can find them using the stExampl
 
 The Flywheel-SDK also includes methods for securely connecting to the site, reading and writing data and metadata, storing analysis results, creating projects, controlling Gears and Jobs, and more.
 
-## CLI - Command line interface
+## Command line interface (CLI)
 
 The command line interface software enables you to perform data upload and download operations, as well as to execute Gears from your command line.  The CLI software ('fw') can be downloaded through the user profile page on the Flywheel instance.
 
