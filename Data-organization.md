@@ -1,5 +1,30 @@
-### Data Containers - Projects, Sessions and Acquisitions
+## Data Containers 
 The Flywheel database hierarchy matches a neuroimaging project. The top level is the user's group;  group contains multiple Projects; each project contains multiple Sessions; each session contains multiple Acquisitions; each acquisition contains multiple Files.
+
+As of version 4.4.5 the SDK containers are **objects**.  Each object 
+
+1. includes metadata about a Flywheel object, and
+2. executes methods based on the container metadata. 
+
+For example, you can 
+
+* Display the container's metadata
+* Retrieve specific content 
+* Download or upload files from the container
+
+There are many SDK Object methods, and we provide a list of [object methods here](object-methods).  As a simple example, here is a way to find the files attached to a project.
+```
+project = st.lookup('adni/ADNI: T1');
+adniProjectFiles = project.files;
+>> stPrint(adniProjectFiles,'name')
+
+Entry: name.
+-----------------------------
+	1 - ADNI_GeneralProceduresManual.pdf 
+	2 - db_accesslog.csv 
+```
+
+
 
 ### Methods
 Once you create a scitran object use <TAB>-completion to see methods that let you perform general actions, for example
