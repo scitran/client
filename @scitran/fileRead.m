@@ -76,8 +76,7 @@ if nargout > 1, save = true; end
 %% Get the file name, container id and container type
 
 % Returns are:
-% [containerType, containerID, fileContainerType, fname, fileType]
-[containerID, ~, fileContainerType, fname, fileType] = ...
+[containerID, containerType, fileContainerType, fname, fileType] = ...
     st.objectParse(fileInfo,containerType,containerID);
 
 % The user is over-riding the Flywheel file type and demanding that we
@@ -94,11 +93,16 @@ else,                     dname = destination;
 end
 
 %% Download the file
-
-st.fileDownload(fname,...
-    'container type',fileContainerType,...
-    'container id', containerID,...
-    'destination',dname);
+if strcmp(containerType,'fileentry')
+    fileInfo.download(dname);
+else
+    % Probably no longer needed.
+    warning('file download called.  I think it should be deprecated.');
+    st.fileDownload(fname,...
+        'container type',fileContainerType,...
+        'container id', containerID,...
+        'destination',dname);
+end
 
 %% When we read the file, it should be one of these file types
 

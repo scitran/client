@@ -46,17 +46,16 @@ function [containerID, containerType, fileContainerType, fname, fileType] = ...
 
 % Examples:
 %{
-st = scitran('stanfordlabs');
-h = st.projectHierarchy('Graphics assets');
-[id, oType] = st.objectParse(h.project)
-[id, oType] = st.objectParse(h.sessions{1})
-[id, oType] = st.objectParse(h.acquisitions{2}{1})
+ st = scitran('stanfordlabs');
+ project = st.lookup('wandell/Graphics assets');
+ [id, oType] = st.objectParse(project)
 
-acquisition = st.search('acquisition',...
-    'project label exact','Graphics assets', ...
-    'acquisition id',id); 
-                           
-[id, oType, fileCType, fname, fType]= st.objectParse(h.acquisitions{2}{1}.files{1})
+ session = project.sessions.findFirst;
+ [id, oType] = st.objectParse(session)
+
+ acquisition = session.acquisitions.findFirst;
+ [id, oType] = st.objectParse(acquisition)
+ [id, oType, fileCType, fname, fType]= st.objectParse(acquisition.files{1})
 %}
 
 %%
@@ -71,6 +70,10 @@ fileType = '';
 
 %%
 if ischar(object)
+    % I think this whole section should be deleted.  We should not allow
+    % this type of object any more (fname, containerType, containerID)
+    % We should only allow a fileEntry (BW).
+    %
     % User sent in a string, so, the containerType must be a file.  
     % The user must might have sent in a container type and id.  Also, for
     % the case of a file  we expect a containerType like
@@ -78,6 +81,7 @@ if ischar(object)
     % 
     % (At some point, file's will have an id and much of  this will go
     % away). 
+    warning('String objectParse for a file');
     if isempty(containerID)
         error('A string "object" means a file and requires the id of it''s container.'); 
     end
@@ -109,16 +113,17 @@ if ischar(object)
     containerType     = 'file';
 
 else
-    % Either a list return, a search return, or a getContainer return
+    % Either a list return, a search return, or a get/getContainer return
     
-    % Figure out which type of object this is.  oType is the object
-    % type itself, or search. If search, then sType is the type of
-    % search.  At present, the sType estimate is not always accurate.
-    % We hope that Justin will make it better.
+    % Figure out which type of object this is.
+    %
+    %  oType is the object type, or search. 
+    %  If oType is search, then sType is the object.returnType
+    %
     [oType, sType] = stObjectType(object);
     
     % If it is a search, then ...
-    if isequal(oType,'search')  && isequal(sType,'file') 
+    if isequal(oType,'search')  && isequal(sType,'fileentry') 
         % A file search object has a parent id included.
         % In 4.4 this will be replaced because the file information
         % will be enough to let us download without the parent information. 
@@ -145,15 +150,18 @@ else
         % This object
         containerType = oType;
         
-        if isequal(oType, 'file')
-            % For a file, the containerID and containerType both refer
-            % to the parent of the file.  We are defaulting to
-            % acquisition until we can do better.
-            % warning('File "id" not yet implemented; file container defaults to "acquisition"');
-            fileContainerType = 'acquisition';
-            % containerID = '';   % We need to get the acquisition ID
+        if isequal(oType, 'fileentry')
+            % We no longer know the file container type, but that doesn't
+            % matter because we have the file.download function, wherever
+            % it is.
+            %
+            % And files do not yet have an id.
+            %
+            % warning('File "id" not yet implemented')
+            fileContainerType = '';
             fileType = object.type;
             fname    = object.name;
+            containerID = object.id;   % For files, this is bogus
         else
             % Not a file.  So, we use the object ID.
             containerID   = object.id;

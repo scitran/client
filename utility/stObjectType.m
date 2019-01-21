@@ -1,25 +1,26 @@
 function [objectType, searchType] = stObjectType(object)
-% Estimate the type (class) of object 
+% Return the object type and the search type
 %
 %  [oType, sType] = stObjectType(object)
 %
 % Description
 %   See the discussion in scitran.objectParse.  This function is used
-%   there at a key step.
+%   there at a key step.  BUT, these functions may become unnecessary.
+%   Just not sure yet.
 %
-%   The object type (project, session, acquisition, file ... search)
+%   The object type (project, session, acquisition, fileentry ... search)
 %   is returned.  If the object type is a search, then a search type
 %   (sType) is also returned (e.g., file, project, ...)
 %
 % Inputs:
-%   object:  A Flywheel object, usually a container
+%   object:  A Flywheel object, usually a container and sometimes a file.
 %
 % Optional key/value pairs
 %   N/A
 % 
 % Returns
-%   oType:  Object type (project, session, or returned by a search)
-%   sType:  Search type (file, project, ...)
+%   oType:  Object type (project, session, ... or a search)
+%   sType:  Search type (the returnType on the searchResponse)
 %
 % Wandell, Vistasoft Team, 2018
 %
@@ -34,19 +35,21 @@ stObjectType(h.project)
 stObjectType(h.sessions{1})
 stObjectType(h.acquisitions{2}{1})
 stObjectType(h.acquisitions{2}{1}.files{1})
-
+%}
+%{
 project = st.search('project','project label exact','VWFA')
 [oType, sType] = stObjectType(project{1})
-
-c = st.fw.getContainer(h.project.id);
-[oType, sType] = stObjectType(c)
-
-c = st.fw.getContainer(h.sessions{1}.id);
-[oType, sType] = stObjectType(c)
-
-c = st.fw.getContainer(h.acquisitions{2}{1}.id);
-[oType, sType] = stObjectType(c)
-
+%}
+%{
+project = st.search('project',...
+        'project label exact','VWFA',...
+        'fw',true);
+[oType, sType] = stObjectType(project{1})
+%}
+%{
+p = st.lookup('wandell/Graphics assets'); oType = stObjectType(p)
+s = p.sessions.findFirst; oType = stObjectType(s)
+a = s.acquisitions.findFirst; oType = stObjectType(a)
 %}
 
 %%  The Flywheel classes are flywheel.model.XXX
@@ -60,8 +63,7 @@ searchType = '';
 % Simplify these cases.
 switch objectType
     case 'fileentry'
-        warning('How did we get a fileentry type?')
-        objectType = 'file';
+        objectType = 'fileentry';
         
     case 'searchresponse'
         % We should be getting a return_type parameter some day, in which case
@@ -69,31 +71,18 @@ switch objectType
         objectType = 'search';
         searchType = object.returnType;
         
-    % Probably never happens.  Depreciate, I think.    
+      %{
+        % Probably never happens.  Deprecate, I think.    
     case 'searchsessionresponse'
         warning('searchsessionresponse is deprecated.  I think.');
         objectType = 'search';
         searchType = 'session';
-    
-    % fw.getContainer returns.  Somehow, JE didn't put a returnType in for
-    % this case.  So, we figure it out from the class.
-    case 'containerprojectoutput'
-        % Returned by a fw.getContainer
-        objectType = 'getcontainer';
-        searchType = 'project';
-    case 'containersessionoutput'
-        objectType = 'getcontainer';
-        searchType = 'session';
-    case 'containeracquisitionoutput'
-        objectType = 'getcontainer';
-        searchType = 'acquisition';
-    case 'containeranalysisoutput'
-        objectType = 'getcontainer';
-        searchType = 'analysis';
-    case 'containercollectionoutput'
-        % Not sure this exists.
-        objectType = 'getcontainer';
-        searchType = 'collection';
+      %}
+        
+    % fw.get or fw.getContainer returns
+    otherwise
+        objectType = object.containerType;
+        
 end
 
 end
