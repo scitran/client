@@ -120,17 +120,62 @@ xlabel('TI'); ylabel('FA'); grid on
 fileList =  st.search('file','file type','dicom',...
     'measurement','T1',...
     'fw',false, ...
-    'summary', true);
+    'summary', true, ...
+    'limit',100);
 
 te = zeros(length(fileList),1);
-for ii=1:numel(fileList)
-    try
-        te(ii) = fileList{ii}.info.fslhd.descrip.te;
-    catch
-        te(ii) = NaN;
+ti = zeros(length(fileList),1);
+tr = zeros(length(fileList),1);
+for ii=51:100
+    if ii ~= 80
+        % This is an ALDIT file.  Something wrong.  Ask LMP.
+        thisFile = stSearch2Container(st,fileList{ii});
+        try
+            te(ii) = thisFile.info.EchoTime;
+            ti(ii) = thisFile.info.InversionTime;
+            tr(ii) = thisFile.info.RepetitionTime;
+        catch
+            te(ii) = NaN;
+            ti(ii) = NaN;
+            tr(ii) = NaN;
+        end
     end
 end
-stNewGraphWin; histogram(te)
+stNewGraphWin; histogram(te,50)
+stNewGraphWin; histogram(ti,50)
+stNewGraphWin; histogram(tr,50)
+
+%% T2
+
+fileList =  st.search('file','file type','dicom',...
+    'measurement','T2',...
+    'fw',false, ...
+    'summary', true, ...
+    'limit',100);
+
+% NO Inversion time for T2 data.
+te = zeros(length(fileList),1);
+tr = zeros(length(fileList),1);
+for ii=1:100
+    if ii ~= 80
+        % This is an ALDIT file.  Something wrong.  Ask LMP.
+        thisFile = stSearch2Container(st,fileList{ii});
+        try
+            te(ii) = thisFile.info.EchoTime;
+            % ti(ii) = thisFile.info.InversionTime;
+            tr(ii) = thisFile.info.RepetitionTime;
+        catch
+            ii
+            keyboard;
+            te(ii) = NaN;
+            % ti(ii) = NaN;
+            tr(ii) = NaN;
+        end
+    end
+end
+stNewGraphWin; histogram(te,50)
+stNewGraphWin; histogram(tr,50)
+
 
 %%  Find all the scans that are intended to be structural
 fileList =  st.search('file','file type','nifti',...
