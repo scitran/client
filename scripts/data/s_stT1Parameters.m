@@ -2,15 +2,19 @@
 %
 %
 
+%%
 st = scitran('stanfordlabs');
-projects = st.list('project','wandell');
-stPrint(projects,'label')
 
-project = st.fw.lookup('adni/ADNI: DWI (AD)');
-project = st.fw.lookup('adni/ADNI: T1');
-project = st.lookup('wandell/Weston Havens');
+%%
+group  = 'wandell';  % 'adni'
+pLabel = 'Weston Havens';
+% 'adni/ADNI: DWI (AD)' or 'adni/ADNI: T1'
+str = fullfile(group,pLabel);
+project = st.lookup(str);
 
-% How do we find all the T1 nifti files in here?  A search?
+%% How do we find all the T1 nifti files in here?  A search?
+
+%{
 fileList =  st.search('file','file type','dicom',...
     'project label exact','Brain Beats',...
     'acquisition label contains','T1w',...
@@ -23,37 +27,47 @@ id = st.objectParse(fileList{1});
 thisFile = st.list('file',fileList{1}.parent.id);
 stSelect(thisFile,'type','nifti')
 niftiFiles{1}.info
-
-
-%%
-project = st.lookup('wandell/Weston Havens');
+%}
 
 % How do we find all the T1 nifti files in here?  A search?
 fileList =  st.search('file','file type','nifti',...
     'project label exact',project.label,...
     'acquisition label contains','T1w',...
-    'summary', true,'fw',false);
+    'summary', true,...
+    'fw',true);
 
-thisFile = fileList{1};
-thisFile.info.fslhd.descrip
+%%
+fa = zeros(length(fileList),1);
+ti = zeros(length(fileList),1);
+for ii=1:length(fileList)
+    fa(ii) = fileList{ii}.info.fslhd.descrip.fa;
+    ti(ii) = fileList{ii}.info.fslhd.descrip.fa;
+end
 
 
-
-%% How do we find all the T1 nifti files in here?  A search?
+%% How do we find all the T1 nifti files in the project?  A search?
 fileList =  st.search('file','file type','nifti',...
     'project label exact',project.label,...
     'measurement','T1',...
-    'summary', true);
+    'summary', true, ...
+    'fw',true);
+
+% Flip angles - These are for the qMRI methods
 fa = zeros(length(fileList),1);
+ti = zeros(length(fileList),1);
 for ii=1:numel(fileList)
     try
         fa(ii) = fileList{ii}.info.fslhd.descrip.fa;
+        ti(ii) = fileList{ii}.info.fslhd.descrip.ti;
     catch
         fa(ii) = NaN;
+        ti(ii) = NaN;
     end
-    
 end
 stNewGraphWin; histogram(fa)
+stNewGraphWin; histogram(ti)
+stNewGraphWin; plot(ti(:),fa(:),'o');
+xlabel('TI'); ylabel('FA'); grid on
 
 %%  These are localizers
 fileList =  st.search('file','file type','nifti',...
