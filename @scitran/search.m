@@ -602,7 +602,7 @@ if ischar(srch)
                     srch.filters{end + 1}.match.file0x2Eclassification0x2EIntent = val;
                 end
                 
-            case {'terange'}
+            case {'measurementterange'}
                 % Here is a goal.
                 % st.search('file','measurement te range',[v1, v2]);
                     

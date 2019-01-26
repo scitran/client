@@ -20,9 +20,6 @@ fileList =  st.search('file','file type','dicom',...
     'acquisition label contains','T1w',...
     'summary', true);
 
-% What we would like to do is search for all the files that have a
-% classification of Measurement: {'T1'} and Intent: {'Structural'}
-
 id = st.objectParse(fileList{1});
 thisFile = st.list('file',fileList{1}.parent.id);
 stSelect(thisFile,'type','nifti')
@@ -36,7 +33,7 @@ fileList =  st.search('file','file type','nifti',...
     'summary', true,...
     'fw',true);
 
-%%
+%
 fa = zeros(length(fileList),1);
 ti = zeros(length(fileList),1);
 for ii=1:length(fileList)
@@ -46,11 +43,19 @@ end
 
 
 %% How do we find all the T1 nifti files in the project?  A search?
-fileList =  st.search('file','file type','nifti',...
+
+% What we would like to do is search for all the files that have a
+% classification of Measurement: {'T1'} and Intent: {'Structural'}
+% I should add other options, I suppose.
+
+fileList =  st.search('file', ...
     'project label exact',project.label,...
     'measurement','T1',...
+    'intent','structural',...
     'summary', true, ...
-    'fw',true);
+    'fw',false);
+
+% st.search('file','intent','structural');
 
 % Flip angles - These are for the qMRI methods
 fa = zeros(length(fileList),1);
