@@ -3,7 +3,7 @@ When you know about the existence and location of project containers and files, 
 ## Lookup
 To retrieve metadata about a group, project, session, acquisition or fear use **scitran.lookup**.  The method takes a string as input and returns the metadata object.  The string should be formatted as
 
-    lookupString = fullfile(groupID, projectLABEL, subjectCODE, sessionLABEL, acquisitionLABEL);
+    lookupString=fullfile(groupID, projectLABEL, subjectCODE, sessionLABEL, acquisitionLABEL);
     st.lookup(lookupString);
 
 Or
