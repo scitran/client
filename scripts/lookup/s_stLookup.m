@@ -1,16 +1,17 @@
 %% s_stLookup
 %
-% Experimenting with lookup for data, and then at the end for Gears.
-%
+% Illustrating lookup and findFirst and find for data. At the end for Gears
+% is illustrated, too.
 %
 % BW Scitran Team, 2019
 %
 % See also
 %
+
 %%
 st = scitran('stanfordlabs');
 
-%% Your group
+%% Lookup a group
 myGroup = st.lookup('wandell');
 disp(myGroup)
 
@@ -21,7 +22,7 @@ pLabels = stPrint(projects,'project','label');
 lookupString = fullfile(myGroup.id,pLabels{1});
 project = st.lookup(lookupString);
 
-%% Now find the data for a subject in a project
+%% Now find the data for a subject in a project = findFirst illustrated
 thisSession = project.sessions.findFirst();
 subject = thisSession.subject.code; % A Weston-Havens subject
 lookupString = fullfile(myGroup.id,pLabels{1},subject);
@@ -30,12 +31,14 @@ thisSubject = st.lookup(lookupString);
 disp(thisSubject)
 
 %% Next level
+
 sLabel = thisSession.label;
 lookupString = fullfile(myGroup.id,pLabels{1},subject,sLabel);
 thisSession2 = st.lookup(lookupString);
 assert(isequal(thisSession.id,thisSession2.id))
 
-%% Next level
+%% Next level - findFirst illustrated
+
 thisAcquisition = thisSession.acquisitions.findFirst;
 aLabel = thisAcquisition.label;
 lookupString = fullfile(myGroup.id,pLabels{1},subject,sLabel,aLabel);
@@ -56,6 +59,9 @@ thisGear = st.lookup(str);
 disp(thisGear)
 thisGear.gear
 
+%%  Find with a label
+project = st.lookup('wandell/VWFA');
+thisSession = project.sessions.find('label=20151127_1332');
+disp(thisSession{1})
+
 %%
-
-
