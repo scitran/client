@@ -45,13 +45,6 @@ There are a great many possible key/value parameters for the **search** method. 
 
 ### Search options
 
-* **'fw'**       - 
-* **'summary'**  - 
-* **'allData'** - 
-* **'limit'**    - 
-
-N.B. Even if 'all_data' is true, you cannot query or download objects unless you have permission
-
 #### 'allData'
 
 Run the search across the entire database ('all_data',true); 
@@ -59,6 +52,8 @@ Run the search across the entire database ('all_data',true);
 By default, you search only the projects you have access to.  To search the entire database use argument
     
      projects = st.search('project','allData',true);
+
+N.B. Even if 'all_data' is true, you cannot query or download objects unless you have permission
 
 #### 'summary'
 
