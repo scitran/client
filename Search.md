@@ -44,10 +44,10 @@ project = st.search('project',...
 There are a great many possible key/value parameters for the **search** method. See the [search examples page](Search-examples).
 
 ### Search options
-### Utility parameters
 
+* **'fw'**       - A logical to return a cell array of Flywheel containers rather than searchResponses
 * **'summary'**  - A logical that indicates whether to print the number of found objects ('summary',true)
-* **'all_data'** - Run the search across the entire database ('all_data',true); 
+* **'allData'** - Run the search across the entire database ('all_data',true); 
 * **'limit'**    - Limit number of returned cells, st.search('file','limit',17,'file name','foo); (default 10,000)
 
 N.B. Even if 'all_data' is true, you cannot query or download objects unless you have permission
@@ -55,18 +55,29 @@ N.B. Even if 'all_data' is true, you cannot query or download objects unless you
 #### 'allData'
 
 By default, you search only the projects you have access to.  To search the entire database use argument
+    
+     projects = st.search('project','allData',true);
 
 #### 'summary'
-    projects = st.search('project','allData',true,'summary',true);
+
+Print a summary of the number of responses
+
+    projects = st.search('project','summary',true);
 
 You only have permission to view or download a subset of these, but you can learn about what is in the database from an 'allData' search.  The Stanford Labs site will soon have more than 100 projects.
 
 #### 'fw'
+
 The SearchResponse and the Flywheel database object contain different information.  If you are searching for only a few files, you may want the return to be in the format of the Flywheel object rather than the search response.  The scitran method stSearch2Container uses the information in the SearchResponse to list the container.  If that is what you really want, then you can use the 'fw' option to return a cell array of Containers rather than a cell array of SearchResponses.
 
      projectContainers = st.search('project','group label','wandell','fw',true);
 
 #### 'limit'
+
+Limit the number of search responses.
+
+     projectContainers = st.search('project','group label','wandell','limit',2);
+
 
 ## Wonkish
 
