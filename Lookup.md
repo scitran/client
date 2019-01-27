@@ -1,4 +1,8 @@
-When you know about the metadata of a specific container or file, you can retrieve it using scitran.lookup.  This methods is similar to the Unix 'ls' command; or, if you prefer, to the Windows 'dir' command.  See the script **s_stLookup** for examples.
+When you know about the metadata of a specific container or file, you can retrieve it using scitran.lookup.  This methods is similar to the Unix 'ls' command; or, if you prefer, to the Windows 'dir' command.  
+
+The methods **find** and **findFirst** are useful if you would like to select a session or acquisition from a project. 
+
+See the script **s_stLookup** for examples.
 
 ## Lookup
 To retrieve metadata about a group, project, session, acquisition or gear use **scitran.lookup**.  The method takes a string as input and returns the metadata object.  The string describes the location of the metadata in the hierarchy
@@ -41,7 +45,9 @@ project =
            tags: {'newtag'}
        analyses: []
 ```
-Using the metadata object, you can continue to learn more about its 'children'. For example, a cell array of the metadata for all the sessions in this project can be read using
+
+## find and findFirst
+Metadata objects have methods to return their 'children'. For example, all the sessions in a project can be returned using
 ```
 >> sessions = project.sessions();
 >> numel(sessions)
@@ -60,3 +66,9 @@ ans =
 
     {1×1 flywheel.model.Session}
 ```
+If you just want one session, and you don't care which one, you can use
+
+```
+>> thisSession = project.sessions.findFirst;
+```
+There are analogous functions for the session and acquisition levels.  Files have no children.
