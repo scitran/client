@@ -1,14 +1,6 @@
 
 We added some utility parameters that are for 'quality of life.'
 
-### Utility parameters
-
-* **'summary'**  - A logical that indicates whether to print the number of found objects ('summary',true)
-* **'all_data'** - Run the search across the entire database ('all_data',true); 
-* **'limit'**    - Limit number of returned cells, st.search('file','limit',17,'file name','foo); (default 10,000)
-
-N.B. Even if 'all_data' is true, you cannot query or download objects unless you have permission
-
 ### Search string
 
 You can add a parameter 'string', which does a free form search within the other parameter constraints. For example, this is a search for acquisitions that have the string 'BOLD_EPI' somewhere in a label, name, or note.
