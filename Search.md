@@ -1,6 +1,6 @@
 * [Search examples](Search-examples) and [More search examples](https://github.com/scitran/client/blob/master/scripts/s_stSearches.m)
 * [Special searches](Special-search-parameters)
-* The 'fw', 'limit' and 'summary' options
+* The 'allData','fw', 'limit' and 'summary' options
 
 ***
 
