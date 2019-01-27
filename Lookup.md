@@ -1,7 +1,11 @@
-When you know about the existence and location of project containers and files, you can retrieve them using scitran.lookup.  This methods is similar to the Unix 'ls' command; or, if you prefer, to the Windows 'dir' command.  See the script **s_stLookup** for examples.
+When you know about the metadata of a specific container or file, you can retrieve it using scitran.lookup.  This methods is similar to the Unix 'ls' command; or, if you prefer, to the Windows 'dir' command.  See the script **s_stLookup** for examples.
 
 ## Lookup
-To retrieve metadata about a group, project, session, acquisition or fear use **scitran.lookup**.  The method takes a string as input and returns the metadata object.  The string should be formatted as
+To retrieve metadata about a group, project, session, acquisition or gear use **scitran.lookup**.  The method takes a string as input and returns the metadata object.  The string describes the location of the metadata in the hierarchy
+
+    str = 'group/projectLabel/subjectCode/sessionLabel/acquisitionLabel';
+
+A convenient way to build the string is this:
 
     lookupString=fullfile(groupID, projectLABEL, subjectCODE, sessionLABEL, acquisitionLABEL);
     st.lookup(lookupString);
