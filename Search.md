@@ -44,6 +44,13 @@ project = st.search('project',...
 There are a great many possible key/value parameters for the **search** method. See the [search examples page](Search-examples).
 
 ### Search options
+### Utility parameters
+
+* **'summary'**  - A logical that indicates whether to print the number of found objects ('summary',true)
+* **'all_data'** - Run the search across the entire database ('all_data',true); 
+* **'limit'**    - Limit number of returned cells, st.search('file','limit',17,'file name','foo); (default 10,000)
+
+N.B. Even if 'all_data' is true, you cannot query or download objects unless you have permission
 
 #### 'allData'
 
