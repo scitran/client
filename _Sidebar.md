@@ -4,7 +4,7 @@
 * [Conceptual overview](Conceptual-overview)
     * [Data](Data-organization)
     * [Computation](Computational-organization)
-* [Lookup](Lookup)
+* [Lookup and Find](Lookup)
 * [Search](Search)
 * [Download and read](Download-and-read)
 * [Create and upload](Create-and-upload)
