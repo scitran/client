@@ -45,6 +45,14 @@ lookupString = fullfile(myGroup.id,pLabels{1},subject,sLabel,aLabel);
 thisAcquisition2 = st.lookup(lookupString);
 assert(isequal(thisAcquisition2.id,thisAcquisition.id))
 
+%% Next level - the file
+
+thisFile = thisAcquisition.files{1};
+fLabel = thisFile.name;
+lookupString = fullfile(myGroup.id,pLabels{1},subject,sLabel,aLabel)
+lookupString = sprintf('%s/files/%s',lookupString,fLabel);
+thisFile2 = st.lookup(lookupString);
+
 %% Look up all Gears.  This uses the 'name' field, not the label field.
 
 gears = st.fw.gears.find();

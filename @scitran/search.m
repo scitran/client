@@ -669,7 +669,7 @@ if summary
     end
 end
 
-if fw  % Convert the search responses to their Flywheel data format
+if fw && ~isempty(result) % Convert the search responses to their Flywheel data format
     result = stSearch2Container(obj,result);
 end
 
