@@ -4,22 +4,30 @@ The methods **find** and **findFirst** are useful if you would like to select a 
 
 See the script **s_stLookup** for examples.
 
-## Lookup
-To retrieve metadata about a group, project, session, acquisition or gear use **scitran.lookup**.  The method takes a string as input and returns the metadata object.  The string describes the location of the metadata in the hierarchy
+## Lookup - container
+To retrieve metadata about a group, project, session, acquisition or gear use **scitran.lookup**.  The method takes a string as input and returns the metadata object.  The lookup string describes the location of the metadata in the hierarchy, and it must be built in this order
 
     str = 'group/projectLabel/subjectCode/sessionLabel/acquisitionLabel';
 
-A convenient way to build the string is this:
+You can stop at any level.  A convenient way to build up the string is this:
 
     lookupString=fullfile(groupID, projectLABEL, subjectCODE, sessionLABEL, acquisitionLABEL);
-    st.lookup(lookupString);
+    thisContainer = st.lookup(lookupString);
 
-Or
+## Lookup - file
+
+The lookup method extends to the file level, but you must insert the string 'file', as in
+
+    fName = 'fileName';
+    lookupString = sprintf('%s/files/%s',lookupString,fName);
+    thisFile = st.lookup(lookupString);
+
+## Lookup - gear
 
     lookupString = fullfile('gear',gearName);
     st.lookup(lookupString);
 
-For example,
+## Lookup example
 ```
 >> project = st.lookup('wandell/VWFA');
 >> project
