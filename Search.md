@@ -45,14 +45,16 @@ There are a great many possible key/value parameters for the **search** method. 
 
 ### Search options
 
-* **'fw'**       - A logical to return a cell array of Flywheel containers rather than searchResponses
-* **'summary'**  - A logical that indicates whether to print the number of found objects ('summary',true)
-* **'allData'** - Run the search across the entire database ('all_data',true); 
-* **'limit'**    - Limit number of returned cells, st.search('file','limit',17,'file name','foo); (default 10,000)
+* **'fw'**       - 
+* **'summary'**  - 
+* **'allData'** - 
+* **'limit'**    - 
 
 N.B. Even if 'all_data' is true, you cannot query or download objects unless you have permission
 
 #### 'allData'
+
+Run the search across the entire database ('all_data',true); 
 
 By default, you search only the projects you have access to.  To search the entire database use argument
     
@@ -60,7 +62,7 @@ By default, you search only the projects you have access to.  To search the enti
 
 #### 'summary'
 
-Print a summary of the number of responses
+A logical that indicates whether to print the number of found objects ('summary',true)
 
     projects = st.search('project','summary',true);
 
@@ -68,13 +70,15 @@ You only have permission to view or download a subset of these, but you can lear
 
 #### 'fw'
 
+A logical to return a cell array of Flywheel containers rather than searchResponses
+
 The SearchResponse and the Flywheel database object contain different information.  If you are searching for only a few files, you may want the return to be in the format of the Flywheel object rather than the search response.  The scitran method stSearch2Container uses the information in the SearchResponse to list the container.  If that is what you really want, then you can use the 'fw' option to return a cell array of Containers rather than a cell array of SearchResponses.
 
      projectContainers = st.search('project','group label','wandell','fw',true);
 
 #### 'limit'
 
-Limit the number of search responses.
+Limit the number of search responses. The default is 10,000, a very large number.
 
      projectContainers = st.search('project','group label','wandell','limit',2);
 
