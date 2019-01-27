@@ -86,7 +86,7 @@ switch containerType
             parent = st.fw.get(id); containerType = parent.containerType;
             switch containerType
                 case 'acquisition'
-                    result{ii} = st.fw.getAcquisitionFileInfo(srch{ii}.parent.id,srch{ii}.file.name);
+                    result{ii} = st.fw.getAcquisitionFileInfo(id,srch{ii}.file.name);
                 otherwise
                     disp('NYI');
             end

@@ -5,145 +5,57 @@
 %%
 st = scitran('stanfordlabs');
 
-%%
-%{
-group  = 'wandell';  % 'adni'
-pLabel = 'Weston Havens';
-%}
-%{
-group = 'adni';
-pLabel = 'ADNI: T1';
-%}
-% 'adni/ADNI: DWI (AD)' or 'adni/ADNI: T1'
-str = fullfile(group,pLabel);
-project = st.lookup(str);
+%% Working with DICOM files 
 
-%% How do we find all the T1 nifti files in here?  A search?
-
-%{
-fileList =  st.search('file','file type','dicom',...
-    'project label exact','Brain Beats',...
-    'acquisition label contains','T1w',...
-    'summary', true);
-
-id = st.objectParse(fileList{1});
-thisFile = st.list('file',fileList{1}.parent.id);
-stSelect(thisFile,'type','nifti')
-niftiFiles{1}.info
-%}
-
-% How do we find all the T1 nifti files with T1W in the label?  A search?
-fileList =  st.search('file','file type','nifti',...
-    'project label exact',project.label,...
-    'acquisition label contains','T1w',...
-    'summary', true,...
-    'fw',true);
-
+% First, the T1 measurement
 %
-fa = zeros(length(fileList),1);
-ti = zeros(length(fileList),1);
-for ii=1:length(fileList)
-    fa(ii) = fileList{ii}.info.fslhd.descrip.fa;
-    ti(ii) = fileList{ii}.info.fslhd.descrip.fa;
-end
-
-%% How do we find all the T1 nifti files in the project?  
-% This list includes all the qMRI data when Weson Havens
-% There are about 1072 files in the ADNI T1
-% 
-fileList =  st.search('file','file type','nifti',...
-    'project label exact',project.label,...
-    'measurement','T1',...
-    'intent','structural',...
-    'summary', true, ...
-    'fw',false);
-
-% st.search('file','intent','structural');
-
-% Parameters 
-% For Weston Havens we have a series of flip angles because of the qMRI
-% data.
-% For ADNI T1 ... there
-fa = zeros(length(fileList),1);
-ti = zeros(length(fileList),1);
-for ii=1:numel(fileList)
-    try
-        fa(ii) = fileList{ii}.info.fslhd.descrip.fa;
-        ti(ii) = fileList{ii}.info.fslhd.descrip.ti;
-    catch
-        fa(ii) = NaN;
-        ti(ii) = NaN;
-    end
-end
-
-stNewGraphWin; histogram(fa)
-stNewGraphWin; histogram(ti)
-stNewGraphWin; plot(ti(:),fa(:),'o');
-xlabel('TI'); ylabel('FA'); grid on
-
-
-%% How do we find all the T1 nifti files in the project?  
-% This list includes all the qMRI data when Weson Havens
-% There are about 1072 files in the ADNI T1
-% 
-fileList =  st.search('file','file type','nifti',...
-    'project label exact',project.label,...
-    'measurement','T1',...
-    'summary', true, ...
-    'fw',true);
-
-% Parameters 
-% For Weston Havens we have a series of flip angles because of the qMRI
-% data.
-% For ADNI T1 ... there
-fa = zeros(length(fileList),1);
-ti = zeros(length(fileList),1);
-for ii=1:numel(fileList)
-    try
-        fa(ii) = fileList{ii}.info.fslhd.descrip.fa;
-        ti(ii) = fileList{ii}.info.fslhd.descrip.ti;
-    catch
-        fa(ii) = NaN;
-        ti(ii) = NaN;
-    end
-end
-
-stNewGraphWin; histogram(fa)
-stNewGraphWin; histogram(ti)
-stNewGraphWin; plot(ti(:),fa(:),'o');
-xlabel('TI'); ylabel('FA'); grid on
-
-%%  Here are examples of DICOM files with a T1 measurement
-%
-% There appear to be a lot in the stanfordlabs instance. THere are 5484
+% There appear to be a lot in the stanfordlabs instance. There are 5484
 % on January 28, 2019.
+% But a lot of them fail the stSearch2Container() call.
+lmt = 100;
+badList = zeros(lmt,3);
+
 fileList =  st.search('file','file type','dicom',...
     'measurement','T1',...
     'fw',false, ...
     'summary', true, ...
-    'limit',100);
-
+    'limit',lmt);
+nFiles = length(fileList);
+fprintf('Found %d T1 files\n',nFiles);
 te = zeros(length(fileList),1);
 ti = zeros(length(fileList),1);
 tr = zeros(length(fileList),1);
-for ii=51:100
-    if ii ~= 80
-        % This is an ALDIT file.  Something wrong.  Ask LMP.
+fa = zeros(length(fileList),1);
+
+for ii=1:length(fileList)
+    % The ALDIT file ii = 80.  Something wrong.  Ask LMP.
+    try
         thisFile = stSearch2Container(st,fileList{ii});
-        try
-            te(ii) = thisFile.info.EchoTime;
+        te(ii) = thisFile.info.EchoTime;
+        tr(ii) = thisFile.info.RepetitionTime;
+        fa(ii) = thisFile.info.FlipAngle;
+        if isfield(thisFile.info,'InversionTime')
             ti(ii) = thisFile.info.InversionTime;
-            tr(ii) = thisFile.info.RepetitionTime;
-        catch
-            te(ii) = NaN;
-            ti(ii) = NaN;
-            tr(ii) = NaN;
+        else, ti(ii) = NaN;
         end
+    catch
+        badList(ii,1) = 1;
+        te(ii) = NaN;
+        ti(ii) = NaN;
+        tr(ii) = NaN;
+        fa(ii) = NaN;
     end
+    
 end
+sum(badList(:,1))
+
+%{
 stNewGraphWin; histogram(te,50)
 stNewGraphWin; histogram(ti,50)
 stNewGraphWin; histogram(tr,50)
+stNewGraphWin; plot(te(:),tr(:),'o'); 
+grid on; xlabel('TE'); ylabel('TR');
+%}
 
 %% T2
 
@@ -151,31 +63,105 @@ fileList =  st.search('file','file type','dicom',...
     'measurement','T2',...
     'fw',false, ...
     'summary', true, ...
-    'limit',100);
+    'limit',lmt);
+nFiles = length(fileList);
+fprintf('Found %d T2 files\n',nFiles);
 
-% NO Inversion time for T2 data.
-te = zeros(length(fileList),1);
-tr = zeros(length(fileList),1);
-for ii=1:100
-    if ii ~= 80
-        % This is an ALDIT file.  Something wrong.  Ask LMP.
+% NO Inversion time expected for Diffusion,T2 data.
+te2 = zeros(length(fileList),1);
+tr2 = zeros(length(fileList),1);
+fa2 = zeros(length(fileList),1);
+ti2 = zeros(length(fileList),1);
+for ii=1:length(fileList)
+    try
         thisFile = stSearch2Container(st,fileList{ii});
-        try
-            te(ii) = thisFile.info.EchoTime;
-            % ti(ii) = thisFile.info.InversionTime;
-            tr(ii) = thisFile.info.RepetitionTime;
-        catch
-            ii
-            keyboard;
-            te(ii) = NaN;
-            % ti(ii) = NaN;
-            tr(ii) = NaN;
+        te2(ii) = thisFile.info.EchoTime;
+        tr2(ii) = thisFile.info.RepetitionTime;
+        fa2(ii) = thisFile.info.FlipAngle;
+        if isfield(thisFile.info,'InversionTime')
+            ti2(ii) = thisFile.info.InversionTime;
+        else, ti2(ii) = NaN;
         end
+    catch
+        badList(ii,2) = 1;
+        te2(ii) = NaN;
+        fa2(ii) = NaN;
+        tr2(ii) = NaN;
+       
     end
 end
-stNewGraphWin; histogram(te,50)
-stNewGraphWin; histogram(tr,50)
+%{
+stNewGraphWin; histogram(te2,50)
+stNewGraphWin; histogram(tr2,50)
+stNewGraphWin; plot(te2(:),tr2(:),'o'); 
+grid on; xlabel('TE'); ylabel('TR');
+%}
 
+%% Diffusion
+
+fileList =  st.search('file','file type','dicom',...
+    'measurement','Diffusion',...
+    'fw',false, ...
+    'summary', true, ...
+    'limit',lmt);
+nFiles = length(fileList);
+fprintf('Found %d DWI files\n',nFiles);
+
+% NO Inversion time expected for Diffusion,T2 data.
+teD = zeros(nFiles,1);
+trD = zeros(nFiles,1);
+faD = zeros(nFiles,1);
+tiD = zeros(nFiles,1);
+for ii=1:nFiles
+    try
+        thisFile = stSearch2Container(st,fileList{ii});
+        teD(ii) = thisFile.info.EchoTime;
+        trD(ii) = thisFile.info.RepetitionTime;
+        faD(ii) = thisFile.info.FlipAngle;
+        if isfield(thisFile.info,'InversionTime')
+              tiD(ii) = thisFile.info.InversionTime;
+        else, tiD(ii) = NaN;
+        end
+    catch
+        badList(ii,3) = 1;
+        teD(ii) = NaN;
+        faD(ii) = NaN;
+        trD(ii) = NaN;
+    end
+end
+
+%{
+stNewGraphWin; histogram(teD,50)
+stNewGraphWin; histogram(trD,50)
+stNewGraphWin; plot(teD(:),trD(:),'o'); 
+grid on; xlabel('TE'); ylabel('TR');
+%}
+
+%%  In the scatter plot, we can see the TR/TE differences
+% The inversion time parameter only seems to be there for the T1, which
+% makes sense in one way but ...
+
+stNewGraphWin;
+plot(te(:),tr(:),'bo',...
+    te2(:),tr2(:),'go',...
+    teD(:),trD(:),'ro');
+grid on; xlabel('TE'); ylabel('TR');
+legend({'T1','T2','Diffusion'})
+
+% Make a 3D plot now
+
+stNewGraphWin;
+plot3(fa(:),te(:),tr(:),'bo'); hold on
+plot3(fa2(:),te2(:),tr2(:),'go'); hold on
+plot3(faD(:),teD(:),trD(:),'ro');
+grid on; legend({'T1','T2','Diffusion'})
+xlabel('FA'); ylabel('TE'); zlabel('TR');
+
+%%
+fhdl = vcNewGraphWin;
+stHistImage([trD(:),teD(:)],true,fhdl);
+img2 = stHistImage([tr2(:),te2(:)],true,fhdl); colormap(parula)
+mesh(img)
 
 %%  Find all the scans that are intended to be structural
 fileList =  st.search('file','file type','nifti',...
