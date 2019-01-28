@@ -34,9 +34,11 @@ for ii=1:length(fileList)
         te(ii) = thisFile.info.EchoTime;
         tr(ii) = thisFile.info.RepetitionTime;
         fa(ii) = thisFile.info.FlipAngle;
-        if isfield(thisFile.info,'InversionTime')
+        try
+            % Not sure why isfield() does not work.
             ti(ii) = thisFile.info.InversionTime;
-        else, ti(ii) = NaN;
+        catch
+            ti(ii) = NaN;
         end
     catch
         badList(ii,1) = 1;
@@ -47,14 +49,22 @@ for ii=1:length(fileList)
     end
     
 end
-sum(badList(:,1))
+fprintf('Number of bad T1 data files %d\n',sum(badList(:,1)));
 
 %{
 stNewGraphWin; histogram(te,50)
 stNewGraphWin; histogram(ti,50)
 stNewGraphWin; histogram(tr,50)
-stNewGraphWin; plot(te(:),tr(:),'o'); 
-grid on; xlabel('TE'); ylabel('TR');
+%}
+%{
+% Ask Adam Kerr about these TR values.
+stNewGraphWin; stPlotJitter(ti,tr,[10 10],gcf);
+grid on; xlabel('TI (ms)'); ylabel('TR (ms)');
+%}
+
+%{
+stNewGraphWin; stPlotJitter(te,tr,[.04,30],gcf);
+grid on; xlabel('TE (ms)'); ylabel('TR (ms)');
 %}
 
 %% T2
