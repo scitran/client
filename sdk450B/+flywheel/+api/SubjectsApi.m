@@ -1,49 +1,50 @@
-% SessionsApi - Session operations
+% SubjectsApi - 
 %
-% SessionsApi Properties:
+% SubjectsApi Properties:
 %    apiClient - ApiClient instance
 %
-% SessionsApi Methods
-%    addSession                             - Create a new session
-%    addSessionAnalysis                     - Create an analysis and upload files.
-%    addSessionAnalysisNote                 - Add a note to session analysis.
-%    addSessionNote                         - Add a note to session.
-%    addSessionTag                          - Add a tag to session.
-%    deleteSession                          - Delete a session
-%    deleteSessionAnalysis                  - Delete an anaylsis
-%    deleteSessionAnalysisNote              - Remove a note from session analysis.
-%    deleteSessionFile                      - Delete a file
-%    deleteSessionNote                      - Remove a note from session
-%    deleteSessionTag                       - Delete a tag
-%    downloadFileFromSession                - Download a file.
-%    getSessionFileZipInfo                  - Download a file.
-%    getSessionDownloadTicket               - Download a file.
-%    downloadInputFromSessionAnalysis       - Download anaylsis inputs with filter.
-%    getSessionAnalysisInputDownloadTicket  - Download anaylsis inputs with filter.
-%    downloadOutputFromSessionAnalysis      - Download anaylsis outputs with filter.
-%    getSessionAnalysisOutputDownloadTicket - Download anaylsis outputs with filter.
-%    downloadSessionAnalysisInputs          - Download analysis inputs.
-%    downloadSessionAnalysisOutputs         - Download analysis outputs.
-%    getAllSessions                         - Get a list of sessions
-%    getSession                             - Get a single session
-%    getSessionAcquisitions                 - List acquisitions in a session
-%    getSessionAnalyses                     - Get analyses for session.
-%    getSessionAnalysis                     - Get an analysis.
-%    getSessionFileInfo                     - Get info for a particular file.
-%    getSessionJobs                         - Return any jobs that use inputs from this session
-%    getSessionNote                         - Get a note on session.
-%    getSessionTag                          - Get the value of a tag, by name.
-%    modifySession                          - Update a session
-%    modifySessionFile                      - Modify a file's attributes
-%    modifySessionFileClassification        - Update classification for a particular file.
-%    modifySessionFileInfo                  - Update info for a particular file.
-%    modifySessionInfo                      - Update or replace info for a session.
-%    modifySessionNote                      - Update a note on session.
-%    renameSessionTag                       - Rename a tag.
-%    replaceSessionFile                     - Replace a file
-%    uploadFileToSession                    - Upload a file to session.
-%    uploadOutputToSessionAnalysis          - Upload an output file to analysis.
-classdef SessionsApi < handle
+% SubjectsApi Methods
+%    addSubject                             - Create a new subject
+%    addSubjectAnalysis                     - Create an analysis and upload files.
+%    addSubjectAnalysisNote                 - Add a note to subject analysis.
+%    addSubjectNote                         - Add a note to subject.
+%    addSubjectTag                          - Add a tag to subject.
+%    deleteSubject                          - Delete a subject
+%    deleteSubjectAnalysis                  - Delete an anaylsis
+%    deleteSubjectAnalysisNote              - Remove a note from subject analysis.
+%    deleteSubjectFile                      - Delete a file
+%    deleteSubjectNote                      - Remove a note from subject
+%    deleteSubjectTag                       - Delete a tag
+%    downloadFileFromSubject                - Download a file.
+%    getSubjectFileZipInfo                  - Download a file.
+%    getSubjectDownloadTicket               - Download a file.
+%    downloadInputFromSubjectAnalysis       - Download anaylsis inputs with filter.
+%    getSubjectAnalysisInputZipInfo         - Download anaylsis inputs with filter.
+%    getSubjectAnalysisInputDownloadTicket  - Download anaylsis inputs with filter.
+%    downloadOutputFromSubjectAnalysis      - Download anaylsis outputs with filter.
+%    getSubjectAnalysisOutputZipInfo        - Download anaylsis outputs with filter.
+%    getSubjectAnalysisOutputDownloadTicket - Download anaylsis outputs with filter.
+%    downloadSubjectAnalysisInputs          - Download analysis inputs.
+%    downloadSubjectAnalysisOutputs         - Download analysis outputs.
+%    getAllSubjects                         - Get a list of subjects
+%    getSubject                             - Get a single subject
+%    getSubjectAnalyses                     - Get analyses for subject.
+%    getSubjectAnalysis                     - Get an analysis.
+%    getSubjectFileInfo                     - Get info for a particular file.
+%    getSubjectNote                         - Get a note on subject.
+%    getSubjectSessions                     - List sessions of a subject
+%    getSubjectTag                          - Get the value of a tag, by name.
+%    modifySubject                          - Update a subject
+%    modifySubjectFile                      - Modify a file's attributes
+%    modifySubjectFileClassification        - Update classification for a particular file.
+%    modifySubjectFileInfo                  - Update info for a particular file.
+%    modifySubjectInfo                      - Update or replace info for a subject.
+%    modifySubjectNote                      - Update a note on subject.
+%    renameSubjectTag                       - Rename a tag.
+%    replaceSubjectFile                     - Replace a file
+%    uploadFileToSubject                    - Upload a file to subject.
+%    uploadOutputToSubjectAnalysis          - Upload an output file to analysis.
+classdef SubjectsApi < handle
     % NOTE: This file is auto generated by the swagger code generator program.
     % Do not edit the file manually.
     properties
@@ -51,14 +52,14 @@ classdef SessionsApi < handle
         context_
     end
     methods
-        function obj = SessionsApi(apiClient, context)
+        function obj = SubjectsApi(apiClient, context)
             obj.apiClient = apiClient;
             obj.context_ = context;
         end
 
-        function [returnData, resp] = addSession(obj, body, varargin)
-            % Create a new session
-            % body (Session)
+        function [returnData, resp] = addSubject(obj, body, varargin)
+            % Create a new subject
+            % body (Subject)
             % returns: [ContainerNewOutput, resp]
 
             x__inp = inputParser;
@@ -81,10 +82,10 @@ classdef SessionsApi < handle
             files = {};
 
             % Body (as JSON)
-            body = flywheel.model.Session.ensureIsInstance(x__inp.Results.body);
+            body = flywheel.model.Subject.ensureIsInstance(x__inp.Results.body);
             body = flywheel.ApiClient.encodeJson(body.toJson());
 
-            resp = obj.apiClient.callApi('POST', '/sessions', ...
+            resp = obj.apiClient.callApi('POST', '/subjects', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -105,25 +106,25 @@ classdef SessionsApi < handle
             end
         end
 
-        function [returnData, resp] = addSessionAnalysis(obj, sessionId, body, varargin)
+        function [returnData, resp] = addSubjectAnalysis(obj, subjectId, body, varargin)
             % Create an analysis and upload files.
-            % sessionId (char)
+            % subjectId (char)
             % body (AnalysisInput)
             % job (logical):Return job as an object instead of an id
             % returns: [ContainerNewOutput, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'sessionId');
+            addRequired(x__inp, 'subjectId');
             addRequired(x__inp, 'body');
             addParameter(x__inp, 'job', []);
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, sessionId, body, varargin{:});
+            parse(x__inp, subjectId, body, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.sessionId)
-                pathParams = [pathParams, 'SessionId', x__inp.Results.sessionId];
+            if ~isempty(x__inp.Results.subjectId)
+                pathParams = [pathParams, 'SubjectId', x__inp.Results.subjectId];
             end
 
             % Query parameters
@@ -145,7 +146,7 @@ classdef SessionsApi < handle
             body = flywheel.model.AnalysisInput.ensureIsInstance(x__inp.Results.body);
             body = flywheel.ApiClient.encodeJson(body.toJson());
 
-            resp = obj.apiClient.callApi('POST', '/sessions/{SessionId}/analyses', ...
+            resp = obj.apiClient.callApi('POST', '/subjects/{SubjectId}/analyses', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -166,25 +167,25 @@ classdef SessionsApi < handle
             end
         end
 
-        function [returnData, resp] = addSessionAnalysisNote(obj, sessionId, analysisId, body, varargin)
-            % Add a note to session analysis.
-            % sessionId (char)
+        function [returnData, resp] = addSubjectAnalysisNote(obj, subjectId, analysisId, body, varargin)
+            % Add a note to subject analysis.
+            % subjectId (char)
             % analysisId (char)
             % body (Note)
             % returns: [InlineResponse200, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'sessionId');
+            addRequired(x__inp, 'subjectId');
             addRequired(x__inp, 'analysisId');
             addRequired(x__inp, 'body');
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, sessionId, analysisId, body, varargin{:});
+            parse(x__inp, subjectId, analysisId, body, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.sessionId)
-                pathParams = [pathParams, 'SessionId', x__inp.Results.sessionId];
+            if ~isempty(x__inp.Results.subjectId)
+                pathParams = [pathParams, 'SubjectId', x__inp.Results.subjectId];
             end
             if ~isempty(x__inp.Results.analysisId)
                 pathParams = [pathParams, 'AnalysisId', x__inp.Results.analysisId];
@@ -204,7 +205,7 @@ classdef SessionsApi < handle
             body = flywheel.model.Note.ensureIsInstance(x__inp.Results.body);
             body = flywheel.ApiClient.encodeJson(body.toJson());
 
-            resp = obj.apiClient.callApi('POST', '/sessions/{SessionId}/analyses/{AnalysisId}/notes', ...
+            resp = obj.apiClient.callApi('POST', '/subjects/{SubjectId}/analyses/{AnalysisId}/notes', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -225,23 +226,23 @@ classdef SessionsApi < handle
             end
         end
 
-        function [returnData, resp] = addSessionNote(obj, sessionId, body, varargin)
-            % Add a note to session.
-            % sessionId (char)
+        function [returnData, resp] = addSubjectNote(obj, subjectId, body, varargin)
+            % Add a note to subject.
+            % subjectId (char)
             % body (Note)
             % returns: [InlineResponse200, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'sessionId');
+            addRequired(x__inp, 'subjectId');
             addRequired(x__inp, 'body');
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, sessionId, body, varargin{:});
+            parse(x__inp, subjectId, body, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.sessionId)
-                pathParams = [pathParams, 'SessionId', x__inp.Results.sessionId];
+            if ~isempty(x__inp.Results.subjectId)
+                pathParams = [pathParams, 'SubjectId', x__inp.Results.subjectId];
             end
 
             % Query parameters
@@ -258,7 +259,7 @@ classdef SessionsApi < handle
             body = flywheel.model.Note.ensureIsInstance(x__inp.Results.body);
             body = flywheel.ApiClient.encodeJson(body.toJson());
 
-            resp = obj.apiClient.callApi('POST', '/sessions/{SessionId}/notes', ...
+            resp = obj.apiClient.callApi('POST', '/subjects/{SubjectId}/notes', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -279,23 +280,23 @@ classdef SessionsApi < handle
             end
         end
 
-        function [returnData, resp] = addSessionTag(obj, sessionId, body, varargin)
-            % Add a tag to session.
-            % sessionId (char)
+        function [returnData, resp] = addSubjectTag(obj, subjectId, body, varargin)
+            % Add a tag to subject.
+            % subjectId (char)
             % body (Tag)
             % returns: [InlineResponse200, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'sessionId');
+            addRequired(x__inp, 'subjectId');
             addRequired(x__inp, 'body');
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, sessionId, body, varargin{:});
+            parse(x__inp, subjectId, body, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.sessionId)
-                pathParams = [pathParams, 'SessionId', x__inp.Results.sessionId];
+            if ~isempty(x__inp.Results.subjectId)
+                pathParams = [pathParams, 'SubjectId', x__inp.Results.subjectId];
             end
 
             % Query parameters
@@ -312,7 +313,7 @@ classdef SessionsApi < handle
             body = flywheel.model.Tag.ensureIsInstance(x__inp.Results.body);
             body = flywheel.ApiClient.encodeJson(body.toJson());
 
-            resp = obj.apiClient.callApi('POST', '/sessions/{SessionId}/tags', ...
+            resp = obj.apiClient.callApi('POST', '/subjects/{SubjectId}/tags', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -333,21 +334,21 @@ classdef SessionsApi < handle
             end
         end
 
-        function [returnData, resp] = deleteSession(obj, sessionId, varargin)
-            % Delete a session
-            % sessionId (char)
+        function [returnData, resp] = deleteSubject(obj, subjectId, varargin)
+            % Delete a subject
+            % subjectId (char)
             % returns: [InlineResponse2001, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'sessionId');
+            addRequired(x__inp, 'subjectId');
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, sessionId, varargin{:});
+            parse(x__inp, subjectId, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.sessionId)
-                pathParams = [pathParams, 'SessionId', x__inp.Results.sessionId];
+            if ~isempty(x__inp.Results.subjectId)
+                pathParams = [pathParams, 'SubjectId', x__inp.Results.subjectId];
             end
 
             % Query parameters
@@ -363,7 +364,7 @@ classdef SessionsApi < handle
             % Body (as JSON)
             body = {};
 
-            resp = obj.apiClient.callApi('DELETE', '/sessions/{SessionId}', ...
+            resp = obj.apiClient.callApi('DELETE', '/subjects/{SubjectId}', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -384,23 +385,23 @@ classdef SessionsApi < handle
             end
         end
 
-        function [returnData, resp] = deleteSessionAnalysis(obj, sessionId, analysisId, varargin)
+        function [returnData, resp] = deleteSubjectAnalysis(obj, subjectId, analysisId, varargin)
             % Delete an anaylsis
-            % sessionId (char)
+            % subjectId (char)
             % analysisId (char)
             % returns: [InlineResponse2001, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'sessionId');
+            addRequired(x__inp, 'subjectId');
             addRequired(x__inp, 'analysisId');
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, sessionId, analysisId, varargin{:});
+            parse(x__inp, subjectId, analysisId, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.sessionId)
-                pathParams = [pathParams, 'SessionId', x__inp.Results.sessionId];
+            if ~isempty(x__inp.Results.subjectId)
+                pathParams = [pathParams, 'SubjectId', x__inp.Results.subjectId];
             end
             if ~isempty(x__inp.Results.analysisId)
                 pathParams = [pathParams, 'AnalysisId', x__inp.Results.analysisId];
@@ -419,7 +420,7 @@ classdef SessionsApi < handle
             % Body (as JSON)
             body = {};
 
-            resp = obj.apiClient.callApi('DELETE', '/sessions/{SessionId}/analyses/{AnalysisId}', ...
+            resp = obj.apiClient.callApi('DELETE', '/subjects/{SubjectId}/analyses/{AnalysisId}', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -440,25 +441,25 @@ classdef SessionsApi < handle
             end
         end
 
-        function [returnData, resp] = deleteSessionAnalysisNote(obj, sessionId, analysisId, noteId, varargin)
-            % Remove a note from session analysis.
-            % sessionId (char)
+        function [returnData, resp] = deleteSubjectAnalysisNote(obj, subjectId, analysisId, noteId, varargin)
+            % Remove a note from subject analysis.
+            % subjectId (char)
             % analysisId (char)
             % noteId (char)
             % returns: [InlineResponse200, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'sessionId');
+            addRequired(x__inp, 'subjectId');
             addRequired(x__inp, 'analysisId');
             addRequired(x__inp, 'noteId');
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, sessionId, analysisId, noteId, varargin{:});
+            parse(x__inp, subjectId, analysisId, noteId, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.sessionId)
-                pathParams = [pathParams, 'SessionId', x__inp.Results.sessionId];
+            if ~isempty(x__inp.Results.subjectId)
+                pathParams = [pathParams, 'SubjectId', x__inp.Results.subjectId];
             end
             if ~isempty(x__inp.Results.analysisId)
                 pathParams = [pathParams, 'AnalysisId', x__inp.Results.analysisId];
@@ -480,7 +481,7 @@ classdef SessionsApi < handle
             % Body (as JSON)
             body = {};
 
-            resp = obj.apiClient.callApi('DELETE', '/sessions/{SessionId}/analyses/{AnalysisId}/notes/{NoteId}', ...
+            resp = obj.apiClient.callApi('DELETE', '/subjects/{SubjectId}/analyses/{AnalysisId}/notes/{NoteId}', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -501,23 +502,23 @@ classdef SessionsApi < handle
             end
         end
 
-        function [returnData, resp] = deleteSessionFile(obj, sessionId, fileName, varargin)
+        function [returnData, resp] = deleteSubjectFile(obj, subjectId, fileName, varargin)
             % Delete a file
-            % sessionId (char)
+            % subjectId (char)
             % fileName (char)
             % returns: [InlineResponse200, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'sessionId');
+            addRequired(x__inp, 'subjectId');
             addRequired(x__inp, 'fileName');
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, sessionId, fileName, varargin{:});
+            parse(x__inp, subjectId, fileName, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.sessionId)
-                pathParams = [pathParams, 'SessionId', x__inp.Results.sessionId];
+            if ~isempty(x__inp.Results.subjectId)
+                pathParams = [pathParams, 'SubjectId', x__inp.Results.subjectId];
             end
             if ~isempty(x__inp.Results.fileName)
                 pathParams = [pathParams, 'FileName', x__inp.Results.fileName];
@@ -536,7 +537,7 @@ classdef SessionsApi < handle
             % Body (as JSON)
             body = {};
 
-            resp = obj.apiClient.callApi('DELETE', '/sessions/{SessionId}/files/{FileName}', ...
+            resp = obj.apiClient.callApi('DELETE', '/subjects/{SubjectId}/files/{FileName}', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -557,23 +558,23 @@ classdef SessionsApi < handle
             end
         end
 
-        function [returnData, resp] = deleteSessionNote(obj, sessionId, noteId, varargin)
-            % Remove a note from session
-            % sessionId (char)
+        function [returnData, resp] = deleteSubjectNote(obj, subjectId, noteId, varargin)
+            % Remove a note from subject
+            % subjectId (char)
             % noteId (char)
             % returns: [InlineResponse200, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'sessionId');
+            addRequired(x__inp, 'subjectId');
             addRequired(x__inp, 'noteId');
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, sessionId, noteId, varargin{:});
+            parse(x__inp, subjectId, noteId, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.sessionId)
-                pathParams = [pathParams, 'SessionId', x__inp.Results.sessionId];
+            if ~isempty(x__inp.Results.subjectId)
+                pathParams = [pathParams, 'SubjectId', x__inp.Results.subjectId];
             end
             if ~isempty(x__inp.Results.noteId)
                 pathParams = [pathParams, 'NoteId', x__inp.Results.noteId];
@@ -592,7 +593,7 @@ classdef SessionsApi < handle
             % Body (as JSON)
             body = {};
 
-            resp = obj.apiClient.callApi('DELETE', '/sessions/{SessionId}/notes/{NoteId}', ...
+            resp = obj.apiClient.callApi('DELETE', '/subjects/{SubjectId}/notes/{NoteId}', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -613,23 +614,23 @@ classdef SessionsApi < handle
             end
         end
 
-        function [returnData, resp] = deleteSessionTag(obj, sessionId, tagValue, varargin)
+        function [returnData, resp] = deleteSubjectTag(obj, subjectId, tagValue, varargin)
             % Delete a tag
-            % sessionId (char)
+            % subjectId (char)
             % tagValue (char):The tag to interact with
             % returns: [InlineResponse200, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'sessionId');
+            addRequired(x__inp, 'subjectId');
             addRequired(x__inp, 'tagValue');
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, sessionId, tagValue, varargin{:});
+            parse(x__inp, subjectId, tagValue, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.sessionId)
-                pathParams = [pathParams, 'SessionId', x__inp.Results.sessionId];
+            if ~isempty(x__inp.Results.subjectId)
+                pathParams = [pathParams, 'SubjectId', x__inp.Results.subjectId];
             end
             if ~isempty(x__inp.Results.tagValue)
                 pathParams = [pathParams, 'TagValue', x__inp.Results.tagValue];
@@ -648,7 +649,7 @@ classdef SessionsApi < handle
             % Body (as JSON)
             body = {};
 
-            resp = obj.apiClient.callApi('DELETE', '/sessions/{SessionId}/tags/{TagValue}', ...
+            resp = obj.apiClient.callApi('DELETE', '/subjects/{SubjectId}/tags/{TagValue}', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -669,9 +670,9 @@ classdef SessionsApi < handle
             end
         end
 
-        function [returnData, resp] = downloadFileFromSession(obj, sessionId, fileName, varargin)
+        function [returnData, resp] = downloadFileFromSubject(obj, subjectId, fileName, varargin)
             % Download a file.
-            % sessionId (char)
+            % subjectId (char)
             % fileName (char)
             % view (logical):If true, the proper \"Content-Type\" header based on the file's mimetype is set on response If false, the \"Content-Type\" header is set to \"application/octet-stream\" 
             % info (logical):If the file is a zipfile, return a json response of zipfile member information
@@ -681,7 +682,7 @@ classdef SessionsApi < handle
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'sessionId');
+            addRequired(x__inp, 'subjectId');
             addRequired(x__inp, 'fileName');
             addParameter(x__inp, 'view', []);
             addParameter(x__inp, 'info', []);
@@ -689,12 +690,12 @@ classdef SessionsApi < handle
             addRequired(x__inp, 'destFile');
             addParameter(x__inp, 'OutputType', 'double');
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, sessionId, fileName, varargin{:});
+            parse(x__inp, subjectId, fileName, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.sessionId)
-                pathParams = [pathParams, 'SessionId', x__inp.Results.sessionId];
+            if ~isempty(x__inp.Results.subjectId)
+                pathParams = [pathParams, 'SubjectId', x__inp.Results.subjectId];
             end
             if ~isempty(x__inp.Results.fileName)
                 pathParams = [pathParams, 'FileName', x__inp.Results.fileName];
@@ -722,7 +723,7 @@ classdef SessionsApi < handle
             % Body (as JSON)
             body = {};
 
-            resp = obj.apiClient.callApi('GET', '/sessions/{SessionId}/files/{FileName}', ...
+            resp = obj.apiClient.callApi('GET', '/subjects/{SubjectId}/files/{FileName}', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -741,9 +742,9 @@ classdef SessionsApi < handle
             end
         end
 
-        function [returnData, resp] = getSessionFileZipInfo(obj, sessionId, fileName, varargin)
+        function [returnData, resp] = getSubjectFileZipInfo(obj, subjectId, fileName, varargin)
             % Download a file.
-            % sessionId (char)
+            % subjectId (char)
             % fileName (char)
             % ticket (char):The generated ticket id for the download, or present but empty to generate a ticket id
             % view (logical):If true, the proper \"Content-Type\" header based on the file's mimetype is set on response If false, the \"Content-Type\" header is set to \"application/octet-stream\" 
@@ -753,19 +754,19 @@ classdef SessionsApi < handle
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'sessionId');
+            addRequired(x__inp, 'subjectId');
             addRequired(x__inp, 'fileName');
             addParameter(x__inp, 'ticket', []);
             addParameter(x__inp, 'view', []);
             addParameter(x__inp, 'info', []);
             addParameter(x__inp, 'member', []);
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, sessionId, fileName, varargin{:});
+            parse(x__inp, subjectId, fileName, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.sessionId)
-                pathParams = [pathParams, 'SessionId', x__inp.Results.sessionId];
+            if ~isempty(x__inp.Results.subjectId)
+                pathParams = [pathParams, 'SubjectId', x__inp.Results.subjectId];
             end
             if ~isempty(x__inp.Results.fileName)
                 pathParams = [pathParams, 'FileName', x__inp.Results.fileName];
@@ -798,7 +799,7 @@ classdef SessionsApi < handle
             % Body (as JSON)
             body = {};
 
-            resp = obj.apiClient.callApi('GET', '/sessions/{SessionId}/files/{FileName}', ...
+            resp = obj.apiClient.callApi('GET', '/subjects/{SubjectId}/files/{FileName}', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -819,9 +820,9 @@ classdef SessionsApi < handle
             end
         end
 
-        function [returnData, resp] = getSessionDownloadTicket(obj, sessionId, fileName, varargin)
+        function [returnData, resp] = getSubjectDownloadTicket(obj, subjectId, fileName, varargin)
             % Download a file.
-            % sessionId (char)
+            % subjectId (char)
             % fileName (char)
             % ticket (char):The generated ticket id for the download, or present but empty to generate a ticket id
             % view (logical):If true, the proper \"Content-Type\" header based on the file's mimetype is set on response If false, the \"Content-Type\" header is set to \"application/octet-stream\" 
@@ -831,19 +832,19 @@ classdef SessionsApi < handle
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'sessionId');
+            addRequired(x__inp, 'subjectId');
             addRequired(x__inp, 'fileName');
             addParameter(x__inp, 'ticket', []);
             addParameter(x__inp, 'view', []);
             addParameter(x__inp, 'info', []);
             addParameter(x__inp, 'member', []);
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, sessionId, fileName, varargin{:});
+            parse(x__inp, subjectId, fileName, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.sessionId)
-                pathParams = [pathParams, 'SessionId', x__inp.Results.sessionId];
+            if ~isempty(x__inp.Results.subjectId)
+                pathParams = [pathParams, 'SubjectId', x__inp.Results.subjectId];
             end
             if ~isempty(x__inp.Results.fileName)
                 pathParams = [pathParams, 'FileName', x__inp.Results.fileName];
@@ -874,7 +875,7 @@ classdef SessionsApi < handle
             % Body (as JSON)
             body = {};
 
-            resp = obj.apiClient.callApi('GET', '/sessions/{SessionId}/files/{FileName}', ...
+            resp = obj.apiClient.callApi('GET', '/subjects/{SubjectId}/files/{FileName}', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -895,28 +896,32 @@ classdef SessionsApi < handle
             end
         end
 
-        function [returnData, resp] = downloadInputFromSessionAnalysis(obj, sessionId, analysisId, filename, varargin)
+        function [returnData, resp] = downloadInputFromSubjectAnalysis(obj, subjectId, analysisId, filename, varargin)
             % Download anaylsis inputs with filter.
-            % sessionId (char)
+            % subjectId (char)
             % analysisId (char)
             % filename (char):regex to select inputs for download
+            % info (logical):If the file is a zipfile, return a json response of zipfile member information
+            % member (char):The filename of a zipfile member to download rather than the entire file
             % destFile - Destination file path
             % returns: [AnalysisFilesCreateTicketOutput, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'sessionId');
+            addRequired(x__inp, 'subjectId');
             addRequired(x__inp, 'analysisId');
             addRequired(x__inp, 'filename');
+            addParameter(x__inp, 'info', []);
+            addParameter(x__inp, 'member', []);
             addRequired(x__inp, 'destFile');
             addParameter(x__inp, 'OutputType', 'double');
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, sessionId, analysisId, filename, varargin{:});
+            parse(x__inp, subjectId, analysisId, filename, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.sessionId)
-                pathParams = [pathParams, 'SessionId', x__inp.Results.sessionId];
+            if ~isempty(x__inp.Results.subjectId)
+                pathParams = [pathParams, 'SubjectId', x__inp.Results.subjectId];
             end
             if ~isempty(x__inp.Results.analysisId)
                 pathParams = [pathParams, 'AnalysisId', x__inp.Results.analysisId];
@@ -927,6 +932,12 @@ classdef SessionsApi < handle
 
             % Query parameters
             queryParams = {};
+            if ~isempty(x__inp.Results.info)
+                queryParams = [queryParams, 'info', flywheel.ApiClient.castParam(x__inp.Results.info, 'logical')];
+            end
+            if ~isempty(x__inp.Results.member)
+                queryParams = [queryParams, 'member', flywheel.ApiClient.castParam(x__inp.Results.member, 'char')];
+            end
 
             % Header parameters
             headers = {};
@@ -938,7 +949,7 @@ classdef SessionsApi < handle
             % Body (as JSON)
             body = {};
 
-            resp = obj.apiClient.callApi('GET', '/sessions/{SessionId}/analyses/{AnalysisId}/inputs/{Filename}', ...
+            resp = obj.apiClient.callApi('GET', '/subjects/{SubjectId}/analyses/{AnalysisId}/inputs/{Filename}', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -957,27 +968,31 @@ classdef SessionsApi < handle
             end
         end
 
-        function [returnData, resp] = getSessionAnalysisInputDownloadTicket(obj, sessionId, analysisId, filename, varargin)
+        function [returnData, resp] = getSubjectAnalysisInputZipInfo(obj, subjectId, analysisId, filename, varargin)
             % Download anaylsis inputs with filter.
-            % sessionId (char)
+            % subjectId (char)
             % analysisId (char)
             % filename (char):regex to select inputs for download
             % ticket (char):ticket id of the inputs to download
-            % returns: [AnalysisFilesCreateTicketOutput, resp]
+            % info (logical):If the file is a zipfile, return a json response of zipfile member information
+            % member (char):The filename of a zipfile member to download rather than the entire file
+            % returns: [FileZipInfo, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'sessionId');
+            addRequired(x__inp, 'subjectId');
             addRequired(x__inp, 'analysisId');
             addRequired(x__inp, 'filename');
             addParameter(x__inp, 'ticket', []);
+            addParameter(x__inp, 'info', []);
+            addParameter(x__inp, 'member', []);
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, sessionId, analysisId, filename, varargin{:});
+            parse(x__inp, subjectId, analysisId, filename, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.sessionId)
-                pathParams = [pathParams, 'SessionId', x__inp.Results.sessionId];
+            if ~isempty(x__inp.Results.subjectId)
+                pathParams = [pathParams, 'SubjectId', x__inp.Results.subjectId];
             end
             if ~isempty(x__inp.Results.analysisId)
                 pathParams = [pathParams, 'AnalysisId', x__inp.Results.analysisId];
@@ -991,6 +1006,14 @@ classdef SessionsApi < handle
             if ~isempty(x__inp.Results.ticket)
                 queryParams = [queryParams, 'ticket', flywheel.ApiClient.castParam(x__inp.Results.ticket, 'char')];
             end
+            if ~isempty(x__inp.Results.info)
+                queryParams = [queryParams, 'info', flywheel.ApiClient.castParam(x__inp.Results.info, 'logical')];
+            else
+                queryParams = [queryParams, 'info', 'true'];
+            end
+            if ~isempty(x__inp.Results.member)
+                queryParams = [queryParams, 'member', flywheel.ApiClient.castParam(x__inp.Results.member, 'char')];
+            end
 
             % Header parameters
             headers = {};
@@ -1002,7 +1025,83 @@ classdef SessionsApi < handle
             % Body (as JSON)
             body = {};
 
-            resp = obj.apiClient.callApi('GET', '/sessions/{SessionId}/analyses/{AnalysisId}/inputs/{Filename}', ...
+            resp = obj.apiClient.callApi('GET', '/subjects/{SubjectId}/analyses/{AnalysisId}/inputs/{Filename}', ...
+                pathParams, queryParams, headers, body, formParams, files);
+
+            status = resp.getStatusCode();
+
+            switch num2str(status)
+                case '200'
+                    if x__inp.Results.DumpResponseData
+                        x__respData = resp.getBodyAsString();
+                        disp(x__respData);
+                    end
+                    json = flywheel.ApiClient.getResponseJson(resp);
+                    returnData = flywheel.model.FileZipInfo.fromJson(json, obj.context_);
+                    if ~isempty(returnData)
+                        returnData = returnData.returnValue();
+                    end
+                otherwise
+                    returnData = [];
+            end
+        end
+
+        function [returnData, resp] = getSubjectAnalysisInputDownloadTicket(obj, subjectId, analysisId, filename, varargin)
+            % Download anaylsis inputs with filter.
+            % subjectId (char)
+            % analysisId (char)
+            % filename (char):regex to select inputs for download
+            % ticket (char):ticket id of the inputs to download
+            % info (logical):If the file is a zipfile, return a json response of zipfile member information
+            % member (char):The filename of a zipfile member to download rather than the entire file
+            % returns: [AnalysisFilesCreateTicketOutput, resp]
+
+            x__inp = inputParser;
+            x__inp.StructExpand = false;
+            addRequired(x__inp, 'subjectId');
+            addRequired(x__inp, 'analysisId');
+            addRequired(x__inp, 'filename');
+            addParameter(x__inp, 'ticket', []);
+            addParameter(x__inp, 'info', []);
+            addParameter(x__inp, 'member', []);
+            addParameter(x__inp, 'DumpResponseData', false);
+            parse(x__inp, subjectId, analysisId, filename, varargin{:});
+
+            % Path parameters
+            pathParams = {};
+            if ~isempty(x__inp.Results.subjectId)
+                pathParams = [pathParams, 'SubjectId', x__inp.Results.subjectId];
+            end
+            if ~isempty(x__inp.Results.analysisId)
+                pathParams = [pathParams, 'AnalysisId', x__inp.Results.analysisId];
+            end
+            if ~isempty(x__inp.Results.filename)
+                pathParams = [pathParams, 'Filename', x__inp.Results.filename];
+            end
+
+            % Query parameters
+            queryParams = {};
+            if ~isempty(x__inp.Results.ticket)
+                queryParams = [queryParams, 'ticket', flywheel.ApiClient.castParam(x__inp.Results.ticket, 'char')];
+            end
+            if ~isempty(x__inp.Results.info)
+                queryParams = [queryParams, 'info', flywheel.ApiClient.castParam(x__inp.Results.info, 'logical')];
+            end
+            if ~isempty(x__inp.Results.member)
+                queryParams = [queryParams, 'member', flywheel.ApiClient.castParam(x__inp.Results.member, 'char')];
+            end
+
+            % Header parameters
+            headers = {};
+
+            % Form parameters
+            formParams = {};
+            files = {};
+
+            % Body (as JSON)
+            body = {};
+
+            resp = obj.apiClient.callApi('GET', '/subjects/{SubjectId}/analyses/{AnalysisId}/inputs/{Filename}', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -1023,28 +1122,32 @@ classdef SessionsApi < handle
             end
         end
 
-        function [returnData, resp] = downloadOutputFromSessionAnalysis(obj, sessionId, analysisId, filename, varargin)
+        function [returnData, resp] = downloadOutputFromSubjectAnalysis(obj, subjectId, analysisId, filename, varargin)
             % Download anaylsis outputs with filter.
-            % sessionId (char)
+            % subjectId (char)
             % analysisId (char)
             % filename (char):regex to select outputs for download
+            % info (logical):If the file is a zipfile, return a json response of zipfile member information
+            % member (char):The filename of a zipfile member to download rather than the entire file
             % destFile - Destination file path
             % returns: [AnalysisFilesCreateTicketOutput, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'sessionId');
+            addRequired(x__inp, 'subjectId');
             addRequired(x__inp, 'analysisId');
             addRequired(x__inp, 'filename');
+            addParameter(x__inp, 'info', []);
+            addParameter(x__inp, 'member', []);
             addRequired(x__inp, 'destFile');
             addParameter(x__inp, 'OutputType', 'double');
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, sessionId, analysisId, filename, varargin{:});
+            parse(x__inp, subjectId, analysisId, filename, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.sessionId)
-                pathParams = [pathParams, 'SessionId', x__inp.Results.sessionId];
+            if ~isempty(x__inp.Results.subjectId)
+                pathParams = [pathParams, 'SubjectId', x__inp.Results.subjectId];
             end
             if ~isempty(x__inp.Results.analysisId)
                 pathParams = [pathParams, 'AnalysisId', x__inp.Results.analysisId];
@@ -1055,6 +1158,12 @@ classdef SessionsApi < handle
 
             % Query parameters
             queryParams = {};
+            if ~isempty(x__inp.Results.info)
+                queryParams = [queryParams, 'info', flywheel.ApiClient.castParam(x__inp.Results.info, 'logical')];
+            end
+            if ~isempty(x__inp.Results.member)
+                queryParams = [queryParams, 'member', flywheel.ApiClient.castParam(x__inp.Results.member, 'char')];
+            end
 
             % Header parameters
             headers = {};
@@ -1066,7 +1175,7 @@ classdef SessionsApi < handle
             % Body (as JSON)
             body = {};
 
-            resp = obj.apiClient.callApi('GET', '/sessions/{SessionId}/analyses/{AnalysisId}/files/{Filename}', ...
+            resp = obj.apiClient.callApi('GET', '/subjects/{SubjectId}/analyses/{AnalysisId}/files/{Filename}', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -1085,27 +1194,31 @@ classdef SessionsApi < handle
             end
         end
 
-        function [returnData, resp] = getSessionAnalysisOutputDownloadTicket(obj, sessionId, analysisId, filename, varargin)
+        function [returnData, resp] = getSubjectAnalysisOutputZipInfo(obj, subjectId, analysisId, filename, varargin)
             % Download anaylsis outputs with filter.
-            % sessionId (char)
+            % subjectId (char)
             % analysisId (char)
             % filename (char):regex to select outputs for download
             % ticket (char):ticket id of the outputs to download
-            % returns: [AnalysisFilesCreateTicketOutput, resp]
+            % info (logical):If the file is a zipfile, return a json response of zipfile member information
+            % member (char):The filename of a zipfile member to download rather than the entire file
+            % returns: [FileZipInfo, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'sessionId');
+            addRequired(x__inp, 'subjectId');
             addRequired(x__inp, 'analysisId');
             addRequired(x__inp, 'filename');
             addParameter(x__inp, 'ticket', []);
+            addParameter(x__inp, 'info', []);
+            addParameter(x__inp, 'member', []);
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, sessionId, analysisId, filename, varargin{:});
+            parse(x__inp, subjectId, analysisId, filename, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.sessionId)
-                pathParams = [pathParams, 'SessionId', x__inp.Results.sessionId];
+            if ~isempty(x__inp.Results.subjectId)
+                pathParams = [pathParams, 'SubjectId', x__inp.Results.subjectId];
             end
             if ~isempty(x__inp.Results.analysisId)
                 pathParams = [pathParams, 'AnalysisId', x__inp.Results.analysisId];
@@ -1119,6 +1232,14 @@ classdef SessionsApi < handle
             if ~isempty(x__inp.Results.ticket)
                 queryParams = [queryParams, 'ticket', flywheel.ApiClient.castParam(x__inp.Results.ticket, 'char')];
             end
+            if ~isempty(x__inp.Results.info)
+                queryParams = [queryParams, 'info', flywheel.ApiClient.castParam(x__inp.Results.info, 'logical')];
+            else
+                queryParams = [queryParams, 'info', 'true'];
+            end
+            if ~isempty(x__inp.Results.member)
+                queryParams = [queryParams, 'member', flywheel.ApiClient.castParam(x__inp.Results.member, 'char')];
+            end
 
             % Header parameters
             headers = {};
@@ -1130,7 +1251,83 @@ classdef SessionsApi < handle
             % Body (as JSON)
             body = {};
 
-            resp = obj.apiClient.callApi('GET', '/sessions/{SessionId}/analyses/{AnalysisId}/files/{Filename}', ...
+            resp = obj.apiClient.callApi('GET', '/subjects/{SubjectId}/analyses/{AnalysisId}/files/{Filename}', ...
+                pathParams, queryParams, headers, body, formParams, files);
+
+            status = resp.getStatusCode();
+
+            switch num2str(status)
+                case '200'
+                    if x__inp.Results.DumpResponseData
+                        x__respData = resp.getBodyAsString();
+                        disp(x__respData);
+                    end
+                    json = flywheel.ApiClient.getResponseJson(resp);
+                    returnData = flywheel.model.FileZipInfo.fromJson(json, obj.context_);
+                    if ~isempty(returnData)
+                        returnData = returnData.returnValue();
+                    end
+                otherwise
+                    returnData = [];
+            end
+        end
+
+        function [returnData, resp] = getSubjectAnalysisOutputDownloadTicket(obj, subjectId, analysisId, filename, varargin)
+            % Download anaylsis outputs with filter.
+            % subjectId (char)
+            % analysisId (char)
+            % filename (char):regex to select outputs for download
+            % ticket (char):ticket id of the outputs to download
+            % info (logical):If the file is a zipfile, return a json response of zipfile member information
+            % member (char):The filename of a zipfile member to download rather than the entire file
+            % returns: [AnalysisFilesCreateTicketOutput, resp]
+
+            x__inp = inputParser;
+            x__inp.StructExpand = false;
+            addRequired(x__inp, 'subjectId');
+            addRequired(x__inp, 'analysisId');
+            addRequired(x__inp, 'filename');
+            addParameter(x__inp, 'ticket', []);
+            addParameter(x__inp, 'info', []);
+            addParameter(x__inp, 'member', []);
+            addParameter(x__inp, 'DumpResponseData', false);
+            parse(x__inp, subjectId, analysisId, filename, varargin{:});
+
+            % Path parameters
+            pathParams = {};
+            if ~isempty(x__inp.Results.subjectId)
+                pathParams = [pathParams, 'SubjectId', x__inp.Results.subjectId];
+            end
+            if ~isempty(x__inp.Results.analysisId)
+                pathParams = [pathParams, 'AnalysisId', x__inp.Results.analysisId];
+            end
+            if ~isempty(x__inp.Results.filename)
+                pathParams = [pathParams, 'Filename', x__inp.Results.filename];
+            end
+
+            % Query parameters
+            queryParams = {};
+            if ~isempty(x__inp.Results.ticket)
+                queryParams = [queryParams, 'ticket', flywheel.ApiClient.castParam(x__inp.Results.ticket, 'char')];
+            end
+            if ~isempty(x__inp.Results.info)
+                queryParams = [queryParams, 'info', flywheel.ApiClient.castParam(x__inp.Results.info, 'logical')];
+            end
+            if ~isempty(x__inp.Results.member)
+                queryParams = [queryParams, 'member', flywheel.ApiClient.castParam(x__inp.Results.member, 'char')];
+            end
+
+            % Header parameters
+            headers = {};
+
+            % Form parameters
+            formParams = {};
+            files = {};
+
+            % Body (as JSON)
+            body = {};
+
+            resp = obj.apiClient.callApi('GET', '/subjects/{SubjectId}/analyses/{AnalysisId}/files/{Filename}', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -1151,25 +1348,25 @@ classdef SessionsApi < handle
             end
         end
 
-        function [returnData, resp] = downloadSessionAnalysisInputs(obj, sessionId, analysisId, varargin)
+        function [returnData, resp] = downloadSubjectAnalysisInputs(obj, subjectId, analysisId, varargin)
             % Download analysis inputs.
-            % sessionId (char)
+            % subjectId (char)
             % analysisId (char)
             % ticket (char):ticket id of the inputs to download
             % returns: [AnalysisFilesCreateTicketOutput, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'sessionId');
+            addRequired(x__inp, 'subjectId');
             addRequired(x__inp, 'analysisId');
             addParameter(x__inp, 'ticket', []);
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, sessionId, analysisId, varargin{:});
+            parse(x__inp, subjectId, analysisId, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.sessionId)
-                pathParams = [pathParams, 'SessionId', x__inp.Results.sessionId];
+            if ~isempty(x__inp.Results.subjectId)
+                pathParams = [pathParams, 'SubjectId', x__inp.Results.subjectId];
             end
             if ~isempty(x__inp.Results.analysisId)
                 pathParams = [pathParams, 'AnalysisId', x__inp.Results.analysisId];
@@ -1191,7 +1388,7 @@ classdef SessionsApi < handle
             % Body (as JSON)
             body = {};
 
-            resp = obj.apiClient.callApi('GET', '/sessions/{SessionId}/analyses/{AnalysisId}/inputs', ...
+            resp = obj.apiClient.callApi('GET', '/subjects/{SubjectId}/analyses/{AnalysisId}/inputs', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -1212,25 +1409,25 @@ classdef SessionsApi < handle
             end
         end
 
-        function [returnData, resp] = downloadSessionAnalysisOutputs(obj, sessionId, analysisId, varargin)
+        function [returnData, resp] = downloadSubjectAnalysisOutputs(obj, subjectId, analysisId, varargin)
             % Download analysis outputs.
-            % sessionId (char)
+            % subjectId (char)
             % analysisId (char)
             % ticket (char):ticket id of the outputs to download
             % returns: [AnalysisFilesCreateTicketOutput, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'sessionId');
+            addRequired(x__inp, 'subjectId');
             addRequired(x__inp, 'analysisId');
             addParameter(x__inp, 'ticket', []);
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, sessionId, analysisId, varargin{:});
+            parse(x__inp, subjectId, analysisId, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.sessionId)
-                pathParams = [pathParams, 'SessionId', x__inp.Results.sessionId];
+            if ~isempty(x__inp.Results.subjectId)
+                pathParams = [pathParams, 'SubjectId', x__inp.Results.subjectId];
             end
             if ~isempty(x__inp.Results.analysisId)
                 pathParams = [pathParams, 'AnalysisId', x__inp.Results.analysisId];
@@ -1252,7 +1449,7 @@ classdef SessionsApi < handle
             % Body (as JSON)
             body = {};
 
-            resp = obj.apiClient.callApi('GET', '/sessions/{SessionId}/analyses/{AnalysisId}/files', ...
+            resp = obj.apiClient.callApi('GET', '/subjects/{SubjectId}/analyses/{AnalysisId}/files', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -1273,15 +1470,15 @@ classdef SessionsApi < handle
             end
         end
 
-        function [returnData, resp] = getAllSessions(obj, varargin)
-            % Get a list of sessions
+        function [returnData, resp] = getAllSubjects(obj, varargin)
+            % Get a list of subjects
             % filter (char):The filter to apply. (e.g. label=my-label,created>2018-09-22)
             % sort (char):The sort fields and order. (e.g. label:asc,created:desc)
             % limit (integer):The maximum number of entries to return.
             % skip (integer):The number of entries to skip.
             % page (integer):The page number (i.e. skip limit*page entries)
             % afterId (char):Paginate after the given id. (Cannot be used with sort, page or skip)
-            % returns: [vector[Session], resp]
+            % returns: [vector[Subject], resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
@@ -1330,7 +1527,7 @@ classdef SessionsApi < handle
             % Body (as JSON)
             body = {};
 
-            resp = obj.apiClient.callApi('GET', '/sessions', ...
+            resp = obj.apiClient.callApi('GET', '/subjects', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -1342,27 +1539,27 @@ classdef SessionsApi < handle
                         disp(x__respData);
                     end
                     json = flywheel.ApiClient.getResponseJson(resp);
-                    returnData = flywheel.ModelBase.cellmap(@(x) flywheel.model.Session.fromJson(x, obj.context_), json);
+                    returnData = flywheel.ModelBase.cellmap(@(x) flywheel.model.Subject.fromJson(x, obj.context_), json);
                 otherwise
                     returnData = [];
             end
         end
 
-        function [returnData, resp] = getSession(obj, sessionId, varargin)
-            % Get a single session
-            % sessionId (char)
-            % returns: [Session, resp]
+        function [returnData, resp] = getSubject(obj, subjectId, varargin)
+            % Get a single subject
+            % subjectId (char)
+            % returns: [Subject, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'sessionId');
+            addRequired(x__inp, 'subjectId');
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, sessionId, varargin{:});
+            parse(x__inp, subjectId, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.sessionId)
-                pathParams = [pathParams, 'SessionId', x__inp.Results.sessionId];
+            if ~isempty(x__inp.Results.subjectId)
+                pathParams = [pathParams, 'SubjectId', x__inp.Results.subjectId];
             end
 
             % Query parameters
@@ -1378,7 +1575,7 @@ classdef SessionsApi < handle
             % Body (as JSON)
             body = {};
 
-            resp = obj.apiClient.callApi('GET', '/sessions/{SessionId}', ...
+            resp = obj.apiClient.callApi('GET', '/subjects/{SubjectId}', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -1390,7 +1587,7 @@ classdef SessionsApi < handle
                         disp(x__respData);
                     end
                     json = flywheel.ApiClient.getResponseJson(resp);
-                    returnData = flywheel.model.Session.fromJson(json, obj.context_);
+                    returnData = flywheel.model.Subject.fromJson(json, obj.context_);
                     if ~isempty(returnData)
                         returnData = returnData.returnValue();
                     end
@@ -1399,87 +1596,9 @@ classdef SessionsApi < handle
             end
         end
 
-        function [returnData, resp] = getSessionAcquisitions(obj, sessionId, varargin)
-            % List acquisitions in a session
-            % sessionId (char)
-            % filter (char):The filter to apply. (e.g. label=my-label,created>2018-09-22)
-            % sort (char):The sort fields and order. (e.g. label:asc,created:desc)
-            % limit (integer):The maximum number of entries to return.
-            % skip (integer):The number of entries to skip.
-            % page (integer):The page number (i.e. skip limit*page entries)
-            % afterId (char):Paginate after the given id. (Cannot be used with sort, page or skip)
-            % returns: [vector[Acquisition], resp]
-
-            x__inp = inputParser;
-            x__inp.StructExpand = false;
-            addRequired(x__inp, 'sessionId');
-            addParameter(x__inp, 'filter', []);
-            addParameter(x__inp, 'sort', []);
-            addParameter(x__inp, 'limit', []);
-            addParameter(x__inp, 'skip', []);
-            addParameter(x__inp, 'page', []);
-            addParameter(x__inp, 'afterId', []);
-            addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, sessionId, varargin{:});
-
-            % Path parameters
-            pathParams = {};
-            if ~isempty(x__inp.Results.sessionId)
-                pathParams = [pathParams, 'SessionId', x__inp.Results.sessionId];
-            end
-
-            % Query parameters
-            queryParams = {};
-            if ~isempty(x__inp.Results.filter)
-                queryParams = [queryParams, 'filter', flywheel.ApiClient.castParam(x__inp.Results.filter, 'char')];
-            end
-            if ~isempty(x__inp.Results.sort)
-                queryParams = [queryParams, 'sort', flywheel.ApiClient.castParam(x__inp.Results.sort, 'char')];
-            end
-            if ~isempty(x__inp.Results.limit)
-                queryParams = [queryParams, 'limit', flywheel.ApiClient.castParam(x__inp.Results.limit, 'integer')];
-            end
-            if ~isempty(x__inp.Results.skip)
-                queryParams = [queryParams, 'skip', flywheel.ApiClient.castParam(x__inp.Results.skip, 'integer')];
-            end
-            if ~isempty(x__inp.Results.page)
-                queryParams = [queryParams, 'page', flywheel.ApiClient.castParam(x__inp.Results.page, 'integer')];
-            end
-            if ~isempty(x__inp.Results.afterId)
-                queryParams = [queryParams, 'after_id', flywheel.ApiClient.castParam(x__inp.Results.afterId, 'char')];
-            end
-
-            % Header parameters
-            headers = {};
-
-            % Form parameters
-            formParams = {};
-            files = {};
-
-            % Body (as JSON)
-            body = {};
-
-            resp = obj.apiClient.callApi('GET', '/sessions/{SessionId}/acquisitions', ...
-                pathParams, queryParams, headers, body, formParams, files);
-
-            status = resp.getStatusCode();
-
-            switch num2str(status)
-                case '200'
-                    if x__inp.Results.DumpResponseData
-                        x__respData = resp.getBodyAsString();
-                        disp(x__respData);
-                    end
-                    json = flywheel.ApiClient.getResponseJson(resp);
-                    returnData = flywheel.ModelBase.cellmap(@(x) flywheel.model.Acquisition.fromJson(x, obj.context_), json);
-                otherwise
-                    returnData = [];
-            end
-        end
-
-        function [returnData, resp] = getSessionAnalyses(obj, sessionId, varargin)
-            % Get analyses for session.
-            % sessionId (char)
+        function [returnData, resp] = getSubjectAnalyses(obj, subjectId, varargin)
+            % Get analyses for subject.
+            % subjectId (char)
             % filter (char):The filter to apply. (e.g. label=my-label,created>2018-09-22)
             % sort (char):The sort fields and order. (e.g. label:asc,created:desc)
             % limit (integer):The maximum number of entries to return.
@@ -1490,7 +1609,7 @@ classdef SessionsApi < handle
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'sessionId');
+            addRequired(x__inp, 'subjectId');
             addParameter(x__inp, 'filter', []);
             addParameter(x__inp, 'sort', []);
             addParameter(x__inp, 'limit', []);
@@ -1498,12 +1617,12 @@ classdef SessionsApi < handle
             addParameter(x__inp, 'page', []);
             addParameter(x__inp, 'afterId', []);
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, sessionId, varargin{:});
+            parse(x__inp, subjectId, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.sessionId)
-                pathParams = [pathParams, 'SessionId', x__inp.Results.sessionId];
+            if ~isempty(x__inp.Results.subjectId)
+                pathParams = [pathParams, 'SubjectId', x__inp.Results.subjectId];
             end
 
             % Query parameters
@@ -1537,7 +1656,7 @@ classdef SessionsApi < handle
             % Body (as JSON)
             body = {};
 
-            resp = obj.apiClient.callApi('GET', '/sessions/{SessionId}/analyses', ...
+            resp = obj.apiClient.callApi('GET', '/subjects/{SubjectId}/analyses', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -1555,25 +1674,25 @@ classdef SessionsApi < handle
             end
         end
 
-        function [returnData, resp] = getSessionAnalysis(obj, sessionId, analysisId, varargin)
+        function [returnData, resp] = getSubjectAnalysis(obj, subjectId, analysisId, varargin)
             % Get an analysis.
-            % sessionId (char)
+            % subjectId (char)
             % analysisId (char)
             % inflateJob (logical):Return job as an object instead of an id
             % returns: [AnalysisOutput, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'sessionId');
+            addRequired(x__inp, 'subjectId');
             addRequired(x__inp, 'analysisId');
             addParameter(x__inp, 'inflateJob', []);
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, sessionId, analysisId, varargin{:});
+            parse(x__inp, subjectId, analysisId, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.sessionId)
-                pathParams = [pathParams, 'SessionId', x__inp.Results.sessionId];
+            if ~isempty(x__inp.Results.subjectId)
+                pathParams = [pathParams, 'SubjectId', x__inp.Results.subjectId];
             end
             if ~isempty(x__inp.Results.analysisId)
                 pathParams = [pathParams, 'AnalysisId', x__inp.Results.analysisId];
@@ -1597,7 +1716,7 @@ classdef SessionsApi < handle
             % Body (as JSON)
             body = {};
 
-            resp = obj.apiClient.callApi('GET', '/sessions/{SessionId}/analyses/{AnalysisId}', ...
+            resp = obj.apiClient.callApi('GET', '/subjects/{SubjectId}/analyses/{AnalysisId}', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -1618,23 +1737,23 @@ classdef SessionsApi < handle
             end
         end
 
-        function [returnData, resp] = getSessionFileInfo(obj, sessionId, fileName, varargin)
+        function [returnData, resp] = getSubjectFileInfo(obj, subjectId, fileName, varargin)
             % Get info for a particular file.
-            % sessionId (char)
+            % subjectId (char)
             % fileName (char)
             % returns: [FileEntry, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'sessionId');
+            addRequired(x__inp, 'subjectId');
             addRequired(x__inp, 'fileName');
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, sessionId, fileName, varargin{:});
+            parse(x__inp, subjectId, fileName, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.sessionId)
-                pathParams = [pathParams, 'SessionId', x__inp.Results.sessionId];
+            if ~isempty(x__inp.Results.subjectId)
+                pathParams = [pathParams, 'SubjectId', x__inp.Results.subjectId];
             end
             if ~isempty(x__inp.Results.fileName)
                 pathParams = [pathParams, 'FileName', x__inp.Results.fileName];
@@ -1653,7 +1772,7 @@ classdef SessionsApi < handle
             % Body (as JSON)
             body = {};
 
-            resp = obj.apiClient.callApi('GET', '/sessions/{SessionId}/files/{FileName}/info', ...
+            resp = obj.apiClient.callApi('GET', '/subjects/{SubjectId}/files/{FileName}/info', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -1674,114 +1793,23 @@ classdef SessionsApi < handle
             end
         end
 
-        function [returnData, resp] = getSessionJobs(obj, sessionId, varargin)
-            % Return any jobs that use inputs from this session
-            % sessionId (char)
-            % states (char):filter results by job state
-            % tags (char):filter results by job tags
-            % filter (char):The filter to apply. (e.g. label=my-label,created>2018-09-22)
-            % sort (char):The sort fields and order. (e.g. label:asc,created:desc)
-            % limit (integer):The maximum number of entries to return.
-            % skip (integer):The number of entries to skip.
-            % page (integer):The page number (i.e. skip limit*page entries)
-            % afterId (char):Paginate after the given id. (Cannot be used with sort, page or skip)
-            % returns: [SessionJobsOutput, resp]
-
-            x__inp = inputParser;
-            x__inp.StructExpand = false;
-            addRequired(x__inp, 'sessionId');
-            addParameter(x__inp, 'states', []);
-            addParameter(x__inp, 'tags', []);
-            addParameter(x__inp, 'filter', []);
-            addParameter(x__inp, 'sort', []);
-            addParameter(x__inp, 'limit', []);
-            addParameter(x__inp, 'skip', []);
-            addParameter(x__inp, 'page', []);
-            addParameter(x__inp, 'afterId', []);
-            addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, sessionId, varargin{:});
-
-            % Path parameters
-            pathParams = {};
-            if ~isempty(x__inp.Results.sessionId)
-                pathParams = [pathParams, 'SessionId', x__inp.Results.sessionId];
-            end
-
-            % Query parameters
-            queryParams = {};
-            if ~isempty(x__inp.Results.states)
-                queryParams = [queryParams, 'states', flywheel.ApiClient.castParam(x__inp.Results.states, 'char')];
-            end
-            if ~isempty(x__inp.Results.tags)
-                queryParams = [queryParams, 'tags', flywheel.ApiClient.castParam(x__inp.Results.tags, 'char')];
-            end
-            if ~isempty(x__inp.Results.filter)
-                queryParams = [queryParams, 'filter', flywheel.ApiClient.castParam(x__inp.Results.filter, 'char')];
-            end
-            if ~isempty(x__inp.Results.sort)
-                queryParams = [queryParams, 'sort', flywheel.ApiClient.castParam(x__inp.Results.sort, 'char')];
-            end
-            if ~isempty(x__inp.Results.limit)
-                queryParams = [queryParams, 'limit', flywheel.ApiClient.castParam(x__inp.Results.limit, 'integer')];
-            end
-            if ~isempty(x__inp.Results.skip)
-                queryParams = [queryParams, 'skip', flywheel.ApiClient.castParam(x__inp.Results.skip, 'integer')];
-            end
-            if ~isempty(x__inp.Results.page)
-                queryParams = [queryParams, 'page', flywheel.ApiClient.castParam(x__inp.Results.page, 'integer')];
-            end
-            if ~isempty(x__inp.Results.afterId)
-                queryParams = [queryParams, 'after_id', flywheel.ApiClient.castParam(x__inp.Results.afterId, 'char')];
-            end
-
-            % Header parameters
-            headers = {};
-
-            % Form parameters
-            formParams = {};
-            files = {};
-
-            % Body (as JSON)
-            body = {};
-
-            resp = obj.apiClient.callApi('GET', '/sessions/{SessionId}/jobs', ...
-                pathParams, queryParams, headers, body, formParams, files);
-
-            status = resp.getStatusCode();
-
-            switch num2str(status)
-                case '200'
-                    if x__inp.Results.DumpResponseData
-                        x__respData = resp.getBodyAsString();
-                        disp(x__respData);
-                    end
-                    json = flywheel.ApiClient.getResponseJson(resp);
-                    returnData = flywheel.model.SessionJobsOutput.fromJson(json, obj.context_);
-                    if ~isempty(returnData)
-                        returnData = returnData.returnValue();
-                    end
-                otherwise
-                    returnData = [];
-            end
-        end
-
-        function [returnData, resp] = getSessionNote(obj, sessionId, noteId, varargin)
-            % Get a note on session.
-            % sessionId (char)
+        function [returnData, resp] = getSubjectNote(obj, subjectId, noteId, varargin)
+            % Get a note on subject.
+            % subjectId (char)
             % noteId (char)
             % returns: [Note, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'sessionId');
+            addRequired(x__inp, 'subjectId');
             addRequired(x__inp, 'noteId');
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, sessionId, noteId, varargin{:});
+            parse(x__inp, subjectId, noteId, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.sessionId)
-                pathParams = [pathParams, 'SessionId', x__inp.Results.sessionId];
+            if ~isempty(x__inp.Results.subjectId)
+                pathParams = [pathParams, 'SubjectId', x__inp.Results.subjectId];
             end
             if ~isempty(x__inp.Results.noteId)
                 pathParams = [pathParams, 'NoteId', x__inp.Results.noteId];
@@ -1800,7 +1828,7 @@ classdef SessionsApi < handle
             % Body (as JSON)
             body = {};
 
-            resp = obj.apiClient.callApi('GET', '/sessions/{SessionId}/notes/{NoteId}', ...
+            resp = obj.apiClient.callApi('GET', '/subjects/{SubjectId}/notes/{NoteId}', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -1821,23 +1849,71 @@ classdef SessionsApi < handle
             end
         end
 
-        function [returnData, resp] = getSessionTag(obj, sessionId, tagValue, varargin)
+        function [returnData, resp] = getSubjectSessions(obj, subjectId, varargin)
+            % List sessions of a subject
+            % subjectId (char)
+            % returns: [vector[Session], resp]
+
+            x__inp = inputParser;
+            x__inp.StructExpand = false;
+            addRequired(x__inp, 'subjectId');
+            addParameter(x__inp, 'DumpResponseData', false);
+            parse(x__inp, subjectId, varargin{:});
+
+            % Path parameters
+            pathParams = {};
+            if ~isempty(x__inp.Results.subjectId)
+                pathParams = [pathParams, 'SubjectId', x__inp.Results.subjectId];
+            end
+
+            % Query parameters
+            queryParams = {};
+
+            % Header parameters
+            headers = {};
+
+            % Form parameters
+            formParams = {};
+            files = {};
+
+            % Body (as JSON)
+            body = {};
+
+            resp = obj.apiClient.callApi('GET', '/subjects/{SubjectId}/sessions', ...
+                pathParams, queryParams, headers, body, formParams, files);
+
+            status = resp.getStatusCode();
+
+            switch num2str(status)
+                case '200'
+                    if x__inp.Results.DumpResponseData
+                        x__respData = resp.getBodyAsString();
+                        disp(x__respData);
+                    end
+                    json = flywheel.ApiClient.getResponseJson(resp);
+                    returnData = flywheel.ModelBase.cellmap(@(x) flywheel.model.Session.fromJson(x, obj.context_), json);
+                otherwise
+                    returnData = [];
+            end
+        end
+
+        function [returnData, resp] = getSubjectTag(obj, subjectId, tagValue, varargin)
             % Get the value of a tag, by name.
-            % sessionId (char)
+            % subjectId (char)
             % tagValue (char):The tag to interact with
             % returns: [Tag, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'sessionId');
+            addRequired(x__inp, 'subjectId');
             addRequired(x__inp, 'tagValue');
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, sessionId, tagValue, varargin{:});
+            parse(x__inp, subjectId, tagValue, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.sessionId)
-                pathParams = [pathParams, 'SessionId', x__inp.Results.sessionId];
+            if ~isempty(x__inp.Results.subjectId)
+                pathParams = [pathParams, 'SubjectId', x__inp.Results.subjectId];
             end
             if ~isempty(x__inp.Results.tagValue)
                 pathParams = [pathParams, 'TagValue', x__inp.Results.tagValue];
@@ -1856,7 +1932,7 @@ classdef SessionsApi < handle
             % Body (as JSON)
             body = {};
 
-            resp = obj.apiClient.callApi('GET', '/sessions/{SessionId}/tags/{TagValue}', ...
+            resp = obj.apiClient.callApi('GET', '/subjects/{SubjectId}/tags/{TagValue}', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -1877,23 +1953,23 @@ classdef SessionsApi < handle
             end
         end
 
-        function [returnData, resp] = modifySession(obj, sessionId, body, varargin)
-            % Update a session
-            % sessionId (char)
-            % body (Session)
+        function [returnData, resp] = modifySubject(obj, subjectId, body, varargin)
+            % Update a subject
+            % subjectId (char)
+            % body (Subject)
             % returns: [InlineResponse200, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'sessionId');
+            addRequired(x__inp, 'subjectId');
             addRequired(x__inp, 'body');
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, sessionId, body, varargin{:});
+            parse(x__inp, subjectId, body, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.sessionId)
-                pathParams = [pathParams, 'SessionId', x__inp.Results.sessionId];
+            if ~isempty(x__inp.Results.subjectId)
+                pathParams = [pathParams, 'SubjectId', x__inp.Results.subjectId];
             end
 
             % Query parameters
@@ -1907,10 +1983,10 @@ classdef SessionsApi < handle
             files = {};
 
             % Body (as JSON)
-            body = flywheel.model.Session.ensureIsInstance(x__inp.Results.body);
+            body = flywheel.model.Subject.ensureIsInstance(x__inp.Results.body);
             body = flywheel.ApiClient.encodeJson(body.toJson());
 
-            resp = obj.apiClient.callApi('PUT', '/sessions/{SessionId}', ...
+            resp = obj.apiClient.callApi('PUT', '/subjects/{SubjectId}', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -1931,25 +2007,25 @@ classdef SessionsApi < handle
             end
         end
 
-        function [returnData, resp] = modifySessionFile(obj, sessionId, fileName, body, varargin)
+        function [returnData, resp] = modifySubjectFile(obj, subjectId, fileName, body, varargin)
             % Modify a file's attributes
-            % sessionId (char)
+            % subjectId (char)
             % fileName (char)
             % body (FileEntry)
             % returns: [InlineResponse2003, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'sessionId');
+            addRequired(x__inp, 'subjectId');
             addRequired(x__inp, 'fileName');
             addRequired(x__inp, 'body');
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, sessionId, fileName, body, varargin{:});
+            parse(x__inp, subjectId, fileName, body, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.sessionId)
-                pathParams = [pathParams, 'SessionId', x__inp.Results.sessionId];
+            if ~isempty(x__inp.Results.subjectId)
+                pathParams = [pathParams, 'SubjectId', x__inp.Results.subjectId];
             end
             if ~isempty(x__inp.Results.fileName)
                 pathParams = [pathParams, 'FileName', x__inp.Results.fileName];
@@ -1969,7 +2045,7 @@ classdef SessionsApi < handle
             body = flywheel.model.FileEntry.ensureIsInstance(x__inp.Results.body);
             body = flywheel.ApiClient.encodeJson(body.toJson());
 
-            resp = obj.apiClient.callApi('PUT', '/sessions/{SessionId}/files/{FileName}', ...
+            resp = obj.apiClient.callApi('PUT', '/subjects/{SubjectId}/files/{FileName}', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -1990,25 +2066,25 @@ classdef SessionsApi < handle
             end
         end
 
-        function [returnData, resp] = modifySessionFileClassification(obj, sessionId, fileName, body, varargin)
+        function [returnData, resp] = modifySubjectFileClassification(obj, subjectId, fileName, body, varargin)
             % Update classification for a particular file.
-            % sessionId (char)
+            % subjectId (char)
             % fileName (char)
             % body (ClassificationUpdateInput)
             % returns: [InlineResponse2003, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'sessionId');
+            addRequired(x__inp, 'subjectId');
             addRequired(x__inp, 'fileName');
             addRequired(x__inp, 'body');
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, sessionId, fileName, body, varargin{:});
+            parse(x__inp, subjectId, fileName, body, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.sessionId)
-                pathParams = [pathParams, 'SessionId', x__inp.Results.sessionId];
+            if ~isempty(x__inp.Results.subjectId)
+                pathParams = [pathParams, 'SubjectId', x__inp.Results.subjectId];
             end
             if ~isempty(x__inp.Results.fileName)
                 pathParams = [pathParams, 'FileName', x__inp.Results.fileName];
@@ -2028,7 +2104,7 @@ classdef SessionsApi < handle
             body = flywheel.model.ClassificationUpdateInput.ensureIsInstance(x__inp.Results.body);
             body = flywheel.ApiClient.encodeJson(body.toJson());
 
-            resp = obj.apiClient.callApi('POST', '/sessions/{SessionId}/files/{FileName}/classification', ...
+            resp = obj.apiClient.callApi('POST', '/subjects/{SubjectId}/files/{FileName}/classification', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -2049,25 +2125,25 @@ classdef SessionsApi < handle
             end
         end
 
-        function [returnData, resp] = modifySessionFileInfo(obj, sessionId, fileName, body, varargin)
+        function [returnData, resp] = modifySubjectFileInfo(obj, subjectId, fileName, body, varargin)
             % Update info for a particular file.
-            % sessionId (char)
+            % subjectId (char)
             % fileName (char)
             % body (InfoUpdateInput)
             % returns: [InlineResponse200, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'sessionId');
+            addRequired(x__inp, 'subjectId');
             addRequired(x__inp, 'fileName');
             addRequired(x__inp, 'body');
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, sessionId, fileName, body, varargin{:});
+            parse(x__inp, subjectId, fileName, body, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.sessionId)
-                pathParams = [pathParams, 'SessionId', x__inp.Results.sessionId];
+            if ~isempty(x__inp.Results.subjectId)
+                pathParams = [pathParams, 'SubjectId', x__inp.Results.subjectId];
             end
             if ~isempty(x__inp.Results.fileName)
                 pathParams = [pathParams, 'FileName', x__inp.Results.fileName];
@@ -2087,7 +2163,7 @@ classdef SessionsApi < handle
             body = flywheel.model.InfoUpdateInput.ensureIsInstance(x__inp.Results.body);
             body = flywheel.ApiClient.encodeJson(body.toJson());
 
-            resp = obj.apiClient.callApi('POST', '/sessions/{SessionId}/files/{FileName}/info', ...
+            resp = obj.apiClient.callApi('POST', '/subjects/{SubjectId}/files/{FileName}/info', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -2108,23 +2184,23 @@ classdef SessionsApi < handle
             end
         end
 
-        function [returnData, resp] = modifySessionInfo(obj, sessionId, body, varargin)
-            % Update or replace info for a session.
-            % sessionId (char)
+        function [returnData, resp] = modifySubjectInfo(obj, subjectId, body, varargin)
+            % Update or replace info for a subject.
+            % subjectId (char)
             % body (InfoUpdateInput)
             % returns: [none, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'sessionId');
+            addRequired(x__inp, 'subjectId');
             addRequired(x__inp, 'body');
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, sessionId, body, varargin{:});
+            parse(x__inp, subjectId, body, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.sessionId)
-                pathParams = [pathParams, 'SessionId', x__inp.Results.sessionId];
+            if ~isempty(x__inp.Results.subjectId)
+                pathParams = [pathParams, 'SubjectId', x__inp.Results.subjectId];
             end
 
             % Query parameters
@@ -2141,7 +2217,7 @@ classdef SessionsApi < handle
             body = flywheel.model.InfoUpdateInput.ensureIsInstance(x__inp.Results.body);
             body = flywheel.ApiClient.encodeJson(body.toJson());
 
-            resp = obj.apiClient.callApi('POST', '/sessions/{SessionId}/info', ...
+            resp = obj.apiClient.callApi('POST', '/subjects/{SubjectId}/info', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -2152,25 +2228,25 @@ classdef SessionsApi < handle
             end
         end
 
-        function [returnData, resp] = modifySessionNote(obj, sessionId, noteId, body, varargin)
-            % Update a note on session.
-            % sessionId (char)
+        function [returnData, resp] = modifySubjectNote(obj, subjectId, noteId, body, varargin)
+            % Update a note on subject.
+            % subjectId (char)
             % noteId (char)
             % body (Note)
             % returns: [InlineResponse200, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'sessionId');
+            addRequired(x__inp, 'subjectId');
             addRequired(x__inp, 'noteId');
             addRequired(x__inp, 'body');
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, sessionId, noteId, body, varargin{:});
+            parse(x__inp, subjectId, noteId, body, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.sessionId)
-                pathParams = [pathParams, 'SessionId', x__inp.Results.sessionId];
+            if ~isempty(x__inp.Results.subjectId)
+                pathParams = [pathParams, 'SubjectId', x__inp.Results.subjectId];
             end
             if ~isempty(x__inp.Results.noteId)
                 pathParams = [pathParams, 'NoteId', x__inp.Results.noteId];
@@ -2190,7 +2266,7 @@ classdef SessionsApi < handle
             body = flywheel.model.Note.ensureIsInstance(x__inp.Results.body);
             body = flywheel.ApiClient.encodeJson(body.toJson());
 
-            resp = obj.apiClient.callApi('PUT', '/sessions/{SessionId}/notes/{NoteId}', ...
+            resp = obj.apiClient.callApi('PUT', '/subjects/{SubjectId}/notes/{NoteId}', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -2211,25 +2287,25 @@ classdef SessionsApi < handle
             end
         end
 
-        function [returnData, resp] = renameSessionTag(obj, sessionId, tagValue, body, varargin)
+        function [returnData, resp] = renameSubjectTag(obj, subjectId, tagValue, body, varargin)
             % Rename a tag.
-            % sessionId (char)
+            % subjectId (char)
             % tagValue (char):The tag to interact with
             % body (Tag)
             % returns: [InlineResponse200, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'sessionId');
+            addRequired(x__inp, 'subjectId');
             addRequired(x__inp, 'tagValue');
             addRequired(x__inp, 'body');
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, sessionId, tagValue, body, varargin{:});
+            parse(x__inp, subjectId, tagValue, body, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.sessionId)
-                pathParams = [pathParams, 'SessionId', x__inp.Results.sessionId];
+            if ~isempty(x__inp.Results.subjectId)
+                pathParams = [pathParams, 'SubjectId', x__inp.Results.subjectId];
             end
             if ~isempty(x__inp.Results.tagValue)
                 pathParams = [pathParams, 'TagValue', x__inp.Results.tagValue];
@@ -2249,7 +2325,7 @@ classdef SessionsApi < handle
             body = flywheel.model.Tag.ensureIsInstance(x__inp.Results.body);
             body = flywheel.ApiClient.encodeJson(body.toJson());
 
-            resp = obj.apiClient.callApi('PUT', '/sessions/{SessionId}/tags/{TagValue}', ...
+            resp = obj.apiClient.callApi('PUT', '/subjects/{SubjectId}/tags/{TagValue}', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -2270,23 +2346,23 @@ classdef SessionsApi < handle
             end
         end
 
-        function [returnData, resp] = replaceSessionFile(obj, sessionId, fileName, varargin)
+        function [returnData, resp] = replaceSubjectFile(obj, subjectId, fileName, varargin)
             % Replace a file
-            % sessionId (char)
+            % subjectId (char)
             % fileName (char)
             % returns: [none, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'sessionId');
+            addRequired(x__inp, 'subjectId');
             addRequired(x__inp, 'fileName');
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, sessionId, fileName, varargin{:});
+            parse(x__inp, subjectId, fileName, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.sessionId)
-                pathParams = [pathParams, 'SessionId', x__inp.Results.sessionId];
+            if ~isempty(x__inp.Results.subjectId)
+                pathParams = [pathParams, 'SubjectId', x__inp.Results.subjectId];
             end
             if ~isempty(x__inp.Results.fileName)
                 pathParams = [pathParams, 'FileName', x__inp.Results.fileName];
@@ -2305,7 +2381,7 @@ classdef SessionsApi < handle
             % Body (as JSON)
             body = {};
 
-            resp = obj.apiClient.callApi('POST', '/sessions/{SessionId}/files/{FileName}', ...
+            resp = obj.apiClient.callApi('POST', '/subjects/{SubjectId}/files/{FileName}', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -2316,25 +2392,25 @@ classdef SessionsApi < handle
             end
         end
 
-        function [returnData, resp] = uploadFileToSession(obj, sessionId, file, varargin)
-            % Upload a file to session.
-            % sessionId (char)
+        function [returnData, resp] = uploadFileToSubject(obj, subjectId, file, varargin)
+            % Upload a file to subject.
+            % subjectId (char)
             % file (char):The file to upload
             % metadata (char):File metadata
             % returns: [none, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'sessionId');
+            addRequired(x__inp, 'subjectId');
             addRequired(x__inp, 'file');
             addParameter(x__inp, 'metadata', []);
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, sessionId, file, varargin{:});
+            parse(x__inp, subjectId, file, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.sessionId)
-                pathParams = [pathParams, 'SessionId', x__inp.Results.sessionId];
+            if ~isempty(x__inp.Results.subjectId)
+                pathParams = [pathParams, 'SubjectId', x__inp.Results.subjectId];
             end
 
             % Query parameters
@@ -2356,7 +2432,7 @@ classdef SessionsApi < handle
             % Body (as JSON)
             body = {};
 
-            resp = obj.apiClient.callApi('POST', '/sessions/{SessionId}/files', ...
+            resp = obj.apiClient.callApi('POST', '/subjects/{SubjectId}/files', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -2367,25 +2443,25 @@ classdef SessionsApi < handle
             end
         end
 
-        function [returnData, resp] = uploadOutputToSessionAnalysis(obj, sessionId, analysisId, file, varargin)
+        function [returnData, resp] = uploadOutputToSubjectAnalysis(obj, subjectId, analysisId, file, varargin)
             % Upload an output file to analysis.
-            % sessionId (char)
+            % subjectId (char)
             % analysisId (char)
             % file (char):The file to upload
             % returns: [none, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'sessionId');
+            addRequired(x__inp, 'subjectId');
             addRequired(x__inp, 'analysisId');
             addRequired(x__inp, 'file');
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, sessionId, analysisId, file, varargin{:});
+            parse(x__inp, subjectId, analysisId, file, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.sessionId)
-                pathParams = [pathParams, 'SessionId', x__inp.Results.sessionId];
+            if ~isempty(x__inp.Results.subjectId)
+                pathParams = [pathParams, 'SubjectId', x__inp.Results.subjectId];
             end
             if ~isempty(x__inp.Results.analysisId)
                 pathParams = [pathParams, 'AnalysisId', x__inp.Results.analysisId];
@@ -2407,7 +2483,7 @@ classdef SessionsApi < handle
             % Body (as JSON)
             body = {};
 
-            resp = obj.apiClient.callApi('POST', '/sessions/{SessionId}/analyses/{AnalysisId}/files', ...
+            resp = obj.apiClient.callApi('POST', '/subjects/{SubjectId}/analyses/{AnalysisId}/files', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();

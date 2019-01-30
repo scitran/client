@@ -21,8 +21,10 @@
 %    getAcquisitionFileZipInfo                  - Download a file.
 %    getAcquisitionDownloadTicket               - Download a file.
 %    downloadInputFromAcquisitionAnalysis       - Download anaylsis inputs with filter.
+%    getAcquisitionAnalysisInputZipInfo         - Download anaylsis inputs with filter.
 %    getAcquisitionAnalysisInputDownloadTicket  - Download anaylsis inputs with filter.
 %    downloadOutputFromAcquisitionAnalysis      - Download anaylsis outputs with filter.
+%    getAcquisitionAnalysisOutputZipInfo        - Download anaylsis outputs with filter.
 %    getAcquisitionAnalysisOutputDownloadTicket - Download anaylsis outputs with filter.
 %    getAcquisition                             - Get a single acquisition
 %    getAcquisitionAnalyses                     - Get analyses for acquisition.
@@ -1020,6 +1022,8 @@ classdef AcquisitionsApi < handle
             % acquisitionId (char)
             % analysisId (char)
             % filename (char):regex to select inputs for download
+            % info (logical):If the file is a zipfile, return a json response of zipfile member information
+            % member (char):The filename of a zipfile member to download rather than the entire file
             % destFile - Destination file path
             % returns: [AnalysisFilesCreateTicketOutput, resp]
 
@@ -1028,6 +1032,8 @@ classdef AcquisitionsApi < handle
             addRequired(x__inp, 'acquisitionId');
             addRequired(x__inp, 'analysisId');
             addRequired(x__inp, 'filename');
+            addParameter(x__inp, 'info', []);
+            addParameter(x__inp, 'member', []);
             addRequired(x__inp, 'destFile');
             addParameter(x__inp, 'OutputType', 'double');
             addParameter(x__inp, 'DumpResponseData', false);
@@ -1047,6 +1053,12 @@ classdef AcquisitionsApi < handle
 
             % Query parameters
             queryParams = {};
+            if ~isempty(x__inp.Results.info)
+                queryParams = [queryParams, 'info', flywheel.ApiClient.castParam(x__inp.Results.info, 'logical')];
+            end
+            if ~isempty(x__inp.Results.member)
+                queryParams = [queryParams, 'member', flywheel.ApiClient.castParam(x__inp.Results.member, 'char')];
+            end
 
             % Header parameters
             headers = {};
@@ -1077,13 +1089,15 @@ classdef AcquisitionsApi < handle
             end
         end
 
-        function [returnData, resp] = getAcquisitionAnalysisInputDownloadTicket(obj, acquisitionId, analysisId, filename, varargin)
+        function [returnData, resp] = getAcquisitionAnalysisInputZipInfo(obj, acquisitionId, analysisId, filename, varargin)
             % Download anaylsis inputs with filter.
             % acquisitionId (char)
             % analysisId (char)
             % filename (char):regex to select inputs for download
             % ticket (char):ticket id of the inputs to download
-            % returns: [AnalysisFilesCreateTicketOutput, resp]
+            % info (logical):If the file is a zipfile, return a json response of zipfile member information
+            % member (char):The filename of a zipfile member to download rather than the entire file
+            % returns: [FileZipInfo, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
@@ -1091,6 +1105,8 @@ classdef AcquisitionsApi < handle
             addRequired(x__inp, 'analysisId');
             addRequired(x__inp, 'filename');
             addParameter(x__inp, 'ticket', []);
+            addParameter(x__inp, 'info', []);
+            addParameter(x__inp, 'member', []);
             addParameter(x__inp, 'DumpResponseData', false);
             parse(x__inp, acquisitionId, analysisId, filename, varargin{:});
 
@@ -1110,6 +1126,90 @@ classdef AcquisitionsApi < handle
             queryParams = {};
             if ~isempty(x__inp.Results.ticket)
                 queryParams = [queryParams, 'ticket', flywheel.ApiClient.castParam(x__inp.Results.ticket, 'char')];
+            end
+            if ~isempty(x__inp.Results.info)
+                queryParams = [queryParams, 'info', flywheel.ApiClient.castParam(x__inp.Results.info, 'logical')];
+            else
+                queryParams = [queryParams, 'info', 'true'];
+            end
+            if ~isempty(x__inp.Results.member)
+                queryParams = [queryParams, 'member', flywheel.ApiClient.castParam(x__inp.Results.member, 'char')];
+            end
+
+            % Header parameters
+            headers = {};
+
+            % Form parameters
+            formParams = {};
+            files = {};
+
+            % Body (as JSON)
+            body = {};
+
+            resp = obj.apiClient.callApi('GET', '/acquisitions/{AcquisitionId}/analyses/{AnalysisId}/inputs/{Filename}', ...
+                pathParams, queryParams, headers, body, formParams, files);
+
+            status = resp.getStatusCode();
+
+            switch num2str(status)
+                case '200'
+                    if x__inp.Results.DumpResponseData
+                        x__respData = resp.getBodyAsString();
+                        disp(x__respData);
+                    end
+                    json = flywheel.ApiClient.getResponseJson(resp);
+                    returnData = flywheel.model.FileZipInfo.fromJson(json, obj.context_);
+                    if ~isempty(returnData)
+                        returnData = returnData.returnValue();
+                    end
+                otherwise
+                    returnData = [];
+            end
+        end
+
+        function [returnData, resp] = getAcquisitionAnalysisInputDownloadTicket(obj, acquisitionId, analysisId, filename, varargin)
+            % Download anaylsis inputs with filter.
+            % acquisitionId (char)
+            % analysisId (char)
+            % filename (char):regex to select inputs for download
+            % ticket (char):ticket id of the inputs to download
+            % info (logical):If the file is a zipfile, return a json response of zipfile member information
+            % member (char):The filename of a zipfile member to download rather than the entire file
+            % returns: [AnalysisFilesCreateTicketOutput, resp]
+
+            x__inp = inputParser;
+            x__inp.StructExpand = false;
+            addRequired(x__inp, 'acquisitionId');
+            addRequired(x__inp, 'analysisId');
+            addRequired(x__inp, 'filename');
+            addParameter(x__inp, 'ticket', []);
+            addParameter(x__inp, 'info', []);
+            addParameter(x__inp, 'member', []);
+            addParameter(x__inp, 'DumpResponseData', false);
+            parse(x__inp, acquisitionId, analysisId, filename, varargin{:});
+
+            % Path parameters
+            pathParams = {};
+            if ~isempty(x__inp.Results.acquisitionId)
+                pathParams = [pathParams, 'AcquisitionId', x__inp.Results.acquisitionId];
+            end
+            if ~isempty(x__inp.Results.analysisId)
+                pathParams = [pathParams, 'AnalysisId', x__inp.Results.analysisId];
+            end
+            if ~isempty(x__inp.Results.filename)
+                pathParams = [pathParams, 'Filename', x__inp.Results.filename];
+            end
+
+            % Query parameters
+            queryParams = {};
+            if ~isempty(x__inp.Results.ticket)
+                queryParams = [queryParams, 'ticket', flywheel.ApiClient.castParam(x__inp.Results.ticket, 'char')];
+            end
+            if ~isempty(x__inp.Results.info)
+                queryParams = [queryParams, 'info', flywheel.ApiClient.castParam(x__inp.Results.info, 'logical')];
+            end
+            if ~isempty(x__inp.Results.member)
+                queryParams = [queryParams, 'member', flywheel.ApiClient.castParam(x__inp.Results.member, 'char')];
             end
 
             % Header parameters
@@ -1148,6 +1248,8 @@ classdef AcquisitionsApi < handle
             % acquisitionId (char)
             % analysisId (char)
             % filename (char):regex to select outputs for download
+            % info (logical):If the file is a zipfile, return a json response of zipfile member information
+            % member (char):The filename of a zipfile member to download rather than the entire file
             % destFile - Destination file path
             % returns: [AnalysisFilesCreateTicketOutput, resp]
 
@@ -1156,6 +1258,8 @@ classdef AcquisitionsApi < handle
             addRequired(x__inp, 'acquisitionId');
             addRequired(x__inp, 'analysisId');
             addRequired(x__inp, 'filename');
+            addParameter(x__inp, 'info', []);
+            addParameter(x__inp, 'member', []);
             addRequired(x__inp, 'destFile');
             addParameter(x__inp, 'OutputType', 'double');
             addParameter(x__inp, 'DumpResponseData', false);
@@ -1175,6 +1279,12 @@ classdef AcquisitionsApi < handle
 
             % Query parameters
             queryParams = {};
+            if ~isempty(x__inp.Results.info)
+                queryParams = [queryParams, 'info', flywheel.ApiClient.castParam(x__inp.Results.info, 'logical')];
+            end
+            if ~isempty(x__inp.Results.member)
+                queryParams = [queryParams, 'member', flywheel.ApiClient.castParam(x__inp.Results.member, 'char')];
+            end
 
             % Header parameters
             headers = {};
@@ -1205,13 +1315,15 @@ classdef AcquisitionsApi < handle
             end
         end
 
-        function [returnData, resp] = getAcquisitionAnalysisOutputDownloadTicket(obj, acquisitionId, analysisId, filename, varargin)
+        function [returnData, resp] = getAcquisitionAnalysisOutputZipInfo(obj, acquisitionId, analysisId, filename, varargin)
             % Download anaylsis outputs with filter.
             % acquisitionId (char)
             % analysisId (char)
             % filename (char):regex to select outputs for download
             % ticket (char):ticket id of the outputs to download
-            % returns: [AnalysisFilesCreateTicketOutput, resp]
+            % info (logical):If the file is a zipfile, return a json response of zipfile member information
+            % member (char):The filename of a zipfile member to download rather than the entire file
+            % returns: [FileZipInfo, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
@@ -1219,6 +1331,8 @@ classdef AcquisitionsApi < handle
             addRequired(x__inp, 'analysisId');
             addRequired(x__inp, 'filename');
             addParameter(x__inp, 'ticket', []);
+            addParameter(x__inp, 'info', []);
+            addParameter(x__inp, 'member', []);
             addParameter(x__inp, 'DumpResponseData', false);
             parse(x__inp, acquisitionId, analysisId, filename, varargin{:});
 
@@ -1238,6 +1352,90 @@ classdef AcquisitionsApi < handle
             queryParams = {};
             if ~isempty(x__inp.Results.ticket)
                 queryParams = [queryParams, 'ticket', flywheel.ApiClient.castParam(x__inp.Results.ticket, 'char')];
+            end
+            if ~isempty(x__inp.Results.info)
+                queryParams = [queryParams, 'info', flywheel.ApiClient.castParam(x__inp.Results.info, 'logical')];
+            else
+                queryParams = [queryParams, 'info', 'true'];
+            end
+            if ~isempty(x__inp.Results.member)
+                queryParams = [queryParams, 'member', flywheel.ApiClient.castParam(x__inp.Results.member, 'char')];
+            end
+
+            % Header parameters
+            headers = {};
+
+            % Form parameters
+            formParams = {};
+            files = {};
+
+            % Body (as JSON)
+            body = {};
+
+            resp = obj.apiClient.callApi('GET', '/acquisitions/{AcquisitionId}/analyses/{AnalysisId}/files/{Filename}', ...
+                pathParams, queryParams, headers, body, formParams, files);
+
+            status = resp.getStatusCode();
+
+            switch num2str(status)
+                case '200'
+                    if x__inp.Results.DumpResponseData
+                        x__respData = resp.getBodyAsString();
+                        disp(x__respData);
+                    end
+                    json = flywheel.ApiClient.getResponseJson(resp);
+                    returnData = flywheel.model.FileZipInfo.fromJson(json, obj.context_);
+                    if ~isempty(returnData)
+                        returnData = returnData.returnValue();
+                    end
+                otherwise
+                    returnData = [];
+            end
+        end
+
+        function [returnData, resp] = getAcquisitionAnalysisOutputDownloadTicket(obj, acquisitionId, analysisId, filename, varargin)
+            % Download anaylsis outputs with filter.
+            % acquisitionId (char)
+            % analysisId (char)
+            % filename (char):regex to select outputs for download
+            % ticket (char):ticket id of the outputs to download
+            % info (logical):If the file is a zipfile, return a json response of zipfile member information
+            % member (char):The filename of a zipfile member to download rather than the entire file
+            % returns: [AnalysisFilesCreateTicketOutput, resp]
+
+            x__inp = inputParser;
+            x__inp.StructExpand = false;
+            addRequired(x__inp, 'acquisitionId');
+            addRequired(x__inp, 'analysisId');
+            addRequired(x__inp, 'filename');
+            addParameter(x__inp, 'ticket', []);
+            addParameter(x__inp, 'info', []);
+            addParameter(x__inp, 'member', []);
+            addParameter(x__inp, 'DumpResponseData', false);
+            parse(x__inp, acquisitionId, analysisId, filename, varargin{:});
+
+            % Path parameters
+            pathParams = {};
+            if ~isempty(x__inp.Results.acquisitionId)
+                pathParams = [pathParams, 'AcquisitionId', x__inp.Results.acquisitionId];
+            end
+            if ~isempty(x__inp.Results.analysisId)
+                pathParams = [pathParams, 'AnalysisId', x__inp.Results.analysisId];
+            end
+            if ~isempty(x__inp.Results.filename)
+                pathParams = [pathParams, 'Filename', x__inp.Results.filename];
+            end
+
+            % Query parameters
+            queryParams = {};
+            if ~isempty(x__inp.Results.ticket)
+                queryParams = [queryParams, 'ticket', flywheel.ApiClient.castParam(x__inp.Results.ticket, 'char')];
+            end
+            if ~isempty(x__inp.Results.info)
+                queryParams = [queryParams, 'info', flywheel.ApiClient.castParam(x__inp.Results.info, 'logical')];
+            end
+            if ~isempty(x__inp.Results.member)
+                queryParams = [queryParams, 'member', flywheel.ApiClient.castParam(x__inp.Results.member, 'char')];
             end
 
             % Header parameters

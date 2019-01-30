@@ -2,13 +2,19 @@
 %
 %
 
+%%
 st = scitran('stanfordlabs');
-projects = st.list('project','wandell');
-stPrint(projects,'label')
 
+%%
+project = st.lookup('wandell/Weston Havens');
+
+%%
+
+%{
 project = st.fw.lookup('adni/ADNI: DWI (AD)');
 project = st.fw.lookup('adni/ADNI: T1');
 project = st.lookup('wandell/Weston Havens');
+%}
 
 % How do we find all the T1 nifti files in here?  A search?
 fileList =  st.search('file','file type','dicom',...

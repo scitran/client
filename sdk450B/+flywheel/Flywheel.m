@@ -41,8 +41,10 @@
 %    getAcquisitionFileZipInfo - Download a file.
 %    getAcquisitionDownloadUrl - Download a file.
 %    downloadInputFromAcquisitionAnalysis - Download anaylsis inputs with filter.
+%    getAcquisitionAnalysisInputZipInfo - Download anaylsis inputs with filter.
 %    getAcquisitionAnalysisInputDownloadUrl - Download anaylsis inputs with filter.
 %    downloadOutputFromAcquisitionAnalysis - Download anaylsis outputs with filter.
+%    getAcquisitionAnalysisOutputZipInfo - Download anaylsis outputs with filter.
 %    getAcquisitionAnalysisOutputDownloadUrl - Download anaylsis outputs with filter.
 %    getAcquisition - Get a single acquisition
 %    getAcquisitionAnalyses - Get analyses for acquisition.
@@ -68,8 +70,10 @@
 %    downloadAnalysisInputs - Download analysis inputs.
 %    downloadAnalysisOutputs - Download analysis outputs.
 %    downloadInputFromAnalysis - Download anaylsis inputs with filter.
+%    getAnalysisInputZipInfo - Download anaylsis inputs with filter.
 %    getAnalysisInputDownloadUrl - Download anaylsis inputs with filter.
 %    downloadOutputFromAnalysis - Download anaylsis outputs with filter.
+%    getAnalysisOutputZipInfo - Download anaylsis outputs with filter.
 %    getAnalysisOutputDownloadUrl - Download anaylsis outputs with filter.
 %    getAnalyses - Get nested analyses for a container
 %    getAnalysis - Get an analysis.
@@ -104,8 +108,10 @@
 %    getCollectionFileZipInfo - Download a file.
 %    getCollectionDownloadUrl - Download a file.
 %    downloadInputFromCollectionAnalysis - Download anaylsis inputs with filter.
+%    getCollectionAnalysisInputZipInfo - Download anaylsis inputs with filter.
 %    getCollectionAnalysisInputDownloadUrl - Download anaylsis inputs with filter.
 %    downloadOutputFromCollectionAnalysis - Download anaylsis outputs with filter.
+%    getCollectionAnalysisOutputZipInfo - Download anaylsis outputs with filter.
 %    getCollectionAnalysisOutputDownloadUrl - Download anaylsis outputs with filter.
 %    getAllCollections - List all collections.
 %    getAllCollectionsCurators - List all curators of collections
@@ -145,8 +151,10 @@
 %    getContainerFileZipInfo - Download a file.
 %    getContainerDownloadUrl - Download a file.
 %    downloadInputFromContainerAnalysis - Download anaylsis inputs with filter.
+%    getContainerAnalysisInputZipInfo - Download anaylsis inputs with filter.
 %    getContainerAnalysisInputDownloadUrl - Download anaylsis inputs with filter.
 %    downloadOutputFromContainerAnalysis - Download anaylsis outputs with filter.
+%    getContainerAnalysisOutputZipInfo - Download anaylsis outputs with filter.
 %    getContainerAnalysisOutputDownloadUrl - Download anaylsis outputs with filter.
 %    getContainer - Retrieve a single container
 %    getContainerAnalyses - Get analyses for container.
@@ -164,6 +172,7 @@
 %    replaceContainerFile - Replace a file
 %    uploadFileToContainer - Upload a file to container.
 %    uploadOutputToContainerAnalysis - Upload an output file to analysis.
+%    getSearchStatus - Get the status of search (Mongo Connector)
 %    search - Perform a search query
 %    cleanPackfiles - Clean up expired upload tokens and invalid token directories.
 %    engineUpload - Upload a list of file fields.
@@ -213,6 +222,7 @@
 %    acceptFailedOutput - Accept failed job output.
 %    addJob - Add a job
 %    addJobLogs - Add logs to a job.
+%    completeJob - Complete a job, with information
 %    getAllJobs - Return all jobs
 %    getJob - Get job details
 %    getJobConfig - Get a job's config
@@ -221,7 +231,7 @@
 %    getJobsStats - Get stats about all current jobs
 %    getNextJob - Get the next job in the queue
 %    modifyJob - Update a job.
-%    prepareCompeteJob - Create a ticket for completing a job, with id and status.
+%    prepareCompleteJob - Create a ticket for completing a job, with id and status.
 %    reapJobs - Reap stale jobs
 %    retryJob - Retry a job.
 %    updateJobProfile - Update profile information on a job. (e.g. machine type, etc)
@@ -248,8 +258,10 @@
 %    getProjectFileZipInfo - Download a file.
 %    getProjectDownloadUrl - Download a file.
 %    downloadInputFromProjectAnalysis - Download anaylsis inputs with filter.
+%    getProjectAnalysisInputZipInfo - Download anaylsis inputs with filter.
 %    getProjectAnalysisInputDownloadUrl - Download anaylsis inputs with filter.
 %    downloadOutputFromProjectAnalysis - Download anaylsis outputs with filter.
+%    getProjectAnalysisOutputZipInfo - Download anaylsis outputs with filter.
 %    getProjectAnalysisOutputDownloadUrl - Download anaylsis outputs with filter.
 %    downloadProjectAnalysisInputs - Download analysis inputs.
 %    downloadProjectAnalysisOutputs - Download analysis outputs.
@@ -312,8 +324,10 @@
 %    getSessionFileZipInfo - Download a file.
 %    getSessionDownloadUrl - Download a file.
 %    downloadInputFromSessionAnalysis - Download anaylsis inputs with filter.
+%    getSessionAnalysisInputZipInfo - Download anaylsis inputs with filter.
 %    getSessionAnalysisInputDownloadUrl - Download anaylsis inputs with filter.
 %    downloadOutputFromSessionAnalysis - Download anaylsis outputs with filter.
+%    getSessionAnalysisOutputZipInfo - Download anaylsis outputs with filter.
 %    getSessionAnalysisOutputDownloadUrl - Download anaylsis outputs with filter.
 %    downloadSessionAnalysisInputs - Download analysis inputs.
 %    downloadSessionAnalysisOutputs - Download analysis outputs.
@@ -351,8 +365,10 @@
 %    getSubjectFileZipInfo - Download a file.
 %    getSubjectDownloadUrl - Download a file.
 %    downloadInputFromSubjectAnalysis - Download anaylsis inputs with filter.
+%    getSubjectAnalysisInputZipInfo - Download anaylsis inputs with filter.
 %    getSubjectAnalysisInputDownloadUrl - Download anaylsis inputs with filter.
 %    downloadOutputFromSubjectAnalysis - Download anaylsis outputs with filter.
+%    getSubjectAnalysisOutputZipInfo - Download anaylsis outputs with filter.
 %    getSubjectAnalysisOutputDownloadUrl - Download anaylsis outputs with filter.
 %    downloadSubjectAnalysisInputs - Download analysis inputs.
 %    downloadSubjectAnalysisOutputs - Download analysis outputs.
@@ -400,7 +416,7 @@ classdef Flywheel < handle
     % NOTE: This file is auto generated by the swagger code generator program.
     % Do not edit the file manually.
     properties(Constant)
-        SDK_VERSION = '4.5.0-beta.1';
+        SDK_VERSION = '4.5.0-beta.3';
     end
     properties
         apiClient
@@ -554,6 +570,9 @@ classdef Flywheel < handle
         function [returnData, resp] = downloadInputFromAcquisitionAnalysis(obj, varargin)
             [returnData, resp] = obj.acquisitionsApi.downloadInputFromAcquisitionAnalysis(varargin{:});
         end
+        function [returnData, resp] = getAcquisitionAnalysisInputZipInfo(obj, varargin)
+            [returnData, resp] = obj.acquisitionsApi.getAcquisitionAnalysisInputZipInfo(varargin{:});
+        end
         function [returnData, resp] = getAcquisitionAnalysisInputDownloadUrl(obj, varargin)
             [returnData, resp] = obj.acquisitionsApi.getAcquisitionAnalysisInputDownloadTicket(varargin{:}, 'ticket', true);
             if ~isempty(returnData)
@@ -563,6 +582,9 @@ classdef Flywheel < handle
         end
         function [returnData, resp] = downloadOutputFromAcquisitionAnalysis(obj, varargin)
             [returnData, resp] = obj.acquisitionsApi.downloadOutputFromAcquisitionAnalysis(varargin{:});
+        end
+        function [returnData, resp] = getAcquisitionAnalysisOutputZipInfo(obj, varargin)
+            [returnData, resp] = obj.acquisitionsApi.getAcquisitionAnalysisOutputZipInfo(varargin{:});
         end
         function [returnData, resp] = getAcquisitionAnalysisOutputDownloadUrl(obj, varargin)
             [returnData, resp] = obj.acquisitionsApi.getAcquisitionAnalysisOutputDownloadTicket(varargin{:}, 'ticket', true);
@@ -643,6 +665,9 @@ classdef Flywheel < handle
         function [returnData, resp] = downloadInputFromAnalysis(obj, varargin)
             [returnData, resp] = obj.analysesApi.downloadInputFromAnalysis(varargin{:});
         end
+        function [returnData, resp] = getAnalysisInputZipInfo(obj, varargin)
+            [returnData, resp] = obj.analysesApi.getAnalysisInputZipInfo(varargin{:});
+        end
         function [returnData, resp] = getAnalysisInputDownloadUrl(obj, varargin)
             [returnData, resp] = obj.analysesApi.getAnalysisInputDownloadTicket(varargin{:}, 'ticket', true);
             if ~isempty(returnData)
@@ -652,6 +677,9 @@ classdef Flywheel < handle
         end
         function [returnData, resp] = downloadOutputFromAnalysis(obj, varargin)
             [returnData, resp] = obj.analysesApi.downloadOutputFromAnalysis(varargin{:});
+        end
+        function [returnData, resp] = getAnalysisOutputZipInfo(obj, varargin)
+            [returnData, resp] = obj.analysesApi.getAnalysisOutputZipInfo(varargin{:});
         end
         function [returnData, resp] = getAnalysisOutputDownloadUrl(obj, varargin)
             [returnData, resp] = obj.analysesApi.getAnalysisOutputDownloadTicket(varargin{:}, 'ticket', true);
@@ -763,6 +791,9 @@ classdef Flywheel < handle
         function [returnData, resp] = downloadInputFromCollectionAnalysis(obj, varargin)
             [returnData, resp] = obj.collectionsApi.downloadInputFromCollectionAnalysis(varargin{:});
         end
+        function [returnData, resp] = getCollectionAnalysisInputZipInfo(obj, varargin)
+            [returnData, resp] = obj.collectionsApi.getCollectionAnalysisInputZipInfo(varargin{:});
+        end
         function [returnData, resp] = getCollectionAnalysisInputDownloadUrl(obj, varargin)
             [returnData, resp] = obj.collectionsApi.getCollectionAnalysisInputDownloadTicket(varargin{:}, 'ticket', true);
             if ~isempty(returnData)
@@ -772,6 +803,9 @@ classdef Flywheel < handle
         end
         function [returnData, resp] = downloadOutputFromCollectionAnalysis(obj, varargin)
             [returnData, resp] = obj.collectionsApi.downloadOutputFromCollectionAnalysis(varargin{:});
+        end
+        function [returnData, resp] = getCollectionAnalysisOutputZipInfo(obj, varargin)
+            [returnData, resp] = obj.collectionsApi.getCollectionAnalysisOutputZipInfo(varargin{:});
         end
         function [returnData, resp] = getCollectionAnalysisOutputDownloadUrl(obj, varargin)
             [returnData, resp] = obj.collectionsApi.getCollectionAnalysisOutputDownloadTicket(varargin{:}, 'ticket', true);
@@ -898,6 +932,9 @@ classdef Flywheel < handle
         function [returnData, resp] = downloadInputFromContainerAnalysis(obj, varargin)
             [returnData, resp] = obj.containersApi.downloadInputFromContainerAnalysis(varargin{:});
         end
+        function [returnData, resp] = getContainerAnalysisInputZipInfo(obj, varargin)
+            [returnData, resp] = obj.containersApi.getContainerAnalysisInputZipInfo(varargin{:});
+        end
         function [returnData, resp] = getContainerAnalysisInputDownloadUrl(obj, varargin)
             [returnData, resp] = obj.containersApi.getContainerAnalysisInputDownloadTicket(varargin{:}, 'ticket', true);
             if ~isempty(returnData)
@@ -907,6 +944,9 @@ classdef Flywheel < handle
         end
         function [returnData, resp] = downloadOutputFromContainerAnalysis(obj, varargin)
             [returnData, resp] = obj.containersApi.downloadOutputFromContainerAnalysis(varargin{:});
+        end
+        function [returnData, resp] = getContainerAnalysisOutputZipInfo(obj, varargin)
+            [returnData, resp] = obj.containersApi.getContainerAnalysisOutputZipInfo(varargin{:});
         end
         function [returnData, resp] = getContainerAnalysisOutputDownloadUrl(obj, varargin)
             [returnData, resp] = obj.containersApi.getContainerAnalysisOutputDownloadTicket(varargin{:}, 'ticket', true);
@@ -962,6 +1002,9 @@ classdef Flywheel < handle
         end
         function [returnData, resp] = uploadOutputToContainerAnalysis(obj, varargin)
             [returnData, resp] = obj.containersApi.uploadOutputToContainerAnalysis(varargin{:});
+        end
+        function [returnData, resp] = getSearchStatus(obj, varargin)
+            [returnData, resp] = obj.dataexplorerApi.getSearchStatus(varargin{:});
         end
         function [returnData, resp] = search(obj, varargin)
             [returnData, resp] = obj.dataexplorerApi.search(varargin{:});
@@ -1110,6 +1153,9 @@ classdef Flywheel < handle
         function [returnData, resp] = addJobLogs(obj, varargin)
             [returnData, resp] = obj.jobsApi.addJobLogs(varargin{:});
         end
+        function [returnData, resp] = completeJob(obj, varargin)
+            [returnData, resp] = obj.jobsApi.completeJob(varargin{:});
+        end
         function [returnData, resp] = getAllJobs(obj, varargin)
             [returnData, resp] = obj.jobsApi.getAllJobs(varargin{:});
         end
@@ -1134,8 +1180,8 @@ classdef Flywheel < handle
         function [returnData, resp] = modifyJob(obj, varargin)
             [returnData, resp] = obj.jobsApi.modifyJob(varargin{:});
         end
-        function [returnData, resp] = prepareCompeteJob(obj, varargin)
-            [returnData, resp] = obj.jobsApi.prepareCompeteJob(varargin{:});
+        function [returnData, resp] = prepareCompleteJob(obj, varargin)
+            [returnData, resp] = obj.jobsApi.prepareCompleteJob(varargin{:});
         end
         function [returnData, resp] = reapJobs(obj, varargin)
             [returnData, resp] = obj.jobsApi.reapJobs(varargin{:});
@@ -1219,6 +1265,9 @@ classdef Flywheel < handle
         function [returnData, resp] = downloadInputFromProjectAnalysis(obj, varargin)
             [returnData, resp] = obj.projectsApi.downloadInputFromProjectAnalysis(varargin{:});
         end
+        function [returnData, resp] = getProjectAnalysisInputZipInfo(obj, varargin)
+            [returnData, resp] = obj.projectsApi.getProjectAnalysisInputZipInfo(varargin{:});
+        end
         function [returnData, resp] = getProjectAnalysisInputDownloadUrl(obj, varargin)
             [returnData, resp] = obj.projectsApi.getProjectAnalysisInputDownloadTicket(varargin{:}, 'ticket', true);
             if ~isempty(returnData)
@@ -1228,6 +1277,9 @@ classdef Flywheel < handle
         end
         function [returnData, resp] = downloadOutputFromProjectAnalysis(obj, varargin)
             [returnData, resp] = obj.projectsApi.downloadOutputFromProjectAnalysis(varargin{:});
+        end
+        function [returnData, resp] = getProjectAnalysisOutputZipInfo(obj, varargin)
+            [returnData, resp] = obj.projectsApi.getProjectAnalysisOutputZipInfo(varargin{:});
         end
         function [returnData, resp] = getProjectAnalysisOutputDownloadUrl(obj, varargin)
             [returnData, resp] = obj.projectsApi.getProjectAnalysisOutputDownloadTicket(varargin{:}, 'ticket', true);
@@ -1423,6 +1475,9 @@ classdef Flywheel < handle
         function [returnData, resp] = downloadInputFromSessionAnalysis(obj, varargin)
             [returnData, resp] = obj.sessionsApi.downloadInputFromSessionAnalysis(varargin{:});
         end
+        function [returnData, resp] = getSessionAnalysisInputZipInfo(obj, varargin)
+            [returnData, resp] = obj.sessionsApi.getSessionAnalysisInputZipInfo(varargin{:});
+        end
         function [returnData, resp] = getSessionAnalysisInputDownloadUrl(obj, varargin)
             [returnData, resp] = obj.sessionsApi.getSessionAnalysisInputDownloadTicket(varargin{:}, 'ticket', true);
             if ~isempty(returnData)
@@ -1432,6 +1487,9 @@ classdef Flywheel < handle
         end
         function [returnData, resp] = downloadOutputFromSessionAnalysis(obj, varargin)
             [returnData, resp] = obj.sessionsApi.downloadOutputFromSessionAnalysis(varargin{:});
+        end
+        function [returnData, resp] = getSessionAnalysisOutputZipInfo(obj, varargin)
+            [returnData, resp] = obj.sessionsApi.getSessionAnalysisOutputZipInfo(varargin{:});
         end
         function [returnData, resp] = getSessionAnalysisOutputDownloadUrl(obj, varargin)
             [returnData, resp] = obj.sessionsApi.getSessionAnalysisOutputDownloadTicket(varargin{:}, 'ticket', true);
@@ -1552,6 +1610,9 @@ classdef Flywheel < handle
         function [returnData, resp] = downloadInputFromSubjectAnalysis(obj, varargin)
             [returnData, resp] = obj.subjectsApi.downloadInputFromSubjectAnalysis(varargin{:});
         end
+        function [returnData, resp] = getSubjectAnalysisInputZipInfo(obj, varargin)
+            [returnData, resp] = obj.subjectsApi.getSubjectAnalysisInputZipInfo(varargin{:});
+        end
         function [returnData, resp] = getSubjectAnalysisInputDownloadUrl(obj, varargin)
             [returnData, resp] = obj.subjectsApi.getSubjectAnalysisInputDownloadTicket(varargin{:}, 'ticket', true);
             if ~isempty(returnData)
@@ -1561,6 +1622,9 @@ classdef Flywheel < handle
         end
         function [returnData, resp] = downloadOutputFromSubjectAnalysis(obj, varargin)
             [returnData, resp] = obj.subjectsApi.downloadOutputFromSubjectAnalysis(varargin{:});
+        end
+        function [returnData, resp] = getSubjectAnalysisOutputZipInfo(obj, varargin)
+            [returnData, resp] = obj.subjectsApi.getSubjectAnalysisOutputZipInfo(varargin{:});
         end
         function [returnData, resp] = getSubjectAnalysisOutputDownloadUrl(obj, varargin)
             [returnData, resp] = obj.subjectsApi.getSubjectAnalysisOutputDownloadTicket(varargin{:}, 'ticket', true);

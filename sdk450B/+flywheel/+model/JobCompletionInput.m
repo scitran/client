@@ -1,4 +1,4 @@
-% JobCompletionInput
+% JobCompletionInput - Describes how a job should be transitioned after outputs have been uploaded
 %
 % JobCompletionInput Properties:
 %    success        - Whether or not the job succeeded

@@ -7,6 +7,7 @@
 %    acceptFailedOutput - Accept failed job output.
 %    addJob             - Add a job
 %    addJobLogs         - Add logs to a job.
+%    completeJob        - Complete a job, with information
 %    getAllJobs         - Return all jobs
 %    getJob             - Get job details
 %    getJobConfig       - Get a job's config
@@ -15,7 +16,7 @@
 %    getJobsStats       - Get stats about all current jobs
 %    getNextJob         - Get the next job in the queue
 %    modifyJob          - Update a job.
-%    prepareCompeteJob  - Create a ticket for completing a job, with id and status.
+%    prepareCompleteJob - Create a ticket for completing a job, with id and status.
 %    reapJobs           - Reap stale jobs
 %    retryJob           - Retry a job.
 %    updateJobProfile   - Update profile information on a job. (e.g. machine type, etc)
@@ -156,6 +157,55 @@ classdef JobsApi < handle
             body = flywheel.ApiClient.encodeJson(body.toJson());
 
             resp = obj.apiClient.callApi('POST', '/jobs/{JobId}/logs', ...
+                pathParams, queryParams, headers, body, formParams, files);
+
+            status = resp.getStatusCode();
+
+            switch num2str(status)
+                otherwise
+                    returnData = [];
+            end
+        end
+
+        function [returnData, resp] = completeJob(obj, jobId, body, varargin)
+            % Complete a job, with information
+            % jobId (char)
+            % body (JobCompletionInput)
+            % jobTicketId (char)
+            % returns: [none, resp]
+
+            x__inp = inputParser;
+            x__inp.StructExpand = false;
+            addRequired(x__inp, 'jobId');
+            addRequired(x__inp, 'body');
+            addParameter(x__inp, 'jobTicketId', []);
+            addParameter(x__inp, 'DumpResponseData', false);
+            parse(x__inp, jobId, body, varargin{:});
+
+            % Path parameters
+            pathParams = {};
+            if ~isempty(x__inp.Results.jobId)
+                pathParams = [pathParams, 'JobId', x__inp.Results.jobId];
+            end
+
+            % Query parameters
+            queryParams = {};
+            if ~isempty(x__inp.Results.jobTicketId)
+                queryParams = [queryParams, 'job_ticket_id', flywheel.ApiClient.castParam(x__inp.Results.jobTicketId, 'char')];
+            end
+
+            % Header parameters
+            headers = {};
+
+            % Form parameters
+            formParams = {};
+            files = {};
+
+            % Body (as JSON)
+            body = flywheel.model.JobCompletionInput.ensureIsInstance(x__inp.Results.body);
+            body = flywheel.ApiClient.encodeJson(body.toJson());
+
+            resp = obj.apiClient.callApi('POST', '/jobs/{JobId}/complete', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -596,18 +646,16 @@ classdef JobsApi < handle
             end
         end
 
-        function [returnData, resp] = prepareCompeteJob(obj, jobId, body, varargin)
+        function [returnData, resp] = prepareCompleteJob(obj, jobId, varargin)
             % Create a ticket for completing a job, with id and status.
             % jobId (char)
-            % body (JobCompletionInput)
             % returns: [JobCompletionTicket, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
             addRequired(x__inp, 'jobId');
-            addRequired(x__inp, 'body');
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, jobId, body, varargin{:});
+            parse(x__inp, jobId, varargin{:});
 
             % Path parameters
             pathParams = {};
@@ -626,8 +674,7 @@ classdef JobsApi < handle
             files = {};
 
             % Body (as JSON)
-            body = flywheel.model.JobCompletionInput.ensureIsInstance(x__inp.Results.body);
-            body = flywheel.ApiClient.encodeJson(body.toJson());
+            body = {};
 
             resp = obj.apiClient.callApi('POST', '/jobs/{JobId}/prepare-complete', ...
                 pathParams, queryParams, headers, body, formParams, files);
