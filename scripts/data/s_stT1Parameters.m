@@ -12,7 +12,7 @@ st = scitran('stanfordlabs');
 % There appear to be a lot in the stanfordlabs instance. There are 5484
 % on January 28, 2019.
 % But a lot of them fail the stSearch2Container() call.
-lmt = 100;
+lmt = 1000;
 badList = zeros(lmt,3);
 
 fileList =  st.search('file','file type','dicom',...
@@ -151,6 +151,11 @@ grid on; xlabel('TE'); ylabel('TR');
 % The inversion time parameter only seems to be there for the T1, which
 % makes sense in one way but ...
 
+
+save('ParameterSummary','fa','te','tr','ti','fa2','te2','tr2','faD','teD','trD','fileList','badList');
+
+%%
+
 stNewGraphWin;
 plot(te(:),tr(:),'bo',...
     te2(:),tr2(:),'go',...
@@ -166,6 +171,8 @@ plot3(fa2(:),te2(:),tr2(:),'go'); hold on
 plot3(faD(:),teD(:),trD(:),'ro');
 grid on; legend({'T1','T2','Diffusion'})
 xlabel('FA'); ylabel('TE'); zlabel('TR');
+
+%%
 
 %%
 fhdl = vcNewGraphWin;
