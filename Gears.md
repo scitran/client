@@ -1,12 +1,12 @@
 ## Gears
-Gears are executable programs installed to run with the data in a Flywheel site.  Typically, the Gears run programs that are of interest to many users. The installation is usually managed by Flywheel itself or by the site manager.  You can see the set of *Gears* installed at your site by clicking on 'Gears installed' on the left panel of the Flywheel web page.  
+Gears are executable programs installed to run with the data in a Flywheel site. The Gears installed on a Flywheel site are typically either (a) of interest to many users, or (b) run many times (cloud-scale) by the members of a group. Gear installation is managed by the the site manager.  The *Gears* installed at your site are listed when you select 'Gears installed' on the left panel of the Flywheel web page.  
 
-There is continuing growth in the number of Gears and what they do. For the Center Edition of Flywheel, where many users share a central resource, the ability to run Gears is usually restricted to programs that have modest computational demands and are used by many users.  If you hear about a *Gear* at a site other than your own, you can ask for it to be installed.  
+The Center Edition of Flywheel, where many users share a central resource, the ability to run Gears is usually restricted to programs that have modest computational demands and are used by many users. The Lab Edition of Flywheel typically includes Gears for specialized lab goals. The reason for distinguishing Gear usage this way has to do with cost. Running software requires computational resources and memory.  MRI service centers do not typically have funding to cover the computational costs of data analysis for their users.  Hence, Flywheel separates Center and Lab usage, assigning the costs of computation and memory to the appropriate level (Center vs. Lab).
 
-Computationally demanding Gears that are used for specialized purposes are typically installed and run on the Lab Edition. This lets Flywheel determine the costs of computation and memory so the charge can be assigned to the appropriate research group.
+The *Gears* can be run on almost any platform because they are embedded in a Container technology (Docker Container). Thus, if you learn about a *Gear* at a site other than your own, you can ask for it to be installed at your Center or Lab.
 
 ### Utility Gears
-* [Flywheel Utility Gears - Needs improvement](https://docs.flywheel.io/display/EM/Utility+Gears)
+* [Flywheel Utility Gears - Will be added here](https://flywheelio.zendesk.com/hc/en-us)
 
 An example of an important utility used by many people is [**dcm2niix**](https://github.com/rordenlab/dcm2niix) by Chris Rorden and his colleagues.  This important utility converts DICOM files to the NIfTI files that many people use in their data analysis.  Flywheel sites typically have a Gear that can be run automatically to convert DICOM files.  This is a 'Utility Gear'.
 
