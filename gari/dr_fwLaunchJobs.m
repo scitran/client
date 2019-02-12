@@ -196,30 +196,84 @@ for ns=1:length(sessionsInCollection)
                                          'config', config);
                         body    = struct('label', [labelStr 'neuro-detect OK bVal: ' bval{:} ], ...
                                          'job'  , thisJob); 
-                    case {'afq-pipeline'}
+                    case {'afq-pipeline','afq-pipeline-3'}
                         % Edit the config defaults specific to this project
-                        config.dwOutMm_1           = 1.25;
-                        config.dwOutMm_2           = 1.25;
-                        config.dwOutMm_3           = 1.25;
+                            config.dwOutMm_1           = 1.25;
+                            config.dwOutMm_2           = 1.25;
+                            config.dwOutMm_3           = 1.25;
                         % Create the body
                         fprintf('   ... bValue: %s\n', bval{:})
+                        % Obtain the required acquisitions
+                        stracqu  = dr_fwSearchAcquAnalysis(st, thisSession, ...
+                                             'acquisition','Structural','last');
+                        diffacqu = dr_fwSearchAcquAnalysis(st, thisSession, ...
+                                             'acquisition', 'Diffusion','last');
+                                                % Check if any of those is empty, if not, continue
+                        if isempty(stracqu) || isempty(diffacqu) 
+                            fprintf('No acquisition or analysis found, adding session to the tmpCollection...\n') 
+                            dr_fwAddSession2tmpCollection(st, thisSession,'tmpCollection')
+                        else
+                            % Obtain the file names. In some cases if we
+                            % prepared the data we will know all names will be
+                            % the same, but it is not true for all projects...
+                            % The following function will check if the file name
+                            % contains the string below, and it will return
+                            % either an empty string or the name. If more than
+                            % one are encountered, the last one will be
+                            % returned.
+                            % IT is unnecessary for HCP, as we pass the whole name
+                            T1wFile       = dr_fwFileName(stracqu, 'T1w_acpc_dc_restore_1.25.nii.gz');
+                            aparcasegFile = dr_fwFileName(stracqu, 'aparc+aseg');
+                            % I should make sure that there always will be an
+                            % apar+aseg, but just to be sure...
+                            if isempty(aparcasegFile); aparcasegFile = T1wFile; end
+                            % Here separate the bValues
+                            if strcmp(bval{:},'MS'); bvalStr = 'dwi';
+                            else                     bvalStr = ['dwi_' bval{:}];
+                            end
+                            bvecfile      = dr_fwFileName(diffacqu, [bvalStr '.bvec']);
+                            bvalfile      = dr_fwFileName(diffacqu, [bvalStr '.bval']);
+                            dwifile       = dr_fwFileName(diffacqu, [bvalStr '.nii.gz']);
+                            
+                            % Create the inputs struct of structs for FW
+                            inputs=struct(...
+                                'anatomical',struct('type','acquisition','id',stracqu.id ,'name',T1wFile), ...
+                                'aparcaseg' ,struct('type','acquisition','id',stracqu.id ,'name',aparcasegFile), ...   
+                                'bvec'      ,struct('type','acquisition','id',diffacqu.id,'name',bvecfile), ...
+                                'bval'      ,struct('type','acquisition','id',diffacqu.id,'name',bvalfile), ...
+                                'dwi'       ,struct('type','acquisition','id',diffacqu.id,'name',dwifile));
+
+                            % create the job with all the involved files in a struct
+                            thisJob = struct('gearId', thisGearId, ...
+                                             'inputs', inputs, ...
+                                             'config', config);
+                            body    = struct('label', [labelStr 'Analysis ' gearName '  bVal: ' bval{:} ], ...
+                                             'job'  , thisJob);      
+                            % Launch the job
+                            st.fw.addSessionAnalysis(idGet(thisSession), body);
+                        end
+                    otherwise
+                        disp(fprintf('No changes for project %s and gear  %s\n', thisProject.label, gearName))
+                end
+            end
+        case {'HCP_Depression'}
+            fprintf('Launching %s sessions now...\n', ns, thisProject.label)
+            if configDefault.mrtrix_multishell
+                bvalues = {'MS'};
+            else
+                error('HCP_Depression is not ready for independent shell analysis')
+            end
+            for bval=bvalues
+                config = configDefault;
+                switch gearName
+                    case {'neuro-detect'}
                         % Obtain the acquisitionsIDs:
                         acqus = st.list('acquisition', idGet(thisSession));
-                        stracqu = [];
                         diffacqu = [];
                         for na=1:length(acqus)
                             acqu = st.fw.getAcquisition(idGet(acqus{na}));
-                            if strcmp(acqu.label,'Structural');stracqu=acqu;end;
-                            if strcmp(acqu.label,'Diffusion');diffacqu=acqu;end;
+                            if strcmp(acqu.label,'Diffusion');diffacqu=acqu;end
                         end
-
-                        % Add a struct with input file(s). These are FileReference objects, which are in
-                        % the form of container type, container id, and filename:
-                        % Structural: select the 1.25 for HCP
-                        T1wFile        = struct('type', 'acquisition','id', idGet(stracqu), ...
-                                          'name', 'T1w_acpc_dc_restore_1.25.nii.gz');
-                        aparcasegFile  = struct('type', 'acquisition','id', idGet(stracqu), ...
-                                          'name', 'aparc+aseg.nii.gz');
                         % Diffusion files, loop over the bval values              
                         bvecfile = struct('type', 'acquisition','id', idGet(diffacqu), ...
                                           'name', [thisSession.subject.code '_dwi_' bval{:} '.bvec']);
@@ -227,22 +281,77 @@ for ns=1:length(sessionsInCollection)
                                           'name', [thisSession.subject.code '_dwi_' bval{:} '.bval']);
                         dwifile  = struct('type', 'acquisition','id', idGet(diffacqu), ...
                                           'name', [thisSession.subject.code '_dwi_' bval{:} '.nii.gz']);              
-                        inputs   = struct('anatomical', T1wFile, ...
-                                          'bvec'      , bvecfile, ...
+                        inputs   = struct('bvec'      , bvecfile, ...
                                           'bval'      , bvalfile, ...
                                           'dwi'       , dwifile);
                         % create the job with all the involved files in a struct
                         thisJob = struct('gear_id', thisGearId, ...
                                          'inputs', inputs, ...
                                          'config', config);
-                        body    = struct('label', [labelStr 'Analysis ' gearName '  bVal: ' bval{:} ], ...
-                                         'job'  , thisJob);      
-                        % Launch the job
-                        st.fw.addSessionAnalysis(idGet(thisSession), body);
+                        body    = struct('label', [labelStr 'neuro-detect OK bVal: ' bval{:} ], ...
+                                         'job'  , thisJob); 
+                    case {'afq-pipeline','afq-pipeline-3'}
+                        % Edit the config defaults specific to this project
+                            config.dwOutMm_1           = 1.5;
+                            config.dwOutMm_2           = 1.5;
+                            config.dwOutMm_3           = 1.5;
+                        % Create the body
+                        fprintf('   ... bValue: %s\n', bval{:})
+                        % Obtain the required acquisitions
+                        stracqu  = dr_fwSearchAcquAnalysis(st, thisSession, ...
+                                             'acquisition','Structural','last');
+                        aparcAcqu  = dr_fwSearchAcquAnalysis(st, thisSession, ...
+                                             'acquisition','aparc','last');
+                        diffacqu = dr_fwSearchAcquAnalysis(st, thisSession, ...
+                                             'acquisition', 'DWI_uncut','last');
+                        % Check if any of those is empty, if not, continue
+                        if isempty(stracqu) || isempty(diffacqu) 
+                            fprintf('No acquisition or analysis found, adding session to the tmpCollection...\n') 
+                            dr_fwAddSession2tmpCollection(st, thisSession,'tmpCollection')
+                        else
+                            % Obtain the file names. In some cases if we
+                            % prepared the data we will know all names will be
+                            % the same, but it is not true for all projects...
+                            % The following function will check if the file name
+                            % contains the string below, and it will return
+                            % either an empty string or the name. If more than
+                            % one are encountered, the last one will be
+                            % returned.
+                            % IT is unnecessary for HCP, as we pass the whole name
+                            T1wFile       = dr_fwFileName(stracqu, 'T1w_acpc');
+                            aparcasegFile = dr_fwFileName(aparcAcqu, 'aparc+aseg');
+                            % I should make sure that there always will be an
+                            % apar+aseg, but just to be sure...
+                            if isempty(aparcasegFile); aparcasegFile = T1wFile; end
+                            % Here separate the bValues
+                            if strcmp(bval{:},'MS'); bvalStr = '';
+                            else                     bvalStr = ['dwi_' bval{:}];
+                            end
+                            bvecfile      = dr_fwFileName(diffacqu, [bvalStr '.bvec']);
+                            bvalfile      = dr_fwFileName(diffacqu, [bvalStr '.bval']);
+                            dwifile       = dr_fwFileName(diffacqu, [bvalStr '.nii.gz']);
+                            
+                            % Create the inputs struct of structs for FW
+                            inputs=struct(...
+                                'anatomical',struct('type','acquisition','id',stracqu.id ,'name',T1wFile), ...
+                                'aparcaseg' ,struct('type','acquisition','id',aparcAcqu.id ,'name',aparcasegFile), ...   
+                                'bvec'      ,struct('type','acquisition','id',diffacqu.id,'name',bvecfile), ...
+                                'bval'      ,struct('type','acquisition','id',diffacqu.id,'name',bvalfile), ...
+                                'dwi'       ,struct('type','acquisition','id',diffacqu.id,'name',dwifile));
+
+                            % create the job with all the involved files in a struct
+                            thisJob = struct('gearId', thisGearId, ...
+                                             'inputs', inputs, ...
+                                             'config', config);
+                            body    = struct('label', [labelStr 'Analysis ' gearName '  bVal: ' bval{:} ], ...
+                                             'job'  , thisJob);      
+                            % Launch the job
+                            st.fw.addSessionAnalysis(idGet(thisSession), body);
+                        end
                     otherwise
                         disp(fprintf('No changes for project %s and gear  %s\n', thisProject.label, gearName))
                 end
-           end    
+           end                
         case {'BCBL_ILLITERATES'}
                 % Edit the config defaults specific to this project
                 config = configDefault;
