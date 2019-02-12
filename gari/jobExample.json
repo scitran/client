@@ -1,0 +1,79 @@
+{
+  "inputs": {
+    "bvec": {
+      "type": "acquisition", 
+      "id": "5af4c75caced220017eeaf75", 
+      "name": "103818_dwi_3000.bvec"
+    }, 
+    "bval": {
+      "type": "acquisition", 
+      "id": "5af4c75caced220017eeaf75", 
+      "name": "103818_dwi_3000.bval"
+    }, 
+    "dwi": {
+      "type": "acquisition", 
+      "id": "5af4c75caced220017eeaf75", 
+      "name": "103818_dwi_3000.nii.gz"
+    }, 
+    "anatomical": {
+      "type": "acquisition", 
+      "id": "5af452f1aced22001aeeaf17", 
+      "name": "T1w_acpc_dc_restore_1.25.nii.gz"
+    }
+  }, 
+  "gear_id": "5b452784d294db0017bb1ad1", 
+  "config": {
+    "cleanIter": 5, 
+    "imresample": 0, 
+    "track_algorithm": "mrtrix", 
+    "computeCSD": 1, 
+    "fiberWeighting": 1, 
+    "life_saveOutput": true, 
+    "track_minLengthThreshMm": 50, 
+    "savefigs": 0, 
+    "rotateBvecsWithRx": 0, 
+    "AFQ_Browser_Title": "AFQ_Browser", 
+    "life_runLife": true, 
+    "bsplineInterpFlag": 0, 
+    "mrtrix_multishell": false, 
+    "track_faThresh": 0.2, 
+    "maxDist": 5, 
+    "track_whichAlgorithm": 1, 
+    "mrtrix_tool": "freesurfer", 
+    "clip2rois": 1, 
+    "phaseEncodeDir": 2, 
+    "track_offsetJitter": 0, 
+    "track_nfibers": 500000, 
+    "cutoffUpper": 90, 
+    "cleanClippedFibers": 1, 
+    "numberOfNodes": 100, 
+    "track_maxLengthThreshMm": 250, 
+    "AFQ_Output_Name": "afq_output", 
+    "numBootStrapSamples": 500, 
+    "flipLrApFlag": 0, 
+    "track_faMaskThresh": 0.3, 
+    "life_test": false, 
+    "eddyCorrect": -1, 
+    "track_wPuncture": 0.2, 
+    "maxLen": 4, 
+    "computenorms": 1, 
+    "track_angleThresh": 30, 
+    "track_seedVoxelOffset_1": 0.25, 
+    "life_num_iterations": 500, 
+    "normalization": "spm", 
+    "noiseCalcMethod": "b0", 
+    "mrtrix_mrTrixAlgo": "iFOD2", 
+    "cutoffLower": 10, 
+    "rotateBvecsWithCanXform": 1, 
+    "track_stepSizeMm": 1, 
+    "nStep": 50, 
+    "track_whichInterp": 1, 
+    "cleanFibers": 1, 
+    "track_seedVoxelOffset_2": 0.75, 
+    "life_discretization": 360, 
+    "fitMethod": "ls", 
+    "dwOutMm_3": 1.25, 
+    "dwOutMm_2": 1.25, 
+    "dwOutMm_1": 1.25
+  }
+}
