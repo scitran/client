@@ -1,9 +1,9 @@
 classdef FileMethods < handle
     methods(Hidden)
         function [returnData, resp] = invokeFileApi(obj, name, varargin)
-            fname = sprintf(name, obj.containerType_)
+            fname = sprintf(name, obj.containerType_);
             if isprop(obj, 'fileGroup_')
-                fname = strrep(fname, 'File', obj.fileGroup_)
+                fname = strrep(fname, 'File', obj.fileGroup_);
             end
             fn = str2func(fname);
             [returnData, resp] = fn(obj.context_, varargin{:});
