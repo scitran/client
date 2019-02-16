@@ -71,6 +71,11 @@ switch containerType
             parent = st.fw.get(id); containerType = parent.containerType;
             switch containerType
                 case 'acquisition'
+                    % Maybe we should be using, as per JE email on
+                    % Feb. 12, 2019,
+                    % result{ii} = srch{ii}.parent.getFile(srch{ii}.file.name)
+                    % This will permit result{ii}.download('...');
+                    %
                     result{ii} = st.fw.getAcquisitionFileInfo(srch{ii}.parent.id,srch{ii}.file.name);
                 otherwise
                     disp('NYI');
