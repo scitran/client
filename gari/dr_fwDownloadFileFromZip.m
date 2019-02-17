@@ -1,5 +1,5 @@
 function localFiles = dr_fwDownloadFileFromZip(st, collectionName, ...
-                                            zipNameContains, varargin)
+                                               zipNameContains, varargin)
 %
 % Add information to find and download from a zip. 
 % If there are more than one analysis with the same name or
@@ -27,21 +27,25 @@ function localFiles = dr_fwDownloadFileFromZip(st, collectionName, ...
 % Examples:
 %{
 clear all; close all; clc;
-st = scitran('stanfordlabs'); st.verify
-dr_fwDownloadFileFromZip(st, '00_VIS', 'AFQ_Output_', ...
-                         'analysisLabelContains', 'Allv01', ...
-                         'filesContain'         , '_wmMask.mif', ...
-                         'downloadTo'           , '/Users/glerma/Downloads/Allv01', ...
-                         'showListSession'      , false)
+st                    = scitran('stanfordlabs'); st.verify
+colecName             = 'HCPTEST';
+% analysisLabelContains = 'AllV03:v3.0.6:10LiFE:min20max250:0.1cutoff:Analysis afq-pipeline bVal: 3000';
+analysisLabelContains = 'MS7';
+zipNameContains       = 'AFQ_Output_';
+% listOfFilesContain    = {'MoriGroups_clean','_wmMask.mif','_wmMask_dilated.mif', ...
+%                              '_fa.mif', 'b0.nii.gz','_L.mat','_R.mat'};
+% listOfFilesContain    = {'MoriGroups_clean', 'b0.nii.gz', '_L.mat','_R.mat'};    
+% listOfFilesContain    = {'_fa.mif', '_CLIPPED_'};
+listOfFilesContain    = {'_autolmax.mif'};
+downloadDir           = '/Users/glerma/Downloads/v3.0.6';
+downFiles             = dr_fwDownloadFileFromZip(st, colecName, zipNameContains, ...
+                         'analysisLabelContains', analysisLabelContains, ...
+                         'filesContain'         , listOfFilesContain, ...
+                         'downloadTo'           , downloadDir, ...
+                         'showListSession'      , false);
 %}
-% 'MoriGroups_clean', '_wmMask', '_fa.mif'
-%
-% Make it work with multiple analysis, right now will take the last one
-% 
 % 
 % GLU Vistalab, 2018
-%
-% See also:  
 
 
 %% 0.- Parse inputs
@@ -70,14 +74,9 @@ showListSession      = p.Results.showListSession;
 
 % Connect to the collection, verify it and show the number of sessions for verification
 % FC: obtain collection ID from the collection name
-collectionID = '';
-collections  = st.fw.getAllCollections();
-for nc=1:length(collections)
-    if strcmp(collections{nc}.label, collectionName)
-        collectionID = collections{nc}.id;
-    end
-end
 
+cc            = st.search('collection','collection label contains',collectionName);
+collectionID  = cc{1}.collection.id;
 if isempty(collectionID)
     error('Collection %s could not be found on the server %s (verify permissions or the collection name).', collectionName, st.instance)
 else
