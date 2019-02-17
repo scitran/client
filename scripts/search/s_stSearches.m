@@ -386,11 +386,11 @@ disp(thisGroup)
 
 %% Or by group name, which is also the group id
 
-% ** Fails.  There is a group label 'Wandell Lab'
 group = 'wandell';
 [projects,srchCmd] = st.search('project',...
     'group id',group,...
     'summary',true);
+stPrint(projects,'project','label')
 
 %% Return collections
 

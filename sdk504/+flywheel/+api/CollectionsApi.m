@@ -1,45 +1,56 @@
-% ContainersApi - Abstract container operations
+% CollectionsApi - Collection operations
 %
-% ContainersApi Properties:
+% CollectionsApi Properties:
 %    apiClient - ApiClient instance
 %
-% ContainersApi Methods
-%    addContainerAnalysis                     - Create an analysis and upload files.
-%    addContainerAnalysisNote                 - Add a note to container analysis.
-%    addContainerNote                         - Add a note to container.
-%    addContainerTag                          - Add a tag to container.
-%    deleteContainer                          - Delete a container
-%    deleteContainerAnalysis                  - Delete an anaylsis
-%    deleteContainerAnalysisNote              - Remove a note from container analysis.
-%    deleteContainerFile                      - Delete a file
-%    deleteContainerNote                      - Remove a note from container
-%    deleteContainerTag                       - Delete a tag
-%    downloadContainerAnalysisInputs          - Download analysis inputs.
-%    downloadContainerAnalysisOutputs         - Download analysis outputs.
-%    downloadFileFromContainer                - Download a file.
-%    getContainerFileZipInfo                  - Download a file.
-%    getContainerDownloadTicket               - Download a file.
-%    downloadInputFromContainerAnalysis       - Download anaylsis inputs with filter.
-%    getContainerAnalysisInputDownloadTicket  - Download anaylsis inputs with filter.
-%    downloadOutputFromContainerAnalysis      - Download anaylsis outputs with filter.
-%    getContainerAnalysisOutputDownloadTicket - Download anaylsis outputs with filter.
-%    getContainer                             - Retrieve a single container
-%    getContainerAnalyses                     - Get analyses for container.
-%    getContainerAnalysis                     - Get an analysis.
-%    getContainerFileInfo                     - Get info for a particular file.
-%    getContainerNote                         - Get a note on container.
-%    getContainerTag                          - Get the value of a tag, by name.
-%    modifyContainer                          - Update a container and its contents
-%    modifyContainerFile                      - Modify a file's attributes
-%    modifyContainerFileClassification        - Update classification for a particular file.
-%    modifyContainerFileInfo                  - Update info for a particular file.
-%    modifyContainerInfo                      - Update or replace info for a container.
-%    modifyContainerNote                      - Update a note on container.
-%    renameContainerTag                       - Rename a tag.
-%    replaceContainerFile                     - Replace a file
-%    uploadFileToContainer                    - Upload a file to container.
-%    uploadOutputToContainerAnalysis          - Upload an output file to analysis.
-classdef ContainersApi < handle
+% CollectionsApi Methods
+%    addCollection                             - Create a collection
+%    addCollectionAnalysis                     - Create an analysis and upload files.
+%    addCollectionAnalysisNote                 - Add a note to collection analysis.
+%    addCollectionNote                         - Add a note to collection.
+%    addCollectionPermission                   - Add a permission
+%    addCollectionTag                          - Add a tag to collection.
+%    deleteCollection                          - Delete a collection
+%    deleteCollectionAnalysis                  - Delete an anaylsis
+%    deleteCollectionAnalysisNote              - Remove a note from collection analysis.
+%    deleteCollectionFile                      - Delete a file
+%    deleteCollectionNote                      - Remove a note from collection
+%    deleteCollectionTag                       - Delete a tag
+%    deleteCollectionUserPermission            - Delete a permission
+%    downloadCollectionAnalysisInputs          - Download analysis inputs.
+%    downloadCollectionAnalysisOutputs         - Download analysis outputs.
+%    downloadFileFromCollection                - Download a file.
+%    getCollectionFileZipInfo                  - Download a file.
+%    getCollectionDownloadTicket               - Download a file.
+%    downloadInputFromCollectionAnalysis       - Download anaylsis inputs with filter.
+%    getCollectionAnalysisInputZipInfo         - Download anaylsis inputs with filter.
+%    getCollectionAnalysisInputDownloadTicket  - Download anaylsis inputs with filter.
+%    downloadOutputFromCollectionAnalysis      - Download anaylsis outputs with filter.
+%    getCollectionAnalysisOutputZipInfo        - Download anaylsis outputs with filter.
+%    getCollectionAnalysisOutputDownloadTicket - Download anaylsis outputs with filter.
+%    getAllCollections                         - List all collections.
+%    getAllCollectionsCurators                 - List all curators of collections
+%    getCollection                             - Retrieve a single collection
+%    getCollectionAcquisitions                 - List acquisitions in a collection
+%    getCollectionAnalyses                     - Get analyses for collection.
+%    getCollectionAnalysis                     - Get an analysis.
+%    getCollectionFileInfo                     - Get info for a particular file.
+%    getCollectionNote                         - Get a note on collection.
+%    getCollectionSessions                     - List sessions in a collection
+%    getCollectionTag                          - Get the value of a tag, by name.
+%    getCollectionUserPermission               - List a user's permissions for this collection.
+%    modifyCollection                          - Update a collection and its contents
+%    modifyCollectionFile                      - Modify a file's attributes
+%    modifyCollectionFileClassification        - Update classification for a particular file.
+%    modifyCollectionFileInfo                  - Update info for a particular file.
+%    modifyCollectionInfo                      - Update or replace info for a collection.
+%    modifyCollectionNote                      - Update a note on collection.
+%    modifyCollectionUserPermission            - Update a user's permission for this collection.
+%    renameCollectionTag                       - Rename a tag.
+%    replaceCollectionFile                     - Replace a file
+%    uploadFileToCollection                    - Upload a file to collection.
+%    uploadOutputToCollectionAnalysis          - Upload an output file to analysis.
+classdef CollectionsApi < handle
     % NOTE: This file is auto generated by the swagger code generator program.
     % Do not edit the file manually.
     properties
@@ -47,30 +58,79 @@ classdef ContainersApi < handle
         context_
     end
     methods
-        function obj = ContainersApi(apiClient, context)
+        function obj = CollectionsApi(apiClient, context)
             obj.apiClient = apiClient;
             obj.context_ = context;
         end
 
-        function [returnData, resp] = addContainerAnalysis(obj, containerId, body, varargin)
+        function [returnData, resp] = addCollection(obj, body, varargin)
+            % Create a collection
+            % body (Collection)
+            % returns: [CollectionNewOutput, resp]
+
+            x__inp = inputParser;
+            x__inp.StructExpand = false;
+            addRequired(x__inp, 'body');
+            addParameter(x__inp, 'DumpResponseData', false);
+            parse(x__inp, body, varargin{:});
+
+            % Path parameters
+            pathParams = {};
+
+            % Query parameters
+            queryParams = {};
+
+            % Header parameters
+            headers = {};
+
+            % Form parameters
+            formParams = {};
+            files = {};
+
+            % Body (as JSON)
+            body = flywheel.model.Collection.ensureIsInstance(x__inp.Results.body);
+            body = flywheel.ApiClient.encodeJson(body.toJson());
+
+            resp = obj.apiClient.callApi('POST', '/collections', ...
+                pathParams, queryParams, headers, body, formParams, files);
+
+            status = resp.getStatusCode();
+
+            switch num2str(status)
+                case '200'
+                    if x__inp.Results.DumpResponseData
+                        x__respData = resp.getBodyAsString();
+                        disp(x__respData);
+                    end
+                    json = flywheel.ApiClient.getResponseJson(resp);
+                    returnData = flywheel.model.CollectionNewOutput.fromJson(json, obj.context_);
+                    if ~isempty(returnData)
+                        returnData = returnData.returnValue();
+                    end
+                otherwise
+                    returnData = [];
+            end
+        end
+
+        function [returnData, resp] = addCollectionAnalysis(obj, collectionId, body, varargin)
             % Create an analysis and upload files.
-            % containerId (char)
+            % collectionId (char)
             % body (AnalysisInput)
             % job (logical):Return job as an object instead of an id
             % returns: [ContainerNewOutput, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'containerId');
+            addRequired(x__inp, 'collectionId');
             addRequired(x__inp, 'body');
             addParameter(x__inp, 'job', []);
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, containerId, body, varargin{:});
+            parse(x__inp, collectionId, body, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.containerId)
-                pathParams = [pathParams, 'ContainerId', x__inp.Results.containerId];
+            if ~isempty(x__inp.Results.collectionId)
+                pathParams = [pathParams, 'CollectionId', x__inp.Results.collectionId];
             end
 
             % Query parameters
@@ -92,7 +152,7 @@ classdef ContainersApi < handle
             body = flywheel.model.AnalysisInput.ensureIsInstance(x__inp.Results.body);
             body = flywheel.ApiClient.encodeJson(body.toJson());
 
-            resp = obj.apiClient.callApi('POST', '/containers/{ContainerId}/analyses', ...
+            resp = obj.apiClient.callApi('POST', '/collections/{CollectionId}/analyses', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -113,25 +173,25 @@ classdef ContainersApi < handle
             end
         end
 
-        function [returnData, resp] = addContainerAnalysisNote(obj, containerId, analysisId, body, varargin)
-            % Add a note to container analysis.
-            % containerId (char)
+        function [returnData, resp] = addCollectionAnalysisNote(obj, collectionId, analysisId, body, varargin)
+            % Add a note to collection analysis.
+            % collectionId (char)
             % analysisId (char)
             % body (Note)
             % returns: [InlineResponse200, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'containerId');
+            addRequired(x__inp, 'collectionId');
             addRequired(x__inp, 'analysisId');
             addRequired(x__inp, 'body');
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, containerId, analysisId, body, varargin{:});
+            parse(x__inp, collectionId, analysisId, body, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.containerId)
-                pathParams = [pathParams, 'ContainerId', x__inp.Results.containerId];
+            if ~isempty(x__inp.Results.collectionId)
+                pathParams = [pathParams, 'CollectionId', x__inp.Results.collectionId];
             end
             if ~isempty(x__inp.Results.analysisId)
                 pathParams = [pathParams, 'AnalysisId', x__inp.Results.analysisId];
@@ -151,7 +211,7 @@ classdef ContainersApi < handle
             body = flywheel.model.Note.ensureIsInstance(x__inp.Results.body);
             body = flywheel.ApiClient.encodeJson(body.toJson());
 
-            resp = obj.apiClient.callApi('POST', '/containers/{ContainerId}/analyses/{AnalysisId}/notes', ...
+            resp = obj.apiClient.callApi('POST', '/collections/{CollectionId}/analyses/{AnalysisId}/notes', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -172,23 +232,23 @@ classdef ContainersApi < handle
             end
         end
 
-        function [returnData, resp] = addContainerNote(obj, containerId, body, varargin)
-            % Add a note to container.
-            % containerId (char)
+        function [returnData, resp] = addCollectionNote(obj, collectionId, body, varargin)
+            % Add a note to collection.
+            % collectionId (char)
             % body (Note)
             % returns: [InlineResponse200, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'containerId');
+            addRequired(x__inp, 'collectionId');
             addRequired(x__inp, 'body');
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, containerId, body, varargin{:});
+            parse(x__inp, collectionId, body, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.containerId)
-                pathParams = [pathParams, 'ContainerId', x__inp.Results.containerId];
+            if ~isempty(x__inp.Results.collectionId)
+                pathParams = [pathParams, 'CollectionId', x__inp.Results.collectionId];
             end
 
             % Query parameters
@@ -205,7 +265,7 @@ classdef ContainersApi < handle
             body = flywheel.model.Note.ensureIsInstance(x__inp.Results.body);
             body = flywheel.ApiClient.encodeJson(body.toJson());
 
-            resp = obj.apiClient.callApi('POST', '/containers/{ContainerId}/notes', ...
+            resp = obj.apiClient.callApi('POST', '/collections/{CollectionId}/notes', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -226,23 +286,77 @@ classdef ContainersApi < handle
             end
         end
 
-        function [returnData, resp] = addContainerTag(obj, containerId, body, varargin)
-            % Add a tag to container.
-            % containerId (char)
+        function [returnData, resp] = addCollectionPermission(obj, collectionId, body, varargin)
+            % Add a permission
+            % collectionId (char)
+            % body (Permission)
+            % returns: [InlineResponse200, resp]
+
+            x__inp = inputParser;
+            x__inp.StructExpand = false;
+            addRequired(x__inp, 'collectionId');
+            addRequired(x__inp, 'body');
+            addParameter(x__inp, 'DumpResponseData', false);
+            parse(x__inp, collectionId, body, varargin{:});
+
+            % Path parameters
+            pathParams = {};
+            if ~isempty(x__inp.Results.collectionId)
+                pathParams = [pathParams, 'CollectionId', x__inp.Results.collectionId];
+            end
+
+            % Query parameters
+            queryParams = {};
+
+            % Header parameters
+            headers = {};
+
+            % Form parameters
+            formParams = {};
+            files = {};
+
+            % Body (as JSON)
+            body = flywheel.model.Permission.ensureIsInstance(x__inp.Results.body);
+            body = flywheel.ApiClient.encodeJson(body.toJson());
+
+            resp = obj.apiClient.callApi('POST', '/collections/{CollectionId}/permissions', ...
+                pathParams, queryParams, headers, body, formParams, files);
+
+            status = resp.getStatusCode();
+
+            switch num2str(status)
+                case '200'
+                    if x__inp.Results.DumpResponseData
+                        x__respData = resp.getBodyAsString();
+                        disp(x__respData);
+                    end
+                    json = flywheel.ApiClient.getResponseJson(resp);
+                    returnData = flywheel.model.InlineResponse200.fromJson(json, obj.context_);
+                    if ~isempty(returnData)
+                        returnData = returnData.returnValue();
+                    end
+                otherwise
+                    returnData = [];
+            end
+        end
+
+        function [returnData, resp] = addCollectionTag(obj, collectionId, body, varargin)
+            % Add a tag to collection.
+            % collectionId (char)
             % body (Tag)
             % returns: [InlineResponse200, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'containerId');
+            addRequired(x__inp, 'collectionId');
             addRequired(x__inp, 'body');
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, containerId, body, varargin{:});
+            parse(x__inp, collectionId, body, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.containerId)
-                pathParams = [pathParams, 'ContainerId', x__inp.Results.containerId];
+            if ~isempty(x__inp.Results.collectionId)
+                pathParams = [pathParams, 'CollectionId', x__inp.Results.collectionId];
             end
 
             % Query parameters
@@ -259,7 +373,7 @@ classdef ContainersApi < handle
             body = flywheel.model.Tag.ensureIsInstance(x__inp.Results.body);
             body = flywheel.ApiClient.encodeJson(body.toJson());
 
-            resp = obj.apiClient.callApi('POST', '/containers/{ContainerId}/tags', ...
+            resp = obj.apiClient.callApi('POST', '/collections/{CollectionId}/tags', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -280,21 +394,21 @@ classdef ContainersApi < handle
             end
         end
 
-        function [returnData, resp] = deleteContainer(obj, containerId, varargin)
-            % Delete a container
-            % containerId (char)
+        function [returnData, resp] = deleteCollection(obj, collectionId, varargin)
+            % Delete a collection
+            % collectionId (char)
             % returns: [none, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'containerId');
+            addRequired(x__inp, 'collectionId');
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, containerId, varargin{:});
+            parse(x__inp, collectionId, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.containerId)
-                pathParams = [pathParams, 'ContainerId', x__inp.Results.containerId];
+            if ~isempty(x__inp.Results.collectionId)
+                pathParams = [pathParams, 'CollectionId', x__inp.Results.collectionId];
             end
 
             % Query parameters
@@ -310,7 +424,7 @@ classdef ContainersApi < handle
             % Body (as JSON)
             body = {};
 
-            resp = obj.apiClient.callApi('DELETE', '/containers/{ContainerId}', ...
+            resp = obj.apiClient.callApi('DELETE', '/collections/{CollectionId}', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -321,23 +435,23 @@ classdef ContainersApi < handle
             end
         end
 
-        function [returnData, resp] = deleteContainerAnalysis(obj, containerId, analysisId, varargin)
+        function [returnData, resp] = deleteCollectionAnalysis(obj, collectionId, analysisId, varargin)
             % Delete an anaylsis
-            % containerId (char)
+            % collectionId (char)
             % analysisId (char)
             % returns: [InlineResponse2001, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'containerId');
+            addRequired(x__inp, 'collectionId');
             addRequired(x__inp, 'analysisId');
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, containerId, analysisId, varargin{:});
+            parse(x__inp, collectionId, analysisId, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.containerId)
-                pathParams = [pathParams, 'ContainerId', x__inp.Results.containerId];
+            if ~isempty(x__inp.Results.collectionId)
+                pathParams = [pathParams, 'CollectionId', x__inp.Results.collectionId];
             end
             if ~isempty(x__inp.Results.analysisId)
                 pathParams = [pathParams, 'AnalysisId', x__inp.Results.analysisId];
@@ -356,7 +470,7 @@ classdef ContainersApi < handle
             % Body (as JSON)
             body = {};
 
-            resp = obj.apiClient.callApi('DELETE', '/containers/{ContainerId}/analyses/{AnalysisId}', ...
+            resp = obj.apiClient.callApi('DELETE', '/collections/{CollectionId}/analyses/{AnalysisId}', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -377,25 +491,25 @@ classdef ContainersApi < handle
             end
         end
 
-        function [returnData, resp] = deleteContainerAnalysisNote(obj, containerId, analysisId, noteId, varargin)
-            % Remove a note from container analysis.
-            % containerId (char)
+        function [returnData, resp] = deleteCollectionAnalysisNote(obj, collectionId, analysisId, noteId, varargin)
+            % Remove a note from collection analysis.
+            % collectionId (char)
             % analysisId (char)
             % noteId (char)
             % returns: [InlineResponse200, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'containerId');
+            addRequired(x__inp, 'collectionId');
             addRequired(x__inp, 'analysisId');
             addRequired(x__inp, 'noteId');
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, containerId, analysisId, noteId, varargin{:});
+            parse(x__inp, collectionId, analysisId, noteId, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.containerId)
-                pathParams = [pathParams, 'ContainerId', x__inp.Results.containerId];
+            if ~isempty(x__inp.Results.collectionId)
+                pathParams = [pathParams, 'CollectionId', x__inp.Results.collectionId];
             end
             if ~isempty(x__inp.Results.analysisId)
                 pathParams = [pathParams, 'AnalysisId', x__inp.Results.analysisId];
@@ -417,7 +531,7 @@ classdef ContainersApi < handle
             % Body (as JSON)
             body = {};
 
-            resp = obj.apiClient.callApi('DELETE', '/containers/{ContainerId}/analyses/{AnalysisId}/notes/{NoteId}', ...
+            resp = obj.apiClient.callApi('DELETE', '/collections/{CollectionId}/analyses/{AnalysisId}/notes/{NoteId}', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -438,23 +552,23 @@ classdef ContainersApi < handle
             end
         end
 
-        function [returnData, resp] = deleteContainerFile(obj, containerId, fileName, varargin)
+        function [returnData, resp] = deleteCollectionFile(obj, collectionId, fileName, varargin)
             % Delete a file
-            % containerId (char)
+            % collectionId (char)
             % fileName (char)
             % returns: [InlineResponse200, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'containerId');
+            addRequired(x__inp, 'collectionId');
             addRequired(x__inp, 'fileName');
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, containerId, fileName, varargin{:});
+            parse(x__inp, collectionId, fileName, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.containerId)
-                pathParams = [pathParams, 'ContainerId', x__inp.Results.containerId];
+            if ~isempty(x__inp.Results.collectionId)
+                pathParams = [pathParams, 'CollectionId', x__inp.Results.collectionId];
             end
             if ~isempty(x__inp.Results.fileName)
                 pathParams = [pathParams, 'FileName', x__inp.Results.fileName];
@@ -473,7 +587,7 @@ classdef ContainersApi < handle
             % Body (as JSON)
             body = {};
 
-            resp = obj.apiClient.callApi('DELETE', '/containers/{ContainerId}/files/{FileName}', ...
+            resp = obj.apiClient.callApi('DELETE', '/collections/{CollectionId}/files/{FileName}', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -494,23 +608,23 @@ classdef ContainersApi < handle
             end
         end
 
-        function [returnData, resp] = deleteContainerNote(obj, containerId, noteId, varargin)
-            % Remove a note from container
-            % containerId (char)
+        function [returnData, resp] = deleteCollectionNote(obj, collectionId, noteId, varargin)
+            % Remove a note from collection
+            % collectionId (char)
             % noteId (char)
             % returns: [InlineResponse200, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'containerId');
+            addRequired(x__inp, 'collectionId');
             addRequired(x__inp, 'noteId');
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, containerId, noteId, varargin{:});
+            parse(x__inp, collectionId, noteId, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.containerId)
-                pathParams = [pathParams, 'ContainerId', x__inp.Results.containerId];
+            if ~isempty(x__inp.Results.collectionId)
+                pathParams = [pathParams, 'CollectionId', x__inp.Results.collectionId];
             end
             if ~isempty(x__inp.Results.noteId)
                 pathParams = [pathParams, 'NoteId', x__inp.Results.noteId];
@@ -529,7 +643,7 @@ classdef ContainersApi < handle
             % Body (as JSON)
             body = {};
 
-            resp = obj.apiClient.callApi('DELETE', '/containers/{ContainerId}/notes/{NoteId}', ...
+            resp = obj.apiClient.callApi('DELETE', '/collections/{CollectionId}/notes/{NoteId}', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -550,23 +664,23 @@ classdef ContainersApi < handle
             end
         end
 
-        function [returnData, resp] = deleteContainerTag(obj, containerId, tagValue, varargin)
+        function [returnData, resp] = deleteCollectionTag(obj, collectionId, tagValue, varargin)
             % Delete a tag
-            % containerId (char)
+            % collectionId (char)
             % tagValue (char):The tag to interact with
             % returns: [InlineResponse200, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'containerId');
+            addRequired(x__inp, 'collectionId');
             addRequired(x__inp, 'tagValue');
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, containerId, tagValue, varargin{:});
+            parse(x__inp, collectionId, tagValue, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.containerId)
-                pathParams = [pathParams, 'ContainerId', x__inp.Results.containerId];
+            if ~isempty(x__inp.Results.collectionId)
+                pathParams = [pathParams, 'CollectionId', x__inp.Results.collectionId];
             end
             if ~isempty(x__inp.Results.tagValue)
                 pathParams = [pathParams, 'TagValue', x__inp.Results.tagValue];
@@ -585,7 +699,7 @@ classdef ContainersApi < handle
             % Body (as JSON)
             body = {};
 
-            resp = obj.apiClient.callApi('DELETE', '/containers/{ContainerId}/tags/{TagValue}', ...
+            resp = obj.apiClient.callApi('DELETE', '/collections/{CollectionId}/tags/{TagValue}', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -606,25 +720,81 @@ classdef ContainersApi < handle
             end
         end
 
-        function [returnData, resp] = downloadContainerAnalysisInputs(obj, containerId, analysisId, varargin)
+        function [returnData, resp] = deleteCollectionUserPermission(obj, collectionId, userId, varargin)
+            % Delete a permission
+            % collectionId (char)
+            % userId (char)
+            % returns: [InlineResponse200, resp]
+
+            x__inp = inputParser;
+            x__inp.StructExpand = false;
+            addRequired(x__inp, 'collectionId');
+            addRequired(x__inp, 'userId');
+            addParameter(x__inp, 'DumpResponseData', false);
+            parse(x__inp, collectionId, userId, varargin{:});
+
+            % Path parameters
+            pathParams = {};
+            if ~isempty(x__inp.Results.collectionId)
+                pathParams = [pathParams, 'CollectionId', x__inp.Results.collectionId];
+            end
+            if ~isempty(x__inp.Results.userId)
+                pathParams = [pathParams, 'UserId', x__inp.Results.userId];
+            end
+
+            % Query parameters
+            queryParams = {};
+
+            % Header parameters
+            headers = {};
+
+            % Form parameters
+            formParams = {};
+            files = {};
+
+            % Body (as JSON)
+            body = {};
+
+            resp = obj.apiClient.callApi('DELETE', '/collections/{CollectionId}/permissions/{UserId}', ...
+                pathParams, queryParams, headers, body, formParams, files);
+
+            status = resp.getStatusCode();
+
+            switch num2str(status)
+                case '200'
+                    if x__inp.Results.DumpResponseData
+                        x__respData = resp.getBodyAsString();
+                        disp(x__respData);
+                    end
+                    json = flywheel.ApiClient.getResponseJson(resp);
+                    returnData = flywheel.model.InlineResponse200.fromJson(json, obj.context_);
+                    if ~isempty(returnData)
+                        returnData = returnData.returnValue();
+                    end
+                otherwise
+                    returnData = [];
+            end
+        end
+
+        function [returnData, resp] = downloadCollectionAnalysisInputs(obj, collectionId, analysisId, varargin)
             % Download analysis inputs.
-            % containerId (char)
+            % collectionId (char)
             % analysisId (char)
             % ticket (char):ticket id of the inputs to download
             % returns: [AnalysisFilesCreateTicketOutput, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'containerId');
+            addRequired(x__inp, 'collectionId');
             addRequired(x__inp, 'analysisId');
             addParameter(x__inp, 'ticket', []);
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, containerId, analysisId, varargin{:});
+            parse(x__inp, collectionId, analysisId, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.containerId)
-                pathParams = [pathParams, 'ContainerId', x__inp.Results.containerId];
+            if ~isempty(x__inp.Results.collectionId)
+                pathParams = [pathParams, 'CollectionId', x__inp.Results.collectionId];
             end
             if ~isempty(x__inp.Results.analysisId)
                 pathParams = [pathParams, 'AnalysisId', x__inp.Results.analysisId];
@@ -646,7 +816,7 @@ classdef ContainersApi < handle
             % Body (as JSON)
             body = {};
 
-            resp = obj.apiClient.callApi('GET', '/containers/{ContainerId}/analyses/{AnalysisId}/inputs', ...
+            resp = obj.apiClient.callApi('GET', '/collections/{CollectionId}/analyses/{AnalysisId}/inputs', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -667,25 +837,25 @@ classdef ContainersApi < handle
             end
         end
 
-        function [returnData, resp] = downloadContainerAnalysisOutputs(obj, containerId, analysisId, varargin)
+        function [returnData, resp] = downloadCollectionAnalysisOutputs(obj, collectionId, analysisId, varargin)
             % Download analysis outputs.
-            % containerId (char)
+            % collectionId (char)
             % analysisId (char)
             % ticket (char):ticket id of the outputs to download
             % returns: [AnalysisFilesCreateTicketOutput, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'containerId');
+            addRequired(x__inp, 'collectionId');
             addRequired(x__inp, 'analysisId');
             addParameter(x__inp, 'ticket', []);
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, containerId, analysisId, varargin{:});
+            parse(x__inp, collectionId, analysisId, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.containerId)
-                pathParams = [pathParams, 'ContainerId', x__inp.Results.containerId];
+            if ~isempty(x__inp.Results.collectionId)
+                pathParams = [pathParams, 'CollectionId', x__inp.Results.collectionId];
             end
             if ~isempty(x__inp.Results.analysisId)
                 pathParams = [pathParams, 'AnalysisId', x__inp.Results.analysisId];
@@ -707,7 +877,7 @@ classdef ContainersApi < handle
             % Body (as JSON)
             body = {};
 
-            resp = obj.apiClient.callApi('GET', '/containers/{ContainerId}/analyses/{AnalysisId}/files', ...
+            resp = obj.apiClient.callApi('GET', '/collections/{CollectionId}/analyses/{AnalysisId}/files', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -728,9 +898,9 @@ classdef ContainersApi < handle
             end
         end
 
-        function [returnData, resp] = downloadFileFromContainer(obj, containerId, fileName, varargin)
+        function [returnData, resp] = downloadFileFromCollection(obj, collectionId, fileName, varargin)
             % Download a file.
-            % containerId (char)
+            % collectionId (char)
             % fileName (char)
             % view (logical):If true, the proper \"Content-Type\" header based on the file's mimetype is set on response If false, the \"Content-Type\" header is set to \"application/octet-stream\" 
             % info (logical):If the file is a zipfile, return a json response of zipfile member information
@@ -740,7 +910,7 @@ classdef ContainersApi < handle
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'containerId');
+            addRequired(x__inp, 'collectionId');
             addRequired(x__inp, 'fileName');
             addParameter(x__inp, 'view', []);
             addParameter(x__inp, 'info', []);
@@ -748,12 +918,12 @@ classdef ContainersApi < handle
             addRequired(x__inp, 'destFile');
             addParameter(x__inp, 'OutputType', 'double');
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, containerId, fileName, varargin{:});
+            parse(x__inp, collectionId, fileName, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.containerId)
-                pathParams = [pathParams, 'ContainerId', x__inp.Results.containerId];
+            if ~isempty(x__inp.Results.collectionId)
+                pathParams = [pathParams, 'CollectionId', x__inp.Results.collectionId];
             end
             if ~isempty(x__inp.Results.fileName)
                 pathParams = [pathParams, 'FileName', x__inp.Results.fileName];
@@ -781,7 +951,7 @@ classdef ContainersApi < handle
             % Body (as JSON)
             body = {};
 
-            resp = obj.apiClient.callApi('GET', '/containers/{ContainerId}/files/{FileName}', ...
+            resp = obj.apiClient.callApi('GET', '/collections/{CollectionId}/files/{FileName}', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -800,9 +970,9 @@ classdef ContainersApi < handle
             end
         end
 
-        function [returnData, resp] = getContainerFileZipInfo(obj, containerId, fileName, varargin)
+        function [returnData, resp] = getCollectionFileZipInfo(obj, collectionId, fileName, varargin)
             % Download a file.
-            % containerId (char)
+            % collectionId (char)
             % fileName (char)
             % ticket (char):The generated ticket id for the download, or present but empty to generate a ticket id
             % view (logical):If true, the proper \"Content-Type\" header based on the file's mimetype is set on response If false, the \"Content-Type\" header is set to \"application/octet-stream\" 
@@ -812,19 +982,19 @@ classdef ContainersApi < handle
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'containerId');
+            addRequired(x__inp, 'collectionId');
             addRequired(x__inp, 'fileName');
             addParameter(x__inp, 'ticket', []);
             addParameter(x__inp, 'view', []);
             addParameter(x__inp, 'info', []);
             addParameter(x__inp, 'member', []);
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, containerId, fileName, varargin{:});
+            parse(x__inp, collectionId, fileName, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.containerId)
-                pathParams = [pathParams, 'ContainerId', x__inp.Results.containerId];
+            if ~isempty(x__inp.Results.collectionId)
+                pathParams = [pathParams, 'CollectionId', x__inp.Results.collectionId];
             end
             if ~isempty(x__inp.Results.fileName)
                 pathParams = [pathParams, 'FileName', x__inp.Results.fileName];
@@ -857,7 +1027,7 @@ classdef ContainersApi < handle
             % Body (as JSON)
             body = {};
 
-            resp = obj.apiClient.callApi('GET', '/containers/{ContainerId}/files/{FileName}', ...
+            resp = obj.apiClient.callApi('GET', '/collections/{CollectionId}/files/{FileName}', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -878,9 +1048,9 @@ classdef ContainersApi < handle
             end
         end
 
-        function [returnData, resp] = getContainerDownloadTicket(obj, containerId, fileName, varargin)
+        function [returnData, resp] = getCollectionDownloadTicket(obj, collectionId, fileName, varargin)
             % Download a file.
-            % containerId (char)
+            % collectionId (char)
             % fileName (char)
             % ticket (char):The generated ticket id for the download, or present but empty to generate a ticket id
             % view (logical):If true, the proper \"Content-Type\" header based on the file's mimetype is set on response If false, the \"Content-Type\" header is set to \"application/octet-stream\" 
@@ -890,19 +1060,19 @@ classdef ContainersApi < handle
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'containerId');
+            addRequired(x__inp, 'collectionId');
             addRequired(x__inp, 'fileName');
             addParameter(x__inp, 'ticket', []);
             addParameter(x__inp, 'view', []);
             addParameter(x__inp, 'info', []);
             addParameter(x__inp, 'member', []);
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, containerId, fileName, varargin{:});
+            parse(x__inp, collectionId, fileName, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.containerId)
-                pathParams = [pathParams, 'ContainerId', x__inp.Results.containerId];
+            if ~isempty(x__inp.Results.collectionId)
+                pathParams = [pathParams, 'CollectionId', x__inp.Results.collectionId];
             end
             if ~isempty(x__inp.Results.fileName)
                 pathParams = [pathParams, 'FileName', x__inp.Results.fileName];
@@ -933,7 +1103,7 @@ classdef ContainersApi < handle
             % Body (as JSON)
             body = {};
 
-            resp = obj.apiClient.callApi('GET', '/containers/{ContainerId}/files/{FileName}', ...
+            resp = obj.apiClient.callApi('GET', '/collections/{CollectionId}/files/{FileName}', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -954,28 +1124,32 @@ classdef ContainersApi < handle
             end
         end
 
-        function [returnData, resp] = downloadInputFromContainerAnalysis(obj, containerId, analysisId, filename, varargin)
+        function [returnData, resp] = downloadInputFromCollectionAnalysis(obj, collectionId, analysisId, filename, varargin)
             % Download anaylsis inputs with filter.
-            % containerId (char)
+            % collectionId (char)
             % analysisId (char)
             % filename (char):regex to select inputs for download
+            % info (logical):If the file is a zipfile, return a json response of zipfile member information
+            % member (char):The filename of a zipfile member to download rather than the entire file
             % destFile - Destination file path
             % returns: [AnalysisFilesCreateTicketOutput, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'containerId');
+            addRequired(x__inp, 'collectionId');
             addRequired(x__inp, 'analysisId');
             addRequired(x__inp, 'filename');
+            addParameter(x__inp, 'info', []);
+            addParameter(x__inp, 'member', []);
             addRequired(x__inp, 'destFile');
             addParameter(x__inp, 'OutputType', 'double');
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, containerId, analysisId, filename, varargin{:});
+            parse(x__inp, collectionId, analysisId, filename, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.containerId)
-                pathParams = [pathParams, 'ContainerId', x__inp.Results.containerId];
+            if ~isempty(x__inp.Results.collectionId)
+                pathParams = [pathParams, 'CollectionId', x__inp.Results.collectionId];
             end
             if ~isempty(x__inp.Results.analysisId)
                 pathParams = [pathParams, 'AnalysisId', x__inp.Results.analysisId];
@@ -986,6 +1160,12 @@ classdef ContainersApi < handle
 
             % Query parameters
             queryParams = {};
+            if ~isempty(x__inp.Results.info)
+                queryParams = [queryParams, 'info', flywheel.ApiClient.castParam(x__inp.Results.info, 'logical')];
+            end
+            if ~isempty(x__inp.Results.member)
+                queryParams = [queryParams, 'member', flywheel.ApiClient.castParam(x__inp.Results.member, 'char')];
+            end
 
             % Header parameters
             headers = {};
@@ -997,7 +1177,7 @@ classdef ContainersApi < handle
             % Body (as JSON)
             body = {};
 
-            resp = obj.apiClient.callApi('GET', '/containers/{ContainerId}/analyses/{AnalysisId}/inputs/{Filename}', ...
+            resp = obj.apiClient.callApi('GET', '/collections/{CollectionId}/analyses/{AnalysisId}/inputs/{Filename}', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -1016,27 +1196,31 @@ classdef ContainersApi < handle
             end
         end
 
-        function [returnData, resp] = getContainerAnalysisInputDownloadTicket(obj, containerId, analysisId, filename, varargin)
+        function [returnData, resp] = getCollectionAnalysisInputZipInfo(obj, collectionId, analysisId, filename, varargin)
             % Download anaylsis inputs with filter.
-            % containerId (char)
+            % collectionId (char)
             % analysisId (char)
             % filename (char):regex to select inputs for download
             % ticket (char):ticket id of the inputs to download
-            % returns: [AnalysisFilesCreateTicketOutput, resp]
+            % info (logical):If the file is a zipfile, return a json response of zipfile member information
+            % member (char):The filename of a zipfile member to download rather than the entire file
+            % returns: [FileZipInfo, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'containerId');
+            addRequired(x__inp, 'collectionId');
             addRequired(x__inp, 'analysisId');
             addRequired(x__inp, 'filename');
             addParameter(x__inp, 'ticket', []);
+            addParameter(x__inp, 'info', []);
+            addParameter(x__inp, 'member', []);
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, containerId, analysisId, filename, varargin{:});
+            parse(x__inp, collectionId, analysisId, filename, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.containerId)
-                pathParams = [pathParams, 'ContainerId', x__inp.Results.containerId];
+            if ~isempty(x__inp.Results.collectionId)
+                pathParams = [pathParams, 'CollectionId', x__inp.Results.collectionId];
             end
             if ~isempty(x__inp.Results.analysisId)
                 pathParams = [pathParams, 'AnalysisId', x__inp.Results.analysisId];
@@ -1050,6 +1234,14 @@ classdef ContainersApi < handle
             if ~isempty(x__inp.Results.ticket)
                 queryParams = [queryParams, 'ticket', flywheel.ApiClient.castParam(x__inp.Results.ticket, 'char')];
             end
+            if ~isempty(x__inp.Results.info)
+                queryParams = [queryParams, 'info', flywheel.ApiClient.castParam(x__inp.Results.info, 'logical')];
+            else
+                queryParams = [queryParams, 'info', 'true'];
+            end
+            if ~isempty(x__inp.Results.member)
+                queryParams = [queryParams, 'member', flywheel.ApiClient.castParam(x__inp.Results.member, 'char')];
+            end
 
             % Header parameters
             headers = {};
@@ -1061,7 +1253,83 @@ classdef ContainersApi < handle
             % Body (as JSON)
             body = {};
 
-            resp = obj.apiClient.callApi('GET', '/containers/{ContainerId}/analyses/{AnalysisId}/inputs/{Filename}', ...
+            resp = obj.apiClient.callApi('GET', '/collections/{CollectionId}/analyses/{AnalysisId}/inputs/{Filename}', ...
+                pathParams, queryParams, headers, body, formParams, files);
+
+            status = resp.getStatusCode();
+
+            switch num2str(status)
+                case '200'
+                    if x__inp.Results.DumpResponseData
+                        x__respData = resp.getBodyAsString();
+                        disp(x__respData);
+                    end
+                    json = flywheel.ApiClient.getResponseJson(resp);
+                    returnData = flywheel.model.FileZipInfo.fromJson(json, obj.context_);
+                    if ~isempty(returnData)
+                        returnData = returnData.returnValue();
+                    end
+                otherwise
+                    returnData = [];
+            end
+        end
+
+        function [returnData, resp] = getCollectionAnalysisInputDownloadTicket(obj, collectionId, analysisId, filename, varargin)
+            % Download anaylsis inputs with filter.
+            % collectionId (char)
+            % analysisId (char)
+            % filename (char):regex to select inputs for download
+            % ticket (char):ticket id of the inputs to download
+            % info (logical):If the file is a zipfile, return a json response of zipfile member information
+            % member (char):The filename of a zipfile member to download rather than the entire file
+            % returns: [AnalysisFilesCreateTicketOutput, resp]
+
+            x__inp = inputParser;
+            x__inp.StructExpand = false;
+            addRequired(x__inp, 'collectionId');
+            addRequired(x__inp, 'analysisId');
+            addRequired(x__inp, 'filename');
+            addParameter(x__inp, 'ticket', []);
+            addParameter(x__inp, 'info', []);
+            addParameter(x__inp, 'member', []);
+            addParameter(x__inp, 'DumpResponseData', false);
+            parse(x__inp, collectionId, analysisId, filename, varargin{:});
+
+            % Path parameters
+            pathParams = {};
+            if ~isempty(x__inp.Results.collectionId)
+                pathParams = [pathParams, 'CollectionId', x__inp.Results.collectionId];
+            end
+            if ~isempty(x__inp.Results.analysisId)
+                pathParams = [pathParams, 'AnalysisId', x__inp.Results.analysisId];
+            end
+            if ~isempty(x__inp.Results.filename)
+                pathParams = [pathParams, 'Filename', x__inp.Results.filename];
+            end
+
+            % Query parameters
+            queryParams = {};
+            if ~isempty(x__inp.Results.ticket)
+                queryParams = [queryParams, 'ticket', flywheel.ApiClient.castParam(x__inp.Results.ticket, 'char')];
+            end
+            if ~isempty(x__inp.Results.info)
+                queryParams = [queryParams, 'info', flywheel.ApiClient.castParam(x__inp.Results.info, 'logical')];
+            end
+            if ~isempty(x__inp.Results.member)
+                queryParams = [queryParams, 'member', flywheel.ApiClient.castParam(x__inp.Results.member, 'char')];
+            end
+
+            % Header parameters
+            headers = {};
+
+            % Form parameters
+            formParams = {};
+            files = {};
+
+            % Body (as JSON)
+            body = {};
+
+            resp = obj.apiClient.callApi('GET', '/collections/{CollectionId}/analyses/{AnalysisId}/inputs/{Filename}', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -1082,28 +1350,32 @@ classdef ContainersApi < handle
             end
         end
 
-        function [returnData, resp] = downloadOutputFromContainerAnalysis(obj, containerId, analysisId, filename, varargin)
+        function [returnData, resp] = downloadOutputFromCollectionAnalysis(obj, collectionId, analysisId, filename, varargin)
             % Download anaylsis outputs with filter.
-            % containerId (char)
+            % collectionId (char)
             % analysisId (char)
             % filename (char):regex to select outputs for download
+            % info (logical):If the file is a zipfile, return a json response of zipfile member information
+            % member (char):The filename of a zipfile member to download rather than the entire file
             % destFile - Destination file path
             % returns: [AnalysisFilesCreateTicketOutput, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'containerId');
+            addRequired(x__inp, 'collectionId');
             addRequired(x__inp, 'analysisId');
             addRequired(x__inp, 'filename');
+            addParameter(x__inp, 'info', []);
+            addParameter(x__inp, 'member', []);
             addRequired(x__inp, 'destFile');
             addParameter(x__inp, 'OutputType', 'double');
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, containerId, analysisId, filename, varargin{:});
+            parse(x__inp, collectionId, analysisId, filename, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.containerId)
-                pathParams = [pathParams, 'ContainerId', x__inp.Results.containerId];
+            if ~isempty(x__inp.Results.collectionId)
+                pathParams = [pathParams, 'CollectionId', x__inp.Results.collectionId];
             end
             if ~isempty(x__inp.Results.analysisId)
                 pathParams = [pathParams, 'AnalysisId', x__inp.Results.analysisId];
@@ -1114,6 +1386,12 @@ classdef ContainersApi < handle
 
             % Query parameters
             queryParams = {};
+            if ~isempty(x__inp.Results.info)
+                queryParams = [queryParams, 'info', flywheel.ApiClient.castParam(x__inp.Results.info, 'logical')];
+            end
+            if ~isempty(x__inp.Results.member)
+                queryParams = [queryParams, 'member', flywheel.ApiClient.castParam(x__inp.Results.member, 'char')];
+            end
 
             % Header parameters
             headers = {};
@@ -1125,7 +1403,7 @@ classdef ContainersApi < handle
             % Body (as JSON)
             body = {};
 
-            resp = obj.apiClient.callApi('GET', '/containers/{ContainerId}/analyses/{AnalysisId}/files/{Filename}', ...
+            resp = obj.apiClient.callApi('GET', '/collections/{CollectionId}/analyses/{AnalysisId}/files/{Filename}', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -1144,27 +1422,31 @@ classdef ContainersApi < handle
             end
         end
 
-        function [returnData, resp] = getContainerAnalysisOutputDownloadTicket(obj, containerId, analysisId, filename, varargin)
+        function [returnData, resp] = getCollectionAnalysisOutputZipInfo(obj, collectionId, analysisId, filename, varargin)
             % Download anaylsis outputs with filter.
-            % containerId (char)
+            % collectionId (char)
             % analysisId (char)
             % filename (char):regex to select outputs for download
             % ticket (char):ticket id of the outputs to download
-            % returns: [AnalysisFilesCreateTicketOutput, resp]
+            % info (logical):If the file is a zipfile, return a json response of zipfile member information
+            % member (char):The filename of a zipfile member to download rather than the entire file
+            % returns: [FileZipInfo, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'containerId');
+            addRequired(x__inp, 'collectionId');
             addRequired(x__inp, 'analysisId');
             addRequired(x__inp, 'filename');
             addParameter(x__inp, 'ticket', []);
+            addParameter(x__inp, 'info', []);
+            addParameter(x__inp, 'member', []);
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, containerId, analysisId, filename, varargin{:});
+            parse(x__inp, collectionId, analysisId, filename, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.containerId)
-                pathParams = [pathParams, 'ContainerId', x__inp.Results.containerId];
+            if ~isempty(x__inp.Results.collectionId)
+                pathParams = [pathParams, 'CollectionId', x__inp.Results.collectionId];
             end
             if ~isempty(x__inp.Results.analysisId)
                 pathParams = [pathParams, 'AnalysisId', x__inp.Results.analysisId];
@@ -1178,6 +1460,14 @@ classdef ContainersApi < handle
             if ~isempty(x__inp.Results.ticket)
                 queryParams = [queryParams, 'ticket', flywheel.ApiClient.castParam(x__inp.Results.ticket, 'char')];
             end
+            if ~isempty(x__inp.Results.info)
+                queryParams = [queryParams, 'info', flywheel.ApiClient.castParam(x__inp.Results.info, 'logical')];
+            else
+                queryParams = [queryParams, 'info', 'true'];
+            end
+            if ~isempty(x__inp.Results.member)
+                queryParams = [queryParams, 'member', flywheel.ApiClient.castParam(x__inp.Results.member, 'char')];
+            end
 
             % Header parameters
             headers = {};
@@ -1189,7 +1479,83 @@ classdef ContainersApi < handle
             % Body (as JSON)
             body = {};
 
-            resp = obj.apiClient.callApi('GET', '/containers/{ContainerId}/analyses/{AnalysisId}/files/{Filename}', ...
+            resp = obj.apiClient.callApi('GET', '/collections/{CollectionId}/analyses/{AnalysisId}/files/{Filename}', ...
+                pathParams, queryParams, headers, body, formParams, files);
+
+            status = resp.getStatusCode();
+
+            switch num2str(status)
+                case '200'
+                    if x__inp.Results.DumpResponseData
+                        x__respData = resp.getBodyAsString();
+                        disp(x__respData);
+                    end
+                    json = flywheel.ApiClient.getResponseJson(resp);
+                    returnData = flywheel.model.FileZipInfo.fromJson(json, obj.context_);
+                    if ~isempty(returnData)
+                        returnData = returnData.returnValue();
+                    end
+                otherwise
+                    returnData = [];
+            end
+        end
+
+        function [returnData, resp] = getCollectionAnalysisOutputDownloadTicket(obj, collectionId, analysisId, filename, varargin)
+            % Download anaylsis outputs with filter.
+            % collectionId (char)
+            % analysisId (char)
+            % filename (char):regex to select outputs for download
+            % ticket (char):ticket id of the outputs to download
+            % info (logical):If the file is a zipfile, return a json response of zipfile member information
+            % member (char):The filename of a zipfile member to download rather than the entire file
+            % returns: [AnalysisFilesCreateTicketOutput, resp]
+
+            x__inp = inputParser;
+            x__inp.StructExpand = false;
+            addRequired(x__inp, 'collectionId');
+            addRequired(x__inp, 'analysisId');
+            addRequired(x__inp, 'filename');
+            addParameter(x__inp, 'ticket', []);
+            addParameter(x__inp, 'info', []);
+            addParameter(x__inp, 'member', []);
+            addParameter(x__inp, 'DumpResponseData', false);
+            parse(x__inp, collectionId, analysisId, filename, varargin{:});
+
+            % Path parameters
+            pathParams = {};
+            if ~isempty(x__inp.Results.collectionId)
+                pathParams = [pathParams, 'CollectionId', x__inp.Results.collectionId];
+            end
+            if ~isempty(x__inp.Results.analysisId)
+                pathParams = [pathParams, 'AnalysisId', x__inp.Results.analysisId];
+            end
+            if ~isempty(x__inp.Results.filename)
+                pathParams = [pathParams, 'Filename', x__inp.Results.filename];
+            end
+
+            % Query parameters
+            queryParams = {};
+            if ~isempty(x__inp.Results.ticket)
+                queryParams = [queryParams, 'ticket', flywheel.ApiClient.castParam(x__inp.Results.ticket, 'char')];
+            end
+            if ~isempty(x__inp.Results.info)
+                queryParams = [queryParams, 'info', flywheel.ApiClient.castParam(x__inp.Results.info, 'logical')];
+            end
+            if ~isempty(x__inp.Results.member)
+                queryParams = [queryParams, 'member', flywheel.ApiClient.castParam(x__inp.Results.member, 'char')];
+            end
+
+            % Header parameters
+            headers = {};
+
+            % Form parameters
+            formParams = {};
+            files = {};
+
+            % Body (as JSON)
+            body = {};
+
+            resp = obj.apiClient.callApi('GET', '/collections/{CollectionId}/analyses/{AnalysisId}/files/{Filename}', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -1210,21 +1576,137 @@ classdef ContainersApi < handle
             end
         end
 
-        function [returnData, resp] = getContainer(obj, containerId, varargin)
-            % Retrieve a single container
-            % containerId (char)
-            % returns: [ContainerOutput, resp]
+        function [returnData, resp] = getAllCollections(obj, varargin)
+            % List all collections.
+            % filter (char):The filter to apply. (e.g. label=my-label,created>2018-09-22)
+            % sort (char):The sort fields and order. (e.g. label:asc,created:desc)
+            % limit (integer):The maximum number of entries to return.
+            % skip (integer):The number of entries to skip.
+            % page (integer):The page number (i.e. skip limit*page entries)
+            % afterId (char):Paginate after the given id. (Cannot be used with sort, page or skip)
+            % returns: [vector[Collection], resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'containerId');
+            addParameter(x__inp, 'filter', []);
+            addParameter(x__inp, 'sort', []);
+            addParameter(x__inp, 'limit', []);
+            addParameter(x__inp, 'skip', []);
+            addParameter(x__inp, 'page', []);
+            addParameter(x__inp, 'afterId', []);
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, containerId, varargin{:});
+            parse(x__inp, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.containerId)
-                pathParams = [pathParams, 'ContainerId', x__inp.Results.containerId];
+
+            % Query parameters
+            queryParams = {};
+            if ~isempty(x__inp.Results.filter)
+                queryParams = [queryParams, 'filter', flywheel.ApiClient.castParam(x__inp.Results.filter, 'char')];
+            end
+            if ~isempty(x__inp.Results.sort)
+                queryParams = [queryParams, 'sort', flywheel.ApiClient.castParam(x__inp.Results.sort, 'char')];
+            end
+            if ~isempty(x__inp.Results.limit)
+                queryParams = [queryParams, 'limit', flywheel.ApiClient.castParam(x__inp.Results.limit, 'integer')];
+            end
+            if ~isempty(x__inp.Results.skip)
+                queryParams = [queryParams, 'skip', flywheel.ApiClient.castParam(x__inp.Results.skip, 'integer')];
+            end
+            if ~isempty(x__inp.Results.page)
+                queryParams = [queryParams, 'page', flywheel.ApiClient.castParam(x__inp.Results.page, 'integer')];
+            end
+            if ~isempty(x__inp.Results.afterId)
+                queryParams = [queryParams, 'after_id', flywheel.ApiClient.castParam(x__inp.Results.afterId, 'char')];
+            end
+
+            % Header parameters
+            headers = {};
+
+            % Form parameters
+            formParams = {};
+            files = {};
+
+            % Body (as JSON)
+            body = {};
+
+            resp = obj.apiClient.callApi('GET', '/collections', ...
+                pathParams, queryParams, headers, body, formParams, files);
+
+            status = resp.getStatusCode();
+
+            switch num2str(status)
+                case '200'
+                    if x__inp.Results.DumpResponseData
+                        x__respData = resp.getBodyAsString();
+                        disp(x__respData);
+                    end
+                    json = flywheel.ApiClient.getResponseJson(resp);
+                    returnData = flywheel.ModelBase.cellmap(@(x) flywheel.model.Collection.fromJson(x, obj.context_), json);
+                otherwise
+                    returnData = [];
+            end
+        end
+
+        function [returnData, resp] = getAllCollectionsCurators(obj, varargin)
+            % List all curators of collections
+            % returns: [vector[InlineResponse2002], resp]
+
+            x__inp = inputParser;
+            x__inp.StructExpand = false;
+            addParameter(x__inp, 'DumpResponseData', false);
+            parse(x__inp, varargin{:});
+
+            % Path parameters
+            pathParams = {};
+
+            % Query parameters
+            queryParams = {};
+
+            % Header parameters
+            headers = {};
+
+            % Form parameters
+            formParams = {};
+            files = {};
+
+            % Body (as JSON)
+            body = {};
+
+            resp = obj.apiClient.callApi('GET', '/collections/curators', ...
+                pathParams, queryParams, headers, body, formParams, files);
+
+            status = resp.getStatusCode();
+
+            switch num2str(status)
+                case '200'
+                    if x__inp.Results.DumpResponseData
+                        x__respData = resp.getBodyAsString();
+                        disp(x__respData);
+                    end
+                    json = flywheel.ApiClient.getResponseJson(resp);
+                    returnData = flywheel.ModelBase.cellmap(@(x) flywheel.model.InlineResponse2002.fromJson(x, obj.context_), json);
+                otherwise
+                    returnData = [];
+            end
+        end
+
+        function [returnData, resp] = getCollection(obj, collectionId, varargin)
+            % Retrieve a single collection
+            % collectionId (char)
+            % returns: [Collection, resp]
+
+            x__inp = inputParser;
+            x__inp.StructExpand = false;
+            addRequired(x__inp, 'collectionId');
+            addParameter(x__inp, 'DumpResponseData', false);
+            parse(x__inp, collectionId, varargin{:});
+
+            % Path parameters
+            pathParams = {};
+            if ~isempty(x__inp.Results.collectionId)
+                pathParams = [pathParams, 'CollectionId', x__inp.Results.collectionId];
             end
 
             % Query parameters
@@ -1240,7 +1722,7 @@ classdef ContainersApi < handle
             % Body (as JSON)
             body = {};
 
-            resp = obj.apiClient.callApi('GET', '/containers/{ContainerId}', ...
+            resp = obj.apiClient.callApi('GET', '/collections/{CollectionId}', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -1252,7 +1734,7 @@ classdef ContainersApi < handle
                         disp(x__respData);
                     end
                     json = flywheel.ApiClient.getResponseJson(resp);
-                    returnData = flywheel.model.ContainerOutput.fromJson(json, obj.context_);
+                    returnData = flywheel.model.Collection.fromJson(json, obj.context_);
                     if ~isempty(returnData)
                         returnData = returnData.returnValue();
                     end
@@ -1261,9 +1743,62 @@ classdef ContainersApi < handle
             end
         end
 
-        function [returnData, resp] = getContainerAnalyses(obj, containerId, varargin)
-            % Get analyses for container.
-            % containerId (char)
+        function [returnData, resp] = getCollectionAcquisitions(obj, collectionId, varargin)
+            % List acquisitions in a collection
+            % collectionId (char)
+            % session (char):The id of a session, to which the acquisitions returned will be restricted
+            % returns: [vector[Acquisition], resp]
+
+            x__inp = inputParser;
+            x__inp.StructExpand = false;
+            addRequired(x__inp, 'collectionId');
+            addParameter(x__inp, 'session', []);
+            addParameter(x__inp, 'DumpResponseData', false);
+            parse(x__inp, collectionId, varargin{:});
+
+            % Path parameters
+            pathParams = {};
+            if ~isempty(x__inp.Results.collectionId)
+                pathParams = [pathParams, 'CollectionId', x__inp.Results.collectionId];
+            end
+
+            % Query parameters
+            queryParams = {};
+            if ~isempty(x__inp.Results.session)
+                queryParams = [queryParams, 'session', flywheel.ApiClient.castParam(x__inp.Results.session, 'char')];
+            end
+
+            % Header parameters
+            headers = {};
+
+            % Form parameters
+            formParams = {};
+            files = {};
+
+            % Body (as JSON)
+            body = {};
+
+            resp = obj.apiClient.callApi('GET', '/collections/{CollectionId}/acquisitions', ...
+                pathParams, queryParams, headers, body, formParams, files);
+
+            status = resp.getStatusCode();
+
+            switch num2str(status)
+                case '200'
+                    if x__inp.Results.DumpResponseData
+                        x__respData = resp.getBodyAsString();
+                        disp(x__respData);
+                    end
+                    json = flywheel.ApiClient.getResponseJson(resp);
+                    returnData = flywheel.ModelBase.cellmap(@(x) flywheel.model.Acquisition.fromJson(x, obj.context_), json);
+                otherwise
+                    returnData = [];
+            end
+        end
+
+        function [returnData, resp] = getCollectionAnalyses(obj, collectionId, varargin)
+            % Get analyses for collection.
+            % collectionId (char)
             % filter (char):The filter to apply. (e.g. label=my-label,created>2018-09-22)
             % sort (char):The sort fields and order. (e.g. label:asc,created:desc)
             % limit (integer):The maximum number of entries to return.
@@ -1274,7 +1809,7 @@ classdef ContainersApi < handle
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'containerId');
+            addRequired(x__inp, 'collectionId');
             addParameter(x__inp, 'filter', []);
             addParameter(x__inp, 'sort', []);
             addParameter(x__inp, 'limit', []);
@@ -1282,12 +1817,12 @@ classdef ContainersApi < handle
             addParameter(x__inp, 'page', []);
             addParameter(x__inp, 'afterId', []);
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, containerId, varargin{:});
+            parse(x__inp, collectionId, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.containerId)
-                pathParams = [pathParams, 'ContainerId', x__inp.Results.containerId];
+            if ~isempty(x__inp.Results.collectionId)
+                pathParams = [pathParams, 'CollectionId', x__inp.Results.collectionId];
             end
 
             % Query parameters
@@ -1321,7 +1856,7 @@ classdef ContainersApi < handle
             % Body (as JSON)
             body = {};
 
-            resp = obj.apiClient.callApi('GET', '/containers/{ContainerId}/analyses', ...
+            resp = obj.apiClient.callApi('GET', '/collections/{CollectionId}/analyses', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -1339,25 +1874,25 @@ classdef ContainersApi < handle
             end
         end
 
-        function [returnData, resp] = getContainerAnalysis(obj, containerId, analysisId, varargin)
+        function [returnData, resp] = getCollectionAnalysis(obj, collectionId, analysisId, varargin)
             % Get an analysis.
-            % containerId (char)
+            % collectionId (char)
             % analysisId (char)
             % inflateJob (logical):Return job as an object instead of an id
             % returns: [AnalysisOutput, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'containerId');
+            addRequired(x__inp, 'collectionId');
             addRequired(x__inp, 'analysisId');
             addParameter(x__inp, 'inflateJob', []);
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, containerId, analysisId, varargin{:});
+            parse(x__inp, collectionId, analysisId, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.containerId)
-                pathParams = [pathParams, 'ContainerId', x__inp.Results.containerId];
+            if ~isempty(x__inp.Results.collectionId)
+                pathParams = [pathParams, 'CollectionId', x__inp.Results.collectionId];
             end
             if ~isempty(x__inp.Results.analysisId)
                 pathParams = [pathParams, 'AnalysisId', x__inp.Results.analysisId];
@@ -1381,7 +1916,7 @@ classdef ContainersApi < handle
             % Body (as JSON)
             body = {};
 
-            resp = obj.apiClient.callApi('GET', '/containers/{ContainerId}/analyses/{AnalysisId}', ...
+            resp = obj.apiClient.callApi('GET', '/collections/{CollectionId}/analyses/{AnalysisId}', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -1402,23 +1937,23 @@ classdef ContainersApi < handle
             end
         end
 
-        function [returnData, resp] = getContainerFileInfo(obj, containerId, fileName, varargin)
+        function [returnData, resp] = getCollectionFileInfo(obj, collectionId, fileName, varargin)
             % Get info for a particular file.
-            % containerId (char)
+            % collectionId (char)
             % fileName (char)
             % returns: [FileEntry, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'containerId');
+            addRequired(x__inp, 'collectionId');
             addRequired(x__inp, 'fileName');
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, containerId, fileName, varargin{:});
+            parse(x__inp, collectionId, fileName, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.containerId)
-                pathParams = [pathParams, 'ContainerId', x__inp.Results.containerId];
+            if ~isempty(x__inp.Results.collectionId)
+                pathParams = [pathParams, 'CollectionId', x__inp.Results.collectionId];
             end
             if ~isempty(x__inp.Results.fileName)
                 pathParams = [pathParams, 'FileName', x__inp.Results.fileName];
@@ -1437,7 +1972,7 @@ classdef ContainersApi < handle
             % Body (as JSON)
             body = {};
 
-            resp = obj.apiClient.callApi('GET', '/containers/{ContainerId}/files/{FileName}/info', ...
+            resp = obj.apiClient.callApi('GET', '/collections/{CollectionId}/files/{FileName}/info', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -1458,23 +1993,23 @@ classdef ContainersApi < handle
             end
         end
 
-        function [returnData, resp] = getContainerNote(obj, containerId, noteId, varargin)
-            % Get a note on container.
-            % containerId (char)
+        function [returnData, resp] = getCollectionNote(obj, collectionId, noteId, varargin)
+            % Get a note on collection.
+            % collectionId (char)
             % noteId (char)
             % returns: [Note, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'containerId');
+            addRequired(x__inp, 'collectionId');
             addRequired(x__inp, 'noteId');
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, containerId, noteId, varargin{:});
+            parse(x__inp, collectionId, noteId, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.containerId)
-                pathParams = [pathParams, 'ContainerId', x__inp.Results.containerId];
+            if ~isempty(x__inp.Results.collectionId)
+                pathParams = [pathParams, 'CollectionId', x__inp.Results.collectionId];
             end
             if ~isempty(x__inp.Results.noteId)
                 pathParams = [pathParams, 'NoteId', x__inp.Results.noteId];
@@ -1493,7 +2028,7 @@ classdef ContainersApi < handle
             % Body (as JSON)
             body = {};
 
-            resp = obj.apiClient.callApi('GET', '/containers/{ContainerId}/notes/{NoteId}', ...
+            resp = obj.apiClient.callApi('GET', '/collections/{CollectionId}/notes/{NoteId}', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -1514,23 +2049,71 @@ classdef ContainersApi < handle
             end
         end
 
-        function [returnData, resp] = getContainerTag(obj, containerId, tagValue, varargin)
+        function [returnData, resp] = getCollectionSessions(obj, collectionId, varargin)
+            % List sessions in a collection
+            % collectionId (char)
+            % returns: [vector[Session], resp]
+
+            x__inp = inputParser;
+            x__inp.StructExpand = false;
+            addRequired(x__inp, 'collectionId');
+            addParameter(x__inp, 'DumpResponseData', false);
+            parse(x__inp, collectionId, varargin{:});
+
+            % Path parameters
+            pathParams = {};
+            if ~isempty(x__inp.Results.collectionId)
+                pathParams = [pathParams, 'CollectionId', x__inp.Results.collectionId];
+            end
+
+            % Query parameters
+            queryParams = {};
+
+            % Header parameters
+            headers = {};
+
+            % Form parameters
+            formParams = {};
+            files = {};
+
+            % Body (as JSON)
+            body = {};
+
+            resp = obj.apiClient.callApi('GET', '/collections/{CollectionId}/sessions', ...
+                pathParams, queryParams, headers, body, formParams, files);
+
+            status = resp.getStatusCode();
+
+            switch num2str(status)
+                case '200'
+                    if x__inp.Results.DumpResponseData
+                        x__respData = resp.getBodyAsString();
+                        disp(x__respData);
+                    end
+                    json = flywheel.ApiClient.getResponseJson(resp);
+                    returnData = flywheel.ModelBase.cellmap(@(x) flywheel.model.Session.fromJson(x, obj.context_), json);
+                otherwise
+                    returnData = [];
+            end
+        end
+
+        function [returnData, resp] = getCollectionTag(obj, collectionId, tagValue, varargin)
             % Get the value of a tag, by name.
-            % containerId (char)
+            % collectionId (char)
             % tagValue (char):The tag to interact with
             % returns: [Tag, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'containerId');
+            addRequired(x__inp, 'collectionId');
             addRequired(x__inp, 'tagValue');
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, containerId, tagValue, varargin{:});
+            parse(x__inp, collectionId, tagValue, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.containerId)
-                pathParams = [pathParams, 'ContainerId', x__inp.Results.containerId];
+            if ~isempty(x__inp.Results.collectionId)
+                pathParams = [pathParams, 'CollectionId', x__inp.Results.collectionId];
             end
             if ~isempty(x__inp.Results.tagValue)
                 pathParams = [pathParams, 'TagValue', x__inp.Results.tagValue];
@@ -1549,7 +2132,7 @@ classdef ContainersApi < handle
             % Body (as JSON)
             body = {};
 
-            resp = obj.apiClient.callApi('GET', '/containers/{ContainerId}/tags/{TagValue}', ...
+            resp = obj.apiClient.callApi('GET', '/collections/{CollectionId}/tags/{TagValue}', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -1570,23 +2153,26 @@ classdef ContainersApi < handle
             end
         end
 
-        function [returnData, resp] = modifyContainer(obj, containerId, body, varargin)
-            % Update a container and its contents
-            % containerId (char)
-            % body (ContainerUpdate)
-            % returns: [none, resp]
+        function [returnData, resp] = getCollectionUserPermission(obj, collectionId, userId, varargin)
+            % List a user's permissions for this collection.
+            % collectionId (char)
+            % userId (char)
+            % returns: [Permission, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'containerId');
-            addRequired(x__inp, 'body');
+            addRequired(x__inp, 'collectionId');
+            addRequired(x__inp, 'userId');
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, containerId, body, varargin{:});
+            parse(x__inp, collectionId, userId, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.containerId)
-                pathParams = [pathParams, 'ContainerId', x__inp.Results.containerId];
+            if ~isempty(x__inp.Results.collectionId)
+                pathParams = [pathParams, 'CollectionId', x__inp.Results.collectionId];
+            end
+            if ~isempty(x__inp.Results.userId)
+                pathParams = [pathParams, 'UserId', x__inp.Results.userId];
             end
 
             % Query parameters
@@ -1600,10 +2186,63 @@ classdef ContainersApi < handle
             files = {};
 
             % Body (as JSON)
-            body = flywheel.model.ContainerUpdate.ensureIsInstance(x__inp.Results.body);
+            body = {};
+
+            resp = obj.apiClient.callApi('GET', '/collections/{CollectionId}/permissions/{UserId}', ...
+                pathParams, queryParams, headers, body, formParams, files);
+
+            status = resp.getStatusCode();
+
+            switch num2str(status)
+                case '200'
+                    if x__inp.Results.DumpResponseData
+                        x__respData = resp.getBodyAsString();
+                        disp(x__respData);
+                    end
+                    json = flywheel.ApiClient.getResponseJson(resp);
+                    returnData = flywheel.model.Permission.fromJson(json, obj.context_);
+                    if ~isempty(returnData)
+                        returnData = returnData.returnValue();
+                    end
+                otherwise
+                    returnData = [];
+            end
+        end
+
+        function [returnData, resp] = modifyCollection(obj, collectionId, body, varargin)
+            % Update a collection and its contents
+            % collectionId (char)
+            % body (Collection)
+            % returns: [none, resp]
+
+            x__inp = inputParser;
+            x__inp.StructExpand = false;
+            addRequired(x__inp, 'collectionId');
+            addRequired(x__inp, 'body');
+            addParameter(x__inp, 'DumpResponseData', false);
+            parse(x__inp, collectionId, body, varargin{:});
+
+            % Path parameters
+            pathParams = {};
+            if ~isempty(x__inp.Results.collectionId)
+                pathParams = [pathParams, 'CollectionId', x__inp.Results.collectionId];
+            end
+
+            % Query parameters
+            queryParams = {};
+
+            % Header parameters
+            headers = {};
+
+            % Form parameters
+            formParams = {};
+            files = {};
+
+            % Body (as JSON)
+            body = flywheel.model.Collection.ensureIsInstance(x__inp.Results.body);
             body = flywheel.ApiClient.encodeJson(body.toJson());
 
-            resp = obj.apiClient.callApi('PUT', '/containers/{ContainerId}', ...
+            resp = obj.apiClient.callApi('PUT', '/collections/{CollectionId}', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -1614,25 +2253,25 @@ classdef ContainersApi < handle
             end
         end
 
-        function [returnData, resp] = modifyContainerFile(obj, containerId, fileName, body, varargin)
+        function [returnData, resp] = modifyCollectionFile(obj, collectionId, fileName, body, varargin)
             % Modify a file's attributes
-            % containerId (char)
+            % collectionId (char)
             % fileName (char)
             % body (FileEntry)
             % returns: [InlineResponse2003, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'containerId');
+            addRequired(x__inp, 'collectionId');
             addRequired(x__inp, 'fileName');
             addRequired(x__inp, 'body');
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, containerId, fileName, body, varargin{:});
+            parse(x__inp, collectionId, fileName, body, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.containerId)
-                pathParams = [pathParams, 'ContainerId', x__inp.Results.containerId];
+            if ~isempty(x__inp.Results.collectionId)
+                pathParams = [pathParams, 'CollectionId', x__inp.Results.collectionId];
             end
             if ~isempty(x__inp.Results.fileName)
                 pathParams = [pathParams, 'FileName', x__inp.Results.fileName];
@@ -1652,7 +2291,7 @@ classdef ContainersApi < handle
             body = flywheel.model.FileEntry.ensureIsInstance(x__inp.Results.body);
             body = flywheel.ApiClient.encodeJson(body.toJson());
 
-            resp = obj.apiClient.callApi('PUT', '/containers/{ContainerId}/files/{FileName}', ...
+            resp = obj.apiClient.callApi('PUT', '/collections/{CollectionId}/files/{FileName}', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -1673,25 +2312,25 @@ classdef ContainersApi < handle
             end
         end
 
-        function [returnData, resp] = modifyContainerFileClassification(obj, containerId, fileName, body, varargin)
+        function [returnData, resp] = modifyCollectionFileClassification(obj, collectionId, fileName, body, varargin)
             % Update classification for a particular file.
-            % containerId (char)
+            % collectionId (char)
             % fileName (char)
             % body (ClassificationUpdateInput)
             % returns: [InlineResponse2003, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'containerId');
+            addRequired(x__inp, 'collectionId');
             addRequired(x__inp, 'fileName');
             addRequired(x__inp, 'body');
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, containerId, fileName, body, varargin{:});
+            parse(x__inp, collectionId, fileName, body, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.containerId)
-                pathParams = [pathParams, 'ContainerId', x__inp.Results.containerId];
+            if ~isempty(x__inp.Results.collectionId)
+                pathParams = [pathParams, 'CollectionId', x__inp.Results.collectionId];
             end
             if ~isempty(x__inp.Results.fileName)
                 pathParams = [pathParams, 'FileName', x__inp.Results.fileName];
@@ -1711,7 +2350,7 @@ classdef ContainersApi < handle
             body = flywheel.model.ClassificationUpdateInput.ensureIsInstance(x__inp.Results.body);
             body = flywheel.ApiClient.encodeJson(body.toJson());
 
-            resp = obj.apiClient.callApi('POST', '/containers/{ContainerId}/files/{FileName}/classification', ...
+            resp = obj.apiClient.callApi('POST', '/collections/{CollectionId}/files/{FileName}/classification', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -1732,25 +2371,25 @@ classdef ContainersApi < handle
             end
         end
 
-        function [returnData, resp] = modifyContainerFileInfo(obj, containerId, fileName, body, varargin)
+        function [returnData, resp] = modifyCollectionFileInfo(obj, collectionId, fileName, body, varargin)
             % Update info for a particular file.
-            % containerId (char)
+            % collectionId (char)
             % fileName (char)
             % body (InfoUpdateInput)
             % returns: [InlineResponse200, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'containerId');
+            addRequired(x__inp, 'collectionId');
             addRequired(x__inp, 'fileName');
             addRequired(x__inp, 'body');
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, containerId, fileName, body, varargin{:});
+            parse(x__inp, collectionId, fileName, body, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.containerId)
-                pathParams = [pathParams, 'ContainerId', x__inp.Results.containerId];
+            if ~isempty(x__inp.Results.collectionId)
+                pathParams = [pathParams, 'CollectionId', x__inp.Results.collectionId];
             end
             if ~isempty(x__inp.Results.fileName)
                 pathParams = [pathParams, 'FileName', x__inp.Results.fileName];
@@ -1770,7 +2409,7 @@ classdef ContainersApi < handle
             body = flywheel.model.InfoUpdateInput.ensureIsInstance(x__inp.Results.body);
             body = flywheel.ApiClient.encodeJson(body.toJson());
 
-            resp = obj.apiClient.callApi('POST', '/containers/{ContainerId}/files/{FileName}/info', ...
+            resp = obj.apiClient.callApi('POST', '/collections/{CollectionId}/files/{FileName}/info', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -1791,23 +2430,23 @@ classdef ContainersApi < handle
             end
         end
 
-        function [returnData, resp] = modifyContainerInfo(obj, containerId, body, varargin)
-            % Update or replace info for a container.
-            % containerId (char)
+        function [returnData, resp] = modifyCollectionInfo(obj, collectionId, body, varargin)
+            % Update or replace info for a collection.
+            % collectionId (char)
             % body (InfoUpdateInput)
             % returns: [none, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'containerId');
+            addRequired(x__inp, 'collectionId');
             addRequired(x__inp, 'body');
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, containerId, body, varargin{:});
+            parse(x__inp, collectionId, body, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.containerId)
-                pathParams = [pathParams, 'ContainerId', x__inp.Results.containerId];
+            if ~isempty(x__inp.Results.collectionId)
+                pathParams = [pathParams, 'CollectionId', x__inp.Results.collectionId];
             end
 
             % Query parameters
@@ -1824,7 +2463,7 @@ classdef ContainersApi < handle
             body = flywheel.model.InfoUpdateInput.ensureIsInstance(x__inp.Results.body);
             body = flywheel.ApiClient.encodeJson(body.toJson());
 
-            resp = obj.apiClient.callApi('POST', '/containers/{ContainerId}/info', ...
+            resp = obj.apiClient.callApi('POST', '/collections/{CollectionId}/info', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -1835,25 +2474,25 @@ classdef ContainersApi < handle
             end
         end
 
-        function [returnData, resp] = modifyContainerNote(obj, containerId, noteId, body, varargin)
-            % Update a note on container.
-            % containerId (char)
+        function [returnData, resp] = modifyCollectionNote(obj, collectionId, noteId, body, varargin)
+            % Update a note on collection.
+            % collectionId (char)
             % noteId (char)
             % body (Note)
             % returns: [InlineResponse200, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'containerId');
+            addRequired(x__inp, 'collectionId');
             addRequired(x__inp, 'noteId');
             addRequired(x__inp, 'body');
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, containerId, noteId, body, varargin{:});
+            parse(x__inp, collectionId, noteId, body, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.containerId)
-                pathParams = [pathParams, 'ContainerId', x__inp.Results.containerId];
+            if ~isempty(x__inp.Results.collectionId)
+                pathParams = [pathParams, 'CollectionId', x__inp.Results.collectionId];
             end
             if ~isempty(x__inp.Results.noteId)
                 pathParams = [pathParams, 'NoteId', x__inp.Results.noteId];
@@ -1873,7 +2512,7 @@ classdef ContainersApi < handle
             body = flywheel.model.Note.ensureIsInstance(x__inp.Results.body);
             body = flywheel.ApiClient.encodeJson(body.toJson());
 
-            resp = obj.apiClient.callApi('PUT', '/containers/{ContainerId}/notes/{NoteId}', ...
+            resp = obj.apiClient.callApi('PUT', '/collections/{CollectionId}/notes/{NoteId}', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -1894,25 +2533,84 @@ classdef ContainersApi < handle
             end
         end
 
-        function [returnData, resp] = renameContainerTag(obj, containerId, tagValue, body, varargin)
+        function [returnData, resp] = modifyCollectionUserPermission(obj, collectionId, userId, body, varargin)
+            % Update a user's permission for this collection.
+            % collectionId (char)
+            % userId (char)
+            % body (Permission)
+            % returns: [InlineResponse200, resp]
+
+            x__inp = inputParser;
+            x__inp.StructExpand = false;
+            addRequired(x__inp, 'collectionId');
+            addRequired(x__inp, 'userId');
+            addRequired(x__inp, 'body');
+            addParameter(x__inp, 'DumpResponseData', false);
+            parse(x__inp, collectionId, userId, body, varargin{:});
+
+            % Path parameters
+            pathParams = {};
+            if ~isempty(x__inp.Results.collectionId)
+                pathParams = [pathParams, 'CollectionId', x__inp.Results.collectionId];
+            end
+            if ~isempty(x__inp.Results.userId)
+                pathParams = [pathParams, 'UserId', x__inp.Results.userId];
+            end
+
+            % Query parameters
+            queryParams = {};
+
+            % Header parameters
+            headers = {};
+
+            % Form parameters
+            formParams = {};
+            files = {};
+
+            % Body (as JSON)
+            body = flywheel.model.Permission.ensureIsInstance(x__inp.Results.body);
+            body = flywheel.ApiClient.encodeJson(body.toJson());
+
+            resp = obj.apiClient.callApi('PUT', '/collections/{CollectionId}/permissions/{UserId}', ...
+                pathParams, queryParams, headers, body, formParams, files);
+
+            status = resp.getStatusCode();
+
+            switch num2str(status)
+                case '200'
+                    if x__inp.Results.DumpResponseData
+                        x__respData = resp.getBodyAsString();
+                        disp(x__respData);
+                    end
+                    json = flywheel.ApiClient.getResponseJson(resp);
+                    returnData = flywheel.model.InlineResponse200.fromJson(json, obj.context_);
+                    if ~isempty(returnData)
+                        returnData = returnData.returnValue();
+                    end
+                otherwise
+                    returnData = [];
+            end
+        end
+
+        function [returnData, resp] = renameCollectionTag(obj, collectionId, tagValue, body, varargin)
             % Rename a tag.
-            % containerId (char)
+            % collectionId (char)
             % tagValue (char):The tag to interact with
             % body (Tag)
             % returns: [InlineResponse200, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'containerId');
+            addRequired(x__inp, 'collectionId');
             addRequired(x__inp, 'tagValue');
             addRequired(x__inp, 'body');
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, containerId, tagValue, body, varargin{:});
+            parse(x__inp, collectionId, tagValue, body, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.containerId)
-                pathParams = [pathParams, 'ContainerId', x__inp.Results.containerId];
+            if ~isempty(x__inp.Results.collectionId)
+                pathParams = [pathParams, 'CollectionId', x__inp.Results.collectionId];
             end
             if ~isempty(x__inp.Results.tagValue)
                 pathParams = [pathParams, 'TagValue', x__inp.Results.tagValue];
@@ -1932,7 +2630,7 @@ classdef ContainersApi < handle
             body = flywheel.model.Tag.ensureIsInstance(x__inp.Results.body);
             body = flywheel.ApiClient.encodeJson(body.toJson());
 
-            resp = obj.apiClient.callApi('PUT', '/containers/{ContainerId}/tags/{TagValue}', ...
+            resp = obj.apiClient.callApi('PUT', '/collections/{CollectionId}/tags/{TagValue}', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -1953,23 +2651,23 @@ classdef ContainersApi < handle
             end
         end
 
-        function [returnData, resp] = replaceContainerFile(obj, containerId, fileName, varargin)
+        function [returnData, resp] = replaceCollectionFile(obj, collectionId, fileName, varargin)
             % Replace a file
-            % containerId (char)
+            % collectionId (char)
             % fileName (char)
             % returns: [none, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'containerId');
+            addRequired(x__inp, 'collectionId');
             addRequired(x__inp, 'fileName');
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, containerId, fileName, varargin{:});
+            parse(x__inp, collectionId, fileName, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.containerId)
-                pathParams = [pathParams, 'ContainerId', x__inp.Results.containerId];
+            if ~isempty(x__inp.Results.collectionId)
+                pathParams = [pathParams, 'CollectionId', x__inp.Results.collectionId];
             end
             if ~isempty(x__inp.Results.fileName)
                 pathParams = [pathParams, 'FileName', x__inp.Results.fileName];
@@ -1988,7 +2686,7 @@ classdef ContainersApi < handle
             % Body (as JSON)
             body = {};
 
-            resp = obj.apiClient.callApi('POST', '/containers/{ContainerId}/files/{FileName}', ...
+            resp = obj.apiClient.callApi('POST', '/collections/{CollectionId}/files/{FileName}', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -1999,25 +2697,25 @@ classdef ContainersApi < handle
             end
         end
 
-        function [returnData, resp] = uploadFileToContainer(obj, containerId, file, varargin)
-            % Upload a file to container.
-            % containerId (char)
+        function [returnData, resp] = uploadFileToCollection(obj, collectionId, file, varargin)
+            % Upload a file to collection.
+            % collectionId (char)
             % file (char):The file to upload
             % metadata (char):File metadata
             % returns: [none, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'containerId');
+            addRequired(x__inp, 'collectionId');
             addRequired(x__inp, 'file');
             addParameter(x__inp, 'metadata', []);
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, containerId, file, varargin{:});
+            parse(x__inp, collectionId, file, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.containerId)
-                pathParams = [pathParams, 'ContainerId', x__inp.Results.containerId];
+            if ~isempty(x__inp.Results.collectionId)
+                pathParams = [pathParams, 'CollectionId', x__inp.Results.collectionId];
             end
 
             % Query parameters
@@ -2039,7 +2737,7 @@ classdef ContainersApi < handle
             % Body (as JSON)
             body = {};
 
-            resp = obj.apiClient.callApi('POST', '/containers/{ContainerId}/files', ...
+            resp = obj.apiClient.callApi('POST', '/collections/{CollectionId}/files', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
@@ -2050,25 +2748,25 @@ classdef ContainersApi < handle
             end
         end
 
-        function [returnData, resp] = uploadOutputToContainerAnalysis(obj, containerId, analysisId, file, varargin)
+        function [returnData, resp] = uploadOutputToCollectionAnalysis(obj, collectionId, analysisId, file, varargin)
             % Upload an output file to analysis.
-            % containerId (char)
+            % collectionId (char)
             % analysisId (char)
             % file (char):The file to upload
             % returns: [none, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
-            addRequired(x__inp, 'containerId');
+            addRequired(x__inp, 'collectionId');
             addRequired(x__inp, 'analysisId');
             addRequired(x__inp, 'file');
             addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, containerId, analysisId, file, varargin{:});
+            parse(x__inp, collectionId, analysisId, file, varargin{:});
 
             % Path parameters
             pathParams = {};
-            if ~isempty(x__inp.Results.containerId)
-                pathParams = [pathParams, 'ContainerId', x__inp.Results.containerId];
+            if ~isempty(x__inp.Results.collectionId)
+                pathParams = [pathParams, 'CollectionId', x__inp.Results.collectionId];
             end
             if ~isempty(x__inp.Results.analysisId)
                 pathParams = [pathParams, 'AnalysisId', x__inp.Results.analysisId];
@@ -2090,7 +2788,7 @@ classdef ContainersApi < handle
             % Body (as JSON)
             body = {};
 
-            resp = obj.apiClient.callApi('POST', '/containers/{ContainerId}/analyses/{AnalysisId}/files', ...
+            resp = obj.apiClient.callApi('POST', '/collections/{CollectionId}/analyses/{AnalysisId}/files', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();

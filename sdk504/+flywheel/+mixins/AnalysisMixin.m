@@ -6,6 +6,7 @@ classdef AnalysisMixin < flywheel.mixins.ContainerBase ...
         & flywheel.mixins.DownloadMethods
     properties
         containerType_ = 'Analysis';
+        fileGroup_ = 'Output';
     end
     methods
         function [returnData, resp] = uploadFile(obj, file)
