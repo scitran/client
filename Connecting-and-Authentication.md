@@ -3,23 +3,6 @@
 
 ***
 
-### General use
-
-A connection to a Flywheel instance is established using a scitran object.
-```
-st = scitran('stanfordlabs');
-```
-
-The scitran object (**st** in this case) contains information about the Flywheel instance, an interface to the Flywheel SDK methods, and hidden information about your permissions.
-```
-st = 
-
-  scitran with properties:
-
-         url: 'https://stanfordlabs.flywheel.io'
-    instance: 'stanfordlabs'
-          fw: [1×1 Flywheel]
-```
 ### First use
 
 The first time you connect to a Flywheel site, you will be asked to authenticate.  The authentication is based on a secure API Key that you retrieve by logging into the Flywheel site.  To find your key
@@ -71,6 +54,23 @@ ans =
        modified: 21-Dec-2018 23:23:59
          apiKey: [1×1 flywheel.model.UserApiKey]
 ```
+### General use
+
+After your first use, the connection to a Flywheel instance is established by creating a scitran object and using the name of your Flywheel instance as argument to the scitran() function.
+```
+st = scitran('stanfordlabs');
+```
+
+The scitran object (**st** in this case) you create contains information about your Flywheel instance, Flywheel SDK methods, and hidden information about your permissions.
+```
+st = 
+
+  scitran with properties:
+
+         url: 'https://stanfordlabs.flywheel.io'
+    instance: 'stanfordlabs'
+          fw: [1×1 Flywheel]
+```
 
 ### Multiple instances
 You can store the API key for multiple Flywheel instances.  To list the sites you have stored, use
@@ -93,5 +93,5 @@ To refresh the API Key, use
 
     st = scitran('stanfordlabs','action','refresh');
 
-and you will be prompted to enter the new key, which you can obtain from the Flywheel site.
+and you will be prompted to enter the new key, which you can obtain from the Flywheel site as described in the 'First use' case, above.
 
