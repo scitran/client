@@ -1,4 +1,4 @@
-## Data Containers (version 4.4.5 and later)
+## Data Containers (version 5.0.4 and later)
 The Flywheel database hierarchy matches a neuroimaging project. The top level is the user's group;  group contains multiple Projects; each project contains multiple Sessions; each session contains multiple Acquisitions; each acquisition contains multiple Files.
 
 The SDK containers are **objects**.  Each object includes metadata about a Flywheel object, and has methods that perform useful functions. For example, you can 
