@@ -1,6 +1,6 @@
 The remainder of this wiki describes how to perform tasks using the **scitran** client methods. Tasks include
 
-* search for data and metadata
+* find and search for data and metadata
 * read, download or upload data and metadata
 * launch jobs (Gears) and check their status
 * download or upload the outputs of jobs (analyses)
