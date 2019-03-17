@@ -12,7 +12,7 @@ Add both repositories to your path, say
 To verify the installation use
 ```
 >> stFlywheelSDK('verify');
-Verified installed version: 4.3.2
+Verified installed version 504
 ```
 
 ```
