@@ -11,7 +11,7 @@ There are many [SDK Object methods](object-methods). This simple illustration us
 ```
 project = st.lookup('adni/ADNI: T1');
 adniProjectFiles = project.files;
->> stPrint(adniProjectFiles,'name')
+stPrint(adniProjectFiles,'name')
 
 Entry: name.
 -----------------------------
