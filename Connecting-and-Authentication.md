@@ -13,19 +13,19 @@ The first time you connect to a Flywheel site, you will be asked to authenticate
 
 * Scroll down to the API section (see image below)
 
-The authentication key you enter will be stored on your computer - so this needs to be done infrequently. The API key expires after a few months, so you will need to enter it again to refresh your authentication every few months.
+Copy the API key in your user profile - it is the long string that looks like this:
 
-To create a connection to a **stanfordlabs**
+![](https://github.com/scitran/client/wiki/images/userAPI.png)
+
+Now, back on your computer in the Matlab command prompt, create a connection to a **stanfordlabs**
 
     st = scitran('stanfordlabs');
 
-You will be asked to enter your API key.  
+You will be asked to enter your API key.  Paste it in response to this query.
 
     Please enter the API key: 
 
-Copy and paste from API key in your user profile - it is the long string that looks like this:
-
-![](https://github.com/scitran/client/wiki/images/userAPI.png)
+The authentication key you enter will be stored on your computer. The key expires after a few months, so you will need to enter it again to refresh your authentication every few months.
 
 ### Verify the connection
 
