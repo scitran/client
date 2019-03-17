@@ -7,7 +7,7 @@ The containers are Matlab **objects**.  Each object includes metadata about a Fl
 * Update metadata
 * Download or upload content from within the container (e.g., Files, Sessions, Acquisitions)
 
-There are many [SDK Object methods](object-methods). This simple illustration uses a Project to find the files.
+There are many [SDK Object methods](https://flywheel-io.github.io/core/branches/master/matlab/flywheel.html#). This simple illustration uses a Project to find the files.
 ```
 project = st.lookup('adni/ADNI: T1');
 adniProjectFiles = project.files;
