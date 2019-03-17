@@ -7,11 +7,10 @@ The remainder of this wiki describes how to perform tasks using the **scitran** 
 
 This example illustrates the 'look-and-feel' of the **scitran** code.  The first example identifies a group, and then all the projects that are part of the group
 ```
->> st = scitran('stanfordlabs');      % Make an object connected to 'stanfordlabs'
->> group = st.lookup('wandell');      
->> projects = group.projects();       % Find all the projects for this group
->> stPrint(projects,'label');         % Print out a list of all the project names ...
->> stPrint(projects,'label')
+>> st = scitran('stanfordlabs');      % Connect to 'stanfordlabs'
+>> group = st.lookup('wandell');      % Lookup a group
+>> projects = group.projects();       % Find the projects associated with this group
+>> stPrint(projects,'label');         % Print out the project labels ...
 
 Entry: label.
 -----------------------------
@@ -24,11 +23,12 @@ Entry: label.
 	7 - HCP_preproc 
         ....
 ```
+In this example, 'group' is a pointer to an object in the database.  Using 'group.projects()' is a method that lists all of the projects for that group.  stPrint() is a scitran function that prints out a slot.
 
-Or, you might start by looking up on one named project in your grupo
+In a second example, you might lookup a specific project in a group that you belong to
 
 ```
->> thisProject = st.lookup('wandell/HCP')
+>> thisProject = st.lookup('wandell/HCP')    % This is the HCP project in the group 'wandell'
 
 thisProject = 
 
@@ -52,6 +52,16 @@ thisProject =
        analyses: []
 
 ```
+The returned pointer (thisProject) has information about the project and it also has methods that let you find the sessions that are part of the project
+```
+>> sessions = thisProject.sessions();
+>> numel(sessions)
+
+ans =
+
+    31
+```
+
 Understanding the principles of the [Data organization](Data-organization) and [Computational organization](Computational-organization) can be important to use **scitran** effectively.  The comments below describe these principles.
 
 ### Data
