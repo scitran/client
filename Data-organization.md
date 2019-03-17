@@ -7,7 +7,9 @@ The containers are Matlab **objects**.  Each object includes metadata about a Fl
 * Update metadata
 * Download or upload content from within the container (e.g., Files, Sessions, Acquisitions)
 
-There are many [SDK Object methods](https://flywheel-io.github.io/core/branches/master/matlab/flywheel.html#). This simple illustration uses a Project to find the files.
+There are many [SDK methods](https://flywheel-io.github.io/core/branches/master/matlab/flywheel.html#flywheel-class), and one purpose of scitran is to simplify using these methods. 
+
+This simple illustration uses a Project to find the files.
 ```
 project = st.lookup('adni/ADNI: T1');
 adniProjectFiles = project.files;
@@ -19,19 +21,19 @@ Entry: name.
 	2 - db_accesslog.csv 
 ```
 
-
+You can also call the Flywheel methods directly because they are part of the scitran object.  Specifically, all the methods are available from scitran.fw.<>.
 
 ### Methods
-The scitran object implements many methods, as well.  These let you perform general actions, for example
+The scitran object methods help you perform many simple actions. For example
 
     scitran.lookup('a string')  - Returns metadata about a container
     scitran.search( ... )       - Searches the database for specific types of metadata
 
-Or actions on specific containers and files, for example
+Actions on containers and files can be found using Matlab TAB-completion:
 
     scitran.container<TAB> - Shows all the basic Data Container methods
     scitran.file<TAB>      - Shows all the basic File methods 
-    scitran.<TAB>          - Shows all the methods
+    scitran.<TAB>          - Shows all the scitran methods
 
 One additional data container type, the **Collection**, is described below. Other objects (Analyses, Gears, and Jobs) are described in the [Computational organization section](Computational-organization).  Most of these containers can include Files.
 
