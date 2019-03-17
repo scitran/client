@@ -17,22 +17,23 @@ Copy the API key in your user profile - it is the long string that looks like th
 
 ![](https://github.com/scitran/client/wiki/images/userAPI.png)
 
-Now, back on your computer in the Matlab command prompt, create a connection to a **stanfordlabs**
+Now, back on your computer in the Matlab command prompt, create a connection to your instance (in this case **stanfordlabs**)
 
     st = scitran('stanfordlabs');
 
-You will be asked to enter your API key.  Paste it in response to this query.
+You will be asked to enter your API key.  Paste in the key, 
 
     Please enter the API key: 
 
-The authentication key you enter will be stored on your computer. The key expires after a few months, so you will need to enter it again to refresh your authentication every few months.
+The key will be stored on your computer. It expires after a few months, so you will need to enter it again to refresh your authentication from time to time.
 
 ### Verify the connection
 
-To verify that the scitran object is connecting to your site, use
+To verify that the scitran object is connecting to your site, use the method
 ```
 >> st.verify
-Verified connection, using Flywheel-SDK version 432
+Verified installed version 504
+Verified connection
 
 ans = 
 
@@ -61,7 +62,7 @@ After your first use, the connection to a Flywheel instance is established by cr
 st = scitran('stanfordlabs');
 ```
 
-The scitran object (**st** in this case) you create contains information about your Flywheel instance, Flywheel SDK methods, and hidden information about your permissions.
+The scitran object (**st** in this case) contains information about your Flywheel instance, access to the Flywheel SDK methods, and hidden information about your permissions.
 ```
 st = 
 
