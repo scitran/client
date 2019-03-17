@@ -1,7 +1,7 @@
 ## Data Containers (version 5.0.4 and later)
 The Flywheel database hierarchy matches a neuroimaging project. The top level is the user's group;  a group typically contains multiple Projects; each project contains multiple Sessions; each session contains multiple Acquisitions; each acquisition contains multiple Files.
 
-The SDK containers are **objects**.  Each object includes metadata about a Flywheel object, and has methods that perform useful functions. For example, you can 
+The containers are Matlab **objects**.  Each object includes metadata about a Flywheel object, and has methods that perform useful functions. For example, you can 
 
 * Display the container's metadata
 * Update metadata
