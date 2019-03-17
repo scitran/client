@@ -5,36 +5,54 @@ The remainder of this wiki describes how to perform tasks using the **scitran** 
 * launch jobs (Gears) and check their status
 * download or upload the outputs of jobs (analyses)
 
-This example illustrates the 'look-and-feel' of the **scitran** code.
+This example illustrates the 'look-and-feel' of the **scitran** code.  The first example identifies a group, and then all the projects that are part of the group
 ```
->> st = scitran('stanfordlabs');               % Make an object connected to 'stanfordlabs'
->> projects = st.list('project','wandell')     % List project metadata in group 'wandell'
->> projects{2}                                 % Display metadata of one project
+>> st = scitran('stanfordlabs');      % Make an object connected to 'stanfordlabs'
+>> group = st.lookup('wandell');      
+>> projects = group.projects();       % Find all the projects for this group
+>> stPrint(projects,'label');         % Print out a list of all the project names ...
+>> stPrint(projects,'label')
 
-ans = 
+Entry: label.
+-----------------------------
+	1 - BCBL_ILLITERATES 
+	2 - Brain Beats 
+	3 - CoRR 
+	4 - EJ Apricot 
+	5 - Graphics assets 
+	6 - HCP 
+	7 - HCP_preproc 
+        ....
+```
 
-  Project with properties:
+Or, you might start by looking up on one named project in your grupo
 
-         public: 0
-          label: 'Brain Beats'
+```
+>> thisProject = st.lookup('wandell/HCP')
+
+thisProject = 
+
+  ResolverProjectNode with properties:
+
+         public: []
+          label: 'HCP'
            info: [1×1 flywheel.model.CommonInfo]
-    description: '#### Bakground↵Starting in 2015 we collected fast fMRI scans with simultaneous multislice acquisitions to measure signals related to heartbeats (and maybe respiration).↵↵In 2015 we acquired scans in the following slice order: `[(1:2:round(nslices)) (2:2:round(nslices))]`, now added in a custom field `mux_slice_order`.↵↵↵#### Future Directions↵In 2018 we will be experimenting with different variations of this slice sequence.'
+    description: ' ... .... '
           group: 'wandell'
-             id: '597b57d097276d001787e839'
+             id: '57745645ce3b5900238d466c'
         parents: [1×1 flywheel.model.ContainerParents]
-     infoExists: 0
-        created: 28-Jul-2017 15:27:12
-       modified: 09-Nov-2018 05:41:21
+     infoExists: []
+        created: 29-Jun-2016 23:14:13
+       modified: 09-Nov-2018 05:30:55
       templates: []
-    permissions: {[1×1 flywheel.model.Permission]}
-          files: []
+    permissions: {16×1 cell}
+          files: {3×1 cell}
           notes: []
            tags: []
        analyses: []
 
->> 
 ```
-Understanding the principles of the [Data organization](Data-organization) and [Computational organization](Computational-organization) can be important to effectively use **scitran**.  The comments below describe these principles.
+Understanding the principles of the [Data organization](Data-organization) and [Computational organization](Computational-organization) can be important to use **scitran** effectively.  The comments below describe these principles.
 
 ### Data
 
