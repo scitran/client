@@ -1,5 +1,5 @@
-* The first time, you must provide a security key that is obtained from your Flywheel site
-* [Flywheel manual - Getting started](https://flywheel-io.github.io/core/branches/master/matlab/getting_started.html)
+* The first time you use scitran, you must provide a security key that is obtained from your Flywheel site
+* When you use scitran, you do **not** need to install the 'addons' toolbox as in the [Flywheel manual - Getting started](https://flywheel-io.github.io/core/branches/master/matlab/getting_started.html)
 
 ***
 
