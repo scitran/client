@@ -1,6 +1,6 @@
 %% s_stSummary
 %
-% Summarize the projects and number of sessions in each project.
+% Print out the number of sessions in each project.
 %
 % BW, Scitran Team, 2016
 
@@ -15,12 +15,9 @@ st = scitran('stanfordlabs');
 group = 'wandell'; % 'all'
 
 % List is better than search for this case.
-projects = st.list('project',group);
-
-% Store the labels and ids.  This might become a function because we seem
-% to use it a lot.
-projectLabels = cellfun(@(x)(x.label),projects,'UniformOutput',false);
-projectID = cellfun(@(x)(x.id),projects,'UniformOutput',false);
+myGroup = st.lookup(group);
+projects = myGroup.projects();
+pLabels = stPrint(projects,'label');
 
 % First print out
 str =  sprintf('\n** Found %d projects in group "%s" **\n\n',length(projects),group);
@@ -29,9 +26,11 @@ str =  sprintf('\n** Found %d projects in group "%s" **\n\n',length(projects),gr
 
 nSessions = 0;
 for ii=1:length(projects)
-    sessions = st.list('session',projectID{ii});
-    nSessions = nSessions + length(sessions); 
-    str2 = sprintf('\t%s (%d sessions)\n',projectLabels{ii},length(sessions));
+    fprintf('Project label:  %s\n',pLabels{ii});
+    project = st.lookup(fullfile(group,pLabels{ii}));
+    increment = numel(project.sessions());
+    nSessions = nSessions + increment; 
+    str2 = sprintf('\t%s (%d sessions)\n',projectLabels{ii},increment)
     str  =  addText(str,str2);
 end
 str = addText(str,sprintf('\n  Total sessions:  %d\n',nSessions));

@@ -10,14 +10,18 @@ function v = stValid(param,str)
 %   whether or not the string is valid.
 %
 % Inputs
-%   param:
-%   str:
+%   param: 'filetype','datatype','searchreturn','measurement'
+%
+% Optional
+%   str:   A string, a logical will be returned if str is part of the valid
+%          cell array
 %
 % Key/value pairs
 %   N/A
 %
 % Outputs
-%   v:
+%   v:  Cell array of valid values, or if logical (true/false) if str
+%       parameter is included
 %
 % Note: This functionality should be included in the SDK
 %
@@ -32,6 +36,7 @@ function v = stValid(param,str)
   stValid('file type')
   stValid('data type')
   stValid('search return','file')
+  stValid('measurement','B0')
 %}
 
 %% Parse inputs
@@ -44,21 +49,30 @@ if notDefined('str'), str = ''; end
 %%
 switch param
     case 'filetype'
-        % This should be returned by the SDK
+        % Known file types; this value should be returned by the SDK
         v = {'nifti','dicom','null','tabular data',...
             'bval','bvec','text','MATLAB data','pdf',...
             'montage','qa','markup','archive','pfile','source code', ...
             'CG Resource'};
     case {'datatype','classification'}
+        % Data type classifications
         v = {'null','diffusion','diffusion_map','anatomy_t1w',...
             'functional_map','functional','unknown','localizer',...
             'anatomy_t2w','anatomy_ir','screenshot',...
             'calibration','phase_map','high_order_shim','field_map'}; 
     case {'searchreturn'}
+        % What you can ask for in a search
         v = {'group','project','session','acquisition','file',...
             'analysis','analysessession','analysesproject', ...
             'collection','collectionsession','collectionacquisition',...
             'modality','acquisitionfile','subject'};
+    case {'measurement'}
+        % Type of measurement
+        % MR = st.fw.getModality('MR');
+        % valid = MR.classification.Measurement;
+        v = {'B0','B1','T1','T2', 'T2*','PD','MT','ASL',...
+            'Perfusion', 'Diffusion','Spectroscopy','Susceptibility',...
+            'Velocity','Fingerprinting'};
     otherwise
         error('Unknown parameter %s\n',param);
 end
