@@ -19,11 +19,19 @@ st.verify;
 %  group/project/session/acquisition
 % 
 
+%% List all the subjects within a project
+
+project = st.fw.lookup('wandell/VWFA');
+subjects = project.subjects();
+
+sLabels = stPrint(subjects,'label');
+fprintf('Number of subjects: %d\n',numel(unique(sLabels)));
+
 %% Looking up subjects
 
 % This returns only the first one, even though there are several
 % sessions with that name
-session = st.fw.lookup('wandell/VWFA FOV/Whole Brain Anatomy')
+thisSession = st.fw.lookup('wandell/VWFA FOV/jc/Whole Brain Anatomy');
 
 %% Looking up session
 session = st.fw.lookup('wandell/VWFA FOV/20161001_1151')

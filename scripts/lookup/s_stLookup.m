@@ -1,7 +1,7 @@
 %% s_stLookup
 %
-% Experimenting with lookup for data, and then at the end for Gears.
-%
+% Experimenting with lookup for data at the beginning.
+% Then lookup with Gears at the end
 %
 % BW Scitran Team, 2019
 %
@@ -28,7 +28,12 @@ project = st.lookup(lookupString);
 
 %% Look up the first session
 
-thisSession = project.sessions.findFirst();
+thisSession  = project.sessions.findFirst();
+subjectLabel = thisSession.subject.label;
+sessionLabel = thisSession.label;
+lookupString = fullfile(myGroup.id,projectLabel,subjectLabel,sessionLabel)
+
+sameSession = st.lookup(lookupString);
 
 %% Look up the subject for this first session
 
