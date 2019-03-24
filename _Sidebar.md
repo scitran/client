@@ -6,14 +6,13 @@
     * [Computation](Computational-organization)
 * [Lookup and Find](Lookup)
 * [Search](Search)
+* [Flywheel-SDK](Own-programming)
 * [Download and read](Download-and-read)
 * [Create and upload](Create-and-upload)
 * [Info (metadata)](Metadata-(Information))
 * [Reproducible computations](Reproducible-Matlab)
    * [Gears](Gears)
-   * [Analyses](Analyses)
-   * [Flywheel-SDK programming](Own-programming)
-       
+   * [Analyses](Analyses)       
 ***
 Notes
 * [Flywheel SDK](Flywheel-SDK)
