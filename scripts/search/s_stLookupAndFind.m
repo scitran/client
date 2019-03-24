@@ -21,13 +21,15 @@ st.verify;
 
 %% List all the subjects within a project
 
-project = st.fw.lookup('wandell/VWFA');
+project = st.fw.lookup('wandell/VWFA FOV');
 subjects = project.subjects();
-
 sLabels = stPrint(subjects,'label');
 fprintf('Number of subjects: %d\n',numel(unique(sLabels)));
+subjects{37}.label
 
 %% Looking up subjects
+
+thisSubject = st.fw.lookup('wandell/VWFA FOV/ex13414');
 
 % This returns only the first one, even though there are several
 % sessions with that name

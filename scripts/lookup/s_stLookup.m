@@ -31,9 +31,11 @@ project = st.lookup(lookupString);
 thisSession  = project.sessions.findFirst();
 subjectLabel = thisSession.subject.label;
 sessionLabel = thisSession.label;
-lookupString = fullfile(myGroup.id,projectLabel,subjectLabel,sessionLabel)
+lookupString = fullfile(myGroup.id,projectLabel,subjectLabel,sessionLabel);
 
 sameSession = st.lookup(lookupString);
+
+% The age slot and others differ
 
 %% Look up the subject for this first session
 
