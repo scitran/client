@@ -6,7 +6,7 @@
     * [Computation](Computational-organization)
 * [Lookup and Find](Lookup)
 * [Search](Search)
-* [Flywheel-SDK](Own-programming)
+* [Flywheel-SDK](Flywheel-SDK)
 * [Download and read](Download-and-read)
 * [Create and upload](Create-and-upload)
 * [Info (metadata)](Metadata-(Information))
