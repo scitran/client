@@ -1,16 +1,12 @@
-The Matlab **scitran** client is a wrapper on the methods available in the Flywheel SDK. The **scitran** wrapper reformulates the SDK methods in a way that we find easier to understand and use. Over time, some of the principles in the wrapper might migrate into the Flywheel SDK; the Flywheel team will decide about that. 
+The **scitran** client is designed to simplify using the Matlab version of the Flywheel SDK. The intention is to make it easier to find and use the Flywheel SDK methods.
 
-We suggest you use the stFlywheelSDK command shown on the [Installation](Installation) page. That command downloads a matlab toolbox that is installed in the Add-Ons directory.
-
-When you create the scitran object
-
+There are cases in which you might just as well use the Flywheel SDK calls directly.  All of these calls are available to you in the scitran object.  When you create the scitran object the Flywheel SDK methods are available through the fw slot. 
+You can see the full list of methods using tab-completion
+ 
     st = scitran('stanfordlabs')
-
-the Flywheel SDK methods are available through the fw slot.  This enables you to use the SDK methods directly, or to write your own scitran methods calling the SDK methods. You can see the full list of methods by typing 
-
     st.fw.<TAB>
 
-The list of SDK commands will show up as optional Matlab completions. 
+We have a close relationship with the Flywheel SDK team, and in several cases functionality that we put in the wrapper migrated into the Flywheel SDK.  That's a good thing, though it does make extra programming for us.
 
 ## Related links
 
