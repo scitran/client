@@ -67,9 +67,15 @@ switch containerType
         end
     case {'file'}
         for ii=1:nSrch
+            result{ii} = srch{ii}.parent.getFile(srch{ii}.file.name);
+        end
+        %{
+        % Code getting more efficient.  Delete this.
             id = srch{ii}.parent.id;
             parent = st.fw.get(id); containerType = parent.containerType;
             switch containerType
+                case 'project'
+                    % result{ii} = st.fw.getProjectFileInfo(srch{ii}.parent.id,srch{ii}.file.name);
                 case 'acquisition'
                     % Maybe we should be using, as per JE email on
                     % Feb. 12, 2019,
@@ -80,7 +86,7 @@ switch containerType
                 otherwise
                     disp('NYI');
             end
-        end
+        %}
     otherwise
         error('Unknown container type %s\n',containerType);
 end
