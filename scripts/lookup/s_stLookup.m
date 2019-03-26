@@ -82,14 +82,13 @@ assert(isequal(thisAcquisition2.id,thisAcquisition.id))
 
 %% Look up all Gears.  This uses the 'name' field, not the label field.
 
-gears = st.fw.gears.find();
-gNames = stPrint(gears,'gear','name');
+[gears, gNames] = st.gears;
 idx = strcmp(gNames,'mriqc');
-gLabel = gears{idx}.gear.name;
+gName = gears{idx}.gear.name;
 
 %%  Find the gear named 'mriqc'
 
-str = fullfile('gears',gLabel);
+str = fullfile('gears',gName);
 thisGear = st.lookup(str);
 disp(thisGear)
 thisGear.gear
