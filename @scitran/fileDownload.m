@@ -1,6 +1,8 @@
 function destination = fileDownload(st,file,varargin)
 % Retrieve a file from a Flywheel site
 %
+% **** We should be using file.download now for FileEntry ****
+%
 % Syntax
 %   outfile = scitran.fileDownload(file, ...)
 %

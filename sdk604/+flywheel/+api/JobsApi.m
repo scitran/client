@@ -7,6 +7,7 @@
 %    acceptFailedOutput - Accept failed job output.
 %    addJob             - Add a job
 %    addJobLogs         - Add logs to a job.
+%    askJobs            - Ask the queue a question
 %    completeJob        - Complete a job, with information
 %    getAllJobs         - Return all jobs
 %    getJob             - Get job details
@@ -157,6 +158,45 @@ classdef JobsApi < handle
             body = flywheel.ApiClient.encodeJson(body.toJson());
 
             resp = obj.apiClient.callApi('POST', '/jobs/{JobId}/logs', ...
+                pathParams, queryParams, headers, body, formParams, files);
+
+            status = resp.getStatusCode();
+
+            switch num2str(status)
+                otherwise
+                    returnData = [];
+            end
+        end
+
+        function [returnData, resp] = askJobs(obj, body, varargin)
+            % Ask the queue a question
+            % body (JobAsk)
+            % returns: [none, resp]
+
+            x__inp = inputParser;
+            x__inp.StructExpand = false;
+            addRequired(x__inp, 'body');
+            addParameter(x__inp, 'DumpResponseData', false);
+            parse(x__inp, body, varargin{:});
+
+            % Path parameters
+            pathParams = {};
+
+            % Query parameters
+            queryParams = {};
+
+            % Header parameters
+            headers = {};
+
+            % Form parameters
+            formParams = {};
+            files = {};
+
+            % Body (as JSON)
+            body = flywheel.model.JobAsk.ensureIsInstance(x__inp.Results.body);
+            body = flywheel.ApiClient.encodeJson(body.toJson());
+
+            resp = obj.apiClient.callApi('POST', '/jobs/ask', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();
