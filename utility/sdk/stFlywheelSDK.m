@@ -1,4 +1,6 @@
 function status = stFlywheelSDK(action)
+% Deprecated.  Just use st.verify
+%
 % Check the status of the Flywheel-SDK
 %
 % Syntax

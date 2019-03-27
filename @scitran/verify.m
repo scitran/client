@@ -54,9 +54,10 @@ try
     end
     
     if verbose && status && connection == 1
-        stFlywheelSDK('installed version');
-        fprintf('Verified connection\n');
-        
+        thisVersion = obj.fw.getVersion;
+        fprintf('Verified SDK-Flywheel connection.\nSDK version %s\n',thisVersion.release);
+        fprintf('Flywheel release %s\n',thisVersion.flywheelRelease);
+
         % Proceed through additional verifications
         if esearch
             % Test that elastic search is working
