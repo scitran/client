@@ -1,14 +1,14 @@
-The remainder of this wiki describes how to perform tasks using the **scitran** client methods. Tasks include
+Most of this wiki describes how to perform tasks using the **scitran** client methods. Tasks include
 
-* find and search for data and metadata
-* read, download or upload data and metadata
-* launch jobs (Gears) and check their status
-* download or upload the outputs of jobs (analyses)
+* search for data and metadata
+* download and upload data and metadata
+* download-analyze-upload loop
+* launch jobs (Gears), check their status, and download their outputs
 
 This example illustrates the 'look-and-feel' of the **scitran** code.  The first example identifies a group, and then all the projects that are part of the group
 ```
 >> st = scitran('stanfordlabs');      % Connect to 'stanfordlabs'
->> group = st.lookup('wandell');      % Lookup a group
+>> group = st.lookup('wandell');      % Lookup a group based on its ID
 >> projects = group.projects();       % Find the projects associated with this group
 >> stPrint(projects,'label');         % Print out the project labels ...
 
@@ -23,10 +23,8 @@ Entry: label.
 	7 - HCP_preproc 
         ....
 ```
-In this example, 'group' is a pointer to an object in the database.  Using 'group.projects()' is a method that lists all of the projects for that group.  stPrint() is a scitran function that prints out a slot.
 
-In a second example, you might lookup a specific project in a group that you belong to
-
+In this second example, we lookup a specific project in a group
 ```
 >> thisProject = st.lookup('wandell/HCP')    % This is the HCP project in the group 'wandell'
 
@@ -52,7 +50,7 @@ thisProject =
        analyses: []
 
 ```
-The returned pointer (thisProject) has information about the project and it also has methods that let you find the sessions that are part of the project
+The returned object (thisProject) has information about the project. It also has methods to find the sessions that are part of the project
 ```
 >> sessions = thisProject.sessions();
 >> numel(sessions)
@@ -60,4 +58,13 @@ The returned pointer (thisProject) has information about the project and it also
 ans =
 
     31
+```
+Or list the subjects in a project
+```
+>> subjects = thisProject.subjects();
+>> numel(subjects)
+
+ans =
+
+    30
 ```
