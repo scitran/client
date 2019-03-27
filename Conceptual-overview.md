@@ -1,5 +1,5 @@
 
-Understanding the principles of the [Data organization](Data-organization) and [Computational organization](Computational-organization) can be important to use **scitran** effectively.  The comments below describe these principles.
+This section provides a general overview, beyond Flywheel, of data and computational management. The specific concepts of Flywheel's [Data organization](Data-organization) and [Computational organization](Computational-organization) are introduced in the [Programming](Getting-started) section. 
 
 ### Data
 
