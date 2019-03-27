@@ -21,8 +21,6 @@ Entry: name.
 	2 - db_accesslog.csv 
 ```
 
-You can also call the Flywheel methods directly because they are part of the scitran object.  Specifically, all the methods are available from scitran.fw.<>.
-
 ### Methods
 The scitran object methods help you perform many simple actions. For example
 
@@ -52,6 +50,26 @@ To reuse data we create a new data container, the **Collection**. A Collection i
 **Scitran** has methods to create and delete Collections.  These can be found using
 
     scitran.collection<TAB>
+
+### Flywheel methods
+
+All of the Flywheel methods can be invoked from the scitran object. They are available from fw slot, such as
+```
+>> st = scitran('stanfordlabs');
+>> st.fw.getVersion
+ans = 
+
+  VersionOutput with properties:
+
+                 id: 'version'
+       appliedFixes: [1×1 struct]
+         cliVersion: '7.2.0'
+           database: 63
+    flywheelRelease: 'emerald.7.0.2'
+            release: '6.0.5'
+
+>> 
+```
 
 ### References
 
