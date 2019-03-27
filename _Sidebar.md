@@ -1,7 +1,7 @@
 * [Introduction](Home)
 * [Installation](Installation)
 * [Connecting](Connecting-and-Authentication)
-* [Conceptual overview](Conceptual-overview)
+* [Programming](Getting-started)
     * [Data](Data-organization)
     * [Computation](Computational-organization)
 * [Lookup and Find](Lookup)
@@ -12,7 +12,9 @@
 * [Info (metadata)](Metadata-(Information))
 * [Reproducible computations](Reproducible-Matlab)
    * [Gears](Gears)
-   * [Analyses](Analyses)       
+   * [Analyses](Analyses)
+* [Conceptual overview](Conceptual-overview)
+  
 ***
 Notes
 * [Flywheel SDK](Flywheel-SDK)
