@@ -1,7 +1,7 @@
 * [Introduction](Home)
 * [Installation](Installation)
 * [Connecting](Connecting-and-Authentication)
-* [Programming](Getting-started)
+* [Getting started](Getting-started)
     * [Data](Data-organization)
     * [Computation](Computational-organization)
 * [Lookup and Find](Lookup)
