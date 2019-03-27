@@ -5,6 +5,8 @@ Most of this wiki describes how to perform tasks using the **scitran** client me
 * download-analyze-upload loop
 * launch jobs (Gears), check their status, and download their outputs
 
+### Getting information about an object
+
 This example illustrates the 'look-and-feel' of the **scitran** code.  The first example identifies a group, and then all the projects that are part of the group
 ```
 >> st = scitran('stanfordlabs');      % Connect to 'stanfordlabs'
@@ -50,7 +52,17 @@ thisProject =
        analyses: []
 
 ```
-The returned object (thisProject) has information about the project. It also has methods to find the sessions that are part of the project
+You can also find projects using the 'find' operator, which works on most objects.
+```
+>> group.projects.find('label=HCP')
+
+ans =
+
+  1×1 cell array
+
+    {1×1 flywheel.model.Project}
+```
+The object _thisProject_ has information about the project. For example, it can return all the sessions that are part of the project
 ```
 >> sessions = thisProject.sessions();
 >> numel(sessions)
@@ -67,4 +79,15 @@ Or list the subjects in a project
 ans =
 
     30
+```
+
+### The find operators
+
+You can find a particular session using this method
+```
+thisSession = thisProject.sessions.findOne('operator=David');
+```
+Or you can find a cell array of sessions
+```
+thisSession = thisProject.sessions.find('group=wandell');
 ```
