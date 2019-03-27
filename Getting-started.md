@@ -91,3 +91,7 @@ Or you can find a cell array of sessions
 ```
 thisSession = thisProject.sessions.find('group=wandell');
 ```
+Or find the first session meeting the criteria, this way
+```
+thisSession = thisProject.sessions.findFirst('group=wandell');
+```
