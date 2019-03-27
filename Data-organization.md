@@ -1,5 +1,5 @@
 ## Data Containers
-The Flywheel database hierarchy matches a neuroimaging project. The top level is the user's group;  a group typically contains multiple Projects; each project contains multiple Sessions; each session contains multiple Acquisitions; each acquisition contains multiple Files.
+The Flywheel database hierarchy matches a neuroimaging project. The top level is the user's Group;  a group typically contains multiple Projects; each project contains multiple Sessions; each session contains multiple Acquisitions; each acquisition contains multiple Files.
 
 The containers are Matlab **objects**.  Each object includes metadata about a Flywheel object, and has methods that perform useful functions. For example, you can 
 
