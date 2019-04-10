@@ -57,9 +57,15 @@ for ii=1:nFiles
 
 end
 
-%% Then we zip it up and put it on Stanford Box
-%
+%% Then we zip each directory.
 
+chdir(outDir)
+dataDir = dir('*_1');
+for ii=1:length(dataDir)
+    zip([dataDir(ii).name,'.zip'],dataDir(ii).name);
+end
+
+%% Then on the computer we drag all the zip files up to Stanford Box
 
 %%  We had to remove session 5327_14_1 because it is missing the bval.
 
