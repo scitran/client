@@ -41,11 +41,4 @@ session = st.fw.lookup('wandell/VWFA FOV/20161001_1151')
 %% Looking up subject
 subject = st.fw.lookup('wandell/VWFA FOV/20161001_1151')
 
-%
-% Version SDK 2.0 will have a subject.update method and many related
-% methods that extend Version 1.0
-%
-% This would give you all the sessions for this subject
-% subject.session
-
 %%
