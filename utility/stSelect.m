@@ -30,15 +30,14 @@ function selected = stSelect(containers,slot,matchVal,varargin)
 %}
 
 %% Parse inputs
-p = inputParser;
-
 varargin = stParamFormat(varargin);
 
-p.addRequired('files',@iscell);
+p = inputParser;
+p.addRequired('containers',@iscell);
 p.addRequired('slot',@ischar);
 p.addRequired('matchVal',@ischar);
 
-p.addParameter('contains',true,@logical);    % Contains or Exact match.
+p.addParameter('contains',true,@islogical);    % Contains or Exact match.
 p.addParameter('infoval','',@ischar);        % Info field to match
 p.addParameter('infofield','',@ischar);      % Info field value to match
 

@@ -132,7 +132,8 @@ if ~status
     idS.acquisition = obj.fw.addAcquisition(struct('label', acquisition,'session', idS.session));
 end
 
-% Maybe we are adding some acquisition data?
+%% Maybe we are adding some acquisition data?
+
 % if isfield(additionalData, 'acquisition'), acqData = additionalData.acquisition;
 % else,                       acqData = struct;
 % end

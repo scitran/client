@@ -16,7 +16,7 @@ st = scitran('stanfordlabs');
 st.verify;
 
 %% Format for lookup
-%  group/project/session/acquisition
+%  groupID/projectLabel/subjectLabel/sessionLabel/acquisitionLabel
 % 
 
 %% List all the subjects within a project
@@ -25,20 +25,22 @@ project = st.fw.lookup('wandell/VWFA FOV');
 subjects = project.subjects();
 sLabels = stPrint(subjects,'label');
 fprintf('Number of subjects: %d\n',numel(unique(sLabels)));
-subjects{37}.label
+
 
 %% Looking up subjects
+subjects{37}.label
+subjectsFull = st.fw.get(subjects{37}.id);
 
-thisSubject = st.fw.lookup('wandell/VWFA FOV/ex13414');
+thisSubject = st.fw.lookup(fullfile('wandell/VWFA FOV',subjects{37}.label));
 
-% This returns only the first one, even though there are several
-% sessions with that name
+% Not quite equal because, well, Justin
+isequal(subjectsFull,thisSubject)
+
+%% 
 thisSession = st.fw.lookup('wandell/VWFA FOV/jc/Whole Brain Anatomy');
 
-%% Looking up session
-session = st.fw.lookup('wandell/VWFA FOV/20161001_1151')
+%% Looking up session for this subject
 
-%% Looking up subject
-subject = st.fw.lookup('wandell/VWFA FOV/20161001_1151')
+session = st.fw.lookup('wandell/VWFA FOV/ex13642/20161001_1151');
 
 %%
