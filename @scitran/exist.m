@@ -69,24 +69,33 @@ switch objectType
         % In this case, the parentID (project) is required
         % st.exist('session',label,'parentID',projectID);
         project = st.fw.get(parentID);
-        session = project.sessions.findOne(sprintf('label=%s',label));
-        if ~isempty(session)
+        try
+            session = project.sessions.findOne(sprintf('label=%s',label));
             status = true;
             id = session.id;
             clear results;
             results{1} = session;
+        catch
+            % not found.  So return empty results
+            status = false;
+            results{1} = [];
+            id = '';
         end
         
     case 'acquisition'
         % In this case the parentID (session) is required
-        % st.exist('acquisition',label,'parentID',projectID);        
+        % st.exist('acquisition',label,'parentID',projectID);
         session = st.fw.get(parentID);
-        acquisition = session.acquisitions.findOne(sprintf('label=%s',label));
-        if ~isempty(acquisition)
+        try
+            acquisition = session.acquisitions.findOne(sprintf('label=%s',label));
             status = true;
             id = acquisition.id;
             clear results;
             results{1} = acquisition;
+        catch
+            status = false;
+            results{1} = [];
+            id = '';
         end
                    
     otherwise
