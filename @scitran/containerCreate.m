@@ -124,14 +124,23 @@ end
 % subject or adding a session.  
 project = obj.fw.get(idS.project);
 
-%% Did the person want a subject  created?
+%% Did the user supply a subject or want one created?
 
-if isempty(subject)
-    % User believes the subject is already part of the project
+if isempty(subject) 
+    % This is still the subject label.
+    % User believes the subject is already part of the project, so empty.
+    % But we don't know what subject to assign, so it will be the default,
+    % which is 'unknown'.
     idS.subject = '';
 else
-    % User says create a subject for this project with this label
-    subject = project.addSubject('label',subject,'code',subject);
+    % Not empty, so try to find the subject.
+    str = sprintf('label=%s',subject);
+    subject = project.subjects.findOne(str);
+    if isempty(subject)
+        % Not there, so create the subject for this project with this label
+        subject = project.addSubject('label',subject,'code',subject);
+    end
+    % Add the subject ID to the outpu
     idS.subject = subject.id;
 end
 
