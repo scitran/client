@@ -19,39 +19,52 @@ function idS = containerCreate(obj, group, project, varargin)
 %  projectL - Project Label
 %
 % Optional Parameters
-%  session     - Session label
-%  acquisition - Acquisition label
+%  subject       - Make sure the project has a subject with this name 
+%  session       - Session label
+%  acquisition   - Acquisition label
 %
 % Returns:
-%   idS - Struct containing the ids of the created objects, such as
-%     idS.project, idS.session, idS.acquisition
+%   idS - Struct containing the ids of the containers created, such as
+%         idS.project, idS.session, idS.acquisition
 %
-% See also:  delete
+% BW Scitran Team, 2016
 %
-% RF/BW Scitran Team, 2016
+% See also:  
+%  deleteContainer
+%
 
 % Examples:
 %{
   st = scitran('stanfordlabs');
 
   %  Create a project
-  gName = 'Wandell Lab';
+  gName  = 'Wandell Lab';
   pLabel = 'deleteMe';
-  id = st.create(gName, pLabel);
+  id = st.containerCreate(gName, pLabel);
   status = st.exist('project',pLabel)
 
   st.fw.deleteProject(id.project);
-
+%}
+%{
   % Create a session within a project
+  pLabel = 'deleteSubject';
+  subject = 'noone';
   sLabel = 'deleteSession';
-  id = st.create(gName, pLabel,'session',sLabel);
-
+  id = st.containerCreate(gName, pLabel,...
+                'subject',subject,...
+                'session',sLabel);
   st.fw.deleteSession(id.session);
   st.fw.deleteProject(id.project);
-
+%}
+%{
   % Create an acquisition within a session within a project
+  % No subject for the session this time. 
+  pLabel = 'deleteSubject';
+  sLabel = 'deleteSession';
   aLabel = 'deleteAcquisition'
-  id = st.create(gName, pLabel,'session',sLabel,'acquisition',aLabel);
+  id = st.containerCreate(gName, pLabel,...
+       'session',sLabel,...
+       'acquisition',aLabel);
 
   st.fw.deleteAcquisition(id.acquisition);
   st.fw.deleteSession(id.session);
@@ -66,10 +79,14 @@ function idS = containerCreate(obj, group, project, varargin)
 
 %% Input arguments are the project/session/acquisition labels
 
+varargin = stParamFormat(varargin);
+
 p = inputParser;
 p.addRequired('group',@ischar);
 p.addRequired('project',@ischar);
 p.addParameter('session',[],@ischar);
+p.addParameter('subject',[],@ischar);
+
 p.addParameter('acquisition',[],@ischar);
 
 % Not yet implemented.  But we may permit attaching data here to add to the
@@ -82,6 +99,8 @@ group       = p.Results.group;
 project     = p.Results.project;
 session     = p.Results.session;
 acquisition = p.Results.acquisition;
+subject     = p.Results.subject;
+
 % additionalData = p.Results.additionalData;  % NYI
 
 %% Check whether the group exists
@@ -97,46 +116,42 @@ end
 % Does the project exist? 
 [status, idS.project] = obj.exist('project',project);
 if ~status
-    % If not, add it. Should we check with the user?
+    % If not, add it.
     idS.project = obj.fw.addProject(struct('label',project,'group',groupId));
 end
 
-% Maybe we are adding some project data?
-% if isfield(additionalData, 'project'), prjData = additionalData.project;
-% else,                                  prjData = struct;
-% end
+% Always get the project because we will probably need it either for the
+% subject or adding a session.  
+project = obj.fw.get(idS.project);
 
-% If no session is passed, then we are done and return the project ID
+%% Did the person want a subject  created?
+
+if isempty(subject)
+    % User believes the subject is already part of the project
+    idS.subject = '';
+else
+    % User says create a subject for this project with this label
+    subject = project.addSubject('label',subject,'code',subject);
+    idS.subject = subject.id;
+end
+
+%% If no session is passed, then we are done and return the project ID
 if isempty(session), return; end
 
-%% Test for the session label; does it exist? If not create it
-
-[status, idS.session] = obj.exist('session', session, 'parentID', idS.project);
-if ~status
-    % If not, add it. Should we check with the user?
-    idS.session = obj.fw.addSession(struct('label', session, 'project', idS.project));
+% Create a new session for this subject.
+if exist('subject','var') && ~isempty(subject)
+    session = subject.addSession('label',session);
+else
+    session = project.addSession(struct('label', session, 'project', idS.project));
 end
 
-% Maybe we are adding some session data?
-% if isfield(additionalData, 'session'), sesData = additionalData.session;
-% else,                                  sesData = struct;
-% end
-
-% If no session is passed, then we are done and return the project ID
-if isempty(acquisition), return; end
+idS.session = session.id;
 
 %% Test for the acquisition label; does it exist? If not create it
+if isempty(acquisition), return; end
 
-[status, idS.acquisition] = obj.exist('acquisition', acquisition, 'parentID', idS.session);
-if ~status
-    idS.acquisition = obj.fw.addAcquisition(struct('label', acquisition,'session', idS.session));
-end
-
-%% Maybe we are adding some acquisition data?
-
-% if isfield(additionalData, 'acquisition'), acqData = additionalData.acquisition;
-% else,                       acqData = struct;
-% end
+acq = session.addAcquisition('label', acquisition);
+idS.acquisition = acq.id;
 
 end
 
