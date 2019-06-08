@@ -36,7 +36,9 @@ function containers = dr_fwSearchAcquAnalysis(st, session, containerType, patter
             % Do nothing for now, we will a cell array with all containers. 
         case {'last'}
             % Select the last one and return it as a container, not as a cell. 
-            containers = containers{length(containers)};
+            if ~isempty(containers)
+                containers = containers{length(containers)};
+            end
         otherwise
             error('Only "all" and "last" are allowed for this variable.')
     end

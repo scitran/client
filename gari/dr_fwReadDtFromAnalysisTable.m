@@ -6,7 +6,7 @@ function dt = dr_fwReadDtFromAnalysisTable(serverName, t, measurement)
 %{
 clear all; clc; 
 serverName     = 'stanfordlabs';
-collectionName = 'ComputationalReproducibility';  % 'tmpCollection', 'ComputationalReproducibility', 'FWmatlabAPI_test'
+collectionName = 'BCBL_BERTSO';  % 'tmpCollection', 'ComputationalReproducibility', 'FWmatlabAPI_test'
 % collectionName = 'WH_042_volume_test';
 % measurement    = 'volume';  % 
 measurement    = 'fa';
@@ -18,7 +18,7 @@ height(JL)
 % FILTER
 state       = 'complete';  % 'cancelled', 'pending', 'complete', 'running', 'failed'
 % gearName    = 'afq-pipeline-3'; gearVersion = '3.0.0_rc4';
-gearName    = 'afq-pipeline'; gearVersion = '3.0.6';
+gearName    = 'afq-pipeline'; gearVersion = '3.0.7';
 dateFrom  = '04-Feb-2019 00:00:00';
 labelContains = ':';
 state='complete'
@@ -29,18 +29,19 @@ height(t)
 
 
 
-labelContains = 'AllV03';
+labelContains = 'v02b:v3.0.7';
 state='complete'
-t = JL(JL.state==state & contains(string(JL.label), labelContains),:);
-t = JL(contains(string(JL.label), labelContains),:);
+t = JL(JL.state==state & JL.gearName==gearName & ...
+       JL.gearVersion==gearVersion & ...
+       contains(string(JL.label), labelContains),:);
 height(t)
 
 
 
 
 dt = dr_fwReadDtFromAnalysisTable(serverName, t, measurement);
-save(fullfile(afqDimPath,'local','cache', ...
-              sprintf('AllV03b_BCBL_ILLITERATES_%s.mat',measurement)), 'dt')
+save(fullfile(bertsoSoftPath,'local','cache', ...
+              sprintf('v02b_BCBL_BERTSOLARI_%s.mat',measurement)), 'dt')
 
 
 % VISUALIZE RESULTS

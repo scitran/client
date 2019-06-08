@@ -1,8 +1,5 @@
 function dt = dr_fwLaunchJobs(serverName, collectionName, gearName, gearVersion)
-% Create a collection with all the sessions that need the files edited
-% This function will be generic, for now, it is intended to add the DWI
-% information to the HCP preprocessed and bVal splitted .bval, .bvec and dwi
-% files.
+% .
 
 
 % Example inputs to make it work
@@ -13,12 +10,13 @@ function dt = dr_fwLaunchJobs(serverName, collectionName, gearName, gearVersion)
 clc; clear all;
 serverName     = 'stanfordlabs';
 collectionName = 'tmpCollection';
-% collectionName = 'Mareike';
 % collectionName = 'ComputationalReproducibility';
 % collectionName = 'CompRepCheck';
 % collectionName = 'WestonHavens_AFQ_Match-Engage';
 % collectionName = 'ILLITERATES';
-collectionName = 'HCPTEST';
+% collectionName = 'BCBL_BERTSO';
+% collectionName = 'HCPTEST';
+collectionName = 'Mareike';
 
 % Select GEAR, VERSION and DEFAULTS
 % gearName = 'fslmerge'            ; gearVersion    = '0.1.1';
@@ -28,7 +26,8 @@ collectionName = 'HCPTEST';
 % gearName = 'neuro-detect'        ; gearVersion    = '0.3.1';
 % gearName = 'dwi-flip-bvec'       ; gearVersion    = '1.0.0';
 % gearName = 'dtiinit'             ; gearVersion    = '0.2.2';
-gearName = 'afq-pipeline'        ; gearVersion    = '3.0.6';
+gearName = 'afq-pipeline'        ; gearVersion    = '3.0.7';
+gearName = 'afq-pipeline-3'        ; gearVersion    = '3.0.2'; % MAreike
 
     dr_fwLaunchJobs(serverName, collectionName, gearName, gearVersion)
 
@@ -36,7 +35,7 @@ gearName = 'afq-pipeline'        ; gearVersion    = '3.0.6';
 
 %% 0.- Connect to the session where the example dicom header json is
 st = scitran(serverName);
-st.verify
+% st.verify
 
 %% 2.- Connect to the collection, verify it and show the number of sessions for verification
 % FC: obtain collection ID from the collection name
@@ -123,26 +122,26 @@ switch gearName
         % load(fullfile(afqDimPath,'DATA','FW_datatools', configParamDefaultsFileName))
         % This changes to defaults will affect to all projects
         configDefault                     = config;
-        configDefault.ET_numberFibers     = 200000;
-        configDefault.life_num_iterations = 10;  % Before 250
+        configDefault.ET_numberFibers     = 400000;
+        configDefault.life_num_iterations = 250;  % Before 250, 10
         configDefault.ET_runET            = true;
         configDefault.life_runLife        = true;
         configDefault.eddyCorrect         = -1;
-        configDefault.maxDist             = 5;
+        configDefault.maxDist             = 4;
         configDefault.maxLen              = 4;
 
         configDefault.mrtrix_useACT       = true;
         configDefault.mrtrix_autolmax     = false;
-        configDefault.mrtrix_lmax         = 6;
-        configDefault.mrtrix_multishell   = true;     
-        configDefault.track_faThresh      = 0.05;  % 0.1;  
+        configDefault.mrtrix_lmax         = 8;
+        configDefault.mrtrix_multishell   = false;     
+        configDefault.track_faThresh      = 0.2 % 0.05;  % 0.1;  
         configDefault.ET_minlength        = 20;   
         configDefault.ET_maxlength        = 250; 
         configDefault.track_nfibers       = 1000000;
 
-        % Add common label for the analysis based on parameters
+        % Add common label for the analysis based on parametrs
         % labelStr = 'AllV03:v3.0.6:10LiFE:min20max250:0.1cutoff:';
-        labelStr = 'MS7:v3.0.6:ACT:10LiFE:min20max250:0.05cutoff:';
+        labelStr = 'min20max250:0.05cutoff:v3.0.2';
         
         
         % CAREFUL, REMOVE, this is for the 1 subject test
@@ -263,7 +262,7 @@ for ns=1:length(sessionsInCollection)
             else
                 error('HCP_Depression is not ready for independent shell analysis')
             end
-            for bval=bvalues
+            for bval=bvalues    % ;bval;end
                 config = configDefault;
                 switch gearName
                     case {'neuro-detect'}
@@ -301,9 +300,9 @@ for ns=1:length(sessionsInCollection)
                         stracqu  = dr_fwSearchAcquAnalysis(st, thisSession, ...
                                              'acquisition','Structural','last');
                         aparcAcqu  = dr_fwSearchAcquAnalysis(st, thisSession, ...
-                                             'acquisition','aparc','last');
+                                             'acquisition','Structural','last');
                         diffacqu = dr_fwSearchAcquAnalysis(st, thisSession, ...
-                                             'acquisition', 'DWI_uncut','last');
+                                             'acquisition', 'Diffusion','last');
                         % Check if any of those is empty, if not, continue
                         if isempty(stracqu) || isempty(diffacqu) 
                             fprintf('No acquisition or analysis found, adding session to the tmpCollection...\n') 
@@ -318,7 +317,7 @@ for ns=1:length(sessionsInCollection)
                             % one are encountered, the last one will be
                             % returned.
                             % IT is unnecessary for HCP, as we pass the whole name
-                            T1wFile       = dr_fwFileName(stracqu, 'T1w_acpc');
+                            T1wFile       = dr_fwFileName(stracqu, 'T1w');
                             aparcasegFile = dr_fwFileName(aparcAcqu, 'aparc+aseg');
                             % I should make sure that there always will be an
                             % apar+aseg, but just to be sure...
@@ -351,7 +350,194 @@ for ns=1:length(sessionsInCollection)
                     otherwise
                         disp(fprintf('No changes for project %s and gear  %s\n', thisProject.label, gearName))
                 end
-           end                
+            end
+        case {'BCBL_BERTSO'}
+                % Edit the config defaults specific to this project
+                config = configDefault;
+                switch gearName
+                    case {'acpc-anat'}
+                        % Edit the config defaults specific to this project
+                        % No changes to the defaults
+                        % And now create the body for the analysis
+                        % Obtain the acquisitionsIDs:
+                        anatAcqu  = dr_fwSearchAcquAnalysis(st, thisSession, 'acquisition', 'Structural','last');
+                        if isempty(anatAcqu)
+                            fprintf('No acquisition found, adding session to the tmpCollection...\n') 
+                            dr_fwAddSession2tmpCollection(st, thisSession,'tmpCollection')
+                        else
+                            % Add a struct with input file(s). These are FileReference objects, which are in
+                            anatomicalName  = dr_fwFileName(anatAcqu, 'T1w.nii.gz');
+                            % Introduce check that if any of those is empty, add
+                            % the subject to the tmpCollection
+                            if isempty(anatomicalName)
+                                fprintf('No file found, adding session to the tmpCollection...\n') 
+                                dr_fwAddSession2tmpCollection(st, thisSession,'tmpCollection')
+                            else
+                                inputs   = struct('anatomical'  , struct('type', 'acquisition','id', idGet(anatAcqu), 'name', anatomicalName));
+                                % create the job with all the involved files in a struct
+                                thisJob = struct('gearId', thisGearId, ...
+                                                 'inputs', inputs, ...
+                                                 'config', config);
+                                % Launch the job
+                                jobId = st.fw.addJob(thisJob);  
+                            end
+                        end
+                    case {'mrtrix3preproc'}
+                        % Edit the config defaults specific to this project
+                        config.acpc = true;
+                        % And now create the body for the analysis
+                        T1wAcqu  = dr_fwSearchAcquAnalysis(st, thisSession, 'acquisition', 'T1w','last');
+                        % Obtain the diffusion ID:
+                        diffAcqu  = dr_fwSearchAcquAnalysis(st, thisSession, 'acquisition', 'DWI','last');
+                        % Check if any of those is empty, if not, continue
+                        if (isempty(diffAcqu) || isempty(T1wAcqu))
+                            fprintf('Diffusion Acquisition missing, adding session to the tmpCollection...\n') 
+                            dr_fwAddSession2tmpCollection(st, thisSession,'tmpCollection')
+                        else
+                            % Add a struct with input file(s). These are FileReference objects, which are in
+                            T1wName   = dr_fwFileName(T1wAcqu, 'rawavg.nii.gz');  %'T1w.nii.gz'); 
+                            dwiName   = dr_fwFileName(diffAcqu, '.nii.gz'); 
+                            bvecName  = dr_fwFileName(diffAcqu, '.bvec'); 
+                            bvalName  = dr_fwFileName(diffAcqu, '.bval'); 
+                            % Check if we have the file(s) and continue
+                            if (isempty(T1wName)  || isempty(dwiName)  || isempty(bvecName) || isempty(bvalName)) 
+                                fprintf('At least one file missing, adding session to the tmpCollection...\n') 
+                                dr_fwAddSession2tmpCollection(st, thisSession,'tmpCollection')
+                            else
+                                inputs   = struct('ANAT'  , struct('type', 'acquisition','id', idGet(T1wAcqu),  'name', T1wName), ...
+                                                  'BVEC'  , struct('type', 'acquisition','id', idGet(diffAcqu), 'name', bvecName), ...
+                                                  'BVAL'  , struct('type', 'acquisition','id', idGet(diffAcqu), 'name', bvalName), ...
+                                                  'DIFF'  , struct('type', 'acquisition','id', idGet(diffAcqu), 'name', dwiName));
+                                % create the job with all the involved files in a struct
+                                thisJob = struct('gearId', thisGearId, ...
+                                                     'inputs', inputs, ...
+                                                     'config', config);
+                                body    = struct('label', [labelStr gearName ':' gearVersion ' analysis'], ...
+                                                     'job'  , thisJob);
+                                % Launch the job
+                                st.fw.addSessionAnalysis(idGet(thisSession), body);
+                            end
+
+                        end                                               
+                    case {'dwi-flip-bvec'}
+                        config.xFlip = true;
+                        % Find the bvec file inside the result of the analysis
+                        bvecAnalysis  = dr_fwSearchAcquAnalysis(st, thisSession, 'analysis', 'v02bmrtrix3preproc','last');
+                        % Check if any of those is empty, if not, continue
+                        if isempty(bvecAnalysis)
+                            fprintf('No analysis found, adding session to the tmpCollection...\n') 
+                            dr_fwAddSession2tmpCollection(st, thisSession,'tmpCollection')
+                        else
+                            % Add a struct with input file(s). These are FileReference objects, which are in
+                            bvecName   = dr_fwFileName(bvecAnalysis, '.bvecs');
+                            % Check if we have the file(s) and continue
+                            if isempty(bvecName)
+                                fprintf('No file found, adding session to the tmpCollection...\n') 
+                                dr_fwAddSession2tmpCollection(st, thisSession,'tmpCollection')
+                            else
+                                inputs = struct('bvec' , struct('type', 'analysis','id', idGet(bvecAnalysis), 'name', bvecName));
+                                
+                                % create the job with all the involved files in a struct
+                                thisJob = struct('gearId', thisGearId, ...
+                                                     'inputs', inputs, ...
+                                                     'config', config);
+                                % Launch the job
+                                % jobId = st.fw.addJob(thisJob);
+                                % If the job is launched as a utility gear it will
+                                % overwrite the output of the analysis. Launch
+                                % it as an analysis gear.
+                                % create the job with all the involved files in a struct
+                                body    = struct('label', [labelStr 'flipX gear: ' gearName], ...
+                                                     'job'  , thisJob);
+                                % Launch the job
+                                st.fw.addSessionAnalysis(idGet(thisSession), body);
+                            end 
+                        end
+                    case {'neuro-detect'}
+                        preprocAnalysis = dr_fwSearchAcquAnalysis(st, thisSession, 'analysis', 'mrtrix3preproc','last');
+                        % bvecAnalysis    = dr_fwSearchAcquAnalysis(st, thisSession, 'analysis', 'flipY','last');  
+                        % Check if any of those is empty, if not, continue
+                        if isempty(preprocAnalysis) %  || isempty(bvecAnalysis)
+                            fprintf('No acquisition or analysis found, adding session to the tmpCollection...\n') 
+                            dr_fwAddSession2tmpCollection(st, thisSession,'tmpCollection')
+                        else
+                            % bvecName = dr_fwFileName(bvecAnalysis, '.bvecs'); % 
+                            bvecName      = dr_fwFileName(preprocAnalysis, '.bvecs');
+                            bvalName      = dr_fwFileName(preprocAnalysis, '.bvals');
+                            diffusionName = dr_fwFileName(preprocAnalysis, '.nii.gz');
+                            % Check if we have the file(s) and continue
+                            if isempty(diffusionName) || isempty(bvecName) || isempty(bvalName)
+                                fprintf('Not all files found, adding session to the tmpCollection...\n') 
+                                dr_fwAddSession2tmpCollection(st, thisSession,'tmpCollection')
+                            else
+                                inputs   = struct('bvec'      , struct('type', 'analysis','id', idGet(preprocAnalysis), 'name', bvecName), ...% 'bvec'      , struct('type', 'analysis','id', idGet(bvecAnalysis), 'name', bvecName), ... % 
+                                                  'bval'      , struct('type', 'analysis','id', idGet(preprocAnalysis), 'name', bvalName), ...
+                                                  'dwi'       , struct('type', 'analysis','id', idGet(preprocAnalysis), 'name', diffusionName));
+
+                                % create the job with all the involved files in a struct
+                                thisJob = struct('gear_id', thisGearId, ...
+                                                     'inputs', inputs, ...
+                                                     'config', config);
+                                body    = struct('label', [labelStr 'neuro-detect KO'], ...
+                                                     'job'  , thisJob);
+                                % Launch the job
+                                st.fw.addSessionAnalysis(idGet(thisSession), body);
+                            end
+                        end                                                                        
+                    case {'afq-pipeline','afq-pipeline-3'}
+                        % Edit the config defaults specific to this project
+                        fprintf('Changing defaults for project %s and gear %s\n', thisProject.label, gearName);
+                        % config.rotateBvecsWithCanXform = 1; % Philips requires to be onee
+                        % config.phaseEncodeDir          = 2; % A >> P = 2, In Philips (Fold-Over) = Siemens (Phase-Encoding)
+                        % Edit the config defaults specific to this project
+                        config.dwOutMm_1               =  1.8; % This data is 1.8 x 1.8 x 1.8
+                        config.dwOutMm_2               =  1.8;
+                        config.dwOutMm_3               =  1.8;
+                        config.rotateBvecsWithCanXform =  1; 
+                        
+                        % fsAnalysis = dr_fwSearchAcquAnalysis(st, thisSession, 'analysis', 'freesurfer-recon-all:0.1.4 analysis','last');
+                        % It is not finding the file!!!!!!! Let's look in the acqu
+                        anatAcqu        = dr_fwSearchAcquAnalysis(st, thisSession, 'acquisition', 'T1w','last');
+                        preprocAnalysis = dr_fwSearchAcquAnalysis(st, thisSession, 'analysis', 'v02bmrtrix3preproc','last');
+                        bvecAnalysis    = dr_fwSearchAcquAnalysis(st, thisSession, 'analysis', 'v02bflipX','last');
+                        % Check if any of those is empty, if not, continue
+                        if isempty(anatAcqu) || isempty(preprocAnalysis) || isempty(bvecAnalysis)
+                            fprintf('No acquisition or analysis found, adding session to the tmpCollection...\n') 
+                            dr_fwAddSession2tmpCollection(st, thisSession,'tmpCollection')
+                        else
+                            % Add a struct with input file(s). These are FileReference objects, which are in
+                            % anatName          = dr_fwFileName(fsAnalysis, 'T1.nii.gz');
+                            % dtiInit is failing when we use the output of FS
+                            % pipeline, so we use the acpc-anat for now
+                            % Find the file, it can have several names
+                            anatName   = dr_fwFileName(anatAcqu, 'T1w.nii.gz');
+                            aparcasegName = dr_fwFileName(anatAcqu, 'aparcaseg.nii.gz');
+                            bvecName      = dr_fwFileName(bvecAnalysis, '.bvecs');
+                            bvalName      = dr_fwFileName(preprocAnalysis, '.bvals');
+                            diffusionName = dr_fwFileName(preprocAnalysis, 'dwi.nii.gz');
+                            % Check if we have the file(s) and continue
+                            if isempty(anatName) || isempty(diffusionName) || isempty(bvecName) || isempty(bvalName)
+                                fprintf('Not all files found, adding session to the tmpCollection...\n') 
+                                dr_fwAddSession2tmpCollection(st, thisSession,'tmpCollection')
+                            else
+                                inputs   = struct('anatomical', struct('type', 'acquisition','id', idGet(anatAcqu), 'name', anatName), ...
+                                                  'aparcaseg' ,struct('type','acquisition','id',anatAcqu.id ,'name',aparcasegName), ...   
+                                                      'bvec'      , struct('type', 'analysis','id', idGet(bvecAnalysis), 'name', bvecName), ...
+                                                      'bval'      , struct('type', 'analysis','id', idGet(preprocAnalysis), 'name', bvalName), ...
+                                                      'dwi'       , struct('type', 'analysis','id', idGet(preprocAnalysis), 'name', diffusionName));
+                                % create the job with all the involved files in a struct
+                                thisJob = struct('gearId', thisGearId, ...
+                                                     'inputs', inputs, ...
+                                                     'config', config);
+                                body    = struct('label', [labelStr 'X flipped Allv02b: Analysis ' gearName], ...
+                                                     'job'  , thisJob);
+                                % Launch the job
+                                st.fw.addSessionAnalysis(idGet(thisSession), body);
+                            end
+                        end                        
+                    otherwise
+                        disp(fprintf('No changes for project %s and gear  %s\n', thisProject.label, gearName))
+                end           
         case {'BCBL_ILLITERATES'}
                 % Edit the config defaults specific to this project
                 config = configDefault;
@@ -770,7 +956,7 @@ for ns=1:length(sessionsInCollection)
                                                   'BVAL'  , struct('type', 'acquisition','id', idGet(diffAcqu), 'name', bvalName), ...
                                                   'DIFF'  , struct('type', 'acquisition','id', idGet(diffAcqu), 'name', dwiName));
                                 % create the job with all the involved files in a struct
-                                thisJob = struct('gear_id', thisGearId, ...
+                                thisJob = struct('gearId', thisGearId, ...
                                                      'inputs', inputs, ...
                                                      'config', config);
                                 body    = struct('label', [labelStr gearName ':' gearVersion ' analysis'], ...
@@ -799,7 +985,7 @@ for ns=1:length(sessionsInCollection)
                                 inputs = struct('bvec' , struct('type', 'analysis','id', idGet(bvecAnalysis), 'name', bvecName));
                                 
                                 % create the job with all the involved files in a struct
-                                thisJob = struct('gear_id', thisGearId, ...
+                                thisJob = struct('gearId', thisGearId, ...
                                                      'inputs', inputs, ...
                                                      'config', config);
                                 % Launch the job
@@ -836,7 +1022,7 @@ for ns=1:length(sessionsInCollection)
                                                       'dwi'       , struct('type', 'analysis','id', idGet(preprocAnalysis), 'name', diffusionName));
 
                                 % create the job with all the involved files in a struct
-                                thisJob = struct('gear_id', thisGearId, ...
+                                thisJob = struct('gearId', thisGearId, ...
                                                      'inputs', inputs, ...
                                                      'config', config);
                                 body    = struct('label', [labelStr 'neuro-detect OK'], ...
@@ -856,8 +1042,8 @@ for ns=1:length(sessionsInCollection)
                         config.dwOutMm_3               =  2;
                         config.rotateBvecsWithCanXform =  1; 
                         config.eddyCorrect             =  -1; 
-                        config.ET_numberFibers         = 200000;
-                        config.mrtrix_useACT           = false;
+                        config.ET_numberFibers         = 500000;
+                        config.mrtrix_useACT           = true;
                         config.mrtrix_autolmax         = true;
                         
                         
@@ -893,7 +1079,7 @@ for ns=1:length(sessionsInCollection)
                                                   'bval'      , struct('type', 'analysis'   ,'id', idGet(preprocAnalysis), 'name', bvalName     ), ...
                                                   'dwi'       , struct('type', 'analysis'   ,'id', idGet(preprocAnalysis), 'name', diffusionName));
                                 % create the job with all the involved files in a struct
-                                thisJob = struct('gear_id', thisGearId, ...
+                                thisJob = struct('gearId', thisGearId, ...
                                                      'inputs', inputs, ...
                                                      'config', config);
                                 body    = struct('label', [labelStr 'ET:noACT:LiFE 2.5M: X flipped: Analysis ' gearName ':' gearVersion], ...

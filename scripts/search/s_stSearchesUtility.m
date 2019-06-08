@@ -12,7 +12,7 @@
 % RF/BW Vistasoft Team 2016
 
 %% Get authorization to read from the database
-st = scitran('scitran', 'action', 'create');
+st = scitran('stanfordlabs');
 
 % A place for temporary files.
 chdir(fullfile(stRootPath,'local'));
@@ -20,14 +20,13 @@ chdir(fullfile(stRootPath,'local'));
 %% How many total sessions in a project?
 
 allSessions = st.search('sessions',...
-    'project label','ENGAGE');
-
+    'project label exact','ENGAGE');
 fprintf('ENGAGE contains %d sessions\n',length(allSessions));
 
 %% How many of these had run fsl-bet?
 
 fslBetSessions = st.search('sessions',...
-    'project label','ENGAGE',...
+    'project label exact','VWFA FOV',...
     'session contains analysis','fsl-bet');
 
 fprintf('Found %d sessions out of %d with fsl-bet\n',...
@@ -64,8 +63,8 @@ fprintf('Found %d sessions with fsl-bet\n',...
 %% Find session in ENGAGE that have an Anatomy_t1w acquisition
 
 sessions = st.search('sessions',...
-    'file measurement','Anatomy_t1w',...
-    'project label','ENGAGE',...
+    'measurement','T1',...
+    'project label exact','ENGAGE',...
     'file type','nifti');
 fprintf('%d sessions in ENGAGE have an anatomical T1w in nifti format\n',length(sessions));
 

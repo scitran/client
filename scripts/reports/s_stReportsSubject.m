@@ -9,22 +9,24 @@
 %% Authorization
 
 % Open the scitran object
-st = scitran('scitran');
+st = scitran('stanfordlabs');
 
 %% Search for the subject information
+myGroup      = st.lookup('simons');
+projectLabel = 'SVIP Released Data (SIEMENS)';
+SVIP = st.lookup(fullfile(myGroup.id,projectLabel)); 
 
 % Find the sessions in the project
-sessions = st.search('sessions',...
-    'project label','SVIP Released Data (SIEMENS)');
-length(sessions)
+sessions = SVIP.sessions();
+numel(sessions)
 
 %% Get the subject information
-subjects = stSubjectInfo(sessions);
-ages     = stSubjectGet(subjects,'age');
+
+subjects = stSubjectInfo(st,sessions);
+sex = stPrint(subjects,'sex');
+ages = stPrint(subjects,'age');
 
 %% Print out the sex distribution
-
-sex = stSubjectGet(subjects,'sex');
 unknownSexSessions = find(sex == 'u');
 if isempty(unknownSexSessions)
     fprintf('\n---------\n');
@@ -36,12 +38,14 @@ else
     fprintf('---------\n');
 end
 
-nMale    = sum(sex=='m');
-nFemale  = sum(sex =='f');
-nUnknown = sum(sex == 'u');
+nMale    = sum(cellfun( @(x)(isequal(x,'male')),sex));
+nFemale  = sum(cellfun( @(x)(isequal(x,'female')),sex));
+nUnknown = sum(cellfun( @(x)(isequal(x,'unknown')),sex));
 fprintf('%d Males\n%d Females\n%d   Unknown\n',nMale,nFemale,nUnknown);
 
 %% Summarize ages in a graph
+
+% Ages don't seem to be coded here.  Check with LMP.
 figure; hist(ages,20); 
 xlabel('Age in years'); ylabel('N subjects');
 set(gca,'xlim',[0 100]);

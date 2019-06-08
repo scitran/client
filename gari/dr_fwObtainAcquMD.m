@@ -119,7 +119,7 @@ switch thisGearName
                 % First search what was the name of the bval used to know if it
                 % is a v12 or a v14
                 analysis = dr_fwSearchAcquAnalysis(st, thisSession, ...
-                                         'analysis', 'Analysis gear: mrtrix3preproc: with defaults.');   
+                                         'analysis', 'Analysis gear: mrtrix3preproc: with defaults.', 'last');   
                 if isempty(analysis)
                     fprintf('No analysis found, adding session to the tmpCollection...\n') 
                     dr_fwAddSession2tmpCollection(st, thisSession)
@@ -161,7 +161,7 @@ switch thisGearName
                     bvalFromLabel = 'ThrowAnError';
                 end
                 
-                acqu = dr_fwSearchAcquAnalysis(st,thisSession,'acquisition',bvalFromLabel);
+                acqu = dr_fwSearchAcquAnalysis(st,thisSession,'acquisition',bvalFromLabel, 'last');
                 if isempty(acqu)
                     fprintf('No analysis found, adding session to the tmpCollection...\n') 
                     dr_fwAddSession2tmpCollection(st, thisSession)
@@ -187,7 +187,7 @@ switch thisGearName
                 %     with the correct information
                 % 3.- Write the information in the corresponding bval files
                 % 4.- Read and return the information to the main function
-                acqu = dr_fwSearchAcquAnalysis(st,thisSession,'acquisition','Diffusion');
+                acqu = dr_fwSearchAcquAnalysis(st,thisSession,'acquisition','Diffusion', 'last');
                 if isempty(acqu)
                     fprintf('No analysis found, adding session to the tmpCollection...\n') 
                     dr_fwAddSession2tmpCollection(st, thisSession)
@@ -202,7 +202,33 @@ switch thisGearName
                         bval = dlmread(st.fw.downloadFileFromAcquisition(acqu.id, bvalName, ...
                                             fullfile(afqDimPath,'local','tmp',bvalName)));
                     end
-                end                  
+                end
+            case {'BCBL_BERTSO'}
+                % The dwi files have information, but they do not have the same
+                % fields as in HCP for example. And the bval files have no
+                % information associated, this is what I will do: 
+                % 1.- Read the info in the dwi file, for both the b1000 and b2000
+                % 2.- Take the HCP information template (which is the same as
+                %     the latest dcm2niix generates in FW) and edit manually
+                %     with the correct information
+                % 3.- Write the information in the corresponding bval files
+                % 4.- Read and return the information to the main function
+                acqu = dr_fwSearchAcquAnalysis(st,thisSession,'acquisition','DWI','last');
+                if isempty(acqu)
+                    fprintf('No analysis found, adding session to the tmpCollection...\n') 
+                    dr_fwAddSession2tmpCollection(st, thisSession)
+                else
+                    bvalName = dr_fwFileName(acqu, 'bval');
+                    if isempty(bvalName)
+                        fprintf('No analysis found, adding session to the tmpCollection...\n') 
+                        dr_fwAddSession2tmpCollection(st, thisSession)
+                    else
+                        bvalStruct = st.fw.getAcquisitionFileInfo(acqu.id, bvalName);
+                        bvalStruct = bvalStruct.info.struct;
+                        bval = dlmread(st.fw.downloadFileFromAcquisition(acqu.id, bvalName, ...
+                                            fullfile(afqDimPath,'local','tmp',bvalName)));
+                    end
+                end                                  
             otherwise
                 error(sprintf('Project %s not recognized', thisProject.label))
         end

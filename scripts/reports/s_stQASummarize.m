@@ -16,8 +16,7 @@
 % You will be queried for the apiKey on the Flywheel User Profile page.
 %
 st = scitran('cni');
-st.verify
-
+st.verify;
 
 %% First task is to deal with file info and QA
 % Many of the 
@@ -25,21 +24,20 @@ st.verify
 %% List projects you can access
 
 % I guess we should sort the projects on return.
-projects = st.search('project','summary',true);
-for ii=1:length(projects)
-    disp(projects{ii}.project.label)
-end
+group = 'cni';
+myGroup = st.lookup(group);
+qaProject = st.lookup('cni/qa');
 
-%% Needs short form
-projects = st.search('project',...
-    'summary',true,...
-    'project label exact','qa');
+sessions = qaProject.sessions();
+fprintf('Number of QA sessions: %d\n',numel(sessions));
+ts = stPrint(sessions,'timestamp');
+% How do we sort by time stamp?
 
-% Save this project information
-projectID    = projects{1}.project.x_id;
-projectLabel = projects{1}.project.label;
 
-%%  Here are all the acquisitions over time
+
+%% END
+
+%% Here are all the acquisitions over time
 
 % This does not work, and getting the individual one does not work.  It
 % does work on vistalab, though.  Strange.

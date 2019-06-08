@@ -136,8 +136,19 @@ else
 
     elseif isequal(oType,'search')
         % Search for a container.  The id and type should be there.
+        % The case of a file, however, is a little bit different.  In
+        % that case we need to set the fileContainerType and the fileType
         containerType = object.returnType;
-        containerID   = object.(containerType).id;
+        switch containerType
+            case 'file'
+                fileContainerType = stObjectType(object.parent);
+                fileType    = object.file.type;
+                fname       = object.file.name;
+                containerID = object.parent.id;
+            otherwise
+                containerID   = object.(containerType).id;
+        end
+
         
     elseif isequal(oType,'getcontainer')
         % Returned by fw.getContainer(id)

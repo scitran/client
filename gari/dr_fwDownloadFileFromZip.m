@@ -28,17 +28,22 @@ function localFiles = dr_fwDownloadFileFromZip(st, collectionName, ...
 %{
 clear all; close all; clc;
 st                    = scitran('stanfordlabs'); st.verify
-colecName             = 'HCPTEST';
-% analysisLabelContains = 'AllV03:v3.0.6:10LiFE:min20max250:0.1cutoff:Analysis afq-pipeline bVal: 3000';
-analysisLabelContains = 'MS7';
+colecName             = 'BCBL_BERTSO';
+% analysisLabelContains = 'AllV03:v3.0.6:10LiFE:min20max250:0.1cutoff:Analysis b2000';
+analysisLabelContains = 'v02b:';
 zipNameContains       = 'AFQ_Output_';
 % listOfFilesContain    = {'MoriGroups_clean','_wmMask.mif','_wmMask_dilated.mif', ...
 %                              '_fa.mif', 'b0.nii.gz','_L.mat','_R.mat'};
 % listOfFilesContain    = {'MoriGroups_clean', 'b0.nii.gz', '_L.mat','_R.mat'};    
-% listOfFilesContain    = {'_fa.mif', '_CLIPPED_'};
-listOfFilesContain    = {'_autolmax.mif'};
-downloadDir           = '/Users/glerma/Downloads/v3.0.6';
-downFiles             = dr_fwDownloadFileFromZip(st, colecName, zipNameContains, ...
+listOfFilesContain    = {'_fa.mif','_CLIPPED_'};
+% listOfFilesContain    = {'_fa.mif', '_dt.mif'};
+downloadDir           = '/Users/glerma/Downloads/v3.0.7';
+
+
+
+
+
+    downFiles             = dr_fwDownloadFileFromZip(st, colecName, zipNameContains, ...
                          'analysisLabelContains', analysisLabelContains, ...
                          'filesContain'         , listOfFilesContain, ...
                          'downloadTo'           , downloadDir, ...
@@ -75,7 +80,7 @@ showListSession      = p.Results.showListSession;
 % Connect to the collection, verify it and show the number of sessions for verification
 % FC: obtain collection ID from the collection name
 
-cc            = st.search('collection','collection label contains',collectionName);
+cc            = st.search('collection','collection label exact',collectionName);
 collectionID  = cc{1}.collection.id;
 if isempty(collectionID)
     error('Collection %s could not be found on the server %s (verify permissions or the collection name).', collectionName, st.instance)
@@ -94,6 +99,7 @@ else
 end
 
 %% 2.- Download the files
+localFiles = {};
 for ns=1:length(sessionsInCollection)
     % Get info for the session
     thisSession = st.fw.getSession(idGet(sessionsInCollection{ns}));

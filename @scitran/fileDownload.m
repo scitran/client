@@ -1,6 +1,8 @@
 function destination = fileDownload(st,file,varargin)
 % Retrieve a file from a Flywheel site
 %
+% **** We should be using file.download now for FileEntry ****
+%
 % Syntax
 %   outfile = scitran.fileDownload(file, ...)
 %
@@ -122,6 +124,10 @@ switch lower(fileContainerType)
         st.fw.downloadFileFromCollection(containerID,filename,destination);
     case 'analysis'
         st.fw.downloadOutputFromAnalysis(containerID, filename, destination);
+    case 'fileentry'
+        % where result is an individual file search result:
+        fileEntry = result.parent.getFile(result.file.name);
+        fileEntry.download('data.bin');
 
     otherwise
         error('No fileDownload for container type %s\n',containerType);

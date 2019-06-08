@@ -1472,6 +1472,7 @@ classdef SubjectsApi < handle
 
         function [returnData, resp] = getAllSubjects(obj, varargin)
             % Get a list of subjects
+            % exhaustive (logical):Set to return a complete list regardless of permissions
             % filter (char):The filter to apply. (e.g. label=my-label,created>2018-09-22)
             % sort (char):The sort fields and order. (e.g. label:asc,created:desc)
             % limit (integer):The maximum number of entries to return.
@@ -1482,6 +1483,7 @@ classdef SubjectsApi < handle
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
+            addParameter(x__inp, 'exhaustive', []);
             addParameter(x__inp, 'filter', []);
             addParameter(x__inp, 'sort', []);
             addParameter(x__inp, 'limit', []);
@@ -1496,6 +1498,9 @@ classdef SubjectsApi < handle
 
             % Query parameters
             queryParams = {};
+            if ~isempty(x__inp.Results.exhaustive)
+                queryParams = [queryParams, 'exhaustive', flywheel.ApiClient.castParam(x__inp.Results.exhaustive, 'logical')];
+            end
             if ~isempty(x__inp.Results.filter)
                 queryParams = [queryParams, 'filter', flywheel.ApiClient.castParam(x__inp.Results.filter, 'char')];
             end
@@ -1852,11 +1857,23 @@ classdef SubjectsApi < handle
         function [returnData, resp] = getSubjectSessions(obj, subjectId, varargin)
             % List sessions of a subject
             % subjectId (char)
+            % filter (char):The filter to apply. (e.g. label=my-label,created>2018-09-22)
+            % sort (char):The sort fields and order. (e.g. label:asc,created:desc)
+            % limit (integer):The maximum number of entries to return.
+            % skip (integer):The number of entries to skip.
+            % page (integer):The page number (i.e. skip limit*page entries)
+            % afterId (char):Paginate after the given id. (Cannot be used with sort, page or skip)
             % returns: [vector[Session], resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
             addRequired(x__inp, 'subjectId');
+            addParameter(x__inp, 'filter', []);
+            addParameter(x__inp, 'sort', []);
+            addParameter(x__inp, 'limit', []);
+            addParameter(x__inp, 'skip', []);
+            addParameter(x__inp, 'page', []);
+            addParameter(x__inp, 'afterId', []);
             addParameter(x__inp, 'DumpResponseData', false);
             parse(x__inp, subjectId, varargin{:});
 
@@ -1868,6 +1885,24 @@ classdef SubjectsApi < handle
 
             % Query parameters
             queryParams = {};
+            if ~isempty(x__inp.Results.filter)
+                queryParams = [queryParams, 'filter', flywheel.ApiClient.castParam(x__inp.Results.filter, 'char')];
+            end
+            if ~isempty(x__inp.Results.sort)
+                queryParams = [queryParams, 'sort', flywheel.ApiClient.castParam(x__inp.Results.sort, 'char')];
+            end
+            if ~isempty(x__inp.Results.limit)
+                queryParams = [queryParams, 'limit', flywheel.ApiClient.castParam(x__inp.Results.limit, 'integer')];
+            end
+            if ~isempty(x__inp.Results.skip)
+                queryParams = [queryParams, 'skip', flywheel.ApiClient.castParam(x__inp.Results.skip, 'integer')];
+            end
+            if ~isempty(x__inp.Results.page)
+                queryParams = [queryParams, 'page', flywheel.ApiClient.castParam(x__inp.Results.page, 'integer')];
+            end
+            if ~isempty(x__inp.Results.afterId)
+                queryParams = [queryParams, 'after_id', flywheel.ApiClient.castParam(x__inp.Results.afterId, 'char')];
+            end
 
             % Header parameters
             headers = {};
