@@ -1,5 +1,4 @@
-function localFiles = dr_fwDownloadFileFromZip(st, collectionName, ...
-                                               zipNameContains, varargin)
+function localFiles = dr_fwDownloadFileFromZip(varargin)
 %
 % Add information to find and download from a zip. 
 % If there are more than one analysis with the same name or
@@ -39,15 +38,6 @@ listOfFilesContain    = {'_fa.mif','_CLIPPED_'};
 % listOfFilesContain    = {'_fa.mif', '_dt.mif'};
 downloadDir           = '/Users/glerma/Downloads/v3.0.7';
 
-
-
-
-
-    downFiles             = dr_fwDownloadFileFromZip(st, colecName, zipNameContains, ...
-                         'analysisLabelContains', analysisLabelContains, ...
-                         'filesContain'         , listOfFilesContain, ...
-                         'downloadTo'           , downloadDir, ...
-                         'showListSession'      , false);
 %}
 % 
 % GLU Vistalab, 2018
@@ -55,28 +45,36 @@ downloadDir           = '/Users/glerma/Downloads/v3.0.7';
 
 %% 0.- Parse inputs
 p = inputParser;
+p.addParameter('serverName'           , 'stanfordlabs' , @ischar);
+p.addParameter('collectionName'       , 'tmpCollection', @ischar);
+p.addParameter('gearName'             , 'afq-pipeline' , @ischar);
+p.addParameter('gearVersion'          , '3.0.7'        , @ischar);
 
-addRequired(p, 'st'             );
-addRequired(p, 'collectionName' );
-addRequired(p, 'zipNameContains');
+p.addParameter('downloadWholeZip'     , false            , @islogical);
+p.addParameter('unzipAll'             , false            , @islogical);
+p.addParameter('analysisLabelContains', 'v02b:'          , @ischar);
+p.addParameter('zipNameContains'      , 'AFQ_Output_'    , @ischar);
+p.addParameter('listOfFilesContain'   , {'afq'}          , @iscell);
+p.addParameter('downloadTo'           , '/Users/glerma/Downloads', @ischar);
+p.addParameter('showListSession'      , false            , @islogical);
 
-addOptional(p, 'downloadWholeZip'     , false            , @islogical);
-addOptional(p, 'unzipAll'             , false            , @islogical);
-addOptional(p, 'analysisLabelContains', 'Analysis'       , @ischar);
-addOptional(p, 'filesContain'         , {'afq'}          , @iscell);
-addOptional(p, 'downloadTo'           , '/Users/glerma/Downloads', @ischar);
-addOptional(p, 'showListSession'      , false            , @islogical);
-parse(p,st,collectionName,zipNameContains,varargin{:});
+parse(p, varargin{:});
+serverName           = p.Results.serverName;
+collectionName       = p.Results.collectionName;
+gearName             = p.Results.gearName;
+gearVersion          = p.Results.gearVersion;
 
 downloadWholeZip     = p.Results.downloadWholeZip;
 unzipAll             = p.Results.unzipAll;
 analysisLabelContains= p.Results.analysisLabelContains;
-filesContain         = p.Results.filesContain;
+zipNameContains      = p.Results.zipNameContains;
+filesContain         = p.Results.listOfFilesContain;
 downloadTo           = p.Results.downloadTo;
 showListSession      = p.Results.showListSession;
 
 %% 1.- Obtain the collection
-
+st = scitran(serverName);
+st.verify
 % Connect to the collection, verify it and show the number of sessions for verification
 % FC: obtain collection ID from the collection name
 
