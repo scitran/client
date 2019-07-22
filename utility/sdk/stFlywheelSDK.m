@@ -71,7 +71,7 @@ switch action
             disp('No flywheel SDK found');
             status = false;
         else
-            sdk = split(sdkPath,'sdk');
+            sdk = strsplit(sdkPath,'sdk');
             sdkVer = sdk{2}(1:3);
             fprintf('Verified installed version %s\n',sdkVer);
             status = sdkVer;
@@ -93,7 +93,7 @@ switch action
             disp('No flywheel SDK found');
             status = false;
         else
-            sdk = split(sdkPath,'sdk');
+            sdk = strsplit(sdkPath,'sdk');
             sdkVer = sdk{2}(1:3);
             fprintf('Verified installed version %s\n',sdkVer);
             status = str2double(sdkVer);

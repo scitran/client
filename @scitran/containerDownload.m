@@ -64,7 +64,7 @@ p.addParameter('destination','',@ischar);
 
 p.parse(st,container,varargin{:});
 
-cType = split(class(container),'.');
+cType = strsplit(class(container),'.');
 
 if strncmp(cType{3},'Search',6)
     containerC{1} = container;

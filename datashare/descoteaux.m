@@ -38,7 +38,7 @@ for ii=1:nFiles
     % Create a subdirectory labeled by session name
     chdir(outDir)
     thisFile = f{ii}.name;
-    s = split(thisFile,'.'); thisSession = fullfile(outDir,s{1});
+    s = strsplit(thisFile,'.'); thisSession = fullfile(outDir,s{1});
     if ~exist(thisSession,'dir'), mkdir(thisSession); end
     chdir(thisSession);
     

@@ -142,7 +142,7 @@ if isempty(apiKey)
 end
 
 % The part before the ':' is the URL.  Get it.
-newStr = split(apiKey,':');
+newStr = strsplit(apiKey,':');
 if length(newStr) < 2
     % Oops, there was no URL before the :
     ME = MException('FlywheelException:Invalid', 'Invalid API Key');

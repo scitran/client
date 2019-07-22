@@ -72,10 +72,10 @@ for ii=1:length(subjectMetaFiles)
     % adequately general across different directory names.  Just a start.
 
     % The subject data are stored as bids@sub-01_<...>
-    splitName = split(subjectMetaFiles{ii},'@');
+    splitName = strsplit(subjectMetaFiles{ii},'@');
     
     % Get the subject name from the front of the 2nd part
-    subName    = split(splitName{2},'_');
+    subName    = strsplit(splitName{2},'_');
     
     % Move the file into the folder with the subject name
     movefile(subjectMetaFiles{ii},fullfile(subName{1},splitName{2}));
