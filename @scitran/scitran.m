@@ -98,6 +98,9 @@ classdef scitran < handle
                     % here, however.
                     disp('Adding rest-client.jar to java path')
                     apiPath = fileparts(fileparts(which('flywheel.Flywheel')));
+                    if isempty(apiPath)
+                        error('We need to figure out how to do this.');
+                    end
                     apiFile = fullfile(apiPath,'api','rest-client.jar');
                     javaaddpath(apiFile);
                     obj.fw = flywheel.Flywheel(obj.showToken);

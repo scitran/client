@@ -1809,11 +1809,11 @@ classdef Flywheel < handle
         end
 
         function [returnData, resp] = resolve(obj, path, varargin)
-            [returnData, resp] = obj.resolvePath(flywheel.model.ResolverInput('path', split(path, '/')), varargin{:});
+            [returnData, resp] = obj.resolvePath(flywheel.model.ResolverInput('path', strsplit(path, '/')), varargin{:});
         end
 
         function [returnData, resp] = lookup(obj, path, varargin)
-            [returnData, resp] = obj.lookupPath(flywheel.model.ResolverInput('path', split(path, '/')), varargin{:});
+            [returnData, resp] = obj.lookupPath(flywheel.model.ResolverInput('path', strsplit(path, '/')), varargin{:});
         end
 
         function url = fileUrl(obj, path)

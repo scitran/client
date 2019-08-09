@@ -1,9 +1,14 @@
-# Scitran client software for Matlab
+# SCITRAN
+Utilities to interact with Flywheel from the client side using the Matlab SDK.
 
-This repository includes Matlab utilities to work with the [Flywheel-SDK](https://flywheel.io). 
+## Installation instructions
+See wiki in https://github.com/vistalab/scitran/wiki/Installation
 
-See the [scitran client wiki page](https://github.com/vistalab/scitran/wiki) for how to download and use this code.
+## Usage
+See wiki in https://github.com/vistalab/scitran/wiki
 
-
+## TO-DO
+1. Generalize and merge functions in branch garifromafqDim
+2. Add it to the wiki 
 
 

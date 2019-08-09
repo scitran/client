@@ -40,8 +40,8 @@ sameSession = st.lookup(lookupString);
 
 %% Look up the subject for this first session
 
-subjectCode = thisSession.subject.code; 
-lookupString = fullfile(myGroup.id,projectLabel,subjectCode);
+subjectLabel = thisSession.subject.label; 
+lookupString = fullfile(myGroup.id,projectLabel,subjectLabel);
 subject = st.lookup(lookupString);
 disp(subject)
 

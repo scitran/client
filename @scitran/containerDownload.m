@@ -1,8 +1,8 @@
-function destination = containerDownload(st,containertype,containerid,varargin)
+function destination = containerDownload(st,container,varargin)
 % Download a Flywheel container to a local tar-file
 %
 % Syntax
-%  tarFile = scitran.containerDownload(containerType, containerID, varargin)
+%  tarFile = scitran.containerDownload(container, varargin)
 %
 % Description
 %  When the tar-file is unpacked, the directory structure reflects the
@@ -41,70 +41,48 @@ function destination = containerDownload(st,containertype,containerid,varargin)
 %{
   st = scitran('stanfordlabs');
   acq = st.search('acquisition',...
-    'project label contains','SOC',...
-    'session label exact','stimuli');
-  id = idGet(acq{1},'data type','acquisition');
-  fName = st.containerDownload(id);  
-  delete(fName);
+      'project label contains','SOC',...
+      'session label exact','stimuli');
+  st.containerDownload(acq{1});
+%}
+%{
+  project = st.lookup('wandell/SOC ECoG (Hermes)');
+  session = project.sessions.findOne('label=stimuli');
+  acq = session.acquisitions();
+  st.containerDownload(acq{1});
 %}
 
-%% Parse inputs
+%% Parse
+
 varargin = stParamFormat(varargin);
 
 p = inputParser;
-p.addRequired('containertype',@ischar);
-p.addRequired('containerid',@ischar);
+p.addRequired('st',@(x)(isa(x,'scitran')));
+vFunc = @(x)(strncmp(class(x),'flywheel',8));
+p.addRequired('container',vFunc);
+p.addParameter('destination','',@ischar);
 
-% Param/value pairs
-p.addParameter('destination','',@ischar)
+p.parse(st,container,varargin{:});
 
-p.parse(containertype,containerid,varargin{:});
+cType = strsplit(class(container),'.');
 
-containerType = p.Results.containertype;
-id            = p.Results.containerid;
-destination   = p.Results.destination;
+if strncmp(cType{3},'Search',6)
+    containerC{1} = container;
+    containerC = st.search2container(containerC);
+    container = containerC{1};
+end
 
+destination = p.Results.destination;
 if isempty(destination)
-    destination = fullfile(pwd,sprintf('Flywheel-%s-%s.tar',containerType,id));
+    destination = fullfile(pwd,sprintf('%s-%s.tar',container.label,container.id));
 end
 
-%% Make the flywheel sdk call
+%% If the container is a search response, convert it to an container
 
-% Sets up the parameters for creating a ticket and doing the download
-% as a tar file.
-switch(containerType)
-    case 'project'
-        params = struct('optional', false, ...
-            'nodes', ...
-            { struct('level', 'project', 'id', id) });
-    case 'session'
-        % Download a session as a tar file
-        params = struct('optional', false, ...
-            'nodes', ...
-            { struct('level', 'session', 'id', id) });
-        
-    case 'acquisition'
-        % An acquisition within a session
-        params = struct('optional', false, ...
-            'nodes', ...
-            { struct('level', 'acquisition', 'id', id) });
-                
-    % These might be implemented correctly.  But ...
-    case 'collection'
-        disp('collection NYI')
-    case 'analysisacquisition'
-        disp('analysisacquisition NYI')
-    case 'analysiscollection'
-        disp('analysiscollection NYI')
-    otherwise
-        error('Unknown container download type %s \n',containerType);
-end
+status = container.downloadTar(destination);
 
-% Get the ticket and then do the download
-summary     = st.fw.createDownloadTicket(params);
-destination = st.fw.downloadTicket(summary.ticket, destination);
+if isempty(status), error('Download error'); end
 
-if isempty(destination), error('Download error'); end
 
 end
 

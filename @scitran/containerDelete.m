@@ -1,11 +1,10 @@
-function containerDelete(st, object, varargin )
+function containerDelete(st, container, varargin )
 % Deletes an object from a Flywheel site.  
 % 
-%  st.containerDelete(object, varargin)
-%  st.containerDelete([],'container type',ct,'container id',id);
+%  st.containerDelete(container, varargin)
 %
 % Required
-%    object - a Flywheel search response or List return
+%  container - a Flywheel container
 %
 % Key/value pairs inputs
 %    containerId - string that identifies the Flywheel object
@@ -27,33 +26,25 @@ function containerDelete(st, object, varargin )
 %%
 p = inputParser;
 
-p.addRequired('object');
-
-vFunc = @(x)(ismember(x,{'project','session','acquisition','collection'}));
-p.addParameter('containerType', vFunc);
-p.addParameter('containerID',@ischar);
-p.addParameter('query',false,@islogical);
+p.addRequired('container');
+p.addParameter('query',false,@islogical);  % Check before deleting a project
 
 % Parse 
-p.parse(object,varargin{:});
+p.parse(container,varargin{:});
 
-% We can allow people to send in an empty object if they provide the
-% container type and id as parameters.
-containerType  = p.Results.containerType;
-containerID    = p.Results.containerID;
-query          = p.Results.query;
+query = p.Results.query;
 
-[containerID, containerType] = st.objectParse(object,containerType, containerID);
+[containerID, containerType] = st.objectParse(container);
 
 %% Delete
 
 switch containerType
     case 'project'
         % If the project contains sessions, or the query flag is true, we
-        % ask the user.
+        % ask the user before deleting
         sessions = st.fw.getProjectSessions(containerID);
         if ~isempty(sessions) ||  query
-            project = st.containerInfoGet('project',containerID);
+            project = st.containerGet(containerID);
             prompt = sprintf('Delete project named "%s": (y/n) ',project.label);
             str = input(prompt,'s');
             if ~isequal(lower(str(1)),'y')
