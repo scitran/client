@@ -56,7 +56,7 @@ function status = stExamplesShow(theFunction,varargin)
 %% Parse input
 p = inputParser;
 if contains(theFunction,'.')
-    functionParts = split(theFunction,'.');
+    functionParts = strsplit(theFunction,'.');
     theFunction = ['@',functionParts{1},filesep,functionParts{2}];
     fprintf('\n*** Showing examples for %s ***\n',theFunction);
 end

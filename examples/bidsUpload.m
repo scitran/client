@@ -178,7 +178,7 @@ for ii=1:nSessions
     for jj=1:length(sessionLabels)
         % Find the bids sessionLabel that matches
         if strcmp(sessions{ii}.label,sessionLabels{jj})
-            labels = split(sessionLabels{jj},'-');
+            labels = strsplit(sessionLabels{jj},'-');
             whichSubject = uint8(str2double(labels{2}));  % Skip sub-
             whichSession = uint8(str2double(labels{4}));  % Skip ses-
             

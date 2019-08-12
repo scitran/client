@@ -82,15 +82,26 @@ switch containerType
         end
     case {'file'}
         for ii=1:nSrch
+            result{ii} = srch{ii}.parent.getFile(srch{ii}.file.name);
+        end
+        %{
+        % Code getting more efficient.  Delete this.
             id = srch{ii}.parent.id;
             parent = st.fw.get(id); containerType = parent.containerType;
             switch containerType
+                case 'project'
+                    % result{ii} = st.fw.getProjectFileInfo(srch{ii}.parent.id,srch{ii}.file.name);
                 case 'acquisition'
-                    result{ii} = st.fw.getAcquisitionFileInfo(id,srch{ii}.file.name);
+                    % Maybe we should be using, as per JE email on
+                    % Feb. 12, 2019,
+                    % result{ii} = srch{ii}.parent.getFile(srch{ii}.file.name)
+                    % This will permit result{ii}.download('...');
+                    %
+                    result{ii} = st.fw.getAcquisitionFileInfo(srch{ii}.parent.id,srch{ii}.file.name);
                 otherwise
                     disp('NYI');
             end
-        end
+        %}
     otherwise
         error('Unknown container type %s\n',containerType);
 end

@@ -34,29 +34,15 @@ analysis = st.search('analysis',...
 fprintf('** Analysis:\nlabel: %s\nid: %s\n', ...
     analysis{1}.analysis.label,analysis{1}.analysis.id);
 
-% Readable way to get the analysis is
-[parentID, containerType] = st.objectParse(analysis{1}.session);
-
-%% This gets the information container of the analysis 
-
-analysis = st.list('sessionanalyses',analysis{1}.analysis.id);
-
-%%
-thisAnalysis = st.list('analyses',analysis{1}.analysis.id);
-
-%
-stPrint(thisAnalysis,'label','');
-
-%% Apparently, we need to have a destination for the file.
+%% 
 fName = fullfile(stRootPath,'local','lh.pial.obj');
 st.fileDownload('lh.pial.obj',...
-    'container id',id,...
+    'container id',analysis{1}.analysis.id,...
     'container type','analysis', ...
     'destination',fName);
 
 if exist(fName,'file'), fprintf('File downloaded to %s\n',fName); end
 
-%%
 fprintf('Deleting %s\n',fName)
 delete(fName);
 

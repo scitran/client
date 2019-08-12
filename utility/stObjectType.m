@@ -56,7 +56,7 @@ a = s.acquisitions.findFirst; oType = stObjectType(a)
 
 % Find the text after the last period.  That tells us the type of
 % object this is in the flywheel.model world.
-tmp = split(lower(class(object)),'.');
+tmp = strsplit(lower(class(object)),'.');
 objectType = tmp{end};
 searchType = '';
 

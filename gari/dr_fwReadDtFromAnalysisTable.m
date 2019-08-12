@@ -28,10 +28,11 @@ height(t)
 
 
 
-labelContains = 'AllV03';
+labelContains = 'v02b:v3.0.7';
 state='complete'
-t = JL(JL.state==state & contains(string(JL.label), labelContains),:);
-t = JL(contains(string(JL.label), labelContains),:);
+t = JL(JL.state==state & JL.gearName==gearName & ...
+       JL.gearVersion==gearVersion & ...
+       contains(string(JL.label), labelContains),:);
 height(t)
 
 

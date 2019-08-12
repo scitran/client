@@ -1,5 +1,4 @@
-function localFiles = dr_fwDownloadFileFromZip(st, collectionName, ...
-                                            zipNameContains, varargin)
+function localFiles = dr_fwDownloadFileFromZip(varargin)
 %
 % Add information to find and download from a zip. 
 % If there are more than one analysis with the same name or
@@ -27,57 +26,60 @@ function localFiles = dr_fwDownloadFileFromZip(st, collectionName, ...
 % Examples:
 %{
 clear all; close all; clc;
-st = scitran('stanfordlabs'); st.verify
-dr_fwDownloadFileFromZip(st, '00_VIS', 'AFQ_Output_', ...
-                         'analysisLabelContains', 'Allv01', ...
-                         'filesContain'         , '_wmMask.mif', ...
-                         'downloadTo'           , '/Users/glerma/Downloads/Allv01', ...
-                         'showListSession'      , false)
+st                    = scitran('stanfordlabs'); st.verify
+colecName             = 'BCBL_BERTSO';
+% analysisLabelContains = 'AllV03:v3.0.6:10LiFE:min20max250:0.1cutoff:Analysis b2000';
+analysisLabelContains = 'v02b:';
+zipNameContains       = 'AFQ_Output_';
+% listOfFilesContain    = {'MoriGroups_clean','_wmMask.mif','_wmMask_dilated.mif', ...
+%                              '_fa.mif', 'b0.nii.gz','_L.mat','_R.mat'};
+% listOfFilesContain    = {'MoriGroups_clean', 'b0.nii.gz', '_L.mat','_R.mat'};    
+listOfFilesContain    = {'_fa.mif','_CLIPPED_'};
+% listOfFilesContain    = {'_fa.mif', '_dt.mif'};
+downloadDir           = '/Users/glerma/Downloads/v3.0.7';
+
 %}
-% 'MoriGroups_clean', '_wmMask', '_fa.mif'
-%
-% Make it work with multiple analysis, right now will take the last one
-% 
 % 
 % GLU Vistalab, 2018
-%
-% See also:  
 
 
 %% 0.- Parse inputs
 p = inputParser;
+p.addParameter('serverName'           , 'stanfordlabs' , @ischar);
+p.addParameter('collectionName'       , 'tmpCollection', @ischar);
+p.addParameter('gearName'             , 'afq-pipeline' , @ischar);
+p.addParameter('gearVersion'          , '3.0.7'        , @ischar);
 
-addRequired(p, 'st'             );
-addRequired(p, 'collectionName' );
-addRequired(p, 'zipNameContains');
+p.addParameter('downloadWholeZip'     , false            , @islogical);
+p.addParameter('unzipAll'             , false            , @islogical);
+p.addParameter('analysisLabelContains', 'v02b:'          , @ischar);
+p.addParameter('zipNameContains'      , 'AFQ_Output_'    , @ischar);
+p.addParameter('listOfFilesContain'   , {'afq'}          , @iscell);
+p.addParameter('downloadTo'           , '/Users/glerma/Downloads', @ischar);
+p.addParameter('showListSession'      , false            , @islogical);
 
-addOptional(p, 'downloadWholeZip'     , false            , @islogical);
-addOptional(p, 'unzipAll'             , false            , @islogical);
-addOptional(p, 'analysisLabelContains', 'Analysis'       , @ischar);
-addOptional(p, 'filesContain'         , {'afq'}          , @iscell);
-addOptional(p, 'downloadTo'           , '/Users/glerma/Downloads', @ischar);
-addOptional(p, 'showListSession'      , false            , @islogical);
-parse(p,st,collectionName,zipNameContains,varargin{:});
+parse(p, varargin{:});
+serverName           = p.Results.serverName;
+collectionName       = p.Results.collectionName;
+gearName             = p.Results.gearName;
+gearVersion          = p.Results.gearVersion;
 
 downloadWholeZip     = p.Results.downloadWholeZip;
 unzipAll             = p.Results.unzipAll;
 analysisLabelContains= p.Results.analysisLabelContains;
-filesContain         = p.Results.filesContain;
+zipNameContains      = p.Results.zipNameContains;
+filesContain         = p.Results.listOfFilesContain;
 downloadTo           = p.Results.downloadTo;
 showListSession      = p.Results.showListSession;
 
 %% 1.- Obtain the collection
-
+st = scitran(serverName);
+st.verify
 % Connect to the collection, verify it and show the number of sessions for verification
 % FC: obtain collection ID from the collection name
-collectionID = '';
-collections  = st.fw.getAllCollections();
-for nc=1:length(collections)
-    if strcmp(collections{nc}.label, collectionName)
-        collectionID = collections{nc}.id;
-    end
-end
 
+cc            = st.search('collection','collection label exact',collectionName);
+collectionID  = cc{1}.collection.id;
 if isempty(collectionID)
     error('Collection %s could not be found on the server %s (verify permissions or the collection name).', collectionName, st.instance)
 else
@@ -95,6 +97,7 @@ else
 end
 
 %% 2.- Download the files
+localFiles = {};
 for ns=1:length(sessionsInCollection)
     % Get info for the session
     thisSession = st.fw.getSession(idGet(sessionsInCollection{ns}));

@@ -13,7 +13,7 @@ else
 end
 
 str    = class(thisData);
-cArray = split(str,'.');
+cArray = strsplit(str,'.');
 
 modelName = lower(cArray{end});
 
