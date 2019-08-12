@@ -123,7 +123,7 @@ switch gearName
         % This changes to defaults will affect to all projects
         configDefault                     = config;
         configDefault.ET_numberFibers     = 400000;
-        configDefault.life_num_iterations = 250;  % Before 250, 10
+        configDefault.life_num_iterations = 10;  % Before 250, 10
         configDefault.ET_runET            = true;
         configDefault.life_runLife        = true;
         configDefault.eddyCorrect         = -1;
@@ -132,16 +132,17 @@ switch gearName
 
         configDefault.mrtrix_useACT       = true;
         configDefault.mrtrix_autolmax     = false;
-        configDefault.mrtrix_lmax         = 8;
-        configDefault.mrtrix_multishell   = false;     
-        configDefault.track_faThresh      = 0.2 % 0.05;  % 0.1;  
+        configDefault.mrtrix_lmax         = 6;
+        configDefault.mrtrix_multishell   = true;     
+        configDefault.track_faThresh      = 0.05; % 0.2 % 0.05;  % 0.1;  
         configDefault.ET_minlength        = 20;   
         configDefault.ET_maxlength        = 250; 
         configDefault.track_nfibers       = 1000000;
 
         % Add common label for the analysis based on parametrs
         % labelStr = 'AllV03:v3.0.6:10LiFE:min20max250:0.1cutoff:';
-        labelStr = 'min20max250:0.05cutoff:v3.0.2';
+        % labelStr = 'min20max250:0.05cutoff:v3.0.2';
+        labelStr = 'v.3.0.7.min20max250:0.05cutoff:';
         
         
         % CAREFUL, REMOVE, this is for the 1 subject test
