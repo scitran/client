@@ -6,8 +6,7 @@ function acquMD = dr_fwObtainAcquMD(st, thisSession, thisAnalysis, collectionNam
 % Get info for the project the session belong to
 thisProject = st.fw.getProject(thisSession.project);
 
-
-
+tmpCollectionID='5d4c9b022d28760046707931';
 %{
     Now we need to find the files used in this analysis, and the
     acquisition parameters. Usually this could be solved with the gear
@@ -203,6 +202,32 @@ switch thisGearName
                                             fullfile(afqDimPath,'local','tmp',bvalName)));
                     end
                 end                  
+            case {'HCP_Depression'}
+                % The dwi files have information, but they do not have the same
+                % fields as in HCP for example. And the bval files have no
+                % information associated, this is what I will do:
+                % 1.- Read the info in the dwi file, for both the b1000 and b2000
+                % 2.- Take the HCP information template (which is the same as
+                %     the latest dcm2niix generates in FW) and edit manually
+                %     with the correct information
+                % 3.- Write the information in the corresponding bval files
+                % 4.- Read and return the information to the main function
+                acqu = dr_fwSearchAcquAnalysis(st,thisSession,'acquisition','Diffusion','last');
+                if isempty(acqu)
+                    fprintf('No analysis found, adding session to the tmpCollection...\n')
+                    dr_fwAddSession2tmpCollection(st, thisSession)
+                else
+                    bvalName = dr_fwFileName(acqu, 'bval');
+                    if isempty(bvalName)
+                        fprintf('No analysis found, adding session to the tmpCollection...\n')
+                        dr_fwAddSession2tmpCollection(st, thisSession)
+                    else
+                        bvalStruct = st.fw.getAcquisitionFileInfo(acqu.id, bvalName);
+                        bvalStruct = bvalStruct.info.struct;
+                        bval = dlmread(st.fw.downloadFileFromAcquisition(acqu.id, bvalName, ...
+                            fullfile(stRootPath,'local','tmp',bvalName)));
+                    end
+                end
             otherwise
                 error(sprintf('Project %s not recognized', thisProject.label))
         end
@@ -210,7 +235,7 @@ switch thisGearName
         acquMD = struct2table(bvalStruct, 'AsArray', true);
         if isempty(acquMD)
             warning('No acquMD found, added NaN acquMD and added the session to the tmpCollection, so that the info can be updated.')
-            tmp    = load(fullfile(afqDimPath,'DATA','defaults','acquMD999.mat'));
+            tmp    = load(fullfile(stRootPath,'gari','DATA','defaults','acquMD999.mat'));
             acquMD = struct2table(tmp.acquMD999, 'AsArray', true);
             % add session to collection
             % st.fw.addSessionsToCollection(tmpCollectionID, idGet(thisSession])
@@ -236,7 +261,7 @@ switch thisGearName
         assert(isequal(length(bval), length(bvalnozeros)+length(bvalzeros)), ...
             'bval file: not possible to separate zero and non zero values.')
         if length(scanbValue) > 1
-            error('There are more than 1 bValues in the .bval file.')
+%            error('There are more than 1 bValues in the .bval file.')
         elseif length(scanbValue) == 0
             error('There are no b values in the .bval file.')
         end
