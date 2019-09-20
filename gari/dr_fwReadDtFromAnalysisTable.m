@@ -39,7 +39,7 @@ height(t)
 
 
 dt = dr_fwReadDtFromAnalysisTable(serverName, t, measurement);
-save(fullfile('/home/glerma/tmp', ...
+save(fullfile(stRootPath,'local','tmp', ...
               sprintf('AllV01_HCP_Depression_%s.mat',measurement)), 'dt')
 
 

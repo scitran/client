@@ -130,19 +130,19 @@ switch gearName
         configDefault.maxDist             = 4;
         configDefault.maxLen              = 4;
 
-        configDefault.mrtrix_useACT       = true;
-        configDefault.mrtrix_autolmax     = false;
+        configDefault.mrtrix_useACT       = false;
+        configDefault.mrtrix_autolmax     = true;
         configDefault.mrtrix_lmax         = 6;
         configDefault.mrtrix_multishell   = true;     
         configDefault.track_faThresh      = 0.05; % 0.2 % 0.05;  % 0.1;  
         configDefault.ET_minlength        = 20;   
         configDefault.ET_maxlength        = 250; 
-        configDefault.track_nfibers       = 1000000;
+        configDefault.track_nfibers       = 400000;
 
         % Add common label for the analysis based on parametrs
         % labelStr = 'AllV03:v3.0.6:10LiFE:min20max250:0.1cutoff:';
         % labelStr = 'min20max250:0.05cutoff:v3.0.2';
-        labelStr = 'v.3.0.7.min20max250:0.05cutoff:';
+        labelStr = 'v.3.0.7:min20max250:0.05cutoff:';
         
         
         % CAREFUL, REMOVE, this is for the 1 subject test
@@ -343,7 +343,7 @@ for ns=1:length(sessionsInCollection)
                             thisJob = struct('gearId', thisGearId, ...
                                              'inputs', inputs, ...
                                              'config', config);
-                            body    = struct('label', [labelStr 'Analysis ' gearName '  bVal: ' bval{:} ], ...
+                            body    = struct('label', [labelStr 'Analysis ' gearName '_bVal: ' bval{:} ], ...
                                              'job'  , thisJob);      
                             % Launch the job
                             st.fw.addSessionAnalysis(idGet(thisSession), body);
