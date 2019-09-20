@@ -16,7 +16,8 @@ collectionName = 'tmpCollection';
 % collectionName = 'ILLITERATES';
 % collectionName = 'BCBL_BERTSO';
 % collectionName = 'HCPTEST';
-collectionName = 'Mareike';
+% collectionName = 'Mareike';
+
 
 % Select GEAR, VERSION and DEFAULTS
 % gearName = 'fslmerge'            ; gearVersion    = '0.1.1';
