@@ -12,7 +12,8 @@ function selected = stSelect(containers,slot,matchVal,varargin)
 % Optional key/value pairs
 %  contains - Boolean to use contains matchVal rather than exact match
 %  infoval  - Fields within the info slot to check
-%
+%  nocell   - If single object and set to true, return the object
+%             Otherwise, the cell array is returned
 % Returns
 %  selected - The files that matched
 %
@@ -37,9 +38,10 @@ p.addRequired('containers',@iscell);
 p.addRequired('slot',@ischar);
 p.addRequired('matchVal',@ischar);
 
-p.addParameter('contains',true,@islogical);    % Contains or Exact match.
+p.addParameter('contains',true,@islogical);  % Contains or Exact match.
 p.addParameter('infoval','',@ischar);        % Info field to match
 p.addParameter('infofield','',@ischar);      % Info field value to match
+p.addParameter('nocell',false,@islogical);    % If single result and set, return the object
 
 p.parse(containers,slot,matchVal,varargin{:}); %,varargin{:});
 
@@ -47,6 +49,7 @@ matchVal   = stParamFormat(matchVal);
 contains   = p.Results.contains;
 infoField  = p.Results.infofield;
 infoVal    = p.Results.infoval;
+nocell     = p.Results.nocell;
 
 %%  Check if the file type and the critical info field matches the requirements
 
@@ -105,5 +108,14 @@ for jj = 1:length(containers)
             end
         end
     end
+    
+end
+
+% There is only one object and the user wanted the object, not a cell
+% array with one object.
+if length(selected) == 1 && nocell
+    tmp = selected;
+    selected = tmp{1};
+end
     
 end
