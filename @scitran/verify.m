@@ -56,7 +56,7 @@ try
     if verbose && status && connection == 1
         thisVersion = obj.fw.getVersion;
         fprintf('Verified SDK-Flywheel connection.\nSDK version %s\n',thisVersion.release);
-        fprintf('Flywheel release %s\n',thisVersion.flywheelRelease);
+        fprintf('Flywheel release %s\n',thisVersion.release);
 
         % Proceed through additional verifications
         if esearch
