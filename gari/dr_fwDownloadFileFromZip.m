@@ -25,28 +25,38 @@ function localFiles = dr_fwDownloadFileFromZip(varargin)
 %
 % Examples:
 %{
-clear all; close all; clc;
-st                    = scitran('stanfordlabs'); st.verify
-colecName             = 'BCBL_BERTSO';
-% analysisLabelContains = 'AllV03:v3.0.6:10LiFE:min20max250:0.1cutoff:Analysis b2000';
-analysisLabelContains = 'v02b:';
-zipNameContains       = 'AFQ_Output_';
-% listOfFilesContain    = {'MoriGroups_clean','_wmMask.mif','_wmMask_dilated.mif', ...
-%                              '_fa.mif', 'b0.nii.gz','_L.mat','_R.mat'};
-% listOfFilesContain    = {'MoriGroups_clean', 'b0.nii.gz', '_L.mat','_R.mat'};    
-listOfFilesContain    = {'_fa.mif','_CLIPPED_'};
-% listOfFilesContain    = {'_fa.mif', '_dt.mif'};
-downloadDir           = '/Users/glerma/Downloads/v3.0.7';
 
-    TODOEDITdr_fwDownloadFileFromAnalysis('serverName',serverName, ...
+clear all; close all; clc;
+% st                    = scitran('stanfordlabs'); st.verify
+serverName            = 'stanfordlabs';
+% collectionName             = 'BCBL_BERTSO';
+collectionName = 'DefiningWMTractography';
+gearName       = 'afq-pipeline';
+gearVersion    =  '3.0.7';
+
+% analysisLabelContains = 'AllV03:v3.0.6:10LiFE:min20max250:0.1cutoff:Analysis b2000';
+analysisLabelContains = 'v.3.0.7';
+
+zipNameContains       = 'AFQ_Output_';
+
+% listOfFilesContain    = {'MoriGroups_clean','_wmMask.mif','_wmMask_dilated.mif','_fa.mif', 'b0.nii.gz','_L.mat','_R.mat'};
+% listOfFilesContain    = {'MoriGroups_clean', 'b0.nii.gz', '_L.mat','_R.mat'};    
+% listOfFilesContain    = {'_fa.mif','_CLIPPED_'};
+% listOfFilesContain    = {'_fa.mif', '_dt.mif'};
+listOfFilesContain    = {'_L.nii.gz', '_R.nii.gz'};
+
+downloadTo           = '/Users/glerma/Downloads/v3.0.7';
+
+    dr_fwDownloadFileFromZip('serverName',serverName, ...
                                   'collectionName',collectionName, ...
                                   'gearName', gearName, ...
                                   'gearVersion', gearVersion, ...
                                   'analysisLabelContains', analysisLabelContains, ...
-                                  'fileNameContains', fileNameContains, ...
-                                  'downloadBase', downloadBase, ...
-                                  'unzipFile', false, ...
-                                  'showSessions', false)
+                                  'zipNameContains' ,zipNameContains,...
+                                  'listOfFilesContain', listOfFilesContain, ...
+                                  'downloadTo', downloadTo, ...
+                                  'unzipAll', false, ...
+                                  'showListSession', false)
 
 %}
 % 
@@ -60,9 +70,9 @@ p.addParameter('collectionName'       , 'tmpCollection', @ischar);
 p.addParameter('gearName'             , 'afq-pipeline' , @ischar);
 p.addParameter('gearVersion'          , '3.0.7'        , @ischar);
 
+p.addParameter('analysisLabelContains', 'v02b:'          , @ischar);
 p.addParameter('downloadWholeZip'     , false            , @islogical);
 p.addParameter('unzipAll'             , false            , @islogical);
-p.addParameter('analysisLabelContains', 'v02b:'          , @ischar);
 p.addParameter('zipNameContains'      , 'AFQ_Output_'    , @ischar);
 p.addParameter('listOfFilesContain'   , {'afq'}          , @iscell);
 p.addParameter('downloadTo'           , '/Users/glerma/Downloads', @ischar);
@@ -78,7 +88,7 @@ downloadWholeZip     = p.Results.downloadWholeZip;
 unzipAll             = p.Results.unzipAll;
 analysisLabelContains= p.Results.analysisLabelContains;
 zipNameContains      = p.Results.zipNameContains;
-filesContain         = p.Results.listOfFilesContain;
+listOfFilesContain   = p.Results.listOfFilesContain;
 downloadTo           = p.Results.downloadTo;
 showListSession      = p.Results.showListSession;
 
@@ -107,8 +117,8 @@ else
 end
 
 %% 2.- Download the files
-localFiles = {};
-for ns=1:length(sessionsInCollection)
+    localFiles = {};
+for ns=2%1:length(sessionsInCollection)
     % Get info for the session
     thisSession = st.fw.getSession(idGet(sessionsInCollection{ns}));
     % Get info for the project the session belong to
@@ -143,12 +153,12 @@ for ns=1:length(sessionsInCollection)
         zipInfo   = myAnalysis.getFileZipInfo(zipName);
         % Obtain all the members we want to obtain
         fileNames = {};
-        for nf = 1:length(filesContain)
-            tmpNames  = dr_fwFileName(zipInfo, filesContain{nf});
+        for nf = 1:length(listOfFilesContain)
+            tmpNames  = dr_fwFileName(zipInfo, listOfFilesContain{nf});
             fileNames = [fileNames, tmpNames];
         end
         % Download the files to local
-        if isempty(filesContain)
+        if isempty(listOfFilesContain)
             warning('No file members for this zip. Check options.\n')
         else
             % Create the download dir with the analysis name
