@@ -1,5 +1,5 @@
 function dt = dr_fwLaunchJobs(serverName, collectionName, gearName, gearVersion)
-% .
+% GLU 2019 Vista Lab, garikoitz@gmail.com
 
 
 % Example inputs to make it work
@@ -18,8 +18,8 @@ serverName     = 'stanfordlabs';
 % collectionName = 'HCPTEST';
 % collectionName = 'Mareike';
 % collectionName = 'scanner_comparison';
-collectionName = 'DefiningWMTractography';
-% collectionName = 'HCP-DES';
+% collectionName = 'DefiningWMTractography';
+collectionName = 'HCP-DES';
 
 
 % Select GEAR, VERSION and DEFAULTS
@@ -505,6 +505,16 @@ for ns=1:length(sessionsInCollection)
                         config.dwOutMm_2               =  1.8;
                         config.dwOutMm_3               =  1.8;
                         config.rotateBvecsWithCanXform =  1; 
+                        % Make a test with clip2roi=0 and then cleaning tracts more
+                        config.clip2rois               = 0;
+                        config.cleanIter               = 5;
+                        config.maxDist                 = 3;
+                        config.maxLen                  = 3;
+                        config.mrtrix_autolmax	       = false;
+                        config.mrtrix_multishell       = true;
+                        config.track_nfibers	       = 1000000;
+                        
+                        
                         
                         % fsAnalysis = dr_fwSearchAcquAnalysis(st, thisSession, 'analysis', 'freesurfer-recon-all:0.1.4 analysis','last');
                         % It is not finding the file!!!!!!! Let's look in the acqu
@@ -540,7 +550,7 @@ for ns=1:length(sessionsInCollection)
                                 thisJob = struct('gearId', thisGearId, ...
                                                      'inputs', inputs, ...
                                                      'config', config);
-                                body    = struct('label', [labelStr 'X flipped Allv02b: Analysis ' gearName], ...
+                                body    = struct('label', [labelStr 'X flipped Allv03: clip false 3-3-5 Analysis ' gearName], ...
                                                      'job'  , thisJob);
                                 % Launch the job
                                 st.fw.addSessionAnalysis(idGet(thisSession), body);
@@ -3155,8 +3165,8 @@ end
 %{
     clear all; clc; 
     serverName     = 'stanfordlabs';
-    collectionName = 'ComputationalReproducibility';
-    collectionName = 'ILLITERATES';
+    % collectionName = 'ComputationalReproducibility';
+    collectionName = 'HCP-DES';
 
     % GET ALL JOBS FROM COLLECTION
     JL = dr_fwCheckJobs(serverName, collectionName);
@@ -3164,18 +3174,14 @@ end
     % FILTER
     date_After  = '06-Feb-2018 00:00:00';  % neuro-detect KO ... I forgot to change the name in some of them
 
-    gearName    = 'acpc-anat';
-    gearVersion = '1.0.3';
-    gearName    = 'mrtrix3preproc';
-    gearVersion = '1.0.2';
-    gearName    = 'dwi-flip-bvec';
-    gearVersion = '1.0.0';
-	gearName    = 'freesurfer-recon-all';
-	gearVersion = '0.1.4';
-    gearName    = 'afq-pipeline';,'afq-pipeline-3'
-    gearVersion = '3.0.0';
-    gearName    = 'neuro-detect';
-    gearVersion = '0.2.1';
+    % gearName = 'acpc-anat';gearVersion = '1.0.3';
+    % gearName = 'mrtrix3preproc';gearVersion = '1.0.2';
+    % gearName = 'dwi-flip-bvec';gearVersion = '1.0.0';
+	% gearName = 'freesurfer-recon-all';gearVersion = '0.1.4';
+    gearName = 'afq-pipeline'; gearVersion = '3.0.7';
+    % gearName = 'neuro-detect';gearVersion = '0.4.1';
+    % gearName = 'fslmerge'            ; gearVersion    = '0.1.2';
+
 
 
     state = 'complete' ; complete  = JL(JL.state==state & JL.gearName==gearName & JL.gearVersion==gearVersion & JL.JobCreated>date_After,:);
