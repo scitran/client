@@ -1,5 +1,5 @@
 function selected = stSelect(containers,slot,matchVal,varargin)
-% Select containers from a cell array of containers that match a parameter
+% Return containers from a cell array of containers that match a slots
 %
 % Syntax:
 %  selected = stSelect(container,slot,matchVal,varargin)
@@ -15,7 +15,7 @@ function selected = stSelect(containers,slot,matchVal,varargin)
 %  nocell   - If single object and set to true, return the object
 %             Otherwise, the cell array is returned
 % Returns
-%  selected - The files that matched
+%  selected - The containers that matched the slot value
 %
 % ZL/Wandell Vistasoft 2018
 %
