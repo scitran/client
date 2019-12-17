@@ -1,5 +1,5 @@
 function selected = stSelect(containers,slot,matchVal,varargin)
-% Return containers from a cell array of containers that match a slots
+% Return containers from a cell array of containers that match a slot
 %
 % Syntax:
 %  selected = stSelect(container,slot,matchVal,varargin)
