@@ -1,6 +1,8 @@
 function [cmd, status, result] = docker(~,docker)
 % Run the Docker Container with the parameters defined in the docker struct
 %
+%  ** DEPRECATED **
+%
 %  [cmd, status, result] = st.docker(docker)
 %
 % Inputs - docker is a struct with the following fields
@@ -14,6 +16,9 @@ function [cmd, status, result] = docker(~,docker)
 % See also:  stDockerCommand
 %
 % BW/LMP Scitran Team, 2016
+
+%%
+warning('%s command is deprecated',mfile);
 
 %% Check input arguments
 p = inputParser;
