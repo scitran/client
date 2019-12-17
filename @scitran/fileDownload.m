@@ -14,6 +14,7 @@ function destination = fileDownload(st,file,varargin)
 %
 % Optional key/val pairs
 %  destination:   Full path to the local file (default is in tempdir)
+%  overwrite:     Over write if the file exists (logical, default false)
 %  unzip:         Unzip the download and delete the zip file
 %
 % Return
@@ -52,6 +53,7 @@ varargin = stParamFormat(varargin);
 
 p = inputParser;
 
+p.addRequired('st',@(x)(isa(x,'scitran')));
 % Either a struct or a char string
 vFunc = @(x)(isa(x,'flywheel.model.SearchResponse') || ...
              isa(x,'flywheel.model.FileEntry') || ...
@@ -59,21 +61,19 @@ vFunc = @(x)(isa(x,'flywheel.model.SearchResponse') || ...
 p.addRequired('file',vFunc);
 
 % Param/value pairs
-% p.addParameter('containertype','',@ischar); % If file is string, required
-% p.addParameter('containerid','',@ischar);   % If file is string, required
 p.addParameter('destination','',@ischar);
 p.addParameter('unzip',false,@islogical);
+p.addParameter('overwrite',false,@islogical);
 
-p.parse(file,varargin{:});
+p.parse(st,file,varargin{:});
 
-% containerType = p.Results.containertype;
-% containerID   = p.Results.containerid;
+% Fill up the variables from Results
 file          = p.Results.file;
 destination   = p.Results.destination;
+overwrite     = p.Results.overwrite;
 zipFlag       = p.Results.unzip;
 
 %% Set up the Flywheel SDK method parameters. 
-% These are the filename and container information.
 
 if isa(file,'flywheel.model.SearchResponse')
     cFile{1} = file;   % Make it a cell
@@ -89,37 +89,11 @@ end
 
 %% Call the correct Flywheel SDK download method
 
-file.download(destination);
-
-%{
-% Perhaps we could call the analysis download too.  But I don't understand
-% the syntax yet (BW).
-%  fw.downloadAnalysisOutputsByFilename
-%
-% In 4.4.0 there should be a simpler unified method based on the file
-% itself.  values = file.read(), or file.download()
-% Or if you have the container acquisition.readfile(fname)
-%
-switch lower(fileContainerType)
-    case 'project'
-        st.fw.downloadFileFromProject(containerID,file.name,destination);
-    case 'session'
-        st.fw.downloadFileFromSession(containerID,file.name,destination);
-    case 'acquisition'
-        st.fw.downloadFileFromAcquisition(containerID,file.name,destination);
-    case 'collection'
-        st.fw.downloadFileFromCollection(containerID,file.name,destination);
-    case 'analysis'
-        st.fw.downloadOutputFromAnalysis(containerID, file.name, destination);
-    case 'fileentry'
-        % where result is an individual file search result:
-        fileEntry = result.parent.getFile(result.file.name);
-        fileEntry.download('data.bin');
-
-    otherwise
-        error('No fileDownload for container type %s\n',containerType);
+if ~exist(destination,'file') || overwrite
+    file.download(destination);
+else
+    sprintf('File %s already exists',destination);
 end
-%}
 
 if zipFlag
     % User said to unzip the file and delete the zip file.
