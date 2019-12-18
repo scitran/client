@@ -1,14 +1,14 @@
 function localFiles = dr_fwDownloadFileFromZip(varargin)
 %
-% Add information to find and download from a zip. 
+% Add information to find and download from a zip.
 % If there are more than one analysis with the same name or
-% 
+%
 % Syntax:
 %     [check] = dr_fwDownloadFileFromZip(st, collectionName, zipNameContains)
 %
 % Description:
 %  Input an scitran object, collectionName and but the zipName contains to
-%  download them all. 
+%  download them all.
 %
 % Inputs: (required)
 %  st: scitran object
@@ -16,7 +16,7 @@ function localFiles = dr_fwDownloadFileFromZip(varargin)
 %  zipNameContains: string to match with filenames
 %
 % Optional key/val pairs:
-% downloadWholeZip     :  
+% downloadWholeZip     :
 % unzipAll             :
 % sessionLabelContains :
 % filesContain         :
@@ -40,7 +40,7 @@ analysisLabelContains = 'v.3.0.7';
 zipNameContains       = 'AFQ_Output_';
 
 % listOfFilesContain    = {'MoriGroups_clean','_wmMask.mif','_wmMask_dilated.mif','_fa.mif', 'b0.nii.gz','_L.mat','_R.mat'};
-% listOfFilesContain    = {'MoriGroups_clean', 'b0.nii.gz', '_L.mat','_R.mat'};    
+% listOfFilesContain    = {'MoriGroups_clean', 'b0.nii.gz', '_L.mat','_R.mat'};
 % listOfFilesContain    = {'_fa.mif','_CLIPPED_'};
 % listOfFilesContain    = {'_fa.mif', '_dt.mif'};
 listOfFilesContain    = {'_L.nii.gz', '_R.nii.gz'};
@@ -59,7 +59,7 @@ downloadTo           = '/Users/glerma/Downloads/v3.0.7';
                                   'showListSession', false)
 
 %}
-% 
+%
 % GLU Vistalab, 2018
 
 
@@ -98,6 +98,7 @@ st.verify
 % Connect to the collection, verify it and show the number of sessions for verification
 % FC: obtain collection ID from the collection name
 
+%%
 cc            = st.search('collection','collection label exact',collectionName);
 collectionID  = cc{1}.collection.id;
 if isempty(collectionID)
@@ -117,8 +118,8 @@ else
 end
 
 %% 2.- Download the files
-    localFiles = {};
-for ns=2%1:length(sessionsInCollection)
+localFiles = {};
+for ns=1:length(sessionsInCollection)
     % Get info for the session
     thisSession = st.fw.getSession(idGet(sessionsInCollection{ns}));
     % Get info for the project the session belong to
@@ -127,7 +128,7 @@ for ns=2%1:length(sessionsInCollection)
     analysesInSession  = st.fw.getSessionAnalyses(thisSession.id);
     % If there are no in this session, continue to the following one
     if isempty(analysesInSession)
-        fprintf('No analysis found in this session, adding session to the tmpCollection...\n') 
+        fprintf('No analysis found in this session, adding session to the tmpCollection...\n')
         dr_fwAddSession2tmpCollection(st, thisSession, 'tmpCollection')
         continue
     end
@@ -135,7 +136,7 @@ for ns=2%1:length(sessionsInCollection)
     containerType = 'analysis'; pattern = analysisLabelContains;
     myAnalyses = dr_fwSearchAcquAnalysis(st, thisSession, containerType, pattern, 'all');
     if isempty(myAnalyses)
-        fprintf('There are analyses, but not the one you are looking for, adding session to the tmpCollection...\n') 
+        fprintf('There are analyses, but not the one you are looking for, adding session to the tmpCollection...\n')
         dr_fwAddSession2tmpCollection(st, thisSession, 'tmpCollection')
         continue
     end
@@ -145,7 +146,7 @@ for ns=2%1:length(sessionsInCollection)
         % Search for the file in the results of the analysis
         zipName  = dr_fwFileName(myAnalysis, zipNameContains);
         if isempty(zipName)
-            fprintf('The file you are looking for is not part of this analysis (%s), adding session to the tmpCollection...\n', myAnalysis.label) 
+            fprintf('The file you are looking for is not part of this analysis (%s), adding session to the tmpCollection...\n', myAnalysis.label)
             dr_fwAddSession2tmpCollection(st, thisSession, 'tmpCollection')
             continue
         end

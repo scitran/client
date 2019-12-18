@@ -1,8 +1,8 @@
 function [id, project] = projectID(st,label)
-% Return the id of a project with the specified label
+% Return the id of a project from its label
 %
 % Syntax:
-%   [id, project] = scitran.projectID('project label'.varargin)
+%   [id, project] = scitran.projectID('project label',varargin)
 %
 % Brief description:
 %   Get the project id.  You can use the ID to get the project metadata via
