@@ -151,7 +151,11 @@ else
     % Subject label exists, so try to find the subject.
     str = sprintf('label=%s',subjectLabel);
     try
-        subject = project.subjects.findOne(str);
+        % Should work.  ASK LMP.
+        % subject = project.subjects.findOne(str);
+        subjects = project.subjects();
+        thisSubject = stSelect(subjects,'label',subjectLabel);
+        subject = thisSubject{1};
     catch
         % Not there, so create the subject for this project with this label
         subject = project.addSubject('label',subjectLabel,'code',subject);
