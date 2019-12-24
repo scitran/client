@@ -1,30 +1,45 @@
-function basedir = stFWCreate(groupID,projectLabel,sessionLabel, acquisitionLabels)
-% Create fw import directory tree
+function [sessiondir,basedir] = stFWCreate(dstruct,acquisitionlabels)
+% Create fw import directory tree for a particular session
 %
 % Syntax
+%   [sessiondir,basedir] = stFWCreate(groupid,projectlabel,subjectcode,sessionlabel,acquisitionlabels)
 %
 % Brief description
+%    Create a directory tree for the CLI upload 
+%         fw import folder foldername
+%
 %
 % Inputs
-%   groupID - string
-%   projectLabel - string
-%   sessionLabel - string
-%   acquisitionLabel - cell array of strings 
+%   dstruct
+%    .groupID - string
+%    .projectlabel - string
+%    .subjectcode  - string
+%    .sessionlabel - string
+%   acquisitionlabels - cell array of strings 
 %
 % Optional key/value pairs
 %    N/A
 %
 % Return
-%    basedir - directory that contains the groupID
+%    sessiondir - directory that contains the acquisitions
+%    acquisitionlabels - cell array of strings
 %
 % Wandell, 2019.12.20
 %
 % See also
-%    fw (usually /usr/local/bin/fw)
-%    [s,r] = system('which /usr/local/bin/fw')
-%
-%
+%    scitran.fwUpload
 
+% Some notes about the directory tree.  First, from 
+% fw import folder --help
+%
+%{
+%    fw is usually here:  /usr/local/bin/fw
+%    You can make sure /usr/local/bin is on your path by using
+%    stDockerConfig;
+%
+%    You can test by running this
+%    [s,r] = system('which /usr/local/bin/fw')
+%}
 %{
 root-folder
 ??? group-id
@@ -41,18 +56,51 @@ root-folder
 
 % Examples:
 %{
-  clear d, sess
-  d.group = 'oraleye';
-  d.project = 'Dental';
-  d.subject(1).label = '001';
-  d.subject(2).label = '002';
-  sess(1).label = 'sessLabel1';
-  sess(1).acquisitions(1).label = 'first'; 
-  sess(1).acquisitions(2).label = 'second';
-  sess(2).label = 'sessLabel2';
-  sess(2).acquisitions(1).label  = 'first';
-
-
-  d.subject(1).sess = sess;
-  d.subject(2).sess = sess;
+  clear d
+  chdir(fullfile(stRootPath,'local'))
+  d.groupid = 'oraleye';
+  d.projectlabel = 'Dental';
+  d.subjectcode = '001';
+  d.sessionlabel = [datestr(now,'yyyy-mm-dd'),'-test'];
+  acquisitionlabels = {'a1','a2'};
+  sDir = stFWCreate(d,acquisitionlabels);
+  aDirs = dir(sDir); aDirs=aDirs(~ismember({aDirs.name},{'.','..'})); 
 %}
+
+%% Parse
+p = inputParser;
+p.addRequired('dstruct',@isstruct);
+
+p.addRequired('acquisitionlabels',@iscellstr);
+p.parse(dstruct,acquisitionlabels);
+
+fnames = fieldnames(dstruct);
+assert(ismember('groupid',fnames));
+assert(ismember('projectlabel',fnames));
+assert(ismember('subjectcode',fnames));
+assert(ismember('sessionlabel',fnames));
+
+%% Make the directory tree for a session
+basedir = pwd;
+groupdir = fullfile(basedir,dstruct.groupid);
+stDirCreate(groupdir);
+
+projectdir = fullfile(groupdir,dstruct.projectlabel);
+stDirCreate(projectdir);
+
+subjectdir = fullfile(projectdir,dstruct.subjectcode);
+stDirCreate(subjectdir);
+
+sessiondir = fullfile(subjectdir,dstruct.sessionlabel);
+stDirCreate(sessiondir);
+
+chdir(sessiondir);
+for ii=1:numel(acquisitionlabels)
+    thisAcquisition = fullfile(sessiondir,acquisitionlabels{ii});
+    stDirCreate(thisAcquisition);
+end
+
+end
+
+
+
