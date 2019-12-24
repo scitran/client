@@ -20,6 +20,7 @@ function group = groups(obj,varargin)
 %
 % BW, SCITRAN Team, 2018
 
+% Examples:
 %{
   allGroups = st.groups;
   stPrint(allGroups,'label')
