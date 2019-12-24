@@ -43,6 +43,12 @@ if ismac
         setenv('PATH', ['/usr/local/bin:', initPath]);
     end
     
+    % Check for the CLI installation
+    [status, r] = system('which fw');
+    if status == 0
+        fprintf('Flywheel cli found at %s\n',r);
+    end
+    
     % Check for "docker for mac"
     [status, ~] = system('docker ps -a');
     if status == 0
@@ -68,8 +74,8 @@ if ismac
     
     % Check that docker machine is installed
     [status, version] = system('docker-machine -v');
-    if status == 0; 
-        if args.debug; 
+    if status == 0 
+        if args.debug
             fprintf('Found %s\n', version); 
         end
     else
@@ -79,7 +85,7 @@ if ismac
     % Check that the machine is running
     [~, result] = system(sprintf('docker-machine status %s', args.machine));
     if strcmp(strtrim(result),'Running')
-        if args.debug; 
+        if args.debug
             fprintf('docker-machine ''%s'' is running.\n', args.machine); 
         end
     
@@ -87,7 +93,7 @@ if ismac
     else
         fprintf('Starting docker-machine ''%s'' ... \n', args.machine);
         [status, result] = system(sprintf('docker-machine start %s', args.machine), '-echo');
-        if status && strfind(strtrim(result), 'not exist');
+        if status && strfind(strtrim(result), 'not exist')
             
             % Prompt to create the machine
             resp = input('Would you like to create the machine now? (y/n): ', 's');
@@ -152,6 +158,12 @@ elseif isunix
         error('Docker not configured: %s', result);
     end
 
+    % Check for the CLI installation
+    [status, r] = system('which fw');
+    if status == 0
+        fprintf('Flywheel cli found at %s\n',r);
+    end
+    
     
 % Not MAC or LINUX
 else
