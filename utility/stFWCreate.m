@@ -5,41 +5,51 @@ function [sessiondir,basedir] = stFWCreate(dstruct,acquisitionlabels)
 %   [sessiondir,basedir] = stFWCreate(groupid,projectlabel,subjectcode,sessionlabel,acquisitionlabels)
 %
 % Brief description
-%    Create a directory tree for the CLI upload 
+%    Create a directory tree for the CLI upload
+%
 %         fw import folder foldername
 %
-%
 % Inputs
-%   dstruct
+%   dstruct - a struct containing directory information
 %    .groupID - string
 %    .projectlabel - string
 %    .subjectcode  - string
 %    .sessionlabel - string
-%   acquisitionlabels - cell array of strings 
+%   acquisitionlabels - cell array of strings for the acquisition labels 
 %
 % Optional key/value pairs
 %    N/A
 %
 % Return
-%    sessiondir - directory that contains the acquisitions
-%    acquisitionlabels - cell array of strings
+%   sessiondir - directory that contains the acquisitions
+%   acquisitionlabels - cell array of strings
+%
+% Description
+%  The flywheel cli (usually /usr/local/bin/fw) expects a particularly
+%  directory organization when importing to a Flywheel project.  This
+%  function creates the right directory tree for a single session with
+%  multiple acquisitions.  You can put the files you would like
+%  to upload into the acquisition directories, and then invoke the
+%  'fw' command, using 
+%
+%        scitran.fwImportFolder(basedir);
 %
 % Wandell, 2019.12.20
 %
 % See also
-%    scitran.fwUpload
+%    scitran.fwImportFolder
 
-% Some notes about the directory tree.  First, from 
-% fw import folder --help
-%
-%{
-%    fw is usually here:  /usr/local/bin/fw
-%    You can make sure /usr/local/bin is on your path by using
-%    stDockerConfig;
+% Notes about the Flywheel folder directory tree.  
+%    fw is usually located here:  /usr/local/bin/fw
+%    You can make sure /usr/local/bin is on your Matlab path by using
+%        stDockerConfig;
 %
 %    You can test by running this
-%    [s,r] = system('which /usr/local/bin/fw')
-%}
+%        [s,r] = system('which /usr/local/bin/fw')
+%
+%    Help  by
+%     fw import folder --help
+%
 %{
 root-folder
 ??? group-id
@@ -64,7 +74,7 @@ root-folder
   d.sessionlabel = [datestr(now,'yyyy-mm-dd'),'-test'];
   acquisitionlabels = {'a1','a2'};
   sDir = stFWCreate(d,acquisitionlabels);
-  aDirs = dir(sDir); aDirs=aDirs(~ismember({aDirs.name},{'.','..'})); 
+  aDirs = stDir(sDir); 
 %}
 
 %% Parse
