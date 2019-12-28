@@ -1,4 +1,4 @@
-function localFiles = dr_fwDownloadFileFromZip(varargin)
+function [localFiles,zipInfo] = dr_fwDownloadFileFromZip(varargin)
 %
 % Add information to find and download from a zip. 
 % If there are more than one analysis with the same name or
@@ -27,37 +27,44 @@ function localFiles = dr_fwDownloadFileFromZip(varargin)
 %{
 
 clear all; close all; clc;
-% st                    = scitran('stanfordlabs'); st.verify
 serverName            = 'stanfordlabs';
-% collectionName             = 'BCBL_BERTSO';
-collectionName = 'DefiningWMTractography';
-gearName       = 'afq-pipeline';
-gearVersion    =  '3.0.7';
-
-% analysisLabelContains = 'AllV03:v3.0.6:10LiFE:min20max250:0.1cutoff:Analysis b2000';
-analysisLabelContains = 'v.3.0.7';
-
+collectionName        = '00bertso'% 'HCP-Depression-CTRL';
+gearName              = 'afq-pipeline';
+gearVersion           =  '3.1.5';
+analysisLabelContains = 'rtp-pipeline'% 'v.3.1.5';
 zipNameContains       = 'AFQ_Output_';
-
+downloadTo           = '/Users/glerma/Downloads/v3.1.5';
 % listOfFilesContain    = {'MoriGroups_clean','_wmMask.mif','_wmMask_dilated.mif','_fa.mif', 'b0.nii.gz','_L.mat','_R.mat'};
 % listOfFilesContain    = {'MoriGroups_clean', 'b0.nii.gz', '_L.mat','_R.mat'};    
 % listOfFilesContain    = {'_fa.mif','_CLIPPED_'};
 % listOfFilesContain    = {'_fa.mif', '_dt.mif'};
-listOfFilesContain    = {'_L.nii.gz', '_R.nii.gz'};
+% listOfFilesContain    = {'T1w.nii.gz','_fa.mif','_L.nii.gz', '_R.nii.gz'};
+    listOfFilesContain    = {'MoriGroups_Cortex_clean_D3_L3_RightIFOF.tck',...
+                             'MoriGroups_Cortex_clean_D3_L3_LeftIFOF.tck','fa.nii.gz'};
+    
 
-downloadTo           = '/Users/glerma/Downloads/v3.0.7';
+       [localFiles,zipInfo] = dr_fwDownloadFileFromZip('serverName',serverName, ...
+                                      'collectionName',collectionName, ...
+                                      'gearName', gearName, ...
+                                      'gearVersion', gearVersion, ...
+                                      'analysisLabelContains', analysisLabelContains, ...
+                                      'zipNameContains' ,zipNameContains,...
+                                      'listOfFilesContain', listOfFilesContain, ...
+                                      'downloadTo', downloadTo, ...
+                                      'unzipAll', false, ...
+                                      'showListSession', false);
 
-    dr_fwDownloadFileFromZip('serverName',serverName, ...
-                                  'collectionName',collectionName, ...
-                                  'gearName', gearName, ...
-                                  'gearVersion', gearVersion, ...
-                                  'analysisLabelContains', analysisLabelContains, ...
-                                  'zipNameContains' ,zipNameContains,...
-                                  'listOfFilesContain', listOfFilesContain, ...
-                                  'downloadTo', downloadTo, ...
-                                  'unzipAll', false, ...
-                                  'showListSession', false)
 
+
+
+
+A={};for n=1:length(zipInfo.members);A=[A;zipInfo.members{n}.path];end
+A(contains(A,'_LiFE'))
+A(contains(A,'/bin'))
+A(contains(A,'RightArcuate.tck'))
+A(contains(A,'MoriGroups_CLIPPED_RightArcuate.tck'))
+A(contains(A,'MoriGroups_LeftIFOF.tck'))
+A(contains(A,'dwi.nii.gz'))
 %}
 % 
 % GLU Vistalab, 2018
@@ -118,7 +125,7 @@ end
 
 %% 2.- Download the files
     localFiles = {};
-for ns=2%1:length(sessionsInCollection)
+for ns=1:length(sessionsInCollection)
     % Get info for the session
     thisSession = st.fw.getSession(idGet(sessionsInCollection{ns}));
     % Get info for the project the session belong to
@@ -171,8 +178,11 @@ for ns=2%1:length(sessionsInCollection)
                 if ~exist(fileparts(outPath),'dir');mkdir(fileparts(outPath));end
                 myAnalysis.downloadFileZipMember(zipName, fileName, outPath);
                 localFiles{fn} = outPath;
+                [~,fn,fe]      = fileparts(outPath);
+                fprintf('    >>> %s\n',[fn fe]);
             end
         end
     end
+    fprintf('(%d) DONE %s >> %s (%s)\n\n', ns, thisProject.label, thisSession.subject.code, thisSession.label)
 end
 

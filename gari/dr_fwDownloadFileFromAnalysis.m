@@ -35,15 +35,15 @@ p.addParameter('unzipFile'            , false          , @islogical);
 p.addParameter('showSessions'         , false          , @islogical);
 p.parse(varargin{:});
             
-serverName           = p.Results.serverName;
-collectionName       = p.Results.collectionName;
-gearName             = p.Results.gearName;
-gearVersion          = p.Results.gearVersion;
-analysisLabelContains= p.Results.analysisLabelContains;
-fileNameContains     = p.Results.fileNameContains;
-downloadBase         = p.Results.downloadBase;
-unzipFile            = p.Results.unzipFile;
-showSessions         = p.Results.showSessions;
+serverName            = p.Results.serverName;
+collectionName        = p.Results.collectionName;
+gearName              = p.Results.gearName;
+gearVersion           = p.Results.gearVersion;
+analysisLabelContains = p.Results.analysisLabelContains;
+fileNameContains      = p.Results.fileNameContains;
+downloadBase          = p.Results.downloadBase;
+unzipFile             = p.Results.unzipFile;
+showSessions          = p.Results.showSessions;
 
 
 %% 1.- CONNECT (server & collection)
