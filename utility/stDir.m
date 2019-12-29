@@ -1,30 +1,65 @@
-function aDirs = stDir(basedir)
+function aDirs = stDir(varargin)
 % List directories but exclude '.' and '..'
 %
 % Syntax
-%   dirList = stDir(basedir)
+%   dirList = stDir(varargin)
 %
 % Input
-%   basedir:  Normally just the basedir.  But it could be any argument
-%            that you would use to dir, such as '*.m'.  If not passed
-%            in then 'pwd' is used.
-%
+%   List the current directory, excluding files that beging with a '.'.
+%   
 % Optional key/val pairs
-%   None
+%   quiet - Just return the directories, do not list (true)
 %
 % Return
 %   aDirs:  Array of directories in Matlab struct format
 %
 % Description
-%   This function wraps 'dir'.  It excludes the . and .. directories.
+%   This function wraps 'dir'.  It excludes any directory that starts with
+%   a '.' This leaves out '.', '..', and '.DS_Store'.
+%
 %   If you want those directories in the list, just use 'dir'.
 %
 % Wandell, 2019-12-24
 %
-if notDefined('basedir'),basedir = pwd; end
 
-aDirs = dir(basedir); 
-aDirs=aDirs(~ismember({aDirs.name},{'.','..'})); 
+% Examples:
+%{
+   stDir;
+%}
+%{
+ aDirs = stDir('quiet',true);
+ aDirs
+%}
+
+%%
+p = inputParser;
+p.addParameter('arg','',@ischar);
+p.addParameter('quiet',false,@islogical);
+p.parse(varargin{:});
+
+arg   = p.Results.arg;
+quiet = p.Results.quiet;
+
+%% List everything
+aDirs = dir(arg);
+nDirs = numel(aDirs);
+
+% Only keep directories that do NOT start with a '.'
+keep = false(nDirs,1);
+for ii=1:nDirs
+    thisName = aDirs(ii).name;
+    keep(ii) = ~isequal(thisName(1),'.');
+end
+aDirs = aDirs(keep);
+
+if quiet, return; end
+
+fprintf('\nBasedir:  %s\n',pwd);
+fprintf('-------------\n');
+for ii=1:numel(aDirs)
+    fprintf('%s ', aDirs(ii).name)
+end
+fprintf('\n\n');
 
 end
 

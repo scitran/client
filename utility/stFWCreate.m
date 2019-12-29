@@ -1,8 +1,8 @@
 function [sessiondir,basedir] = stFWCreate(dstruct,acquisitionlabels)
-% Create fw import directory tree for a particular session
+% Create directory tree for the Flywheel CLI to import a session
 %
 % Syntax
-%   [sessiondir,basedir] = stFWCreate(groupid,projectlabel,subjectcode,sessionlabel,acquisitionlabels)
+%   [sessiondir,basedir] = stFWCreate(dstruct,acquisitionlabels)
 %
 % Brief description
 %    Create a directory tree for the CLI upload
