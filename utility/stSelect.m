@@ -56,60 +56,74 @@ nocell     = p.Results.nocell;
 cnt = 1;
 selected = {};
 for jj = 1:length(containers)
-    % Force the slot value to lower case and no spaces.
-    try
-        slotVal = stParamFormat(containers{jj}.(slot));
-    catch
-        % If it doesn't exist, set it to empty.
-        slotVal = '';
-    end
     
-    if contains  % 
-        if stContains(slotVal,matchVal)
-            if isempty(infoField)
-                % No info fields to check.
-                selected{cnt} = containers{jj}; %#ok<AGROW>
-                cnt = cnt + 1;
-            else
-                % There is also an info field specified.  Check that.
-                try
-                    % Does the info field match?
-                    if stContains(containers{jj}.info.(infoField),infoVal)
-                        selected{cnt} = containers{jj}; %#ok<AGROW>
-                        cnt = cnt + 1;
+    % This might be a switch statement at some point.
+    % timestamp is a special case because it is a datetime.
+    if isequal(stParamFormat(slot),'timestamp')
+        ts = char(containers{jj}.timestamp);
+        if isequal(stParamFormat(ts),stParamFormat(matchVal))
+            selected{cnt} = containers{jj}; %#ok<AGROW>
+            cnt = cnt + 1;
+        end
+        
+    else
+        
+        try
+            % Force the slot value to lower case and no spaces.
+            slotVal = stParamFormat(containers{jj}.(slot));
+        catch
+            % If it doesn't exist, set it to empty.
+            slotVal = '';
+        end
+        
+        if contains  %
+            if stContains(slotVal,matchVal)
+                if isempty(infoField)
+                    % No info fields to check.
+                    selected{cnt} = containers{jj}; %#ok<AGROW>
+                    cnt = cnt + 1;
+                else
+                    % There is also an info field specified.  Check that.
+                    try
+                        % Does the info field match?
+                        if stContains(containers{jj}.info.(infoField),infoVal)
+                            selected{cnt} = containers{jj}; %#ok<AGROW>
+                            cnt = cnt + 1;
+                        end
+                    catch
+                        % Did not match
+                        disp('Bad info field name %s\n',varargin{1});
                     end
-                catch
-                    % Did not match
-                    disp('Bad info field name %s\n',varargin{1});
+                end
+            end
+            
+        else         % Exact match
+            
+            % See if the slot value matches
+            if isequal(slotVal,matchVal)
+                if isempty(infoField)
+                    % No info fields to check.
+                    selected{cnt} = containers{jj}; %#ok<AGROW>
+                    cnt = cnt + 1;
+                else
+                    % There is also an info field specified.  Check that.
+                    try
+                        % Does the info field match?  This must be exact.
+                        if isequal(containers{jj}.info.(infoField),infoVal)
+                            selected{cnt} = containers{jj}; %#ok<AGROW>
+                            cnt = cnt + 1;
+                        end
+                    catch
+                        % Did not match
+                        disp('Bad info field name %s\n',varargin{1});
+                    end
                 end
             end
         end
         
-    else         % Exact match
-        
-        % See if the slot value matches
-        if isequal(slotVal,matchVal)
-            if isempty(infoField)
-                % No info fields to check.
-                selected{cnt} = containers{jj}; %#ok<AGROW>
-                cnt = cnt + 1;
-            else
-                % There is also an info field specified.  Check that.
-                try
-                    % Does the info field match?  This must be exact.
-                    if isequal(containers{jj}.info.(infoField),infoVal)
-                        selected{cnt} = containers{jj}; %#ok<AGROW>
-                        cnt = cnt + 1;
-                    end
-                catch
-                    % Did not match
-                    disp('Bad info field name %s\n',varargin{1});
-                end
-            end
-        end
     end
-    
 end
+
 
 % There is only one object and the user wanted the object, not a cell
 % array with one object.
@@ -117,5 +131,5 @@ if length(selected) == 1 && nocell
     tmp = selected;
     selected = tmp{1};
 end
-    
+
 end
