@@ -34,12 +34,20 @@ function info = infoGet(st,container,varargin)
 %{
   st = scitran('stanfordlabs');
   st.verify;
-
+110023-100_2
   % Search for files
   files = st.search('file',...
       'project label exact','DEMO', ...
       'acquisition label exact','1_1_3Plane_Loc_SSFSE');
   info = st.infoGet(files{1},'container type','file acquisition');
+%}
+%{
+  % Search for session container.  (Not the search result).
+  session = st.search('session',...
+      'project label exact','Autism Phenome', ...
+      'subject code','110023-100_2',...
+      'fw',true);
+  info = st.infoGet(session{1});
 %}
 %{
   acquisition = st.search('acquisition',...
@@ -63,6 +71,9 @@ p = inputParser;
 varargin = stParamFormat(varargin);
 
 p.addRequired('st',@(x)(isa(x,'scitran')));
+
+% What if this is returned by a search, rather than a container
+% itself?  Can't we detect and convert to the container object?
 p.addRequired('container');
 
 validTypes = {'project','session','acquisition','collection','analysis', ...
@@ -77,7 +88,8 @@ containerType = p.Results.containertype;
 containerID   = p.Results.containerid;
 infoType      = p.Results.infotype;
 
-%% Figure out the the proper container information
+%% Figure out the the container information
+
 [containerID, containerType, fileContainerType, fname] = ...
     st.objectParse(container, containerType,containerID);
 
@@ -95,6 +107,8 @@ switch containerType
     case 'analysis'
       meta = obj.fw.getAnalysis(containerID);
 
+      % We have a new 'file' data type.  Maybe this is no longer
+      % needed?
     case 'file'
         switch fileContainerType
             case 'project'

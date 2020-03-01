@@ -546,6 +546,14 @@ if ischar(srch)
                     srch.filters{end + 1}.term.subject0x2Ecode = val;
                 end
                 
+            case {'subjectlabel'}
+                % This seems to be 'contains', though I am not sure.
+                if ~isfield(srch,'filters')
+                    srch.filters{1}.term.subject0x2Elabel = val;
+                else
+                    srch.filters{end + 1}.term.subject0x2Elabel = val;
+                end
+                
             case {'subjectlastname'}
                 % This seems to be 'contains', though I am not sure.
                 if ~isfield(srch,'filters')

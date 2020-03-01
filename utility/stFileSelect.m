@@ -1,6 +1,8 @@
 function selectedFiles = stFileSelect(files,slot,matchVal,varargin)
 % Select files from a cell array of files based on a parameter
 %
+%   *** See if you really need this, or you can just use stSelect ***
+%
 % Synopsis
 %   selectedFiles = stFileSelect(files,slot,matchVal,varargin)
 %

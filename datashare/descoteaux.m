@@ -1,11 +1,15 @@
 %% Find diffusion nifti, bvec and bval for M. Descoteaux
 %
+% These files were placed in a collection.  We find the files as flywheel
+% objects and then download each of them into a scratch directory.
+%
+% LMP?  BW?
 
-%%
+%% Initialize Flywheel
 st = scitran('stanfordlabs');
 st.verify
 
-%%
+%% Find the files in the Descoteaux collection
 
 f = st.search('files',...
     'collection label exact','Descoteaux',...
@@ -22,7 +26,8 @@ bval = st.search('files',...
     'filetype','bval',...
     'fw',true);
 
-%%  
+%%  How many files?  Where do they go?
+
 nFiles = numel(f);
 fprintf('Returned %d files\n',nFiles);
 
@@ -77,3 +82,4 @@ for ii=1:length(bvalNames), [~,bvalNames{ii}] = fileparts(bvalNames{ii}); end
 out = cellfun(@(x)(~contains(x,bvalNames)),bvecNames);
 bvecNames(out)
 
+%%

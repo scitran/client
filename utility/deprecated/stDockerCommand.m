@@ -1,6 +1,8 @@
 function dockerCommand = stDockerCommand(varargin)
 % Create a docker command to run a container
 %
+% ** DEPRECATED **
+%
 %   dockerCommand = stDockerCommand(varargin)
 %
 % Inputs:
@@ -15,6 +17,9 @@ function dockerCommand = stDockerCommand(varargin)
 %    dockerCommand - This is the system command to run
 %   
 % LMP/BW Vistasoft, 2016
+
+%%
+warning('%s command is deprecated',mfile);
 
 %%
 p = inputParser;

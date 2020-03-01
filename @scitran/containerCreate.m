@@ -18,7 +18,7 @@ function idS = containerCreate(obj, group, project, varargin)
 %  groupLabel   - Group Label
 %  projectLabel - Project Label
 %
-% Optional Parameters (thes4e are a
+% Optional Parameters - these are a
 %  subject       - Subject name
 %  session       - Session label
 %  acquisition   - Acquisition label
@@ -99,9 +99,8 @@ p = inputParser;
 p.addRequired('group',@ischar);
 p.addRequired('project',@ischar);
 p.addParameter('subject','',@ischar);
-p.addParameter('session',[],@ischar);
-
-p.addParameter('acquisition',[],@ischar);
+p.addParameter('session','',@ischar);
+p.addParameter('acquisition','',@ischar);
 
 % Not yet implemented.  But we may permit attaching data here to add to the
 % newly created objects.
@@ -117,6 +116,8 @@ acquisition = p.Results.acquisition;
 
 % additionalData = p.Results.additionalData;  % NYI
 
+%% First test whether the container already exists
+
 %% Check whether the group exists
 
 % Exits on error.  You have to have a group.
@@ -124,6 +125,20 @@ acquisition = p.Results.acquisition;
 if ~status
     error('No group found with label %s\n',group);
 end
+
+%{
+try
+    lustr = sprintf('%s/%s/%s/%s/%s',groupId,project,subject,session,acquisition);
+    % Fix up the string
+    idx = strfind(lustr,'//');
+    if ~isempty(idx), lustr = lustr(1:(idx(1)-1)); end
+    thisContainer = st.lookup(lustr);
+    idS = thisContainer.id;
+    disp('Container exists');
+catch
+    % No container with those properties.  Carry on.
+end
+%}
 
 %% On to the project level
 
@@ -151,13 +166,17 @@ else
     % Subject label exists, so try to find the subject.
     str = sprintf('label=%s',subjectLabel);
     try
-        subject = project.subjects.findOne(str);
+        % Should work.  ASK LMP.
+        % subject = project.subjects.findOne(str);
+        subjects = project.subjects();
+        thisSubject = stSelect(subjects,'label',subjectLabel);
+        subject = thisSubject{1};
     catch
         % Not there, so create the subject for this project with this label
         subject = project.addSubject('label',subjectLabel,'code',subject);
     end
     
-    % Add the subject ID to the outpu
+    % Add the subject ID to the output
     idS.subject = subject.id;
 end
 

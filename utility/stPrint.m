@@ -1,8 +1,8 @@
-function val = stPrint(objects, slot1, slot2)
+function val = stPrint(objects, slot1, slot2, varargin)
 % Print and return the fields from a search or list result 
 %
 % Syntax
-%  val = stPrint(objects, slot1, [slot2])
+%  val = stPrint(objects, slot1, slot2, varargin)
 %
 % Description
 %  Print out a list of the values from a cell array of objects,
@@ -23,7 +23,7 @@ function val = stPrint(objects, slot1, slot2)
 %   slot2  -  Field within the slot1
 %
 % Optional Key/vals
-%   None
+%   show - Print (true, default) or not.
 %
 % Return
 %   val - The printed strings
@@ -31,20 +31,18 @@ function val = stPrint(objects, slot1, slot2)
 % HINT:  Print out one of the returned objects to see the
 %        possibilities for that object. 
 %
-% Example
-%   st = scitran('stanfordlabs');
-%   projects = st.search('project');
-%   stPrint(projects,'project','label');
-%
-% See examples in the source code
-%
 % BW, Vistasoft Team, 2017
 
 % Examples:
-%
-% st = scitran('stanfordlabs');
+%{
+  st = scitran('stanfordlabs');
+  projects = st.search('project');
+  labels = stPrint(projects,'project','label','show',false);
+  disp(labels)
+%}
 %{
   % All project labels
+  st = scitran('stanfordlabs');
   projects = st.search('project');
   val = stPrint(projects,'project','label');
 %}
@@ -58,7 +56,8 @@ function val = stPrint(objects, slot1, slot2)
 
   val = stPrint(sessions,'session','label');
 
-  stPrint(sessions,'subject','code');
+  codes = stPrint(sessions,'subject','code','show',false);
+  disp(codes)
 %}
 %{
   % List example 
@@ -77,33 +76,44 @@ function val = stPrint(objects, slot1, slot2)
 %}
 
 %% Parse
-if notDefined('objects'), error('objects are required'); end
-if notDefined('slot1'),   error('Main slot is required'); end
+
+varargin = stParamFormat(varargin);
+
+p = inputParser;
+p.addRequired('objects',@iscell);
+p.addRequired('slot1',@ischar);
+p.addRequired('slot2',@ischar);
+p.addParameter('show',true,@islogical);
+
 if notDefined('slot2'),   slot2 = ''; end
+p.parse(objects,slot1,slot2,varargin{:});
+show = p.Results.show;
 
 % We will return the values as well as print them
 val = cell(length(objects),1);
 
 %% Start printing
-
-fprintf('\nEntry: %s.%s\n-----------------------------\n',slot1,slot2);
-        
+ 
 if isempty(slot2)
+    if show, fprintf('\nEntry: %s\n-----------------------------\n',slot1); end
     for ii=1:length(objects)
         val{ii} = objects{ii}.(slot1);
-        fprintf('\t%d - %s \n',ii,val{ii} );
+        if show, fprintf('\t%d - %s \n',ii,val{ii} ); end
     end
 else
+    if show, fprintf('\nEntry: %s.%s\n-----------------------------\n',slot1,slot2); end
     for ii=1:length(objects)
         if iscell(objects{ii}.(slot1))
             for jj=1:length(objects{ii}.(slot1))
                 val{ii}{jj} = objects{ii}.(slot1){jj}.(slot2);
-                fprintf('cell (%d), entry (%d) - %s \n',ii,jj,val{ii}{jj});
+                if show, fprintf('cell (%d), entry (%d) - %s \n',ii,jj,val{ii}{jj}); end
             end
         else
             val{ii} = objects{ii}.(slot1).(slot2);
-            fprintf('\t%d - %s \n',ii,val{ii});
+            if show, fprintf('\t%d - %s \n',ii,val{ii}); end
         end
     end
+
+end
 
 end

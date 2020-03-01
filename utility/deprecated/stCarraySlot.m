@@ -1,16 +1,16 @@
 function [val, oType] = stCarraySlot(carray, slot1, slot2)
-% Extract values of a field from a cell array of search or list return
+% Retyrn values from a cell array field 
 %
-% Find a better name
+% ** Deprecated.  Use stPrint **
 %
 % Syntax
-%  [val, oType] = stCarraySlot(objects, slot1, [slot2])
+%  [val, oType] = stCarraySlot(cellArray, slot1, [slot2])
 %
 % Description
 %  Extract the values from a specific slot in a cell array of objects,
 %  returned by a scitran.search or a scitran.list method.
 %
-%  The slot1 and field refers to the first and second struct entries.
+%  The slot1 and slot2 refers to the first and second struct entries.
 %  So, what is printed is a loop over ii for
 %
 %     objects{ii}.slot1.slot2
@@ -18,10 +18,9 @@ function [val, oType] = stCarraySlot(carray, slot1, slot2)
 % Inputs:
 %   result -  A cell array returned from the search or list method
 %   slot1   - Main slot1
-%   slot2  -  Field within the slot1
 %
-% Optional Key/vals
-%   None
+% Optional 
+%   slot2  -  Field within the slot1
 %
 % Return
 %   val - The cell array of extracted values
@@ -29,14 +28,11 @@ function [val, oType] = stCarraySlot(carray, slot1, slot2)
 % HINT:  Print out one of the returned objects to see the
 %        possibilities for that object. 
 %
-% Example
-%   st = scitran('stanfordlabs');
-%   projects = st.search('project');
-%   stCarraySlot(projects,'project','label');
-%
-% See examples in the source code
 %
 % BW, Vistasoft Team, 2017
+%
+% See also
+%   stSelect
 
 % Examples:
 %
@@ -75,6 +71,10 @@ function [val, oType] = stCarraySlot(carray, slot1, slot2)
 
 %}
 
+%%
+warning('%s is deprecated.  Use stPrint',mfile);
+return;
+%{
 %% Parse
 if notDefined('carray'), error('cell array is required'); end
 if notDefined('slot1'), error('Main slot is required'); end
@@ -100,4 +100,4 @@ end
 if nargout > 1
     [~,oType] = stObjectParse(carray{1});
 end
-
+%}
