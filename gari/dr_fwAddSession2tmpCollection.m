@@ -4,7 +4,7 @@ function dr_fwAddSession2tmpCollection(st, thisSession, collection)
     % the ID. We just want the collectionID in this case, check outputs in the same
     % function
     
-    if ~exist(collection)
+    if ~exist(collection,'var')
         collection = 'tmpCollection';
     end
     

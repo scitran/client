@@ -1,46 +1,68 @@
 function dt = dr_fwReadDtFromAnalysisTable(serverName, t, measurement)
-% This function will take a filtered table obtained from dr_fwCheckJobs
+% REWRITE AND OPTIMIZE THIS FUNCTION: This function will take a filtered table obtained from dr_fwCheckJobs
 % and it will create a result datatable out of it. 
 
 % Example inputs to make it work
 %{
 clear all; clc; 
-serverName     = 'stanfordlabs';
-% collectionName = 'ComputationalReproducibility';  % 'tmpCollection', 'ComputationalReproducibility', 'FWmatlabAPI_test'
-collectionName = 'HCP_Depression';%  'WH_042_volume_test';
+serverName       = 'stanfordlabs';
+collectionName   = 'ComputationalReproducibility';  % 'tmpCollection', 'ComputationalReproducibility', 'FWmatlabAPI_test'
+% collectionName = 'HCP_Depression';%  'WH_042_volume_test';
+% collectionName = 'HCP-DES';
 % measurement    = 'volume';  % 
-measurement    = 'fa';
-
-% GET ALL ANALYSIS FROM COLLECTION
-JL = dr_fwCheckJobs(serverName, collectionName);
-height(JL)
-% FILTER
-state       = 'complete';  % 'cancelled', 'pending', 'complete', 'running', 'failed'
-% gearName    = 'afq-pipeline-3'; gearVersion = '3.0.0_rc4';
-gearName    = 'afq-pipeline'; gearVersion = '3.0.7';
-dateFrom  = '04-Feb-2019 00:00:00';
-labelContains = 'v3.0.7:';
-state='complete'
-t = JL(JL.state==state & JL.gearName==gearName & ...
-       JL.gearVersion==gearVersion & JL.JobCreated>dateFrom & ...
-       contains(string(JL.label), labelContains),:);
-height(t)
 
 
+    % GET ALL ANALYSIS FROM COLLECTION
+    JL = dr_fwCheckJobs(serverName, collectionName);
+    height(JL)
+    % FILTER
+    state       = 'complete';  % 'cancelled', 'pending', 'complete', 'running', 'failed'
+    % gearName    = 'afq-pipeline-3'; gearVersion = '3.0.0_rc4';
+    gearName    = 'afq-pipeline'; gearVersion = '3.0.6';
+    dateFrom  = '04-Feb-2019 00:00:00';
+    labelContains = 'AllV03:v3.0.6';
+    state='complete'
+    t = JL(JL.state==state & JL.gearName==gearName & ...
+           JL.gearVersion==gearVersion & JL.JobCreated>dateFrom & ...
+           contains(string(JL.label), labelContains),:);
+    height(t)
 
-labelContains = 'v02b:v3.0.7';
-state='complete'
-t = JL(JL.state==state & JL.gearName==gearName & ...
-       JL.gearVersion==gearVersion & ...
-       contains(string(JL.label), labelContains),:);
-height(t)
+
+measurements      = {'fa','ad','cl','curvature','md','rd','torsion','volume'};
+dt = dr_fwReadDtFromAnalysisTable(serverName, t, measurements);
+fname = fullfile(stRootPath,'local','tmp', ...
+                 sprintf('AllV04_multiSiteAndMeas_%s.mat',collectionName));
+save(fname, 'dt')
+
+% Upload the data to a collection
+st   = scitran('stanfordlabs'); st.verify;
+cc   = st.search('collection','collection label exact',collectionName);
+stts = st.fileUpload(fname,cc{1}.collection.id,'collection');
 
 
 
 
-dt = dr_fwReadDtFromAnalysisTable(serverName, t, measurement);
-save(fullfile(stRootPath,'local','tmp', ...
-              sprintf('AllV01_HCP_Depression_%s.mat',measurement)), 'dt')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 % VISUALIZE RESULTS
@@ -89,7 +111,14 @@ st.verify
 % This version will include the gearName, gearVersion and measurement columns
 % Then we will use other functions to expand afq-pipeline values from the ones
 % in freesurfer or others. 
-TableElements = {'SubjID','TRT','Proj','SubjectMD','AcquMD','AnalysisMD', 'measurement', 'Struct', 'Val', 'UseIt'};
+
+% if measurements is cell, then add them in parallel
+if iscell(measurement)
+    TableElements = {'SubjID','TRT','Proj','SubjectMD','AcquMD','AnalysisMD', 'Struct'};
+    TableElements = [TableElements, measurement];
+else
+    TableElements = {'SubjID','TRT','Proj','SubjectMD','AcquMD','AnalysisMD', 'measurement', 'Struct', 'Val'};
+end
 dt            = array2table(NaN(0,length(TableElements)));
 dt.Properties.VariableNames = TableElements;
 
@@ -97,8 +126,8 @@ dt.Properties.VariableNames = TableElements;
 % If it is less than maxNaNsToClean, substitute, otherwise make everything NaN
 % and UseIt=false
 doNanSubstitution = 1;
-maxNaNsToClean = 5;
-interpMethod = 'spline'; % For NaN substitution using the repnan.m method, default is 'linear'
+maxNaNsToClean    = 5;
+interpMethod      = 'spline'; % For NaN substitution using the repnan.m method, default is 'linear'
 
 
 % What is each columns on the datatable?
@@ -134,6 +163,9 @@ interpMethod = 'spline'; % For NaN substitution using the repnan.m method, defau
 %  exact analysis and result we want. 
 %  Should be MUCH faster
 
+% Feb 2020
+% GLU: FW has updated the api, try to make it even faster
+
 tic
 for ns=1:height(t)
     tic
@@ -145,12 +177,17 @@ for ns=1:height(t)
     fprintf('(%d) Working in session: %s >> %s (%s)\n', ns, thisProject.label, thisSession.subject.code, thisSession.label)
     % Obtain AcquMD
     acquMD = dr_fwObtainAcquMD(st, thisSession, thisAnalysis, thisCollection);
+    % Obtain all the profile values for all measures
     VALUES = dr_fwObtainValues(st, thisAnalysis, measurement);
     
     % Now that we have everything, we can start appending it to our big
     % table that will be the output of this query. 
-    % FC: make this into an independent function as well       
-    Structures = VALUES.Properties.VariableNames;
+    % FC: make this into an independent function as well
+    if iscell(VALUES)
+        Structures = VALUES{1}.Properties.VariableNames;
+    else
+        Structures = VALUES.Properties.VariableNames;
+    end
     for fg=1:length(Structures)
         Structure = string(regexprep(Structures{fg},'{|}| |_',''));
         % This version is afq centered, so when the data is extracted, the
@@ -161,61 +198,143 @@ for ns=1:height(t)
         % Right now, we use the datatable in this form to filter structures
         % but usually then we create a flat datatable. Continue thinking
         % about the best way to analyze this. 
-        T            = array2table(NaN(1,length(TableElements)));
-        T.Properties.VariableNames = TableElements;
-        T.SubjID     = string(thisSession.subject.code);
-        T.Proj       = categorical(string(thisProject.label));
-        T.TRT        = categorical(string(thisSession.label));
-        T.SubjectMD  = struct2table(st.fw.getSession(idGet(thisSession)).subject.struct, 'AsArray', true);
-        % T.SubjectMD.info      = struct2table(T.SubjectMD.info, 'AsArray', true);
-        % Temporary hack so that all have the same info, I need to use the old
-        % method to create the expanded info table:
-        T.SubjectMD.info      = struct2table(struct('ReadEng_AgeAdj',999));
-        % T.SubjectMD.info      = [];
-        if iscell(T.SubjectMD.age)
-             T.SubjectMD.AGE       = 99;
-        else
-            T.SubjectMD.AGE       = T.SubjectMD.age / (365*24*60*60);
-        end
-        T.SubjectMD.age       = [];
-        % if isempty(T.SubjectMD.sex)
-%            T.SubjectMD.GENDER    = [];
-        % else
-          %   T.SubjectMD.GENDER    = categorical(T.SubjectMD.sex);
-        % end
-        T.SubjectMD.sex       = [];
-        T.SubjectMD.tags      = [];
-        T.SubjectMD.files     = [];
-        T.SubjectMD.infoExists= [];
-        T.AcquMD     = acquMD;
-        T.AnalysisMD = struct2table(thisAnalysis.job.config.config, 'AsArray', true);
-        T.measurement= string(measurement);
-        T.Struct     = categorical(string(Structure));
+        
+        
+        % To save time, calculate first tract for this subject, then copy
+        % all for the rest of calculations
+        if fg == 1
+            T            = array2table(NaN(1,length(TableElements)));
+            T.Properties.VariableNames = TableElements;
+            T.SubjID     = string(thisSession.subject.code);
+            T.Proj       = categorical(string(thisProject.label));
+            T.TRT        = categorical(string(thisSession.label));
+            tmpSubjMD    = struct2table(st.fw.getSession(idGet(thisSession)).subject.struct, 'AsArray', true);
+            tmpSubjMD    = tmpSubjMD(:,~contains(tmpSubjMD.Properties.VariableNames,'permissions'));
+            T.SubjectMD  = tmpSubjMD;
+            % T.SubjectMD.info      = struct2table(T.SubjectMD.info, 'AsArray', true);
+            % Temporary hack so that all have the same info, I need to use the old
+            % method to create the expanded info table:
+            infoFields = st.fw.getSession(idGet(thisSession)).subject.info.struct;
+            infofnames = fieldnames(infoFields);
+            for nf=1:length(infofnames)
+                if isempty(infoFields.(infofnames{nf}))
+                    infoFields.(infofnames{nf}) = NaN;
+                end
+                if ischar(infoFields.(infofnames{nf}))
+                    infoFields.(infofnames{nf}) = string(infoFields.(infofnames{nf}));
+                end
+            end
 
-        % And now, assign the value vectors
-        % But, if there are more than 5 NaN-s, convert all to NaN, otherwise
-        % fix it
-        T.UseIt = true;
-        T.Val   = VALUES{:,Structures{fg}}';
-        if doNanSubstitution
-            if sum(isnan(T.Val),2) > 0 & sum(isnan(T.Val),2) <= maxNaNsToClean
-                % For PCA we need to remove the NaN-s, I use this utility called repnan, which
-                % has several options for NaN substitution. 
-                % There are other options to do PCA without NaN substitution (TODO) 
-                % disp(['WH:' shells{kk} ' ' Structure{fg} ' ' subNamesTRAIN{ii} ': There are ' num2str(NaNSubjects{ii,fg}) ' NaN-s that will be substituted with repnan ' interpMethod ' method'])
-                T.Val = repnan(T.Val', interpMethod)';  % default in repnan is 'linear'
+            T.SubjectMD.info      = struct2table(infoFields);
+            % T.SubjectMD.info      = [];
+            if iscell(T.SubjectMD.age)
+                 T.SubjectMD.AGE       = 99;
+            else
+                T.SubjectMD.AGE       = T.SubjectMD.age / (365*24*60*60);
             end
-            if sum(isnan(T.Val),2) > maxNaNsToClean
-                T.Val = NaN(size(T.Val));
-                T.UseIt = false;
+            T.SubjectMD.age       = [];
+            % if isempty(T.SubjectMD.sex)
+    %            T.SubjectMD.GENDER    = [];
+            % else
+              %   T.SubjectMD.GENDER    = categorical(T.SubjectMD.sex);
+            % end
+            T.SubjectMD.sex       = [];
+            T.SubjectMD.tags      = [];
+            T.SubjectMD.files     = [];
+            T.SubjectMD.infoExists= [];
+            T.AcquMD     = acquMD;
+            T.AnalysisMD = struct2table(thisAnalysis.job.config.config, 'AsArray', true);
+            T.Struct     = categorical(string(Structure));
+
+            % And now, assign the value vectors
+            % But, if there are more than 5 NaN-s, convert all to NaN, otherwise
+            % fix it
+            
+            % TODO : make it a function
+            if iscell(measurement)
+                for nm = 1:length(measurement)
+                    meas     = measurement{nm};
+                    TMPVAL   = VALUES{nm};
+                    T.(meas) = TMPVAL{:,Structures{fg}}';
+                    if doNanSubstitution
+                        if sum(isnan(T.(meas)),2) > 0 & sum(isnan(T.(meas)),2) <= maxNaNsToClean
+                            % For PCA we need to remove the NaN-s, I use this utility called repnan, which
+                            % has several options for NaN substitution. 
+                            % There are other options to do PCA without NaN substitution (TODO) 
+                            % disp(['WH:' shells{kk} ' ' Structure{fg} ' ' subNamesTRAIN{ii} ': There are ' num2str(NaNSubjects{ii,fg}) ' NaN-s that will be substituted with repnan ' interpMethod ' method'])
+                            T.(meas) = repnan(T.(meas)', interpMethod)';  % default in repnan is 'linear'
+                        end
+                        if sum(isnan(T.(meas)),2) > maxNaNsToClean
+                            T.(meas) = NaN(size(T.(meas)));
+                        end
+                    end
+                end
+            else
+                T.measurement = string(measurement);
+                T.Val   = VALUES{:,Structures{fg}}';
+                if doNanSubstitution
+                    if sum(isnan(T.Val),2) > 0 & sum(isnan(T.Val),2) <= maxNaNsToClean
+                        % For PCA we need to remove the NaN-s, I use this utility called repnan, which
+                        % has several options for NaN substitution. 
+                        % There are other options to do PCA without NaN substitution (TODO) 
+                        % disp(['WH:' shells{kk} ' ' Structure{fg} ' ' subNamesTRAIN{ii} ': There are ' num2str(NaNSubjects{ii,fg}) ' NaN-s that will be substituted with repnan ' interpMethod ' method'])
+                        T.Val = repnan(T.Val', interpMethod)';  % default in repnan is 'linear'
+                    end
+                    if sum(isnan(T.Val),2) > maxNaNsToClean
+                        T.Val = NaN(size(T.Val));
+                    end
+                end
             end
-        end
-        % Add all the structs for this analysis for this session
-        if height(dt) == 0
-            dt = T;
+            % Add all the structs for this analysis for this session
+            if height(dt) == 0
+                dt = T;
+            else
+                dt = dr_mergeTables({dt, T},{'SubjectMD';'AcquMD';'AnalysisMD'});
+            end    
         else
-            dt = [dt; T];
+            % T is the same for all fiber groups
+            T.Struct     = categorical(string(Structure));
+            if iscell(measurement)
+                for nm = 1:length(measurement)
+                    meas     = measurement{nm};
+                    TMPVAL   = VALUES{nm};
+                    T.(meas) = TMPVAL{:,Structures{fg}}';
+                    if doNanSubstitution
+                        if sum(isnan(T.(meas)),2) > 0 & sum(isnan(T.(meas)),2) <= maxNaNsToClean
+                            % For PCA we need to remove the NaN-s, I use this utility called repnan, which
+                            % has several options for NaN substitution. 
+                            % There are other options to do PCA without NaN substitution (TODO) 
+                            % disp(['WH:' shells{kk} ' ' Structure{fg} ' ' subNamesTRAIN{ii} ': There are ' num2str(NaNSubjects{ii,fg}) ' NaN-s that will be substituted with repnan ' interpMethod ' method'])
+                            T.(meas) = repnan(T.(meas)', interpMethod)';  % default in repnan is 'linear'
+                        end
+                        if sum(isnan(T.(meas)),2) > maxNaNsToClean
+                            T.(meas) = NaN(size(T.(meas)));
+                        end
+                    end
+                end
+            else
+                T.Val   = VALUES{:,Structures{fg}}';
+                if doNanSubstitution
+                    if sum(isnan(T.Val),2) > 0 & sum(isnan(T.Val),2) <= maxNaNsToClean
+                        % For PCA we need to remove the NaN-s, I use this utility called repnan, which
+                        % has several options for NaN substitution. 
+                        % There are other options to do PCA without NaN substitution (TODO) 
+                        % disp(['WH:' shells{kk} ' ' Structure{fg} ' ' subNamesTRAIN{ii} ': There are ' num2str(NaNSubjects{ii,fg}) ' NaN-s that will be substituted with repnan ' interpMethod ' method'])
+                        T.Val = repnan(T.Val', interpMethod)';  % default in repnan is 'linear'
+                    end
+                    if sum(isnan(T.Val),2) > maxNaNsToClean
+                        T.Val = NaN(size(T.Val));
+                    end
+                end
+            end
+            % Add all the structs for this analysis for this session
+            if height(dt) == 0
+                dt = T;
+            else
+                dt = dr_mergeTables({dt, T},{'SubjectMD';'AcquMD';'AnalysisMD'});
+            end 
         end
+   
     end   
     toc
 end
