@@ -7,7 +7,7 @@ function dt = dr_fwReadDtFromAnalysisTable(serverName, t, measurement)
 clear all; clc; 
 serverName     = 'stanfordlabs';
 % collectionName = 'ComputationalReproducibility';  % 'tmpCollection', 'ComputationalReproducibility', 'FWmatlabAPI_test'
-collectionName = 'HCP_Depression';%  'WH_042_volume_test';
+collectionName = 'HCP-Depression-CTRL'; % 'HCP_Depression';%  'WH_042_volume_test';
 % measurement    = 'volume';  % 
 measurement    = 'fa';
 
@@ -16,10 +16,9 @@ JL = dr_fwCheckJobs(serverName, collectionName);
 height(JL)
 % FILTER
 state       = 'complete';  % 'cancelled', 'pending', 'complete', 'running', 'failed'
-% gearName    = 'afq-pipeline-3'; gearVersion = '3.0.0_rc4';
-gearName    = 'afq-pipeline'; gearVersion = '3.0.7';
-dateFrom  = '04-Feb-2019 00:00:00';
-labelContains = 'v3.0.7:';
+gearName    = 'rtp-pipeline'; gearVersion = '3.1.5';
+dateFrom  = '04-Dec-2019 00:00:00';
+labelContains = 'v.3.1.5:';
 state='complete'
 t = JL(JL.state==state & JL.gearName==gearName & ...
        JL.gearVersion==gearVersion & JL.JobCreated>dateFrom & ...
@@ -28,19 +27,9 @@ height(t)
 
 
 
-labelContains = 'v02b:v3.0.7';
-state='complete'
-t = JL(JL.state==state & JL.gearName==gearName & ...
-       JL.gearVersion==gearVersion & ...
-       contains(string(JL.label), labelContains),:);
-height(t)
-
-
-
-
 dt = dr_fwReadDtFromAnalysisTable(serverName, t, measurement);
 save(fullfile(stRootPath,'local','tmp', ...
-              sprintf('AllV01_HCP_Depression_%s.mat',measurement)), 'dt')
+              sprintf('AllV01_HCP_Depression_Controls_%s.mat',measurement)), 'dt')
 
 
 % VISUALIZE RESULTS

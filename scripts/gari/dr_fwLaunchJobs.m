@@ -19,7 +19,8 @@ serverName     = 'stanfordlabs';
 % collectionName = 'Mareike';
 % collectionName = 'scanner_comparison';
 % collectionName = 'DefiningWMTractography';
-collectionName = 'HCP-DES';
+% collectionName = 'HCP-DES';
+collectionName = '00deptest' %'HCP-Depression-CTRL';
 
 
 % Select GEAR, VERSION and DEFAULTS
@@ -32,7 +33,8 @@ collectionName = 'HCP-DES';
 % gearName = 'neuro-detect'        ; gearVersion    = '0.4.1';
 % gearName = 'dwi-flip-bvec'       ; gearVersion    = '1.0.0';
 % gearName = 'dtiinit'             ; gearVersion    = '0.2.2';
-gearName = 'afq-pipeline'        ; gearVersion    = '3.0.7';
+% gearName = 'afq-pipeline'        ; gearVersion    = '3.0.7';
+gearName = 'rtp-pipeline'        ; gearVersion    = '3.1.5';
 
     dr_fwLaunchJobs(serverName, collectionName, gearName, gearVersion)
 
@@ -123,7 +125,9 @@ switch gearName
     case {'neuro-detect'}
         configDefault = config;
         fprintf('No changes to default for  %s\n', gearName);        
-    case {'afq-pipeline','afq-pipeline-3'}
+    case {'rtppreproc'}
+        configDefault = config;    
+    case {'afq-pipeline','afq-pipeline-3','rtp-pipeline'}
         % This file doesn' have the last values...
         % configParamDefaultsFileName = 'afq-pipeline-config-param-defaults.mat';
         % load(fullfile(afqDimPath,'DATA','FW_datatools', configParamDefaultsFileName))
@@ -136,22 +140,24 @@ switch gearName
         configDefault.eddyCorrect         = -1;
         configDefault.maxDist             = 4;
         configDefault.maxLen              = 4;
+        configDefault.cleanIter           = 5;
+        configDefault.clip2rois           = 1;
 
         configDefault.mrtrix_useACT       = false;
-        configDefault.mrtrix_autolmax     = true;
+        configDefault.mrtrix_autolmax     = false;
         configDefault.mrtrix_lmax         = 6;
         %%%%%%%%%%%%%%%%%
-        configDefault.mrtrix_multishell   = false;     
+        configDefault.mrtrix_multishell   = true;     
         %%%%%%%%%%%%%%%%%
-        configDefault.track_faThresh      = 0.1; % 0.2 % 0.05;  % 0.1;  
+        configDefault.track_faThresh      = 0.05; % 0.2 % 0.05;  % 0.1;  
         configDefault.ET_minlength        = 20;   
         configDefault.ET_maxlength        = 250; 
-        configDefault.track_nfibers       = 400000;
+        configDefault.track_nfibers       = 1000000;
 
         % Add common label for the analysis based on parametrs
         % labelStr = 'AllV03:v3.0.6:10LiFE:min20max250:0.1cutoff:';
         % labelStr = 'min20max250:0.05cutoff:v3.0.2';
-        labelStr = ['v.3.0.7:min' num2str(configDefault.ET_minlength) ...
+        labelStr = ['v.' gearVersion ':min' num2str(configDefault.ET_minlength) ...
                            ':max' num2str(configDefault.ET_maxlength)  ...
                            ':cutoff' num2str(configDefault.track_faThresh) ':'];
         
@@ -165,7 +171,7 @@ end
 % Now loop over all the sessions, and in our case, over all the bvalues. 
 
 %% 4.- Launch a job for a specific subject
-for ns=1:length(sessionsInCollection)
+for ns = 1:length(sessionsInCollection)
     % Get info for the session
     thisSession = st.fw.getSession(idGet(sessionsInCollection{ns}));
     % Get info for the project the session belong to
@@ -300,7 +306,7 @@ for ns=1:length(sessionsInCollection)
                                          'config', config);
                         body    = struct('label', [labelStr 'neuro-detect OK bVal: ' bval{:} ], ...
                                          'job'  , thisJob); 
-                    case {'afq-pipeline','afq-pipeline-3'}
+                    case {'afq-pipeline','afq-pipeline-3','rtp-pipeline'}
                         % Edit the config defaults specific to this project
                             config.dwOutMm_1           = 1.5;
                             config.dwOutMm_2           = 1.5;
@@ -344,7 +350,7 @@ for ns=1:length(sessionsInCollection)
                             % Create the inputs struct of structs for FW
                             inputs=struct(...
                                 'anatomical',struct('type','acquisition','id',stracqu.id ,'name',T1wFile), ...
-                                'aparcaseg' ,struct('type','acquisition','id',aparcAcqu.id ,'name',aparcasegFile), ...   
+                                ... % 'aparcaseg' ,struct('type','acquisition','id',aparcAcqu.id ,'name',aparcasegFile), ...   
                                 'bvec'      ,struct('type','acquisition','id',diffacqu.id,'name',bvecfile), ...
                                 'bval'      ,struct('type','acquisition','id',diffacqu.id,'name',bvalfile), ...
                                 'dwi'       ,struct('type','acquisition','id',diffacqu.id,'name',dwifile));
@@ -353,7 +359,7 @@ for ns=1:length(sessionsInCollection)
                             thisJob = struct('gearId', thisGearId, ...
                                              'inputs', inputs, ...
                                              'config', config);
-                            body    = struct('label', [labelStr 'Analysis ' gearName '_bVal: ' bval{:} ], ...
+                            body    = struct('label', [labelStr 'RAS_Analysis ' gearName '_bVal: ' bval{:} ], ...
                                              'job'  , thisJob);      
                             % Launch the job
                             st.fw.addSessionAnalysis(idGet(thisSession), body);
@@ -495,7 +501,7 @@ for ns=1:length(sessionsInCollection)
                                 st.fw.addSessionAnalysis(idGet(thisSession), body);
                             end
                         end                                                                        
-                    case {'afq-pipeline','afq-pipeline-3'}
+                    case {'afq-pipeline','afq-pipeline-3','rtp-pipeline'}
                         % Edit the config defaults specific to this project
                         fprintf('Changing defaults for project %s and gear %s\n', thisProject.label, gearName);
                         % config.rotateBvecsWithCanXform = 1; % Philips requires to be onee
@@ -3235,6 +3241,9 @@ end
 %     for ns=1:length(sessionsInCollection)
 %         dr_fwAddSession2tmpCollection(st, sessionsInCollection{ns},'ComputationalReproducibility')
 %     end
+
+
+
 
 
 

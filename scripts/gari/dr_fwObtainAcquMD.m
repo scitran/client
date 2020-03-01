@@ -65,7 +65,7 @@ switch thisGearName
     % Note3: HCP data is preprocessed niftis, no dicoms to convert
     % from, so no custom fields. We will need to upload them
     % manually using the function modifyAcquisitionFileInfo()
-    case {'afq-pipeline-3', 'afq-pipeline'}
+    case {'afq-pipeline-3', 'afq-pipeline','rtp-pipeline'}
         switch thisProject.label
             case {'HCP_preproc'}
                 % FC: create a indep. func. that will: 
@@ -224,6 +224,9 @@ switch thisGearName
                     else
                         bvalStruct = st.fw.getAcquisitionFileInfo(acqu.id, bvalName);
                         bvalStruct = bvalStruct.info.struct;
+                        if ~exist(fullfile(stRootPath,'local','tmp'),'dir')
+                            mkdir(fullfile(stRootPath,'local','tmp'));
+                        end
                         bval = dlmread(st.fw.downloadFileFromAcquisition(acqu.id, bvalName, ...
                                             fullfile(stRootPath,'local','tmp',bvalName)));
                     end
@@ -263,7 +266,7 @@ switch thisGearName
         acquMD = struct2table(bvalStruct, 'AsArray', true);
         if isempty(acquMD)
             warning('No acquMD found, added NaN acquMD and added the session to the tmpCollection, so that the info can be updated.')
-            tmp    = load(fullfile(stRootPath,'gari','DATA','defaults','acquMD999.mat'));
+            tmp    = load(fullfile(stRootPath,'scripts','gari','DATA','defaults','acquMD999.mat'));
             acquMD = struct2table(tmp.acquMD999, 'AsArray', true);
             % add session to collection
             % st.fw.addSessionsToCollection(tmpCollectionID, idGet(thisSession])
@@ -281,7 +284,7 @@ switch thisGearName
         % previous step before inputing to afq-pipeline. dtiInit is
         % going to fail if there is not a single bValue. We are
         % going to leave it with minimum checks at the moment. 
-        bvalzeros   = bval(bval==0);
+        bvalzeros   = bval(bval<15);
         bvalnozeros = bval(bval > 100);
         bvalnozeros  = 100 * round(bvalnozeros/100);
         scanDirs    = length(bvalnozeros);
