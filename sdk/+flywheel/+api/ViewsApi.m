@@ -28,7 +28,7 @@ classdef ViewsApi < handle
 
         function [returnData, resp] = addView(obj, containerId, body, varargin)
             % Add a new data view
-            % containerId (char):The ID of the container, one of user, group or project
+            % containerId (char):The ID of the container, one of user, group or project. Use \"site\" as containerId to save or get a site data view.
             % body (DataView)
             % returns: [CollectionNewOutput, resp]
 
@@ -357,7 +357,7 @@ classdef ViewsApi < handle
 
         function [returnData, resp] = getViews(obj, containerId, varargin)
             % Return a list of all views belonging to container
-            % containerId (char):The ID of the container, one of user, group or project
+            % containerId (char):The ID of the container, one of user, group or project. Use \"site\" as containerId to save or get a site data view.
             % returns: [vector[DataView], resp]
 
             x__inp = inputParser;

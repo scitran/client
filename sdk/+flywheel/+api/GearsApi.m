@@ -10,6 +10,7 @@
 %    getGear           - Retrieve details about a specific gear
 %    getGearContext    - Get context values for the given gear and container.
 %    getGearInvocation - Get a schema for invoking a gear.
+%    getGearSuggest    - Get files with input suggestions, parent containers, and child containers for the given container.
 %    getGearTicket     - Retrieve a specific gear ticket
 %    getMyGearTickets  - Retrieve all gear tickets for the current user
 %    prepareAddGear    - Prepare a gear upload
@@ -348,6 +349,77 @@ classdef GearsApi < handle
             body = {};
 
             resp = obj.apiClient.callApi('GET', '/gears/{GearId}/invocation', ...
+                pathParams, queryParams, headers, body, formParams, files);
+
+            status = resp.getStatusCode();
+
+            switch num2str(status)
+                case '200'
+                    if x__inp.Results.DumpResponseData
+                        x__respData = resp.getBodyAsString();
+                        disp(x__respData);
+                    end
+                    json = flywheel.ApiClient.getResponseJson(resp);
+                    returnData = flywheel.model.containers.Map.fromJson(json, obj.context_);
+                    if ~isempty(returnData)
+                        returnData = returnData.returnValue();
+                    end
+                otherwise
+                    returnData = [];
+            end
+        end
+
+        function [returnData, resp] = getGearSuggest(obj, gearId, containerType, containerId, varargin)
+            % Get files with input suggestions, parent containers, and child containers for the given container.
+            % gearId (char):Id of the gear to interact with
+            % containerType (char):Type of the container to interact with
+            % containerId (char):Id of the container to interact with
+            % collectionId (char):Get suggestions for a collection
+            % include (char):Include only \"children\" or \"files\"
+            % returns: [containers.Map, resp]
+
+            x__inp = inputParser;
+            x__inp.StructExpand = false;
+            addRequired(x__inp, 'gearId');
+            addRequired(x__inp, 'containerType');
+            addRequired(x__inp, 'containerId');
+            addParameter(x__inp, 'collectionId', []);
+            addParameter(x__inp, 'include', []);
+            addParameter(x__inp, 'DumpResponseData', false);
+            parse(x__inp, gearId, containerType, containerId, varargin{:});
+
+            % Path parameters
+            pathParams = {};
+            if ~isempty(x__inp.Results.gearId)
+                pathParams = [pathParams, 'GearId', x__inp.Results.gearId];
+            end
+            if ~isempty(x__inp.Results.containerType)
+                pathParams = [pathParams, 'ContainerType', x__inp.Results.containerType];
+            end
+            if ~isempty(x__inp.Results.containerId)
+                pathParams = [pathParams, 'ContainerId', x__inp.Results.containerId];
+            end
+
+            % Query parameters
+            queryParams = {};
+            if ~isempty(x__inp.Results.collectionId)
+                queryParams = [queryParams, 'collectionId', flywheel.ApiClient.castParam(x__inp.Results.collectionId, 'char')];
+            end
+            if ~isempty(x__inp.Results.include)
+                queryParams = [queryParams, 'include', flywheel.ApiClient.castParam(x__inp.Results.include, 'char')];
+            end
+
+            % Header parameters
+            headers = {};
+
+            % Form parameters
+            formParams = {};
+            files = {};
+
+            % Body (as JSON)
+            body = {};
+
+            resp = obj.apiClient.callApi('GET', '/gears/{GearId}/suggest/{ContainerType}/{ContainerId}', ...
                 pathParams, queryParams, headers, body, formParams, files);
 
             status = resp.getStatusCode();

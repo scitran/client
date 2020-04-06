@@ -788,6 +788,8 @@ classdef ContainersApi < handle
             % view (logical):If true, the proper \"Content-Type\" header based on the file's mimetype is set on response If false, the \"Content-Type\" header is set to \"application/octet-stream\" 
             % info (logical):If the file is a zipfile, return a json response of zipfile member information
             % member (char):The filename of a zipfile member to download rather than the entire file
+            % signature (char):Url's signature (signed download url)
+            % expires (char):Signed url expiration time (epoch time)
             % destFile - Destination file path
             % returns: [DownloadTicket, resp]
 
@@ -798,6 +800,8 @@ classdef ContainersApi < handle
             addParameter(x__inp, 'view', []);
             addParameter(x__inp, 'info', []);
             addParameter(x__inp, 'member', []);
+            addParameter(x__inp, 'signature', []);
+            addParameter(x__inp, 'expires', []);
             addRequired(x__inp, 'destFile');
             addParameter(x__inp, 'OutputType', 'double');
             addParameter(x__inp, 'DumpResponseData', false);
@@ -822,6 +826,12 @@ classdef ContainersApi < handle
             end
             if ~isempty(x__inp.Results.member)
                 queryParams = [queryParams, 'member', flywheel.ApiClient.castParam(x__inp.Results.member, 'char')];
+            end
+            if ~isempty(x__inp.Results.signature)
+                queryParams = [queryParams, 'signature', flywheel.ApiClient.castParam(x__inp.Results.signature, 'char')];
+            end
+            if ~isempty(x__inp.Results.expires)
+                queryParams = [queryParams, 'expires', flywheel.ApiClient.castParam(x__inp.Results.expires, 'char')];
             end
 
             % Header parameters
@@ -861,6 +871,8 @@ classdef ContainersApi < handle
             % view (logical):If true, the proper \"Content-Type\" header based on the file's mimetype is set on response If false, the \"Content-Type\" header is set to \"application/octet-stream\" 
             % info (logical):If the file is a zipfile, return a json response of zipfile member information
             % member (char):The filename of a zipfile member to download rather than the entire file
+            % signature (char):Url's signature (signed download url)
+            % expires (char):Signed url expiration time (epoch time)
             % returns: [FileZipInfo, resp]
 
             x__inp = inputParser;
@@ -871,6 +883,8 @@ classdef ContainersApi < handle
             addParameter(x__inp, 'view', []);
             addParameter(x__inp, 'info', []);
             addParameter(x__inp, 'member', []);
+            addParameter(x__inp, 'signature', []);
+            addParameter(x__inp, 'expires', []);
             addParameter(x__inp, 'DumpResponseData', false);
             parse(x__inp, containerId, fileName, varargin{:});
 
@@ -898,6 +912,12 @@ classdef ContainersApi < handle
             end
             if ~isempty(x__inp.Results.member)
                 queryParams = [queryParams, 'member', flywheel.ApiClient.castParam(x__inp.Results.member, 'char')];
+            end
+            if ~isempty(x__inp.Results.signature)
+                queryParams = [queryParams, 'signature', flywheel.ApiClient.castParam(x__inp.Results.signature, 'char')];
+            end
+            if ~isempty(x__inp.Results.expires)
+                queryParams = [queryParams, 'expires', flywheel.ApiClient.castParam(x__inp.Results.expires, 'char')];
             end
 
             % Header parameters
@@ -939,6 +959,8 @@ classdef ContainersApi < handle
             % view (logical):If true, the proper \"Content-Type\" header based on the file's mimetype is set on response If false, the \"Content-Type\" header is set to \"application/octet-stream\" 
             % info (logical):If the file is a zipfile, return a json response of zipfile member information
             % member (char):The filename of a zipfile member to download rather than the entire file
+            % signature (char):Url's signature (signed download url)
+            % expires (char):Signed url expiration time (epoch time)
             % returns: [DownloadTicket, resp]
 
             x__inp = inputParser;
@@ -949,6 +971,8 @@ classdef ContainersApi < handle
             addParameter(x__inp, 'view', []);
             addParameter(x__inp, 'info', []);
             addParameter(x__inp, 'member', []);
+            addParameter(x__inp, 'signature', []);
+            addParameter(x__inp, 'expires', []);
             addParameter(x__inp, 'DumpResponseData', false);
             parse(x__inp, containerId, fileName, varargin{:});
 
@@ -974,6 +998,12 @@ classdef ContainersApi < handle
             end
             if ~isempty(x__inp.Results.member)
                 queryParams = [queryParams, 'member', flywheel.ApiClient.castParam(x__inp.Results.member, 'char')];
+            end
+            if ~isempty(x__inp.Results.signature)
+                queryParams = [queryParams, 'signature', flywheel.ApiClient.castParam(x__inp.Results.signature, 'char')];
+            end
+            if ~isempty(x__inp.Results.expires)
+                queryParams = [queryParams, 'expires', flywheel.ApiClient.castParam(x__inp.Results.expires, 'char')];
             end
 
             % Header parameters

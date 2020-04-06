@@ -592,12 +592,16 @@ classdef DefaultApi < handle
             % Perform path based lookup of nodes in the Flywheel hierarchy
             % body (ResolverInput)
             % exhaustive (logical):Set to return a complete list regardless of permissions
+            % fullTree (logical):Parse full download style paths (e.g. group/PROJECTS/project_label/SUBJECTS/...)
+            % minattr (logical):Return only minimal attributes
             % returns: [ResolverOutput, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
             addRequired(x__inp, 'body');
             addParameter(x__inp, 'exhaustive', []);
+            addParameter(x__inp, 'fullTree', []);
+            addParameter(x__inp, 'minattr', []);
             addParameter(x__inp, 'DumpResponseData', false);
             parse(x__inp, body, varargin{:});
 
@@ -608,6 +612,12 @@ classdef DefaultApi < handle
             queryParams = {};
             if ~isempty(x__inp.Results.exhaustive)
                 queryParams = [queryParams, 'exhaustive', flywheel.ApiClient.castParam(x__inp.Results.exhaustive, 'logical')];
+            end
+            if ~isempty(x__inp.Results.fullTree)
+                queryParams = [queryParams, 'full_tree', flywheel.ApiClient.castParam(x__inp.Results.fullTree, 'logical')];
+            end
+            if ~isempty(x__inp.Results.minattr)
+                queryParams = [queryParams, 'minattr', flywheel.ApiClient.castParam(x__inp.Results.minattr, 'logical')];
             end
 
             % Header parameters
