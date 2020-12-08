@@ -202,11 +202,11 @@ end
 switch infoType
     case 'info'
     case 'tags'
-        disp('info returned.  info type not yet implemented')
+        disp('info returned.  infoType tags not yet implemented')
     case 'notes'
-        disp('info returned.  info type not yet implemented')
+        disp('info returned.  infoType notes not yet implemented')
     case 'classification'
-        disp('info returned.  info type not yet implemented')
+        disp('info returned.  infoType classification not yet implemented')
     otherwise
         error('Unknown info type %s',infoType);
 end
