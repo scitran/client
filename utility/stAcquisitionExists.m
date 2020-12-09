@@ -16,7 +16,8 @@ function val = stAcquisitionExists(session,label)
 %
 % BW, December, 2019
 %
-% See also:  stSessionExists,
+% See also:  
+%    stSessionExists, stSelect
 %
 
 % Assume none exist
@@ -33,6 +34,9 @@ else
         % None with the label.
         return;
     else
+        if numel(sameLabel) > 1
+            warning('Multiple acquisitions exist with label %s',label);
+        end
         % Acquisitions with this label exist
         val = sameLabel{1};
     end

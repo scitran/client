@@ -64,7 +64,11 @@ end
 
 % Base directory to store user-specific files
 % If the directory doesn't exist, make it.
-stDir = fullfile(getenv('HOME'), '.stclient');
+if ispc, home = getenv('USERPROFILE');
+else,    home = getenv('HOME');
+end
+
+stDir = fullfile(home, '.stclient');
 if ~exist(stDir,'dir')
     mkdir(stDir);
 end
@@ -156,6 +160,7 @@ obj.url = ['https://', newStr{1}];
 % Create and store the JSON representation in the tokenFile
 st.(instance).token = obj.token;
 st.(instance).client_url = obj.url;
+
 jsonwrite(tokenFile,st);
 fprintf('API key saved for "%s".\n',instance);
 

@@ -1,13 +1,18 @@
 function val = stSessionExists(sessions,label,tStamp)
-% Check for a session with a specific label and time stamp
+% Check if a session with a specific label exists in the sessions list
 %
 % Syntax
-%   match = sessionExists(sessions,sessionLabel,tSamp)
+%   match = sessionExists(sessions,sessionLabel,[tSamp])
 %
+% Brief description
+%   If there are multiple sessions that match the label, then you can also
+%   specify a time stamp (tStamp).
 % Inputs
-%  sessions:   Cell array of sessions
+%  sessions:   Array of Flywheel sessions
 %  label:      Session label
-%  tStamp:     Time stamp
+%
+% Optional
+%  tStamp:     Time stamp  (formatted as in datestr(now))
 %
 % Optional key/value pairs
 %  N/A
@@ -18,8 +23,10 @@ function val = stSessionExists(sessions,label,tStamp)
 % See also
 %
 
+
 %% Check
 val = [];
+if notDefined('tStamp'), tStamp = ''; end
 
 if isempty(sessions)
     % No sessions, then no match
@@ -30,14 +37,22 @@ else
     if isempty(sameLabel)
         % None with the same session label.
         return;
-    else
+    elseif isempty(tStamp)
+        % No tStamp.
+        val = sameLabel;
         % Sessions with this label exist
-        nSessions = numel(sameLabel);
+        if numel(val) > 1
+            warning('Multiple session matches.')
+        end
+        return;
+    else
+        % There is a tStamp and a match, so keep checking
+        
         % Simplified time stamp to avoid formatting issues.  We store
         % lower case letters and numbers
-        X = stParamFormat(char(tStamp)); 
+        X = stParamFormat(char(tStamp));
         X = strrep(X,':',''); X = strrep(X,'-','');
-
+        
         % Check if they have the same time stamp
         for ii=1:nSessions
             % Simplify this time stamp as above
