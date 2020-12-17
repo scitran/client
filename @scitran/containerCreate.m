@@ -2,9 +2,7 @@ function idS = containerCreate(obj, group, project, varargin)
 % Create a project, session or acquisition on a Flywheel instance
 %
 % Synopsis
-%   idS = st.containerCreate(groupLabel, projectLabel,...
-%                 'session',sessionLabel,...
-%                 'acquisition',acquisitionLabel)
+%   idS = st.containerCreate(groupLabel, projectLabel,...)
 %
 % Brief description:
 %   Make a container. Top level is a project; then a session, and then
@@ -19,7 +17,7 @@ function idS = containerCreate(obj, group, project, varargin)
 %  projectLabel - Project Label
 %
 % Optional Parameters - these are a
-%  subject       - Subject name
+%  subject       - Subject code
 %  session       - Session label
 %  acquisition   - Acquisition label
 %
@@ -98,7 +96,7 @@ varargin = stParamFormat(varargin);
 p = inputParser;
 p.addRequired('group',@ischar);
 p.addRequired('project',@ischar);
-p.addParameter('subject','',@ischar);
+p.addParameter('subject','Unknown',@ischar);
 p.addParameter('session','',@ischar);
 p.addParameter('acquisition','',@ischar);
 
@@ -108,15 +106,11 @@ p.addParameter('acquisition','',@ischar);
 
 p.parse(group,project,varargin{:});
 
-group       = p.Results.group;
-project     = p.Results.project;
-subject     = p.Results.subject;
-session     = p.Results.session;
-acquisition = p.Results.acquisition;
-
-% additionalData = p.Results.additionalData;  % NYI
-
-%% First test whether the container already exists
+group            = p.Results.group;
+projectLabel     = p.Results.project;
+subjectCode      = p.Results.subject;
+sessionLabel     = p.Results.session;
+acquisitionLabel = p.Results.acquisition;
 
 %% Check whether the group exists
 
@@ -126,119 +120,72 @@ if ~status
     error('No group found with label %s\n',group);
 end
 
-%{
-try
-    lustr = sprintf('%s/%s/%s/%s/%s',groupId,project,subject,session,acquisition);
-    % Fix up the string
-    idx = strfind(lustr,'//');
-    if ~isempty(idx), lustr = lustr(1:(idx(1)-1)); end
-    thisContainer = st.lookup(lustr);
-    idS = thisContainer.id;
-    disp('Container exists');
-catch
-    % No container with those properties.  Carry on.
-end
-%}
-
 %% On to the project level
 
 % Does the project exist?
-[status, idS.project] = obj.exist('project',project);
+[status, idS.project] = obj.exist('project',projectLabel);
 if ~status
     % If not, add it.
-    idS.project = obj.fw.addProject(struct('label',project,'group',groupId));
+    idS.project = obj.fw.addProject(struct('label',projectLabel,'group',groupId));
 end
 
 % Always get the project because we will probably need it either for the
 % subject or adding a session.
 project = obj.fw.get(idS.project);
 
-%% Did the user supply a subject or want one created?
+%% Does the subject exist?
 
-subjectLabel = subject;
-if isempty(subjectLabel)
-    % This is still the subject label.
-    % User believes the subject is already part of the project, so empty.
-    % But we don't know what subject to assign, so it will be the default,
-    % which is 'unknown'.
-    idS.subject = '';
-else
-    % Subject label exists, so try to find the subject.
-    str = sprintf('label=%s',subjectLabel);
-    try
-        % Should work.  ASK LMP.
-        % subject = project.subjects.findOne(str);
-        subjects = project.subjects();
-        thisSubject = stSelect(subjects,'label',subjectLabel);
-        subject = thisSubject{1};
-    catch
-        % Not there, so create the subject for this project with this label
-        subject = project.addSubject('label',subjectLabel,'code',subject);
-    end
-    
-    % Add the subject ID to the output
-    idS.subject = subject.id;
+subjects    = project.subjects();
+thisSubject = stSelect(subjects,'code',subjectCode);
+if isempty(thisSubject)    
+    % Not there, so create the subject for this project with this label
+    thisSubject = project.addSubject('label',subjectCode,'code',subjectCode);
+end
+if iscell(thisSubject)
+    thisSubject = thisSubject{1};
 end
 
-%% If no session is passed, then we are done and return the project ID
+% Add the subject ID to the output
+idS.subject = thisSubject.id;
+
+%% If no session label is passed, we are done and return the project ID
 
 % Then, we check whether a session with the name 'session' already exists.
 % If it does, we return
-if isempty(session), return; end
-sessionLabel = session;
-str = sprintf('label=%s',sessionLabel);
+if isempty(sessionLabel), return; end
 
-% The user passed a name and it does not exist.
-% Create a new session for this subject, or if no subject with a
-% default subject.
-if exist('subject','var') && ~isempty(subject)
-    % Subject exists
-    try
-        session = subject.sessions.findOne(str);
-    catch
-        session = subject.addSession('label',sessionLabel);
-    end
-else
-    % No subject.  So find the session from within the project.
-    try
-        % This is a test if the session exists
-        session = project.sessions.findOne(str);
-    catch
-        % Create it from the project level
-        session = project.addSession(struct('label', sessionLabel, 'project', idS.project));
-        
-        % [status, idS.session] = obj.exist('session', session, 'parentID', idS.project);
-        % if ~status
-        % If not, add it. Should we check with the user?
-        %
-        % idS.session = obj.fw.addSession(struct('label', session, 'project', idS.project));
-        %{
-              % If the subject exists, we should also update the subject field when
-              % we create a session
-              if ~isempty(subjectLabel)
-                thisSession = st.fw.get(idS.session);
-                thisSubject = thisSession.subject;
-                thisSubject.update('label',subjectLabel);
-              end
-        %}
-        % end
-    end
+%% We have a session and a subject
+
+sessions    = project.sessions();
+thisSession = stSessionExists(sessions,sessionLabel,...
+    'subject code',subjectCode);
+
+% A session for this subject does not exist, so create it.
+if isempty(thisSession)
+    % Create it from the project level
+    thisSession = project.addSession(struct('label', sessionLabel, ...
+        'project', idS.project));
+    obj.containerSet(thisSession,'timestamp',datetime('now'));
+    obj.containerSet(thisSession,'subject',thisSubject);
 end
-
-idS.session = session.id;
+idS.session = thisSession.id;
 
 %% Test for the acquisition label; does it exist? If not create it
-if isempty(acquisition), return; end
-acquisitionLabel = acquisition;
-str = sprintf('label=%s',acquisitionLabel);
+if isempty(acquisitionLabel), return; end
 
-try
-    acq = session.acquisition.findOne(str);
-catch
-    acq = session.addAcquisition('label', acquisitionLabel);
+acquisitions = thisSession.acquisitions();
+if isempty(acquisitions)
+    % No acquisitions at all.
+    thisAcquisition = thisSession.addAcquisition('label', acquisitionLabel);
+else
+    thisAcquisition = stAcquisitionExists(thisSession,acquisitionLabel);
+    if isempty(thisAcquisition)
+        % There are acquisitions, just not the one we want.
+        thisAcquisition = thisSession.addAcquisition('label', acquisitionLabel);
+    end
 end
 
-idS.acquisition = acq.id;
+idS.acquisition = thisAcquisition.id;
 
 end
 

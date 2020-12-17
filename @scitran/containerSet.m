@@ -56,6 +56,11 @@ switch ieParamFormat(param)
         timestamp.TimeZone = 'America/Los_Angeles';
         fwObject.update('timestamp', timestamp);
 
+    case 'subject'
+        % Not sure this is how to do it.  Also, this is only correct for
+        % sessions, I think.  Not acquisition or project.
+        fwObject = st.fw.(cType).findOne(['_id=',id]);
+        fwObject.subject = val;
     otherwise
         error('Not ready');
 end

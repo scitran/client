@@ -1,32 +1,49 @@
-function val = stSessionExists(sessions,label,tStamp)
+function val = stSessionExists(sessions,label,varargin)
 % Check if a session with a specific label exists in the sessions list
 %
+% Put in a warning that I changed this, in case someone else is using it
+%
 % Syntax
-%   match = sessionExists(sessions,sessionLabel,[tSamp])
+%   match = sessionExists(sessions,sessionLabel,varargin)
 %
 % Brief description
 %   If there are multiple sessions that match the label, then you can also
-%   specify a time stamp (tStamp).
+%   require a match to a time stamp or subjectcode.
+%
 % Inputs
 %  sessions:   Array of Flywheel sessions
 %  label:      Session label
 %
-% Optional
-%  tStamp:     Time stamp  (formatted as in datestr(now))
-%
-% Optional key/value pairs
-%  N/A
+% Optional key/val
+%  param:   Parameter string to check, usually subjectcode or time stamp
 %
 % Returns
-%   val - The session if it exists, or empty if it does not
+%   val - A session if it exists, or empty if a matching session does not
+%         exist
 %
 % See also
+%    stAcquisitionExists
+
+% Examples
+%   sess = stSessionExists(sessions,thisLabel,'subject code','003');
+%   sess = stSessionExists(sessions,thisLabel,'time stamp',datestr(now));
 %
 
-
 %% Check
+varargin = ieParamFormat(varargin);
+
+p = inputParser;
+p.addRequired('sessions',@iscell);
+p.addRequired('label',@ischar);
+p.addParameter('timestamp','',@ischar);
+p.addParameter('subjectcode','',@ischar);
+
+p.parse(sessions,label,varargin{:});
+
+timestamp   = p.Results.timestamp;
+subjectcode = p.Results.subjectcode;
+
 val = [];
-if notDefined('tStamp'), tStamp = ''; end
 
 if isempty(sessions)
     % No sessions, then no match
@@ -37,33 +54,38 @@ else
     if isempty(sameLabel)
         % None with the same session label.
         return;
-    elseif isempty(tStamp)
-        % No tStamp.
-        val = sameLabel;
-        % Sessions with this label exist
-        if numel(val) > 1
-            warning('Multiple session matches.')
+    end
+end
+
+% We have one or more sessions matching the label.  Check the additional
+% parameter(s).
+nSessions = numel(sameLabel);
+if ~isempty('subjectcode')
+    % Do any of the sessions match the subject code
+    for ii=1:nSessions
+        if isequal(sameLabel{ii}.subject.code,subjectcode)
+            val = sameLabel{ii};
+            return;
         end
-        return;
-    else
-        % There is a tStamp and a match, so keep checking
-        
-        % Simplified time stamp to avoid formatting issues.  We store
-        % lower case letters and numbers
-        X = stParamFormat(char(tStamp));
-        X = strrep(X,':',''); X = strrep(X,'-','');
-        
-        % Check if they have the same time stamp
-        for ii=1:nSessions
-            % Simplify this time stamp as above
-            Y = char(sameLabel{ii}.timestamp);
-            Y = stParamFormat(Y); Y = strrep(Y,':',''); Y = strrep(Y,'-','');
-            if strcmp(X,Y)
-                % A match. Return the session with the same label and
-                % time stamp
-                val = sameLabel{ii};
-                return;
-            end
+    end
+end
+
+if ~isempty(timestamp)
+    % Simplified time stamp to avoid formatting issues.  We store
+    % lower case letters and numbers
+    X = stParamFormat(char(timestamp));
+    X = strrep(X,':',''); X = strrep(X,'-','');
+    
+    % Check if they have the same time stamp
+    for ii=1:nSessions
+        % Simplify this time stamp as above
+        Y = char(sameLabel{ii}.timestamp);
+        Y = stParamFormat(Y); Y = strrep(Y,':',''); Y = strrep(Y,'-','');
+        if strcmp(X,Y)
+            % A match. Return the session with the same label and
+            % time stamp
+            val = sameLabel{ii};
+            return;
         end
     end
 end
