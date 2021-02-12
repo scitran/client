@@ -11,16 +11,10 @@ function info = infoGet(st,container,varargin)
 %  key/value input.
 %
 % Input (required)
-%   container - A search response or an object container, OR, a string
-%       defining the file, or the filename. If a file name string, you
-%       must use the key/value pairs to specify the container type and id. 
+%   container - A Flywheel container
 %   
 % Optional key/value pairs
-%   'info type'      - 'info' (default),'tag','note'
-%   'container type' - If the 'object' input is a string, we know that
-%                      the request is for a file. The parent container
-%                       and id required
-%   containerID      - See above.
+%   'info type'      - 'info' (default),'tag','note' - TODO: add roi?
 %
 % Return
 %  info - Returned information field.  Either info, tag or note.
@@ -65,33 +59,26 @@ function info = infoGet(st,container,varargin)
   info = st.infoGet(acquisition{1});
 %}
 
-%% Figure out parameters
+%% Parameters
 
 p = inputParser;
 varargin = stParamFormat(varargin);
-
 p.addRequired('st',@(x)(isa(x,'scitran')));
 
 % What if this is returned by a search, rather than a container
 % itself?  Can't we detect and convert to the container object?
 p.addRequired('container');
-
-validTypes = {'project','session','acquisition','collection','analysis', ...
-    'fileproject','filesession','fileacquisition','filecollection'};
-p.addParameter('containertype','',@(x)(ismember(stParamFormat(x),validTypes)));
-p.addParameter('containerid','',@ischar);
 p.addParameter('infotype','info',@ischar);
 
 p.parse(st,container,varargin{:});
 
-containerType = p.Results.containertype;
-containerID   = p.Results.containerid;
+% Different types of info data can be specified
 infoType      = p.Results.infotype;
 
 %% Figure out the the container information
 
-[containerID, containerType, fileContainerType, fname] = ...
-    st.objectParse(container, containerType,containerID);
+containerType = stType(container);
+containerID = container.id;
 
 %% Call the right SDK function to get the whole info struct
 
@@ -107,9 +94,13 @@ switch containerType
     case 'analysis'
       meta = obj.fw.getAnalysis(containerID);
 
-      % We have a new 'file' data type.  Maybe this is no longer
-      % needed?
-    case 'file'
+      % The 'file' data type is handled a little differently.
+    case 'fileentry'
+        
+        fileContainerType = stType(container.parent);
+        fname = container.name;
+        containerID = container.parent.id;
+        
         switch fileContainerType
             case 'project'
                 meta = st.fw.getProjectFileInfo(containerID,fname);
@@ -127,7 +118,9 @@ end
 % There are separate methods for Notes and Tags.  I don't think they
 % are needed because the information is in the info object.  So, the
 % preferred way to get them is infoGet( ...., 'info type','note') ...
-% or similar.
+% or similar.  
+%
+% Note:  We could add an 'roi' type.
 switch infoType
     case 'info'
         info = meta.info;
@@ -144,7 +137,6 @@ switch infoType
     otherwise
         warning('No option for %s.  Returning info\n',infoType);
         info = meta.info;
-
 end
 
 end
