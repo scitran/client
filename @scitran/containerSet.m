@@ -1,7 +1,8 @@
 function containerSet(st,container,param,val,varargin)
 % Set a container parameter to a particular value
 %
-%  TODO
+%  This is a placeholder.  The better FW interface should allow us to get
+%  rid of this method with simpler FW class.
 %
 % Syntax
 %    st.containerSet(container, param, val, varargin)
@@ -55,12 +56,14 @@ switch ieParamFormat(param)
         timestamp = datetime('now');
         timestamp.TimeZone = 'America/Los_Angeles';
         fwObject.update('timestamp', timestamp);
-
+        
     case 'subject'
         % Not sure this is how to do it.  Also, this is only correct for
         % sessions, I think.  Not acquisition or project.
         fwObject = st.fw.(cType).findOne(['_id=',id]);
         fwObject.subject = val;
+        fwObject.update();
+        
     otherwise
         error('Not ready');
 end
