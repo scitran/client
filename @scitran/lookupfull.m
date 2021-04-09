@@ -1,14 +1,14 @@
-function result = lookup(st,str)
-% Interface to Flywheel lookup function
+function result = lookupfull(st,str)
+% Interface to Flywheel lookup function but forces full data return
 %
 % Syntax:
-%    scitran.lookup(str)
+%    scitran.lookupfull(str)
 %
 % Brief description:
-%   Lookup a container by a string of labels.  The returned container is
-%   not always complete.  Instead, there is a flag (infoExists) that tells
-%   you whether there are some fields in the whole container that are not
-%   returned here.
+%   Lookup a container by a string of labels.  The usual lookup only
+%   returns a partial description of the object for reasons of speed.  In
+%   this version, we do the lookup and then we do a 'get' so the entire set
+%   of data is returned.
 %
 % Input:
 %  str:  A string of labels.  You can have any depth in this order.  
@@ -40,12 +40,13 @@ function result = lookup(st,str)
  thisGear.gear.name
 %}
 
-% We might want to make the result conform to some other format some day.
-% Or Flywheel may always return us the same format.
+% This is the quick, partial lookup
 result = st.fw.lookup(str);
 
+% This flag tells us whether the return is partial.  In that case, the get
+% returns the whole thing. 
 if result.infoExists
-    disp('This is a partial container.  Other info exists');
+    result = st.fw.get(result.id);
 end
 
 end

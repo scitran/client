@@ -40,17 +40,25 @@ webOptions = {'wiki','sdk releases','sdk starting','sdk examples','sdk package',
 
 %% Bring up the help pages
 
+%{
+% Older URLs.  Maybe they will reappear?
+% url = 'https://flywheel-io.github.io/core/branches/master/matlab/getting_started.html';
+% url = 'https://github.com/flywheel-io/core/releases';
+% url = 'https://flywheel-io.github.io/core/branches/master/matlab/examples.html';
+% url = 'https://flywheel-io.github.io/core/branches/master/matlab/flywheel.html';
+%}
+
 switch(src)
     case 'wiki'
         url = 'https://github.com/scitran/client/wiki';
     case 'sdkstarting'
-        url = 'https://flywheel-io.github.io/core/branches/master/matlab/getting_started.html';
+        url = 'https://flywheel-io.gitlab.io/product/backend/sdk/branches/master/matlab/index.html';
     case 'sdkreleases'
-        url = 'https://github.com/flywheel-io/core/releases';
+        url = 'https://flywheel-io.gitlab.io/product/backend/sdk/branches/master/matlab/getting_started.html#introduction';
     case 'sdkexamples'
-        url = 'https://flywheel-io.github.io/core/branches/master/matlab/examples.html';
+        url = 'https://flywheel-io.gitlab.io/product/backend/sdk/branches/master/matlab/getting_started.html';
     case 'sdkpackage'
-        url = 'https://flywheel-io.github.io/core/branches/master/matlab/flywheel.html';
+        url = 'https://flywheel-io.gitlab.io/product/backend/sdk/branches/master/matlab/getting_started.html#introduction'; 
     otherwise
         % help brings this up
         fprintf('st.help(Parameter)\nParameter options \n');
