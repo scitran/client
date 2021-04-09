@@ -576,7 +576,7 @@
                 obj.props_('revision') = flywheel.ModelBase.deserializeValue(json.revision, 'integer');
             end
             if isfield(json, 'permissions')
-                obj.props_('permissions') = flywheel.ModelBase.cellmap(@(x) flywheel.model.RolesRoleAssignment.fromJson(x, context), json.permissions);
+                obj.props_('permissions') = flywheel.ModelBase.cellmap(@(x) flywheel.model.Permission.fromJson(x, context), json.permissions);
             end
             if isfield(json, 'files')
                 obj.props_('files') = flywheel.ModelBase.cellmap(@(x) flywheel.model.FileEntry.fromJson(x, context), json.files);
@@ -623,7 +623,7 @@
                 if isKey(obj.props_, 'revision')
                 end
                 if isKey(obj.props_, 'permissions')
-                    obj.props_('permissions') = flywheel.ModelBase.cellmap(@flywheel.model.RolesRoleAssignment.ensureIsInstance, obj.props_('permissions'));
+                    obj.props_('permissions') = flywheel.ModelBase.cellmap(@flywheel.model.Permission.ensureIsInstance, obj.props_('permissions'));
                 end
                 if isKey(obj.props_, 'files')
                     obj.props_('files') = flywheel.ModelBase.cellmap(@flywheel.model.FileEntry.ensureIsInstance, obj.props_('files'));

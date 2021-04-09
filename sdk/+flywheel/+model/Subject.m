@@ -23,7 +23,7 @@
 %    created      - Creation time (automatically set)
 %    modified     - Last modification time (automatically updated)
 %    revision     - An incremental document revision number
-%    permissions 
+%    permissions  - Array of user roles
 %    notes       
 %    infoExists   - Flag that indicates whether or not info exists on this container
 %    analyses    
@@ -975,7 +975,7 @@
                 obj.props_('revision') = flywheel.ModelBase.deserializeValue(json.revision, 'integer');
             end
             if isfield(json, 'permissions')
-                obj.props_('permissions') = flywheel.ModelBase.cellmap(@(x) flywheel.model.RolesBackwardsCompatibleRoleAssignment.fromJson(x, context), json.permissions);
+                obj.props_('permissions') = flywheel.ModelBase.cellmap(@(x) flywheel.model.Permission.fromJson(x, context), json.permissions);
             end
             if isfield(json, 'notes')
                 obj.props_('notes') = flywheel.ModelBase.cellmap(@(x) flywheel.model.Note.fromJson(x, context), json.notes);
@@ -1044,7 +1044,7 @@
                 if isKey(obj.props_, 'revision')
                 end
                 if isKey(obj.props_, 'permissions')
-                    obj.props_('permissions') = flywheel.ModelBase.cellmap(@flywheel.model.RolesBackwardsCompatibleRoleAssignment.ensureIsInstance, obj.props_('permissions'));
+                    obj.props_('permissions') = flywheel.ModelBase.cellmap(@flywheel.model.Permission.ensureIsInstance, obj.props_('permissions'));
                 end
                 if isKey(obj.props_, 'notes')
                     obj.props_('notes') = flywheel.ModelBase.cellmap(@flywheel.model.Note.ensureIsInstance, obj.props_('notes'));

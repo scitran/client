@@ -687,7 +687,7 @@
                 obj.props_('info_exists') = flywheel.ModelBase.deserializeValue(json.info_exists, 'logical');
             end
             if isfield(json, 'permissions')
-                obj.props_('permissions') = flywheel.ModelBase.cellmap(@(x) flywheel.model.RolesBackwardsCompatibleRoleAssignment.fromJson(x, context), json.permissions);
+                obj.props_('permissions') = flywheel.ModelBase.cellmap(@(x) flywheel.model.Permission.fromJson(x, context), json.permissions);
             end
             if isfield(json, 'notes')
                 obj.props_('notes') = flywheel.ModelBase.cellmap(@(x) flywheel.model.Note.fromJson(x, context), json.notes);
@@ -740,7 +740,7 @@
                 if isKey(obj.props_, 'info_exists')
                 end
                 if isKey(obj.props_, 'permissions')
-                    obj.props_('permissions') = flywheel.ModelBase.cellmap(@flywheel.model.RolesBackwardsCompatibleRoleAssignment.ensureIsInstance, obj.props_('permissions'));
+                    obj.props_('permissions') = flywheel.ModelBase.cellmap(@flywheel.model.Permission.ensureIsInstance, obj.props_('permissions'));
                 end
                 if isKey(obj.props_, 'notes')
                     obj.props_('notes') = flywheel.ModelBase.cellmap(@flywheel.model.Note.ensureIsInstance, obj.props_('notes'));

@@ -2229,7 +2229,7 @@ classdef SessionsApi < handle
             % sessionId (char)
             % fileName (char)
             % body (FileEntry)
-            % returns: [InlineResponse2005, resp]
+            % returns: [InlineResponse2004, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
@@ -2274,7 +2274,7 @@ classdef SessionsApi < handle
                         disp(x__respData);
                     end
                     json = flywheel.ApiClient.getResponseJson(resp);
-                    returnData = flywheel.model.InlineResponse2005.fromJson(json, obj.context_);
+                    returnData = flywheel.model.InlineResponse2004.fromJson(json, obj.context_);
                     if ~isempty(returnData)
                         returnData = returnData.returnValue();
                     end
@@ -2288,7 +2288,7 @@ classdef SessionsApi < handle
             % sessionId (char)
             % fileName (char)
             % body (ClassificationUpdateInput)
-            % returns: [InlineResponse2005, resp]
+            % returns: [InlineResponse2004, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
@@ -2333,7 +2333,7 @@ classdef SessionsApi < handle
                         disp(x__respData);
                     end
                     json = flywheel.ApiClient.getResponseJson(resp);
-                    returnData = flywheel.model.InlineResponse2005.fromJson(json, obj.context_);
+                    returnData = flywheel.model.InlineResponse2004.fromJson(json, obj.context_);
                     if ~isempty(returnData)
                         returnData = returnData.returnValue();
                     end

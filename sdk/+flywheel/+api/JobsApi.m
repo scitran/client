@@ -8,7 +8,6 @@
 %    addJob                  - Add a job
 %    addJobLogs              - Add logs to a job.
 %    askJobs                 - Ask the queue a question
-%    askJobsState            - Ask job count by state
 %    completeJob             - Complete a job, with information
 %    determineProviderForJob - Determine the effective compute provider for a proposed job.
 %    getAllJobs              - Return all jobs
@@ -211,60 +210,6 @@ classdef JobsApi < handle
                     end
                     json = flywheel.ApiClient.getResponseJson(resp);
                     returnData = flywheel.model.JobAskResponse.fromJson(json, obj.context_);
-                    if ~isempty(returnData)
-                        returnData = returnData.returnValue();
-                    end
-                otherwise
-                    returnData = [];
-            end
-        end
-
-        function [returnData, resp] = askJobsState(obj, jobState, body, varargin)
-            % Ask job count by state
-            % jobState (char)
-            % body (JobAskState)
-            % returns: [JobAskStateResponse, resp]
-
-            x__inp = inputParser;
-            x__inp.StructExpand = false;
-            addRequired(x__inp, 'jobState');
-            addRequired(x__inp, 'body');
-            addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, jobState, body, varargin{:});
-
-            % Path parameters
-            pathParams = {};
-            if ~isempty(x__inp.Results.jobState)
-                pathParams = [pathParams, 'JobState', x__inp.Results.jobState];
-            end
-
-            % Query parameters
-            queryParams = {};
-
-            % Header parameters
-            headers = {};
-
-            % Form parameters
-            formParams = {};
-            files = {};
-
-            % Body (as JSON)
-            body = flywheel.model.JobAskState.ensureIsInstance(x__inp.Results.body);
-            body = flywheel.ApiClient.encodeJson(body.toJson());
-
-            resp = obj.apiClient.callApi('POST', '/jobs/ask/{JobState}', ...
-                pathParams, queryParams, headers, body, formParams, files);
-
-            status = resp.getStatusCode();
-
-            switch num2str(status)
-                case '200'
-                    if x__inp.Results.DumpResponseData
-                        x__respData = resp.getBodyAsString();
-                        disp(x__respData);
-                    end
-                    json = flywheel.ApiClient.getResponseJson(resp);
-                    returnData = flywheel.model.JobAskStateResponse.fromJson(json, obj.context_);
                     if ~isempty(returnData)
                         returnData = returnData.returnValue();
                     end

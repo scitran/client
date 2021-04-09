@@ -18,7 +18,6 @@
 %    getAnalysisOutputDownloadTicket - Download analysis outputs with filter.
 %    getAnalyses                     - Get nested analyses for a container
 %    getAnalysis                     - Get an analysis.
-%    getAnalysisFileInfo             - Get info for a particular file.
 %    getAnalysisNote                 - Get a note on analysis.
 %    getAnalysisTag                  - Get the value of a tag, by name.
 %    modifyAnalysis                  - Modify an analysis.
@@ -901,62 +900,6 @@ classdef AnalysesApi < handle
                     end
                     json = flywheel.ApiClient.getResponseJson(resp);
                     returnData = flywheel.model.AnalysisOutput.fromJson(json, obj.context_);
-                    if ~isempty(returnData)
-                        returnData = returnData.returnValue();
-                    end
-                otherwise
-                    returnData = [];
-            end
-        end
-
-        function [returnData, resp] = getAnalysisFileInfo(obj, analysisId, fileName, varargin)
-            % Get info for a particular file.
-            % analysisId (char):The analysis id
-            % fileName (char):The name of the file
-            % returns: [FileEntry, resp]
-
-            x__inp = inputParser;
-            x__inp.StructExpand = false;
-            addRequired(x__inp, 'analysisId');
-            addRequired(x__inp, 'fileName');
-            addParameter(x__inp, 'DumpResponseData', false);
-            parse(x__inp, analysisId, fileName, varargin{:});
-
-            % Path parameters
-            pathParams = {};
-            if ~isempty(x__inp.Results.analysisId)
-                pathParams = [pathParams, 'AnalysisId', x__inp.Results.analysisId];
-            end
-            if ~isempty(x__inp.Results.fileName)
-                pathParams = [pathParams, 'FileName', x__inp.Results.fileName];
-            end
-
-            % Query parameters
-            queryParams = {};
-
-            % Header parameters
-            headers = {};
-
-            % Form parameters
-            formParams = {};
-            files = {};
-
-            % Body (as JSON)
-            body = {};
-
-            resp = obj.apiClient.callApi('GET', '/analyses/{AnalysisId}/inputs/{FileName}/info', ...
-                pathParams, queryParams, headers, body, formParams, files);
-
-            status = resp.getStatusCode();
-
-            switch num2str(status)
-                case '200'
-                    if x__inp.Results.DumpResponseData
-                        x__respData = resp.getBodyAsString();
-                        disp(x__respData);
-                    end
-                    json = flywheel.ApiClient.getResponseJson(resp);
-                    returnData = flywheel.model.FileEntry.fromJson(json, obj.context_);
                     if ~isempty(returnData)
                         returnData = returnData.returnValue();
                     end

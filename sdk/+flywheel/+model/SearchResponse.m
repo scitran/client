@@ -11,7 +11,7 @@
 %    collection  
 %    analysis    
 %    parent      
-%    permissions 
+%    permissions  - Array of user roles
 %
 % SearchResponse Methods:
 %    toJson - Convert the object to a Map that can be encoded to json
@@ -444,7 +444,7 @@
                 obj.props_('parent') = flywheel.model.SearchParentResponse.fromJson(json.parent, context);
             end
             if isfield(json, 'permissions')
-                obj.props_('permissions') = flywheel.ModelBase.cellmap(@(x) flywheel.model.RolesRoleAssignment.fromJson(x, context), json.permissions);
+                obj.props_('permissions') = flywheel.ModelBase.cellmap(@(x) flywheel.model.Permission.fromJson(x, context), json.permissions);
             end
             if isprop(obj, 'context_')
                 obj.setContext_(context);
@@ -486,7 +486,7 @@
                     obj.props_('parent') =  flywheel.model.SearchParentResponse.ensureIsInstance(obj.props_('parent'));
                 end
                 if isKey(obj.props_, 'permissions')
-                    obj.props_('permissions') = flywheel.ModelBase.cellmap(@flywheel.model.RolesRoleAssignment.ensureIsInstance, obj.props_('permissions'));
+                    obj.props_('permissions') = flywheel.ModelBase.cellmap(@flywheel.model.Permission.ensureIsInstance, obj.props_('permissions'));
                 end
             end
         end

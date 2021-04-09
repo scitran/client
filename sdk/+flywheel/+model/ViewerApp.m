@@ -138,10 +138,10 @@
                 result('options') = flywheel.ModelBase.serializeValue(obj.props_('options'), 'containers.Map');
             end
             if isKey(obj.props_, 'files')
-                result('files') = flywheel.ModelBase.serializeValue(obj.props_('files'), 'containers.Map[String, containers.Map]');
+                result('files') = flywheel.ModelBase.serializeValue(obj.props_('files'), 'containers.Map[String, containers.Map[String, char]]');
             end
             if isKey(obj.props_, 'containers')
-                result('containers') = flywheel.ModelBase.serializeValue(obj.props_('containers'), 'containers.Map[String, containers.Map]');
+                result('containers') = flywheel.ModelBase.serializeValue(obj.props_('containers'), 'containers.Map[String, containers.Map[String, char]]');
             end
         end
         function result = struct(obj)
@@ -225,10 +225,10 @@
                 obj.props_('options') = flywheel.ModelBase.deserializeValue(json.options, 'containers.Map');
             end
             if isfield(json, 'files')
-                obj.props_('files') = flywheel.ModelBase.deserializeValue(json.files, 'containers.Map[String, containers.Map]');
+                obj.props_('files') = flywheel.ModelBase.deserializeValue(json.files, 'containers.Map[String, containers.Map[String, char]]');
             end
             if isfield(json, 'containers')
-                obj.props_('containers') = flywheel.ModelBase.deserializeValue(json.containers, 'containers.Map[String, containers.Map]');
+                obj.props_('containers') = flywheel.ModelBase.deserializeValue(json.containers, 'containers.Map[String, containers.Map[String, char]]');
             end
             if isprop(obj, 'context_')
                 obj.setContext_(context);

@@ -38,7 +38,7 @@
 %    getCollectionNote                         - Get a note on collection.
 %    getCollectionSessions                     - List sessions in a collection
 %    getCollectionTag                          - Get the value of a tag, by name.
-%    getCollectionUserPermission               - List a user's permissions for this group.
+%    getCollectionUserPermission               - List a user's permissions for this collection.
 %    modifyCollection                          - Update a collection and its contents
 %    modifyCollectionAnalysis                  - Modify an analysis.
 %    modifyCollectionFile                      - Modify a file's attributes
@@ -46,7 +46,7 @@
 %    modifyCollectionFileInfo                  - Update info for a particular file.
 %    modifyCollectionInfo                      - Update or replace info for a collection.
 %    modifyCollectionNote                      - Update a note on collection.
-%    modifyCollectionUserPermission            - Update a user's permission for this group.
+%    modifyCollectionUserPermission            - Update a user's permission for this collection.
 %    renameCollectionTag                       - Rename a tag.
 %    replaceCollectionFile                     - Replace a file
 %    uploadFileToCollection                    - Upload a file to collection.
@@ -290,7 +290,7 @@ classdef CollectionsApi < handle
         function [returnData, resp] = addCollectionPermission(obj, collectionId, body, varargin)
             % Add a permission
             % collectionId (char)
-            % body (PermissionAccessPermission)
+            % body (Permission)
             % returns: [InlineResponse200, resp]
 
             x__inp = inputParser;
@@ -317,7 +317,7 @@ classdef CollectionsApi < handle
             files = {};
 
             % Body (as JSON)
-            body = flywheel.model.PermissionAccessPermission.ensureIsInstance(x__inp.Results.body);
+            body = flywheel.model.Permission.ensureIsInstance(x__inp.Results.body);
             body = flywheel.ApiClient.encodeJson(body.toJson());
 
             resp = obj.apiClient.callApi('POST', '/collections/{CollectionId}/permissions', ...
@@ -2215,10 +2215,10 @@ classdef CollectionsApi < handle
         end
 
         function [returnData, resp] = getCollectionUserPermission(obj, collectionId, userId, varargin)
-            % List a user's permissions for this group.
+            % List a user's permissions for this collection.
             % collectionId (char)
             % userId (char)
-            % returns: [PermissionAccessPermission, resp]
+            % returns: [Permission, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
@@ -2261,7 +2261,7 @@ classdef CollectionsApi < handle
                         disp(x__respData);
                     end
                     json = flywheel.ApiClient.getResponseJson(resp);
-                    returnData = flywheel.model.PermissionAccessPermission.fromJson(json, obj.context_);
+                    returnData = flywheel.model.Permission.fromJson(json, obj.context_);
                     if ~isempty(returnData)
                         returnData = returnData.returnValue();
                     end
@@ -2378,7 +2378,7 @@ classdef CollectionsApi < handle
             % collectionId (char)
             % fileName (char)
             % body (FileEntry)
-            % returns: [InlineResponse2005, resp]
+            % returns: [InlineResponse2004, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
@@ -2423,7 +2423,7 @@ classdef CollectionsApi < handle
                         disp(x__respData);
                     end
                     json = flywheel.ApiClient.getResponseJson(resp);
-                    returnData = flywheel.model.InlineResponse2005.fromJson(json, obj.context_);
+                    returnData = flywheel.model.InlineResponse2004.fromJson(json, obj.context_);
                     if ~isempty(returnData)
                         returnData = returnData.returnValue();
                     end
@@ -2437,7 +2437,7 @@ classdef CollectionsApi < handle
             % collectionId (char)
             % fileName (char)
             % body (ClassificationUpdateInput)
-            % returns: [InlineResponse2005, resp]
+            % returns: [InlineResponse2004, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
@@ -2482,7 +2482,7 @@ classdef CollectionsApi < handle
                         disp(x__respData);
                     end
                     json = flywheel.ApiClient.getResponseJson(resp);
-                    returnData = flywheel.model.InlineResponse2005.fromJson(json, obj.context_);
+                    returnData = flywheel.model.InlineResponse2004.fromJson(json, obj.context_);
                     if ~isempty(returnData)
                         returnData = returnData.returnValue();
                     end
@@ -2654,10 +2654,10 @@ classdef CollectionsApi < handle
         end
 
         function [returnData, resp] = modifyCollectionUserPermission(obj, collectionId, userId, body, varargin)
-            % Update a user's permission for this group.
+            % Update a user's permission for this collection.
             % collectionId (char)
             % userId (char)
-            % body (PermissionAccessPermission)
+            % body (Permission)
             % returns: [InlineResponse200, resp]
 
             x__inp = inputParser;
@@ -2688,7 +2688,7 @@ classdef CollectionsApi < handle
             files = {};
 
             % Body (as JSON)
-            body = flywheel.model.PermissionAccessPermission.ensureIsInstance(x__inp.Results.body);
+            body = flywheel.model.Permission.ensureIsInstance(x__inp.Results.body);
             body = flywheel.ApiClient.encodeJson(body.toJson());
 
             resp = obj.apiClient.callApi('PUT', '/collections/{CollectionId}/permissions/{UserId}', ...

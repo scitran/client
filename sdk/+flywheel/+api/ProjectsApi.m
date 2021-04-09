@@ -303,7 +303,7 @@ classdef ProjectsApi < handle
         function [returnData, resp] = addProjectPermission(obj, projectId, body, varargin)
             % Add a permission
             % projectId (char)
-            % body (RolesRoleAssignment)
+            % body (Permission)
             % returns: [InlineResponse200, resp]
 
             x__inp = inputParser;
@@ -330,7 +330,7 @@ classdef ProjectsApi < handle
             files = {};
 
             % Body (as JSON)
-            body = flywheel.model.RolesRoleAssignment.ensureIsInstance(x__inp.Results.body);
+            body = flywheel.model.Permission.ensureIsInstance(x__inp.Results.body);
             body = flywheel.ApiClient.encodeJson(body.toJson());
 
             resp = obj.apiClient.callApi('POST', '/projects/{ProjectId}/permissions', ...
@@ -2550,7 +2550,7 @@ classdef ProjectsApi < handle
             % List a user's permissions for this project.
             % projectId (char)
             % userId (char)
-            % returns: [InlineResponse2003, resp]
+            % returns: [Permission, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
@@ -2593,7 +2593,7 @@ classdef ProjectsApi < handle
                         disp(x__respData);
                     end
                     json = flywheel.ApiClient.getResponseJson(resp);
-                    returnData = flywheel.model.InlineResponse2003.fromJson(json, obj.context_);
+                    returnData = flywheel.model.Permission.fromJson(json, obj.context_);
                     if ~isempty(returnData)
                         returnData = returnData.returnValue();
                     end
@@ -2720,7 +2720,7 @@ classdef ProjectsApi < handle
             % projectId (char)
             % fileName (char)
             % body (FileEntry)
-            % returns: [InlineResponse2005, resp]
+            % returns: [InlineResponse2004, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
@@ -2765,7 +2765,7 @@ classdef ProjectsApi < handle
                         disp(x__respData);
                     end
                     json = flywheel.ApiClient.getResponseJson(resp);
-                    returnData = flywheel.model.InlineResponse2005.fromJson(json, obj.context_);
+                    returnData = flywheel.model.InlineResponse2004.fromJson(json, obj.context_);
                     if ~isempty(returnData)
                         returnData = returnData.returnValue();
                     end
@@ -2779,7 +2779,7 @@ classdef ProjectsApi < handle
             % projectId (char)
             % fileName (char)
             % body (ClassificationUpdateInput)
-            % returns: [InlineResponse2005, resp]
+            % returns: [InlineResponse2004, resp]
 
             x__inp = inputParser;
             x__inp.StructExpand = false;
@@ -2824,7 +2824,7 @@ classdef ProjectsApi < handle
                         disp(x__respData);
                     end
                     json = flywheel.ApiClient.getResponseJson(resp);
-                    returnData = flywheel.model.InlineResponse2005.fromJson(json, obj.context_);
+                    returnData = flywheel.model.InlineResponse2004.fromJson(json, obj.context_);
                     if ~isempty(returnData)
                         returnData = returnData.returnValue();
                     end
@@ -3048,7 +3048,7 @@ classdef ProjectsApi < handle
             % Update a user's permission for this project.
             % projectId (char)
             % userId (char)
-            % body (RolesRoleAssignment)
+            % body (Permission)
             % returns: [InlineResponse200, resp]
 
             x__inp = inputParser;
@@ -3079,7 +3079,7 @@ classdef ProjectsApi < handle
             files = {};
 
             % Body (as JSON)
-            body = flywheel.model.RolesRoleAssignment.ensureIsInstance(x__inp.Results.body);
+            body = flywheel.model.Permission.ensureIsInstance(x__inp.Results.body);
             body = flywheel.ApiClient.encodeJson(body.toJson());
 
             resp = obj.apiClient.callApi('PUT', '/projects/{ProjectId}/permissions/{UserId}', ...

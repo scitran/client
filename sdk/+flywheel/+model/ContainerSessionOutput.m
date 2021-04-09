@@ -17,7 +17,7 @@
 %    created             - Creation time (automatically set)
 %    modified            - Last modification time (automatically updated)
 %    revision            - An incremental document revision number
-%    permissions        
+%    permissions         - Array of user roles
 %    group              
 %    projectHasTemplate 
 %    satisfiesTemplate  
@@ -891,7 +891,7 @@
                 obj.props_('revision') = flywheel.ModelBase.deserializeValue(json.revision, 'integer');
             end
             if isfield(json, 'permissions')
-                obj.props_('permissions') = flywheel.ModelBase.cellmap(@(x) flywheel.model.RolesBackwardsCompatibleRoleAssignment.fromJson(x, context), json.permissions);
+                obj.props_('permissions') = flywheel.ModelBase.cellmap(@(x) flywheel.model.Permission.fromJson(x, context), json.permissions);
             end
             if isfield(json, 'group')
                 obj.props_('group') = flywheel.ModelBase.deserializeValue(json.group, 'char');
@@ -960,7 +960,7 @@
                 if isKey(obj.props_, 'revision')
                 end
                 if isKey(obj.props_, 'permissions')
-                    obj.props_('permissions') = flywheel.ModelBase.cellmap(@flywheel.model.RolesBackwardsCompatibleRoleAssignment.ensureIsInstance, obj.props_('permissions'));
+                    obj.props_('permissions') = flywheel.ModelBase.cellmap(@flywheel.model.Permission.ensureIsInstance, obj.props_('permissions'));
                 end
                 if isKey(obj.props_, 'group')
                 end
