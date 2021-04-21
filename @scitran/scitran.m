@@ -96,12 +96,8 @@ classdef scitran < handle
                     % receive a warning that the RestClient class exists
                     % and java will not be cleared.  That shouldn't happen
                     % here, however.
-                    disp('Adding rest-client.jar to java path')
-                    apiPath = fileparts(fileparts(which('flywheel.Flywheel')));
-                    if isempty(apiPath)
-                        error('We need to figure out how to do this.');
-                    end
-                    apiFile = fullfile(apiPath,'api','rest-client.jar');
+                    disp('Adding rest-client.jar to java path')                
+                    apiFile = fullfile(stRootPath,'sdk','api','rest-client.jar');
                     javaaddpath(apiFile);
                     obj.fw = flywheel.Flywheel(obj.showToken);
                 end

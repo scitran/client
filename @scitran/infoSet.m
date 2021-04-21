@@ -56,12 +56,10 @@ function info = infoSet(st,object,metadata,varargin)
 
 %}
 %{
-  project = st.search('project','project label exact','DEMO');
-  projectID = idGet(project{1},'data type','project');
-
-  sessions = st.list('session',projectID);
+  project  = st.lookup('scitran/DEMO');
+  sessions = project.sessions();
   allinfo = st.infoGet(sessions{1});
-  info = st.infoGet(sessions{1},'infotype','info');
+  info    = st.infoGet(sessions{1},'infotype','info');
 
   data.subject.firstname = 'Annette2';
   modInfo = st.infoSet(sessions{1},data);
@@ -71,7 +69,11 @@ function info = infoSet(st,object,metadata,varargin)
   data.subject.firstname = 'Annette';
   modInfo = st.infoSet(sessions{1},data);
   modInfo.info.subject.firstname
-
+%}
+%{
+    project  = st.lookup('scitran/DEMO');
+    subjects = project.subjects();
+    thisSubject = subjects{1};
 %}
 %{
   % Add and delete a note
@@ -79,7 +81,6 @@ function info = infoSet(st,object,metadata,varargin)
   projectID = idGet(project{1},'data type','project');
   modInfo = st.infoSet(project{1}, 'Test note','infotype','note');
   st.fw.deleteProjectNote(projectID,modInfo.notes{1}.id)
-
 %}
 %{
 info = struct('some_key', 'somevalue', 'another_key', 10);

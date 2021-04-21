@@ -7,6 +7,7 @@ function modalityCreate(st,name,varargin)
 % Optional Key/Value pairs
 %  classification:  Struct defining options for classifications within the
 %                   modality
+%  description:  Char defining the modality
 %
 % Returns
 %   None
@@ -33,14 +34,18 @@ p = inputParser;
 p.addRequired('st',@(x)(isa(x,'scitran')));
 p.addRequired('name',@ischar);
 p.addParameter('classification',[],@isstruct);
+p.addParameter('description',[],@ischar);
 
 p.parse(st,name,varargin{:});
 
 classification = p.Results.classification;
+description = p.Results.description;
 
 %%  Create the modality object and add it to Flywheel
 
-modality = flywheel.model.Modality('id', name, 'classification', classification);
+modality = flywheel.model.Modality('id', name, ...
+    'classification', classification, ...
+    'description', description);
 
 % The name (id) and the classification specification.
 st.fw.addModality(modality);

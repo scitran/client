@@ -14,8 +14,7 @@ classdef ApiClient < handle
     end
     methods
         function obj = ApiClient(apiKey)
-            % I always have to comment this line out by hand.
-            % io.flywheel.rest.RestClient.useCertFile(getenv('FW_SSL_CERT_FILE'));
+            io.flywheel.rest.RestClient.useCertFile(getenv('FW_SSL_CERT_FILE'));
             obj.restClient = io.flywheel.rest.RestClient.fromApiKey(apiKey);
             obj.versionCheckFn = [];
         end
