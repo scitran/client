@@ -43,11 +43,19 @@ function result = lookup(st,str,full)
  thisGear.gear.name
 %}
 
-% We might want to make the result conform to some other format some day.
-% Or Flywheel may always return us the same format.
+%%
+if notDefined('full'), full = false; end
+
+%%  Get the container
 result = st.fw.lookup(str);
 
-if full && result.infoExists
+%% Flywheel sometimes returns partial information
+
+% They do this because the additional information can be very large, and
+% they are trying to save time/bandwidth.  The user might have specified
+% 'full' as true, which means get all the info, not just the partial info.
+% We check that here.
+if full && ~isempty(result.infoExists)
     % Get the whole container
     result = st.fw.get(result.id);
 elseif result.infoExists
